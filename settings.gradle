@@ -1,0 +1,3 @@
+include ':composeui'
+include ':app'
+rootProject.name = "Call Recorder"

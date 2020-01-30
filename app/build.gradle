@@ -1,0 +1,142 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'com.github.ben-manes.versions' version "0.27.0"
+}
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
+    defaultConfig {
+        applicationId "com.redridgeapps.callrecorder"
+        minSdkVersion 29
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    packagingOptions {
+        pickFirst("META-INF/kotlinx-coroutines-core.kotlin_module")
+    }
+
+    buildFeatures {
+        viewBinding true
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion Compose.VERSION
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    coreLibraryDesugaring AndroidTools.DESUGAR_JDK_LIBS
+
+    // Kotlin
+    implementation Kotlin.STDLIB
+//    implementation Kotlin.COROUTINES
+//    implementation Kotlin.SERIALIZATION_RUNTIME
+
+    // Android Tools
+    implementation(AndroidTools.CONSTRAINT_LAYOUT)
+
+    // Testing
+    testImplementation JUnit.JUNIT
+    androidTestImplementation AndroidXTest.CORE_KTX
+    androidTestImplementation AndroidXTest.RUNNER
+    androidTestImplementation AndroidXTest.EXT_JUNIT_KTX
+    androidTestImplementation Espresso.CORE
+
+    // Material
+    implementation Material.MATERIAL
+
+    // Jetpack
+    implementation Jetpack.ACTIVITY_KTX
+    implementation Jetpack.APPCOMPAT
+    implementation Jetpack.CORE_KTX
+    implementation Jetpack.FRAGMENT_KTX
+//    implementation Jetpack.PREFERENCE_KTX
+//    implementation Jetpack.DRAWERLAYOUT
+    implementation Jetpack.COORDINATORLAYOUT
+    implementation Jetpack.RECYCLERVIEW
+
+    // UI
+    implementation project(":composeui")
+
+    // Compose
+    implementation Compose.FOUNDATION
+    implementation Compose.FRAMEWORK
+    implementation Compose.LAYOUT
+    implementation Compose.MATERIAL
+    implementation Compose.TOOLING
+
+    // ViewModel and LiveData
+//    implementation Lifecycle.LIVEDATA_KTX
+//    implementation Lifecycle.VIEWMODEL_KTX
+//    implementation Lifecycle.COMMON_JAVA8
+
+    // Navigation
+//    implementation Navigation.FRAGMENT_KTX
+//    implementation Navigation.UI_KTX
+
+    // Paging
+//    implementation Paging.RUNTIME_KTX
+
+    // WorkManager
+//    implementation WorkManager.RUNTIME_KTX
+
+    // Dagger
+//    implementation Dagger.DAGGER
+//    implementation Dagger.ANDROID_SUPPORT
+//    kapt Dagger.COMPILER
+//    kapt Dagger.ANDROID_PROCESSOR
+
+    // Retrofit + ( Converters and Adapters )
+//    implementation Retrofit.RETROFIT
+//    implementation Retrofit.CONVERTER_SERIALIZATION
+
+    // Picasso
+//    implementation Picasso.PICASSO
+
+    // OkHttp
+//    implementation OkHttp.OKHTTP
+
+    // LeakCanary
+//    debugImplementation LeakCanary.ANDROID
+
+    // SQLDelight
+//    implementation SQLDelight.ANDROID_DRIVER
+//    implementation SQLDelight.ANDROID_PAGING_EXTENSIONS
+//    implementation SQLDelight.COROUTINES_EXTENSIONS
+
+    // Chucker
+//    debugImplementation Chucker.CHUCKER
+//    releaseImplementation Chucker.CHUCKER_NO_OP
+
+    // AssistedInject
+//    compileOnly AssistedInject.ANNOTATIONS
+//    kapt AssistedInject.PROCESSOR
+}

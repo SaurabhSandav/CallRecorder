@@ -1,0 +1,58 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+
+    repositories {
+        google()
+        mavenCentral()
+
+        // AGP
+        maven { url "https://jetbrains.bintray.com/trove4j" }
+
+        // Kotlin EAP
+        if (Kotlin.enableKotlinEAP)
+            maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
+    }
+
+    dependencies {
+        classpath AndroidTools.GRADLE_PLUGIN
+        classpath Kotlin.GRADLE_PLUGIN
+        classpath Kotlin.SERIALIZATION_PLUGIN
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+
+allprojects {
+
+    repositories {
+        google()
+        mavenCentral()
+
+        // AGP
+        maven { url "https://jetbrains.bintray.com/trove4j" }
+
+        // Kotlin EAP
+        if (Kotlin.enableKotlinEAP)
+            maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
+
+        // KotlinX EAP
+        if (Kotlin.enableKotlinXEAP)
+            maven { url "https://kotlin.bintray.com/kotlinx" }
+
+        // For Chucker
+        maven { url "https://jitpack.io" }
+    }
+
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        kotlinOptions.freeCompilerArgs += [
+                '-progressive'
+        ]
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
