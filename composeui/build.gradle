@@ -55,4 +55,9 @@ dependencies {
     implementation Compose.LAYOUT
     implementation Compose.MATERIAL
     implementation Compose.TOOLING
+
+    // ViewModel and LiveData
+    implementation Lifecycle.LIVEDATA_KTX
+    implementation Lifecycle.VIEWMODEL_KTX
+    implementation Lifecycle.COMMON_JAVA8
 }

@@ -94,9 +94,9 @@ dependencies {
     implementation Compose.TOOLING
 
     // ViewModel and LiveData
-//    implementation Lifecycle.LIVEDATA_KTX
-//    implementation Lifecycle.VIEWMODEL_KTX
-//    implementation Lifecycle.COMMON_JAVA8
+    implementation Lifecycle.LIVEDATA_KTX
+    implementation Lifecycle.VIEWMODEL_KTX
+    implementation Lifecycle.COMMON_JAVA8
 
     // Navigation
 //    implementation Navigation.FRAGMENT_KTX
