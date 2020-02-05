@@ -1,4 +1,4 @@
-package com.redridgeapps.composeui
+package com.redridgeapps.callrecorder
 
 import androidx.compose.Composable
 import androidx.compose.onCommit
@@ -6,6 +6,7 @@ import androidx.compose.remember
 import androidx.compose.state
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import com.afollestad.assent.Permission
 
 @Composable
 fun <T : Any> observe(data: LiveData<T>): T {
@@ -21,4 +22,13 @@ fun <T : Any> observe(data: LiveData<T>): T {
     }
 
     return result
+}
+
+
+@Composable
+fun WithPermission(permissions: Array<Permission>, block: () -> Unit) {
+/*
+    ambient(key = ActivityAmbient) as Activity
+        .runWithPermissions(*permissions) { block() }
+*/
 }

@@ -175,3 +175,9 @@ object AssistedInject {
     const val ANNOTATIONS = "com.squareup.inject:assisted-inject-annotations-dagger2:$VERSION"
     const val PROCESSOR = "com.squareup.inject:assisted-inject-processor-dagger2:$VERSION"
 }
+
+object Assent {
+    private const val VERSION = "3.0.0-RC3"
+
+    const val CORE = "com.afollestad.assent:core:$VERSION"
+}

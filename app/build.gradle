@@ -83,9 +83,6 @@ dependencies {
     implementation Jetpack.COORDINATORLAYOUT
     implementation Jetpack.RECYCLERVIEW
 
-    // UI
-    implementation project(":composeui")
-
     // Compose
     implementation Compose.FOUNDATION
     implementation Compose.FRAMEWORK
@@ -139,4 +136,7 @@ dependencies {
     // AssistedInject
 //    compileOnly AssistedInject.ANNOTATIONS
 //    kapt AssistedInject.PROCESSOR
+
+    // Assent
+    implementation Assent.CORE
 }

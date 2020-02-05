@@ -44,6 +44,9 @@ allprojects {
 
         // For Chucker
         maven { url "https://jitpack.io" }
+
+        // Assent
+        maven { url "https://dl.bintray.com/drummer-aidan/maven" }
     }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
