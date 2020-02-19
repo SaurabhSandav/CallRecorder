@@ -3,6 +3,10 @@
 buildscript {
 
     repositories {
+
+        maven { url "/run/media/saurabh/Extra/Projects/Support/out/ui/build/support_repo/" }
+        maven { url "/run/media/saurabh/Extra/Projects/Support/prebuilts/androidx/external/" }
+
         google()
         mavenCentral()
 
@@ -28,6 +32,10 @@ buildscript {
 allprojects {
 
     repositories {
+
+        maven { url "/run/media/saurabh/Extra/Projects/Support/out/ui/build/support_repo/" }
+        maven { url "/run/media/saurabh/Extra/Projects/Support/prebuilts/androidx/external/" }
+
         google()
         mavenCentral()
 

@@ -77,7 +77,7 @@ object Jetpack {
 }
 
 object Compose {
-    const val VERSION = "0.1.0-dev04"
+    const val VERSION = "0.1.0-dev05"
 
     const val COMPOSE_RUNTIME = "androidx.compose:compose-runtime:$VERSION"
     const val FOUNDATION = "androidx.ui:ui-foundation:$VERSION"
@@ -90,6 +90,7 @@ object Compose {
 object Lifecycle {
     private const val VERSION = "2.2.0"
 
+    const val SERVICE = "androidx.lifecycle:lifecycle-service:$VERSION"
     const val LIVEDATA_KTX = "androidx.lifecycle:lifecycle-livedata-ktx:$VERSION"
     const val VIEWMODEL_KTX = "androidx.lifecycle:lifecycle-viewmodel-ktx:$VERSION"
     const val COMMON_JAVA8 = "androidx.lifecycle:lifecycle-common-java8:$VERSION"

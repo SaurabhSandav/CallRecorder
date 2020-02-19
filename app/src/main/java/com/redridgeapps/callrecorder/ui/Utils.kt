@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder
+package com.redridgeapps.callrecorder.ui
 
 import androidx.compose.Composable
 import androidx.compose.onCommit
@@ -9,21 +9,18 @@ import androidx.lifecycle.Observer
 import com.afollestad.assent.Permission
 
 @Composable
-fun <T : Any> observe(data: LiveData<T>): T {
+fun <T : Any> LiveData<T>.latestValue(): T? {
 
-    var result by state {
-        data.value ?: error("LiveData used in Compose requires an Initial value")
-    }
+    var result by state { value }
     val observer = remember { Observer<T> { result = it } }
 
-    onCommit(data) {
-        data.observeForever(observer)
-        onDispose { data.removeObserver(observer) }
+    onCommit(this) {
+        observeForever(observer)
+        onDispose { removeObserver(observer) }
     }
 
     return result
 }
-
 
 @Composable
 fun WithPermission(permissions: Array<Permission>, block: () -> Unit) {

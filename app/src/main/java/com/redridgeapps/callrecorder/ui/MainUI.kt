@@ -1,7 +1,6 @@
-package com.redridgeapps.callrecorder
+package com.redridgeapps.callrecorder.ui
 
 import androidx.compose.Composable
-import androidx.compose.ambient
 import androidx.compose.state
 import androidx.ui.core.Modifier
 import androidx.ui.core.Text
@@ -9,7 +8,10 @@ import androidx.ui.graphics.Color
 import androidx.ui.layout.Center
 import androidx.ui.layout.Column
 import androidx.ui.layout.LayoutSize
-import androidx.ui.material.*
+import androidx.ui.material.Button
+import androidx.ui.material.MaterialTheme
+import androidx.ui.material.Scaffold
+import androidx.ui.material.TopAppBar
 import androidx.ui.text.TextStyle
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.sp
@@ -43,7 +45,7 @@ fun ContentMain() {
 fun RecordButton(modifier: Modifier = Modifier.None) {
 
     var recording by state { false }
-    val callRecorder = ambient(key = CallRecorderAmbient)
+    val callRecorder = CallRecorderAmbient.current
 
     val onClick = {
         recording = !recording
@@ -54,7 +56,7 @@ fun RecordButton(modifier: Modifier = Modifier.None) {
     Button(
         modifier = modifier + LayoutSize.Fill,
         onClick = onClick,
-        style = ContainedButtonStyle(backgroundColor = if (recording) Color.Red else Color.Cyan)
+        backgroundColor = if (recording) Color.Red else Color.Cyan
     ) {
         val buttonTitle = if (recording) "Stop Recording" else "Start Recording"
 
@@ -69,18 +71,19 @@ fun RecordButton(modifier: Modifier = Modifier.None) {
 fun PlaybackButton(modifier: Modifier = Modifier.None) {
 
     var playing by state { false }
-    val callPlayback = ambient(key = CallPlaybackAmbient)
+    val callPlayback = CallPlaybackAmbient.current
 
     val onClick = {
         playing = !playing
 
-        if (playing) callPlayback.startPlaying() else callPlayback.stopPlaying()
+        val onComplete = { playing = false }
+        if (playing) callPlayback.startPlaying(onComplete) else callPlayback.stopPlaying()
     }
 
     Button(
         modifier = modifier + LayoutSize.Fill,
         onClick = onClick,
-        style = ContainedButtonStyle(backgroundColor = if (playing) Color.Red else Color.Green)
+        backgroundColor = if (playing) Color.Red else Color.Green
     ) {
         val buttonTitle = if (playing) "Stop Playback" else "Start Playback"
 

@@ -2,22 +2,23 @@ package com.redridgeapps.callrecorder.callutils
 
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.Ambient
+import androidx.compose.staticAmbientOf
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 
-val CallPlaybackAmbient = Ambient.of<CallPlayback>()
+val CallPlaybackAmbient = staticAmbientOf<CallPlayback>()
 
 class CallPlayback(private val activity: AppCompatActivity) {
 
-    private val fileName = "${activity.externalCacheDir!!.absolutePath}/audiorecordtest.3gp"
+    private val fileName = "${activity.externalCacheDir!!.absolutePath}/audiorecordtest.mp3"
     private var player: MediaPlayer? = null
 
-    fun startPlaying() {
+    fun startPlaying(onComplete: () -> Unit) {
         player = MediaPlayer().apply {
             setDataSource(fileName)
             prepare()
             start()
+            setOnCompletionListener { onComplete() }
         }
 
         activity.lifecycle.addObserver(object : DefaultLifecycleObserver {

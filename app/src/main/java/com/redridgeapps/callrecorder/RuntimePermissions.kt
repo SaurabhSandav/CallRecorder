@@ -1,7 +1,7 @@
 package com.redridgeapps.callrecorder
 
 import android.app.Activity
-import androidx.compose.Ambient
+import androidx.compose.staticAmbientOf
 import com.afollestad.assent.*
 import com.afollestad.assent.rationale.RationaleHandler
 
@@ -40,4 +40,4 @@ class RuntimePermissions(private val activity: Activity) {
     }
 }
 
-val PermissionsAmbient = Ambient.of<RuntimePermissions>()
+val PermissionsAmbient = staticAmbientOf<RuntimePermissions>()
