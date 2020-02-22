@@ -85,6 +85,7 @@ dependencies {
     implementation Jetpack.RECYCLERVIEW
 
     // Compose
+    implementation Compose.COMPOSE_RUNTIME
     implementation Compose.FOUNDATION
     implementation Compose.FRAMEWORK
     implementation Compose.LAYOUT

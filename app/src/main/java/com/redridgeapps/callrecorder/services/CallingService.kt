@@ -16,6 +16,7 @@ import androidx.lifecycle.LifecycleService
 import com.redridgeapps.callrecorder.MainActivity
 import com.redridgeapps.callrecorder.callutils.CallRecorder
 import com.redridgeapps.callrecorder.callutils.CallStateListener
+import com.redridgeapps.callrecorder.callutils.RecordingAPI
 
 class CallingService : LifecycleService() {
 
@@ -27,7 +28,7 @@ class CallingService : LifecycleService() {
 
         telephonyManager = getSystemService()!!
 
-        val callRecorder = CallRecorder(application, lifecycle)
+        val callRecorder = CallRecorder(RecordingAPI.AudioRecord, application, lifecycle)
         callStateListener = CallStateListener(callRecorder)
 
         createNotification()

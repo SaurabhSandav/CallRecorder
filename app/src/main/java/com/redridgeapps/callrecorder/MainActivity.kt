@@ -5,10 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
 import androidx.compose.Providers
 import androidx.ui.core.setContent
-import com.redridgeapps.callrecorder.callutils.CallPlayback
-import com.redridgeapps.callrecorder.callutils.CallPlaybackAmbient
-import com.redridgeapps.callrecorder.callutils.CallRecorder
-import com.redridgeapps.callrecorder.callutils.CallRecorderAmbient
+import com.redridgeapps.callrecorder.callutils.*
 import com.redridgeapps.callrecorder.services.CallingService
 import com.redridgeapps.callrecorder.ui.MainUI
 
@@ -32,7 +29,11 @@ class MainActivity : AppCompatActivity() {
     private fun WithAmbients(content: @Composable() () -> Unit) {
         Providers(
             PermissionsAmbient provides RuntimePermissions(this@MainActivity),
-            CallRecorderAmbient provides CallRecorder(application, lifecycle),
+            CallRecorderAmbient provides CallRecorder(
+                RecordingAPI.AudioRecord,
+                application,
+                lifecycle
+            ),
             CallPlaybackAmbient provides CallPlayback(this@MainActivity),
             children = content
         )
