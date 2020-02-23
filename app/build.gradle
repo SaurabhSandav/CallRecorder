@@ -143,3 +143,5 @@ dependencies {
     // Assent
     implementation Assent.CORE
 }
+
+task systemInstall(type: AppSystemizer, dependsOn: ":app:assembleDebug")
