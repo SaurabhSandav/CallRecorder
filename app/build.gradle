@@ -144,4 +144,5 @@ dependencies {
     implementation Assent.CORE
 }
 
-task systemInstall(type: AppSystemizer, dependsOn: ":app:assembleDebug")
+task systemAssembleInstall(type: AppSystemizer, dependsOn: ":app:assembleDebug")
+task systemInstall(type: AppSystemizer)

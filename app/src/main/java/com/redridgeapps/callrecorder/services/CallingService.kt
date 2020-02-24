@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.lifecycle.LifecycleService
 import com.redridgeapps.callrecorder.MainActivity
+import com.redridgeapps.callrecorder.R
 import com.redridgeapps.callrecorder.callutils.CallRecorder
 import com.redridgeapps.callrecorder.callutils.CallStateListener
 import com.redridgeapps.callrecorder.callutils.RecordingAPI
@@ -67,7 +68,7 @@ class CallingService : LifecycleService() {
             NotificationCompat.Builder(this, createNotificationChannel())
                 .setContentTitle("Example Service")
                 .setContentText("Standing by to record...")
-//                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.ic_stat_name)
                 .setContentIntent(pendingIntent)
                 .build()
 
