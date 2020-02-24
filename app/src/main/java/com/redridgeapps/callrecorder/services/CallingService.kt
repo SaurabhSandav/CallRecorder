@@ -18,6 +18,7 @@ import com.redridgeapps.callrecorder.R
 import com.redridgeapps.callrecorder.callutils.CallRecorder
 import com.redridgeapps.callrecorder.callutils.CallStateListener
 import com.redridgeapps.callrecorder.callutils.RecordingAPI
+import com.redridgeapps.callrecorder.utils.NOTIFICATION_CALL_SERVICE_ID
 
 class CallingService : LifecycleService() {
 
@@ -27,12 +28,12 @@ class CallingService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
 
+        createNotification()
+
         telephonyManager = getSystemService()!!
 
         val callRecorder = CallRecorder(RecordingAPI.AudioRecord, application, lifecycle)
         callStateListener = CallStateListener(callRecorder)
-
-        createNotification()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -58,30 +59,31 @@ class CallingService : LifecycleService() {
     }
 
     private fun createNotification() {
+
         val notificationIntent = Intent(this, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(
-            this,
-            0, notificationIntent, 0
-        )
+        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 
-        val notification: Notification =
-            NotificationCompat.Builder(this, createNotificationChannel())
-                .setContentTitle("Example Service")
-                .setContentText("Standing by to record...")
-                .setSmallIcon(R.drawable.ic_stat_name)
-                .setContentIntent(pendingIntent)
-                .build()
+        val notification = NotificationCompat.Builder(this, createNotificationChannel())
+            .setContentText("Standing by to record...")
+            .setContentIntent(pendingIntent)
+            .setSmallIcon(R.drawable.ic_stat_name)
+            .setShowWhen(false)
+            .build()
 
-        startForeground(1, notification)
+        startForeground(NOTIFICATION_CALL_SERVICE_ID, notification)
     }
 
     private fun createNotificationChannel(): String {
-        val chan =
-            NotificationChannel("c4c54c44c3", "Call Recorder", NotificationManager.IMPORTANCE_NONE)
-        chan.lockscreenVisibility = Notification.VISIBILITY_SECRET
-        val service = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        service.createNotificationChannel(chan)
-        return chan.id
+
+        val channel = NotificationChannel(
+            javaClass.simpleName,
+            "Call Recorder",
+            NotificationManager.IMPORTANCE_LOW
+        ).apply { lockscreenVisibility = Notification.VISIBILITY_SECRET }
+
+        getSystemService<NotificationManager>()!!.createNotificationChannel(channel)
+
+        return channel.id
     }
 
     companion object {
