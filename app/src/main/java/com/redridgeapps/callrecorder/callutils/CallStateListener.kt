@@ -2,11 +2,9 @@ package com.redridgeapps.callrecorder.callutils
 
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
-import android.util.Log
 import com.redridgeapps.callrecorder.callutils.CallStateListener.CallStatus.*
+import timber.log.Timber
 import java.util.*
-
-const val TAG = "PhoneStateChanged"
 
 class CallStateListener(
     private val callRecorder: CallRecorder
@@ -43,7 +41,7 @@ class CallStateListener(
             OutgoingCallEnded -> "Outgoing call ended"
         }
 
-        Log.d(TAG, message)
+        Timber.d(message)
     }
 
     private fun detectCallStatus(state: Int): CallStatus = when (state) {

@@ -96,6 +96,6 @@ fun PlaybackButton(modifier: Modifier = Modifier.None) {
 
 @Preview
 @Composable
-fun DefaultPreview() {
+private fun DefaultPreview() {
     MainUI("App Title")
 }

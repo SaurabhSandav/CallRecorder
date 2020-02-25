@@ -4,6 +4,7 @@ buildscript {
 
     repositories {
 
+        // Compose from AOSP
         maven { url "/run/media/saurabh/Extra/Projects/Support/out/ui/build/support_repo/" }
         maven { url "/run/media/saurabh/Extra/Projects/Support/prebuilts/androidx/external/" }
 
@@ -21,7 +22,6 @@ buildscript {
     dependencies {
         classpath AndroidTools.GRADLE_PLUGIN
         classpath Kotlin.GRADLE_PLUGIN
-        classpath Kotlin.SERIALIZATION_PLUGIN
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -33,6 +33,7 @@ allprojects {
 
     repositories {
 
+        // Compose from AOSP
         maven { url "/run/media/saurabh/Extra/Projects/Support/out/ui/build/support_repo/" }
         maven { url "/run/media/saurabh/Extra/Projects/Support/prebuilts/androidx/external/" }
 
@@ -49,18 +50,16 @@ allprojects {
         // KotlinX EAP
         if (Kotlin.enableKotlinXEAP)
             maven { url "https://kotlin.bintray.com/kotlinx" }
-
-        // For Chucker
-        maven { url "https://jitpack.io" }
-
-        // Assent
-        maven { url "https://dl.bintray.com/drummer-aidan/maven" }
     }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-        kotlinOptions.freeCompilerArgs += [
-                '-progressive'
-        ]
+        kotlinOptions {
+            jvmTarget = "1.8"
+            freeCompilerArgs += [
+                    '-progressive'/*,
+                    '-Xnew-inference'*/
+            ]
+        }
     }
 }
 

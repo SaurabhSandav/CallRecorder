@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity() {
     @Composable
     private fun WithAmbients(content: @Composable() () -> Unit) {
         Providers(
-            PermissionsAmbient provides RuntimePermissions(this@MainActivity),
             CallRecorderAmbient provides CallRecorder(
                 RecordingAPI.AudioRecord,
                 application,

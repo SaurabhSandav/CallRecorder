@@ -58,11 +58,7 @@ dependencies {
 
     // Kotlin
     implementation Kotlin.STDLIB
-//    implementation Kotlin.COROUTINES
-//    implementation Kotlin.SERIALIZATION_RUNTIME
-
-    // Android Tools
-    implementation(AndroidTools.CONSTRAINT_LAYOUT)
+    implementation Kotlin.COROUTINES
 
     // Testing
     testImplementation JUnit.JUNIT
@@ -79,10 +75,6 @@ dependencies {
     implementation Jetpack.APPCOMPAT
     implementation Jetpack.CORE_KTX
     implementation Jetpack.FRAGMENT_KTX
-//    implementation Jetpack.PREFERENCE_KTX
-//    implementation Jetpack.DRAWERLAYOUT
-    implementation Jetpack.COORDINATORLAYOUT
-    implementation Jetpack.RECYCLERVIEW
 
     // Compose
     implementation Compose.COMPOSE_RUNTIME
@@ -98,50 +90,11 @@ dependencies {
     implementation Lifecycle.VIEWMODEL_KTX
     implementation Lifecycle.COMMON_JAVA8
 
-    // Navigation
-//    implementation Navigation.FRAGMENT_KTX
-//    implementation Navigation.UI_KTX
-
-    // Paging
-//    implementation Paging.RUNTIME_KTX
-
-    // WorkManager
-//    implementation WorkManager.RUNTIME_KTX
-
-    // Dagger
-//    implementation Dagger.DAGGER
-//    implementation Dagger.ANDROID_SUPPORT
-//    kapt Dagger.COMPILER
-//    kapt Dagger.ANDROID_PROCESSOR
-
-    // Retrofit + ( Converters and Adapters )
-//    implementation Retrofit.RETROFIT
-//    implementation Retrofit.CONVERTER_SERIALIZATION
-
-    // Picasso
-//    implementation Picasso.PICASSO
-
-    // OkHttp
-//    implementation OkHttp.OKHTTP
-
     // LeakCanary
-//    debugImplementation LeakCanary.ANDROID
+    debugImplementation LeakCanary.ANDROID
 
-    // SQLDelight
-//    implementation SQLDelight.ANDROID_DRIVER
-//    implementation SQLDelight.ANDROID_PAGING_EXTENSIONS
-//    implementation SQLDelight.COROUTINES_EXTENSIONS
-
-    // Chucker
-//    debugImplementation Chucker.CHUCKER
-//    releaseImplementation Chucker.CHUCKER_NO_OP
-
-    // AssistedInject
-//    compileOnly AssistedInject.ANNOTATIONS
-//    kapt AssistedInject.PROCESSOR
-
-    // Assent
-    implementation Assent.CORE
+    // Timber
+    implementation Timber.TIMBER
 }
 
 task systemAssembleInstall(type: AppSystemizer, dependsOn: ":app:assembleDebug")
