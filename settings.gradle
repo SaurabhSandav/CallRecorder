@@ -1,2 +1,4 @@
+include ':repository'
+include ':ui'
 include ':app'
 rootProject.name = "Call Recorder"

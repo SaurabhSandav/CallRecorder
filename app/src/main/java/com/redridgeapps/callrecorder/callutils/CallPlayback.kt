@@ -2,18 +2,16 @@ package com.redridgeapps.callrecorder.callutils
 
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.staticAmbientOf
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import com.redridgeapps.repository.ICallPlayback
 
-val CallPlaybackAmbient = staticAmbientOf<CallPlayback>()
-
-class CallPlayback(private val activity: AppCompatActivity) {
+class CallPlayback(private val activity: AppCompatActivity) : ICallPlayback {
 
     private val fileName = "${activity.externalCacheDir!!.absolutePath}/audiorecordtest.mp3"
     private var player: MediaPlayer? = null
 
-    fun startPlaying(onComplete: () -> Unit) {
+    override fun startPlaying(onComplete: () -> Unit) {
         player = MediaPlayer().apply {
             setDataSource(fileName)
             prepare()
@@ -29,7 +27,7 @@ class CallPlayback(private val activity: AppCompatActivity) {
         })
     }
 
-    fun stopPlaying() {
+    override fun stopPlaying() {
         player?.release()
         player = null
     }

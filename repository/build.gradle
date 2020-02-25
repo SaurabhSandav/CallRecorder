@@ -1,0 +1,14 @@
+plugins {
+    id 'java-library'
+    id 'kotlin'
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Kotlin
+    implementation Kotlin.STDLIB
+}

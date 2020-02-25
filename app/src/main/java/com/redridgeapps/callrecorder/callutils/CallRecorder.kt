@@ -3,25 +3,23 @@ package com.redridgeapps.callrecorder.callutils
 import android.app.Application
 import android.media.AudioManager
 import android.widget.Toast
-import androidx.compose.staticAmbientOf
 import androidx.core.content.getSystemService
 import androidx.lifecycle.Lifecycle
 import com.redridgeapps.callrecorder.callutils.recorder.Recorder
-
-val CallRecorderAmbient = staticAmbientOf<CallRecorder>()
+import com.redridgeapps.repository.ICallRecorder
 
 class CallRecorder(
     private val recordingAPI: RecordingAPI,
     private val application: Application,
     private val lifecycle: Lifecycle
-) {
+) : ICallRecorder {
 
     private val savePath = application.externalCacheDir!!.absolutePath
     private val am = application.getSystemService<AudioManager>()!!
     private var currentStreamVolume = -1
     private var recorder: Recorder? = null
 
-    fun startRecording() {
+    override fun startRecording() {
 
         recorder = recordingAPI.init(savePath, lifecycle)
         recorder!!.startRecording()
@@ -33,7 +31,7 @@ class CallRecorder(
         Toast.makeText(application, "Started recording", Toast.LENGTH_SHORT).show()
     }
 
-    fun stopRecording() {
+    override fun stopRecording() {
 
         recorder!!.stopRecording()
 

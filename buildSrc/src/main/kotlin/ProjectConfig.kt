@@ -64,11 +64,11 @@ object Compose {
     private const val VERSION = "0.1.0-dev05"
 
     const val COMPOSE_RUNTIME = "androidx.compose:compose-runtime:$VERSION"
-    const val FOUNDATION = "androidx.ui:ui-foundation:$VERSION"
-    const val FRAMEWORK = "androidx.ui:ui-framework:$VERSION"
-    const val LAYOUT = "androidx.ui:ui-layout:$VERSION"
-    const val MATERIAL = "androidx.ui:ui-material:$VERSION"
-    const val TOOLING = "androidx.ui:ui-tooling:$VERSION"
+    const val UI_FOUNDATION = "androidx.ui:ui-foundation:$VERSION"
+    const val UI_FRAMEWORK = "androidx.ui:ui-framework:$VERSION"
+    const val UI_LAYOUT = "androidx.ui:ui-layout:$VERSION"
+    const val UI_MATERIAL = "androidx.ui:ui-material:$VERSION"
+    const val UI_TOOLING = "androidx.ui:ui-tooling:$VERSION"
 }
 
 object Lifecycle {

@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.ui
+package com.redridgeapps.ui
 
 import androidx.compose.Composable
 import androidx.compose.state
@@ -15,8 +15,6 @@ import androidx.ui.material.TopAppBar
 import androidx.ui.text.TextStyle
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.sp
-import com.redridgeapps.callrecorder.callutils.CallPlaybackAmbient
-import com.redridgeapps.callrecorder.callutils.CallRecorderAmbient
 
 @Composable
 fun MainUI(appName: String) {

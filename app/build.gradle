@@ -32,22 +32,12 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-
     packagingOptions {
         pickFirst("META-INF/kotlinx-coroutines-core.kotlin_module")
     }
 
     buildFeatures {
         viewBinding true
-        compose true
-    }
-
-    composeOptions {
-        kotlinCompilerVersion "1.3.61-dev-withExperimentalGoogleExtensions-20200129"
-        kotlinCompilerExtensionVersion Compose.VERSION
     }
 }
 
@@ -55,6 +45,9 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     coreLibraryDesugaring AndroidTools.DESUGAR_JDK_LIBS
+
+    implementation project(":repository")
+    implementation project(":ui")
 
     // Kotlin
     implementation Kotlin.STDLIB
@@ -75,14 +68,6 @@ dependencies {
     implementation Jetpack.APPCOMPAT
     implementation Jetpack.CORE_KTX
     implementation Jetpack.FRAGMENT_KTX
-
-    // Compose
-    implementation Compose.COMPOSE_RUNTIME
-    implementation Compose.FOUNDATION
-    implementation Compose.FRAMEWORK
-    implementation Compose.LAYOUT
-    implementation Compose.MATERIAL
-    implementation Compose.TOOLING
 
     // ViewModel and LiveData
     implementation Lifecycle.SERVICE

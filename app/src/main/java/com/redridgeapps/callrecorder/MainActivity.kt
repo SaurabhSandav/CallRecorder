@@ -3,38 +3,34 @@ package com.redridgeapps.callrecorder
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
-import androidx.compose.Providers
 import androidx.ui.core.setContent
-import com.redridgeapps.callrecorder.callutils.*
-import com.redridgeapps.callrecorder.services.CallingService
-import com.redridgeapps.callrecorder.ui.MainUI
+import com.redridgeapps.callrecorder.callutils.CallPlayback
+import com.redridgeapps.callrecorder.callutils.CallRecorder
+import com.redridgeapps.callrecorder.callutils.RecordingAPI
+import com.redridgeapps.ui.CallPlaybackAmbient
+import com.redridgeapps.ui.CallRecorderAmbient
+import com.redridgeapps.ui.MainUI
+import com.redridgeapps.ui.WithAmbients
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        CallingService.startSurveillance(this@MainActivity)
-
         setContent {
             val content = @Composable() {
                 MainUI(getString(R.string.app_name))
             }
 
-            WithAmbients(content)
+            WithAmbients(
+                CallRecorderAmbient provides CallRecorder(
+                    RecordingAPI.AudioRecord,
+                    application,
+                    lifecycle
+                ),
+                CallPlaybackAmbient provides CallPlayback(this),
+                content = content
+            )
         }
-    }
-
-    @Composable
-    private fun WithAmbients(content: @Composable() () -> Unit) {
-        Providers(
-            CallRecorderAmbient provides CallRecorder(
-                RecordingAPI.AudioRecord,
-                application,
-                lifecycle
-            ),
-            CallPlaybackAmbient provides CallPlayback(this@MainActivity),
-            children = content
-        )
     }
 }

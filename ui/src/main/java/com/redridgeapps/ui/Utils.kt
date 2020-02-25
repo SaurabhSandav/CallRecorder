@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.ui
+package com.redridgeapps.ui
 
 import androidx.compose.Composable
 import androidx.compose.onCommit
