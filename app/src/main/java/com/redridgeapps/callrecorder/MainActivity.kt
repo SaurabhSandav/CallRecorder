@@ -7,10 +7,12 @@ import androidx.ui.core.setContent
 import com.redridgeapps.callrecorder.callutils.CallPlayback
 import com.redridgeapps.callrecorder.callutils.CallRecorder
 import com.redridgeapps.callrecorder.callutils.RecordingAPI
+import com.redridgeapps.callrecorder.utils.Systemizer
 import com.redridgeapps.ui.CallPlaybackAmbient
 import com.redridgeapps.ui.CallRecorderAmbient
-import com.redridgeapps.ui.MainUI
+import com.redridgeapps.ui.SystemizerUI
 import com.redridgeapps.ui.WithAmbients
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             val content = @Composable() {
-                MainUI(getString(R.string.app_name))
+                SystemizerUI(Systemizer())
             }
 
             WithAmbients(

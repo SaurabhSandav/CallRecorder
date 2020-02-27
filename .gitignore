@@ -187,3 +187,5 @@ fabric.properties
 .nfs*
 
 # End of https://www.gitignore.io/api/linux,android,androidstudio
+
+Icon/

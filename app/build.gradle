@@ -51,7 +51,7 @@ dependencies {
 
     // Kotlin
     implementation Kotlin.STDLIB
-    implementation Kotlin.COROUTINES
+    implementation Kotlin.COROUTINES_ANDROID
 
     // Testing
     testImplementation JUnit.JUNIT
@@ -76,10 +76,14 @@ dependencies {
     implementation Lifecycle.COMMON_JAVA8
 
     // LeakCanary
-    debugImplementation LeakCanary.ANDROID
+//    debugImplementation LeakCanary.ANDROID
 
     // Timber
     implementation Timber.TIMBER
+
+    // LibSU
+    implementation LibSU.CORE
+    implementation LibSU.IO
 }
 
 task systemAssembleInstall(type: AppSystemizer, dependsOn: ":app:assembleDebug")

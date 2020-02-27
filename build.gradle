@@ -50,13 +50,17 @@ allprojects {
         // KotlinX EAP
         if (Kotlin.enableKotlinXEAP)
             maven { url "https://kotlin.bintray.com/kotlinx" }
+
+        maven { url "https://jitpack.io" }
     }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
         kotlinOptions {
             jvmTarget = "1.8"
             freeCompilerArgs += [
-                    '-progressive'/*,
+                    '-progressive',
+                    '-Xexperimental=kotlinx.coroutines.ExperimentalCoroutinesApi',
+                    '-Xexperimental=kotlinx.coroutines.FlowPreview'/*,
                     '-Xnew-inference'*/
             ]
         }

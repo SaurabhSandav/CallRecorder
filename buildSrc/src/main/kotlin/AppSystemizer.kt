@@ -7,18 +7,6 @@ const val APP_PACKAGE = "com.redridgeapps.callrecorder"
 const val APP_DIR_NAME = "CallRecorder"
 const val MAIN_ACTIVITY = "MainActivity"
 
-const val TMP_DIR = "/sdcard/tmp"
-
-// APK
-const val FRESH_APK = "/outputs/apk/debug/app-debug.apk"
-const val APK_NAME = "$APP_DIR_NAME.apk"
-const val SYSTEM_PRIV_APP = "/system/priv-app"
-const val APK_TARGET_DIR = "$SYSTEM_PRIV_APP/$APP_DIR_NAME"
-
-// Permissions
-const val PERMISSIONS_FILE_NAME = "privapp-permissions-$APP_PACKAGE.xml"
-const val PERMISSIONS_TARGET_DIR = "/system/etc/permissions"
-
 open class AppSystemizer : DefaultTask() {
 
     private val terminalTools = TerminalTools(project.rootDir)
@@ -37,6 +25,7 @@ open class AppSystemizer : DefaultTask() {
         }
 
         runApp()
+
         println(terminalTools.output)
     }
 
@@ -72,7 +61,7 @@ open class AppSystemizer : DefaultTask() {
         // Push APK to tmp and rename to "<app_name>.apk"
         adb("push ${project.buildDir}/$FRESH_APK $TMP_DIR/$APK_NAME")
 
-        // App needs to reside in a separate directory in /system/priv-app
+        // App needs to reside in an individual directory in /system/priv-app
         adbSU("mkdir -p $APK_TARGET_DIR")
 
         // Move APK to its own directory in /system/priv-app
@@ -102,7 +91,6 @@ open class AppSystemizer : DefaultTask() {
         val permissionsList = manifestParser.permissions
             .joinToString("\n") { """        <permission name="$it" />""" }
 
-
         val permissionsText = """
             |<permissions>
             |
@@ -115,7 +103,6 @@ open class AppSystemizer : DefaultTask() {
         """.trimMargin()
 
         File("${project.rootDir}/$PERMISSIONS_FILE_NAME").writeText(permissionsText)
-
     }
 
     private fun runApp() = with(terminalTools) {
@@ -131,3 +118,14 @@ open class AppSystemizer : DefaultTask() {
     }
 }
 
+const val TMP_DIR = "/sdcard/tmp"
+
+// APK
+const val FRESH_APK = "/outputs/apk/debug/app-debug.apk"
+const val APK_NAME = "$APP_DIR_NAME.apk"
+const val SYSTEM_PRIV_APP = "/system/priv-app"
+const val APK_TARGET_DIR = "$SYSTEM_PRIV_APP/$APP_DIR_NAME"
+
+// Permissions
+const val PERMISSIONS_FILE_NAME = "privapp-permissions-$APP_PACKAGE.xml"
+const val PERMISSIONS_TARGET_DIR = "/system/etc/permissions"

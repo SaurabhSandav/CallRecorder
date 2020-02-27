@@ -14,7 +14,8 @@ object Kotlin {
 
     const val GRADLE_PLUGIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:$VERSION"
     const val STDLIB = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$VERSION"
-    const val COROUTINES = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$COROUTINES_VERSION"
+    const val COROUTINES_ANDROID =
+        "org.jetbrains.kotlinx:kotlinx-coroutines-android:$COROUTINES_VERSION"
 
     const val enableKotlinEAP = false
     const val enableKotlinXEAP = false
@@ -85,8 +86,16 @@ object LeakCanary {
 
     const val ANDROID = "com.squareup.leakcanary:leakcanary-android:$VERSION"
 }
+
 object Timber {
     private const val VERSION = "4.7.1"
 
     const val TIMBER = "com.jakewharton.timber:timber:$VERSION"
+}
+
+object LibSU {
+    private const val VERSION = "2.5.1"
+
+    const val CORE = "com.github.topjohnwu.libsu:core:$VERSION"
+    const val IO = "com.github.topjohnwu.libsu:io:$VERSION"
 }
