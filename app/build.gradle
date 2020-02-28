@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'com.github.ben-manes.versions' version "0.27.0"
+    id 'kotlin-kapt'
 }
 
 android {
@@ -68,12 +68,19 @@ dependencies {
     implementation Jetpack.APPCOMPAT
     implementation Jetpack.CORE_KTX
     implementation Jetpack.FRAGMENT_KTX
+    implementation Jetpack.PREFERENCE_KTX
 
     // ViewModel and LiveData
     implementation Lifecycle.SERVICE
     implementation Lifecycle.LIVEDATA_KTX
     implementation Lifecycle.VIEWMODEL_KTX
     implementation Lifecycle.COMMON_JAVA8
+
+    // Dagger
+    implementation Dagger.DAGGER
+    implementation Dagger.ANDROID_SUPPORT
+    kapt Dagger.COMPILER
+    kapt Dagger.ANDROID_PROCESSOR
 
     // LeakCanary
 //    debugImplementation LeakCanary.ANDROID

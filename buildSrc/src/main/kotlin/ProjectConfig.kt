@@ -1,7 +1,7 @@
 @file:Suppress("unused")
 
 object AndroidTools {
-    private const val GRADLE_PLUGIN_VERSION = "4.0.0-alpha09"
+    private const val GRADLE_PLUGIN_VERSION = "4.1.0-alpha01"
     private const val DESUGAR_JDK_LIBS_VERSION = "1.0.4"
 
     const val GRADLE_PLUGIN = "com.android.tools.build:gradle:$GRADLE_PLUGIN_VERSION"
@@ -44,21 +44,23 @@ object Espresso {
 }
 
 object Material {
-    private const val VERSION = "1.2.0-alpha04"
+    private const val VERSION = "1.2.0-alpha05"
 
     const val MATERIAL = "com.google.android.material:material:$VERSION"
 }
 
 object Jetpack {
     private const val ACTIVITY_KTX_VERSION = "1.1.0"
-    private const val APPCOMPAT_VERSION = "1.2.0-alpha01"
-    private const val CORE_KTX_VERSION = "1.2.0-rc01"
-    private const val FRAGMENT_KTX_VERSION = "1.2.0"
+    private const val APPCOMPAT_VERSION = "1.2.0-alpha02"
+    private const val CORE_KTX_VERSION = "1.3.0-alpha01"
+    private const val FRAGMENT_KTX_VERSION = "1.2.2"
+    private const val PREFERENCE_KTX_VERSION = "1.1.0"
 
     const val ACTIVITY_KTX = "androidx.activity:activity-ktx:$ACTIVITY_KTX_VERSION"
     const val APPCOMPAT = "androidx.appcompat:appcompat:$APPCOMPAT_VERSION"
     const val CORE_KTX = "androidx.core:core-ktx:$CORE_KTX_VERSION"
     const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:$FRAGMENT_KTX_VERSION"
+    const val PREFERENCE_KTX = "androidx.preference:preference-ktx:$PREFERENCE_KTX_VERSION"
 }
 
 object Compose {
@@ -79,6 +81,15 @@ object Lifecycle {
     const val LIVEDATA_KTX = "androidx.lifecycle:lifecycle-livedata-ktx:$VERSION"
     const val VIEWMODEL_KTX = "androidx.lifecycle:lifecycle-viewmodel-ktx:$VERSION"
     const val COMMON_JAVA8 = "androidx.lifecycle:lifecycle-common-java8:$VERSION"
+}
+
+object Dagger {
+    private const val VERSION = "2.26"
+
+    const val DAGGER = "com.google.dagger:dagger:$VERSION"
+    const val ANDROID_SUPPORT = "com.google.dagger:dagger-android-support:$VERSION"
+    const val COMPILER = "com.google.dagger:dagger-compiler:$VERSION"
+    const val ANDROID_PROCESSOR = "com.google.dagger:dagger-android-processor:$VERSION"
 }
 
 object LeakCanary {

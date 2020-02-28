@@ -12,9 +12,9 @@ import com.redridgeapps.ui.CallPlaybackAmbient
 import com.redridgeapps.ui.CallRecorderAmbient
 import com.redridgeapps.ui.SystemizerUI
 import com.redridgeapps.ui.WithAmbients
+import javax.inject.Inject
 
-
-class MainActivity : AppCompatActivity() {
+class MainActivity @Inject constructor() : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

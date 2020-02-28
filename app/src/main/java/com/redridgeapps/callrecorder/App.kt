@@ -1,11 +1,21 @@
 package com.redridgeapps.callrecorder
 
 import android.app.Application
+import com.redridgeapps.callrecorder.di.AppComponent
+import com.redridgeapps.callrecorder.di.DaggerAppComponent
 import com.redridgeapps.callrecorder.services.CallingService
 import com.topjohnwu.superuser.Shell
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
 import timber.log.Timber
+import javax.inject.Inject
 
-class App : Application() {
+class App : Application(), HasAndroidInjector {
+
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
+    lateinit var appComponent: AppComponent
 
     init {
         Shell.Config.setFlags(Shell.FLAG_REDIRECT_STDERR)
@@ -16,10 +26,15 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        appComponent = DaggerAppComponent.factory().create(this)
+        appComponent.inject(this)
+
         setupTimber()
 
         CallingService.startSurveillance(this)
     }
+
+    override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
 
     private fun setupTimber() {
         if (BuildConfig.DEBUG)
