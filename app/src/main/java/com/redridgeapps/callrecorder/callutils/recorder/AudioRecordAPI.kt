@@ -3,30 +3,21 @@ package com.redridgeapps.callrecorder.callutils.recorder
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import java.io.BufferedOutputStream
 import java.io.DataOutputStream
+import java.io.File
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 class AudioRecordAPI(
-    savePath: String,
-    private val lifecycle: Lifecycle
+    savePath: File
 ) : Recorder {
 
     private val filePath = "$savePath/voice.pcm"
     private var recorder: AudioRecord? = null
     private var recordingThread: Thread? = null
     private var isRecording = false
-
-    private val observer = object : DefaultLifecycleObserver {
-        override fun onStop(owner: LifecycleOwner) {
-            releaseRecorder()
-        }
-    }
 
     override fun startRecording() {
 
@@ -49,8 +40,6 @@ class AudioRecordAPI(
         recordingThread =
             Thread(Runnable { writeAudioDataToFile(bufferSize) }, "AudioRecorder Thread")
         recordingThread!!.start()
-
-        lifecycle.addObserver(observer)
     }
 
     override fun stopRecording() {
@@ -61,15 +50,11 @@ class AudioRecordAPI(
             recorder = null
             recordingThread = null
         }
-
-        lifecycle.removeObserver(observer)
     }
 
     override fun releaseRecorder() {
         recorder?.release()
         recorder = null
-
-        lifecycle.removeObserver(observer)
     }
 
     private fun writeAudioDataToFile(bufferSize: Int) {

@@ -1,9 +1,11 @@
 package com.redridgeapps.callrecorder.di.modules
 
-import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import com.redridgeapps.callrecorder.App
 import com.redridgeapps.callrecorder.di.modules.android.AndroidComponentBuilder
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.AndroidInjectionModule
@@ -15,11 +17,18 @@ import javax.inject.Singleton
         AndroidComponentBuilder::class
     ]
 )
-object AppModule {
+abstract class AppModule {
 
-    @Provides
+    @Binds
     @Singleton
-    fun provideSharedPreferences(app: Application): SharedPreferences {
-        return PreferenceManager.getDefaultSharedPreferences(app)
+    abstract fun provideContext(app: App): Context
+
+    companion object {
+
+        @Provides
+        @Singleton
+        fun provideSharedPreferences(context: Context): SharedPreferences {
+            return PreferenceManager.getDefaultSharedPreferences(context)
+        }
     }
 }

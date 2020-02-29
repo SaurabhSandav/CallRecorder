@@ -1,6 +1,7 @@
 package com.redridgeapps.callrecorder.di.modules.android
 
 import com.redridgeapps.callrecorder.MainActivity
+import com.redridgeapps.callrecorder.MainActivityModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import javax.inject.Scope
@@ -10,11 +11,16 @@ abstract class AndroidComponentBuilder {
 
     // Activities
 
-    @ActivityScope
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(
+        modules = [
+            ActivityModule::class,
+            MainActivityModule::class
+        ]
+    )
+    @PerActivity
     abstract fun bindMainActivity(): MainActivity
 }
 
 @Scope
 @Retention(AnnotationRetention.RUNTIME)
-annotation class ActivityScope
+annotation class PerActivity

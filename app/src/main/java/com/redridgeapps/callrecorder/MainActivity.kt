@@ -1,20 +1,26 @@
 package com.redridgeapps.callrecorder
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
 import androidx.ui.core.setContent
 import com.redridgeapps.callrecorder.callutils.CallPlayback
 import com.redridgeapps.callrecorder.callutils.CallRecorder
-import com.redridgeapps.callrecorder.callutils.RecordingAPI
-import com.redridgeapps.callrecorder.utils.Systemizer
 import com.redridgeapps.ui.CallPlaybackAmbient
 import com.redridgeapps.ui.CallRecorderAmbient
-import com.redridgeapps.ui.SystemizerUI
+import com.redridgeapps.ui.MainUI
 import com.redridgeapps.ui.WithAmbients
 import dagger.android.AndroidInjection
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var prefs: SharedPreferences
+
+    @Inject
+    lateinit var callRecorder: CallRecorder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -22,15 +28,11 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             val content = @Composable() {
-                SystemizerUI(Systemizer())
+                MainUI("")
             }
 
             WithAmbients(
-                CallRecorderAmbient provides CallRecorder(
-                    RecordingAPI.AudioRecord,
-                    application,
-                    lifecycle
-                ),
+                CallRecorderAmbient provides callRecorder,
                 CallPlaybackAmbient provides CallPlayback(this),
                 content = content
             )

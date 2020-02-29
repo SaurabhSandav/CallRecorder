@@ -13,11 +13,11 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.lifecycle.LifecycleService
+import androidx.preference.PreferenceManager
 import com.redridgeapps.callrecorder.MainActivity
 import com.redridgeapps.callrecorder.R
 import com.redridgeapps.callrecorder.callutils.CallRecorder
 import com.redridgeapps.callrecorder.callutils.CallStateListener
-import com.redridgeapps.callrecorder.callutils.RecordingAPI
 import com.redridgeapps.callrecorder.utils.NOTIFICATION_CALL_SERVICE_ID
 
 class CallingService : LifecycleService() {
@@ -32,7 +32,8 @@ class CallingService : LifecycleService() {
 
         telephonyManager = getSystemService()!!
 
-        val callRecorder = CallRecorder(RecordingAPI.AudioRecord, application, lifecycle)
+        val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val callRecorder = CallRecorder(applicationContext, prefs, lifecycle)
         callStateListener = CallStateListener(callRecorder)
     }
 

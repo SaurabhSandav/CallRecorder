@@ -1,23 +1,14 @@
 package com.redridgeapps.callrecorder.callutils.recorder
 
 import android.media.MediaRecorder
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
+import java.io.File
 
 class MediaRecorderAPI(
-    savePath: String,
-    private val lifecycle: Lifecycle
+    savePath: File
 ) : Recorder {
 
     private val fileName = "$savePath/audiorecordtest.mp3"
     private var recorder: MediaRecorder? = null
-
-    private val observer = object : DefaultLifecycleObserver {
-        override fun onStop(owner: LifecycleOwner) {
-            releaseRecorder()
-        }
-    }
 
     override fun startRecording() {
         recorder = MediaRecorder().apply {
@@ -30,8 +21,6 @@ class MediaRecorderAPI(
             prepare()
             start()
         }
-
-        lifecycle.addObserver(observer)
     }
 
     override fun stopRecording() {
@@ -41,14 +30,10 @@ class MediaRecorderAPI(
             release()
         }
         recorder = null
-
-        lifecycle.removeObserver(observer)
     }
 
     override fun releaseRecorder() {
         recorder?.release()
         recorder = null
-
-        lifecycle.removeObserver(observer)
     }
 }
