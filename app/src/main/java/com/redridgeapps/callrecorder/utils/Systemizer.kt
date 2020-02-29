@@ -3,35 +3,34 @@ package com.redridgeapps.callrecorder.utils
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.redridgeapps.callrecorder.di.modules.android.PerActivity
 import com.redridgeapps.repository.ISystemizer
 import com.topjohnwu.superuser.Shell
 import com.topjohnwu.superuser.io.SuFile
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
 import java.io.File
+import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-@Suppress("FunctionName")
-fun AppCompatActivity.Systemizer(): Systemizer {
-
-    val info = packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS)
-    val permissions = info.requestedPermissions.asList()
-    return Systemizer(packageName, applicationInfo.sourceDir, permissions, cacheDir, lifecycleScope)
-}
-
-class Systemizer(
-    private val packageName: String,
-    private val currentApkLocation: String,
-    private val permissions: List<String>,
-    private val tmpDir: File,
-    private val coroutineScope: CoroutineScope
+@PerActivity
+class Systemizer @Inject constructor(
+    activity: AppCompatActivity
 ) : ISystemizer {
 
+    private val packageName = activity.packageName
+    private val currentApkLocation = activity.applicationInfo.sourceDir
+    private val permissions: List<String> = run {
+        val info =
+            activity.packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS)
+        info.requestedPermissions.asList()
+    }
+    private val tmpDir = activity.cacheDir
+    private val coroutineScope = activity.lifecycleScope
     private val outputChannel = BroadcastChannel<String>(Channel.CONFLATED)
 
     // TODO Implement output viewer

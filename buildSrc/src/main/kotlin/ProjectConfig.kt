@@ -74,6 +74,12 @@ object Compose {
     const val UI_TOOLING = "androidx.ui:ui-tooling:$VERSION"
 }
 
+object ComposeRouter {
+    private const val VERSION = "0.5.1"
+
+    const val COMPOSE_ROUTER = "com.github.zsoltk:compose-router:$VERSION"
+}
+
 object Lifecycle {
     private const val VERSION = "2.2.0"
 
@@ -90,6 +96,12 @@ object Dagger {
     const val ANDROID_SUPPORT = "com.google.dagger:dagger-android-support:$VERSION"
     const val COMPILER = "com.google.dagger:dagger-compiler:$VERSION"
     const val ANDROID_PROCESSOR = "com.google.dagger:dagger-android-processor:$VERSION"
+}
+
+object JavaX {
+    private const val VERSION = "1"
+
+    const val INJECT = "javax.inject:javax.inject:$VERSION"
 }
 
 object LeakCanary {

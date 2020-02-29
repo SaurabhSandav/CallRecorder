@@ -42,6 +42,7 @@ allprojects {
 
         google()
         mavenCentral()
+        maven { url "https://jitpack.io" }
 
         // AGP
         maven { url "https://jetbrains.bintray.com/trove4j" }
@@ -53,8 +54,6 @@ allprojects {
         // KotlinX EAP
         if (Kotlin.enableKotlinXEAP)
             maven { url "https://kotlin.bintray.com/kotlinx" }
-
-        maven { url "https://jitpack.io" }
     }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {

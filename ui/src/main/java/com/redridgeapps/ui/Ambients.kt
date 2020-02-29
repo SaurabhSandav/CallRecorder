@@ -4,11 +4,10 @@ import androidx.compose.Composable
 import androidx.compose.ProvidedValue
 import androidx.compose.Providers
 import androidx.compose.staticAmbientOf
-import com.redridgeapps.repository.ICallPlayback
-import com.redridgeapps.repository.ICallRecorder
+import javax.inject.Provider
 
-val CallRecorderAmbient = staticAmbientOf<ICallRecorder>()
-val CallPlaybackAmbient = staticAmbientOf<ICallPlayback>()
+val UIInitializersAmbient =
+    staticAmbientOf<Map<Class<out UIInitializer>, Provider<UIInitializer>>>()
 
 @Composable
 fun WithAmbients(vararg values: ProvidedValue<*>, content: @Composable() () -> Unit) {

@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.redridgeapps.callrecorder.App
 import com.redridgeapps.callrecorder.di.modules.android.AndroidComponentBuilder
+import com.redridgeapps.callrecorder.di.modules.android.UIInitializerModule
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -14,7 +15,8 @@ import javax.inject.Singleton
 @Module(
     includes = [
         AndroidInjectionModule::class,
-        AndroidComponentBuilder::class
+        AndroidComponentBuilder::class,
+        UIInitializerModule::class
     ]
 )
 abstract class AppModule {

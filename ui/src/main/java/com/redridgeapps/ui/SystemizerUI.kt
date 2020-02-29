@@ -15,6 +15,17 @@ import androidx.ui.text.TextStyle
 import androidx.ui.unit.dp
 import androidx.ui.unit.sp
 import com.redridgeapps.repository.ISystemizer
+import javax.inject.Inject
+
+class SystemizerUIInitializer @Inject constructor(
+    private val systemizer: ISystemizer
+) : UIInitializer {
+
+    @Composable
+    override fun initialize() {
+        SystemizerUI(systemizer)
+    }
+}
 
 @Composable
 fun SystemizerUI(systemizer: ISystemizer) {

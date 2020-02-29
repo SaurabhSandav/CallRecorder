@@ -62,6 +62,12 @@ dependencies {
     implementation Compose.UI_MATERIAL
     implementation Compose.UI_TOOLING
 
+    // compose-router
+    api ComposeRouter.COMPOSE_ROUTER
+
     // LiveData
     implementation Lifecycle.LIVEDATA_KTX
+
+    // JSR305
+    implementation JavaX.INJECT
 }

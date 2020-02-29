@@ -2,6 +2,7 @@ package com.redridgeapps.callrecorder.di.modules.android
 
 import com.redridgeapps.callrecorder.MainActivity
 import com.redridgeapps.callrecorder.MainActivityModule
+import com.redridgeapps.callrecorder.di.modules.RepositoryModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import javax.inject.Scope
@@ -14,7 +15,8 @@ abstract class AndroidComponentBuilder {
     @ContributesAndroidInjector(
         modules = [
             ActivityModule::class,
-            MainActivityModule::class
+            MainActivityModule::class,
+            RepositoryModule::class
         ]
     )
     @PerActivity

@@ -13,38 +13,51 @@ import androidx.ui.material.Button
 import androidx.ui.material.MaterialTheme
 import androidx.ui.material.Scaffold
 import androidx.ui.material.TopAppBar
+import androidx.ui.res.stringResource
 import androidx.ui.text.TextStyle
-import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.sp
+import com.redridgeapps.repository.ICallPlayback
+import com.redridgeapps.repository.ICallRecorder
+import javax.inject.Inject
+
+class MainUIInitializer @Inject constructor(
+    private val callRecorder: ICallRecorder,
+    private val callPlayback: ICallPlayback
+) : UIInitializer {
+
+    @Composable
+    override fun initialize() {
+        MainUI(callRecorder, callPlayback)
+    }
+}
 
 @Composable
-fun MainUI(appName: String) {
+fun MainUI(callRecorder: ICallRecorder, callPlayback: ICallPlayback) {
 
     MaterialTheme {
         val topAppBar = @Composable {
-            TopAppBar(title = @Composable { Text(text = appName) })
+            TopAppBar(title = @Composable { Text(text = stringResource(R.string.app_name)) })
         }
         Scaffold(topAppBar = topAppBar) {
-            ContentMain()
+            ContentMain(callRecorder, callPlayback)
         }
     }
 }
 
 @Composable
-fun ContentMain() {
+fun ContentMain(callRecorder: ICallRecorder, callPlayback: ICallPlayback) {
     Center {
         Column {
-            RecordButton(LayoutFlexible(.5f))
-            PlaybackButton(LayoutFlexible(.5f))
+            RecordButton(LayoutFlexible(.5f), callRecorder)
+            PlaybackButton(LayoutFlexible(.5f), callPlayback)
         }
     }
 }
 
 @Composable
-fun RecordButton(modifier: Modifier = Modifier.None) {
+fun RecordButton(modifier: Modifier = Modifier.None, callRecorder: ICallRecorder) {
 
     var recording by state { false }
-    val callRecorder = CallRecorderAmbient.current
 
     val onClick = {
         recording = !recording
@@ -69,10 +82,9 @@ fun RecordButton(modifier: Modifier = Modifier.None) {
 }
 
 @Composable
-fun PlaybackButton(modifier: Modifier = Modifier.None) {
+fun PlaybackButton(modifier: Modifier = Modifier.None, callPlayback: ICallPlayback) {
 
     var playing by state { false }
-    val callPlayback = CallPlaybackAmbient.current
 
     val onClick = {
         playing = !playing
@@ -93,10 +105,4 @@ fun PlaybackButton(modifier: Modifier = Modifier.None) {
             style = TextStyle(fontSize = 24.sp)
         )
     }
-}
-
-@Preview
-@Composable
-private fun DefaultPreview() {
-    MainUI("App Title")
 }
