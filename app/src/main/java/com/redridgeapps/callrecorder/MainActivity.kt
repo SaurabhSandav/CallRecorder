@@ -12,11 +12,12 @@ import com.redridgeapps.ui.CallPlaybackAmbient
 import com.redridgeapps.ui.CallRecorderAmbient
 import com.redridgeapps.ui.SystemizerUI
 import com.redridgeapps.ui.WithAmbients
-import javax.inject.Inject
+import dagger.android.AndroidInjection
 
-class MainActivity @Inject constructor() : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
 
         setContent {
