@@ -1,6 +1,7 @@
 package com.redridgeapps.ui
 
 import androidx.compose.Composable
+import androidx.compose.onDispose
 import androidx.compose.state
 import androidx.ui.core.Modifier
 import androidx.ui.core.Text
@@ -50,6 +51,8 @@ fun RecordButton(modifier: Modifier = Modifier.None) {
 
         if (recording) callRecorder.startRecording() else callRecorder.stopRecording()
     }
+
+    onDispose { callRecorder.releaseRecorder() }
 
     Button(
         modifier = modifier + LayoutSize.Fill,

@@ -40,4 +40,8 @@ class CallRecorder(
 
         Toast.makeText(application, "Stopped recording", Toast.LENGTH_SHORT).show()
     }
+
+    override fun releaseRecorder() {
+        recorder?.releaseRecorder()
+    }
 }

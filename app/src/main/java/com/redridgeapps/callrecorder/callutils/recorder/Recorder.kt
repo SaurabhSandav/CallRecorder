@@ -5,4 +5,6 @@ interface Recorder {
     fun startRecording()
 
     fun stopRecording()
+
+    fun releaseRecorder()
 }

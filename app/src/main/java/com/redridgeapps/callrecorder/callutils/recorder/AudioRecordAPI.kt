@@ -24,10 +24,7 @@ class AudioRecordAPI(
 
     private val observer = object : DefaultLifecycleObserver {
         override fun onStop(owner: LifecycleOwner) {
-            recorder?.release()
-            recorder = null
-
-            lifecycle.removeObserver(this)
+            releaseRecorder()
         }
     }
 
@@ -57,7 +54,7 @@ class AudioRecordAPI(
     }
 
     override fun stopRecording() {
-        if (null != recorder) {
+        if (recorder != null) {
             isRecording = false
             recorder!!.stop()
             recorder!!.release()
@@ -68,6 +65,12 @@ class AudioRecordAPI(
         lifecycle.removeObserver(observer)
     }
 
+    override fun releaseRecorder() {
+        recorder?.release()
+        recorder = null
+
+        lifecycle.removeObserver(observer)
+    }
 
     private fun writeAudioDataToFile(bufferSize: Int) {
 

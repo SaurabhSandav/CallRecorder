@@ -15,10 +15,7 @@ class MediaRecorderAPI(
 
     private val observer = object : DefaultLifecycleObserver {
         override fun onStop(owner: LifecycleOwner) {
-            recorder?.release()
-            recorder = null
-
-            lifecycle.removeObserver(this)
+            releaseRecorder()
         }
     }
 
@@ -43,6 +40,13 @@ class MediaRecorderAPI(
             reset()
             release()
         }
+        recorder = null
+
+        lifecycle.removeObserver(observer)
+    }
+
+    override fun releaseRecorder() {
+        recorder?.release()
         recorder = null
 
         lifecycle.removeObserver(observer)

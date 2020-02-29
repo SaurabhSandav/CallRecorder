@@ -5,4 +5,6 @@ interface ICallRecorder {
     fun startRecording()
 
     fun stopRecording()
+
+    fun releaseRecorder()
 }
