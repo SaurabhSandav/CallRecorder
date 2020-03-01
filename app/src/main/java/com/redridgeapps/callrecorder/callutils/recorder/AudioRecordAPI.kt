@@ -9,12 +9,13 @@ import java.io.File
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.time.Instant
 
 class AudioRecordAPI(
-    savePath: File
+    private val saveDir: File
 ) : Recorder {
 
-    private val filePath = "$savePath/voice.pcm"
+    private val saveFileExt = ".pcm"
     private var recorder: AudioRecord? = null
     private var recordingThread: Thread? = null
     private var isRecording = false
@@ -59,8 +60,11 @@ class AudioRecordAPI(
 
     private fun writeAudioDataToFile(bufferSize: Int) {
 
+        val fileName = Instant.now().toEpochMilli().toString() + saveFileExt
+        val savePath = File(saveDir, fileName)
+
+        val dos = DataOutputStream(BufferedOutputStream(FileOutputStream(savePath)))
         val shortBuffer = ShortArray(bufferSize / 2)
-        val dos = DataOutputStream(BufferedOutputStream(FileOutputStream(filePath)))
 
         while (isRecording) {
             recorder!!.read(shortBuffer, 0, shortBuffer.size)

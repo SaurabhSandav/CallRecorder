@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.media.AudioManager
 import android.os.Environment
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -25,7 +26,7 @@ class CallRecorder @Inject constructor(
 
     private val am = context.getSystemService<AudioManager>()!!
     private lateinit var recordingAPI: RecordingAPI
-    private lateinit var savePath: File
+    private lateinit var saveDir: File
     private var recorder: Recorder? = null
     private var currentStreamVolume = -1
 
@@ -46,22 +47,24 @@ class CallRecorder @Inject constructor(
 
         val externalStorageVolumes = ContextCompat.getExternalFilesDirs(context, null)
         val primaryExternalStorage = externalStorageVolumes[0]
-        savePath = File(primaryExternalStorage, "CallRecordings")
+        saveDir = File(primaryExternalStorage, "CallRecordings")
 
-        if (savePath.exists())
-            savePath.mkdir()
+        if (saveDir.exists())
+            saveDir.mkdir()
     }
 
     override fun startRecording() {
 
         setup()
 
-        recorder = recordingAPI.init(savePath)
+        recorder = recordingAPI.init(saveDir)
         recorder!!.startRecording()
 
         maximizeVolume()
 
         lifecycle.addObserver(observer)
+
+        Toast.makeText(context, "Started recording", Toast.LENGTH_LONG).show()
     }
 
     override fun stopRecording() {
@@ -70,6 +73,8 @@ class CallRecorder @Inject constructor(
         restoreVolume()
 
         lifecycle.removeObserver(observer)
+
+        Toast.makeText(context, "Stopped recording", Toast.LENGTH_LONG).show()
     }
 
     override fun releaseRecorder() {

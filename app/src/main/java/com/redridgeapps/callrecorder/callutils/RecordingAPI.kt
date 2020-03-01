@@ -6,7 +6,7 @@ import com.redridgeapps.callrecorder.callutils.recorder.Recorder
 import java.io.File
 
 enum class RecordingAPI(
-    val init: (savePath: File) -> Recorder
+    val init: (saveDir: File) -> Recorder
 ) {
     MediaRecorder(::MediaRecorderAPI),
     AudioRecord(::AudioRecordAPI)
