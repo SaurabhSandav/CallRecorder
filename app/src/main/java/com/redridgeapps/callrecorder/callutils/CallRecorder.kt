@@ -4,15 +4,17 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.media.AudioManager
 import android.os.Environment
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import com.redridgeapps.callrecorder.RecordingQueries
 import com.redridgeapps.callrecorder.callutils.recorder.Recorder
 import com.redridgeapps.callrecorder.di.modules.android.PerService
+import com.redridgeapps.callrecorder.utils.CallLogFetcher
 import com.redridgeapps.callrecorder.utils.PREF_RECORDING_API
+import com.redridgeapps.callrecorder.utils.ToastMaker
 import com.redridgeapps.callrecorder.utils.get
 import java.io.File
 import java.time.Instant
@@ -22,7 +24,10 @@ import javax.inject.Inject
 class CallRecorder @Inject constructor(
     private val context: Context,
     private val prefs: SharedPreferences,
-    private val lifecycle: Lifecycle
+    private val lifecycle: Lifecycle,
+    private val toastMaker: ToastMaker,
+    private val callLogFetcher: CallLogFetcher,
+    private val recordingQueries: RecordingQueries
 ) {
 
     private val am = context.getSystemService<AudioManager>()!!
@@ -52,7 +57,7 @@ class CallRecorder @Inject constructor(
         val primaryExternalStorage = externalStorageVolumes[0]
         saveDir = File(primaryExternalStorage, "CallRecordings")
 
-        if (saveDir.exists())
+        if (!saveDir.exists())
             saveDir.mkdir()
     }
 
@@ -61,27 +66,31 @@ class CallRecorder @Inject constructor(
         setup()
 
         recorder = recordingAPI.init(saveDir, prefs)
-        recorder!!.startRecording()
+
+        val fileName = Instant.now().epochSecond
+        recorder!!.startRecording(fileName.toString())
 
         maximizeVolume()
 
         lifecycle.addObserver(observer)
 
-        Toast.makeText(context, "Started recording", Toast.LENGTH_LONG).show()
+        toastMaker.newToast("Started recording").show()
 
         callStartTime = Instant.now()
     }
 
     fun stopRecording() {
-        recorder!!.stopRecording()
+        val savePath = recorder!!.stopRecording()
 
         restoreVolume()
 
         lifecycle.removeObserver(observer)
 
-        Toast.makeText(context, "Stopped recording", Toast.LENGTH_LONG).show()
+        toastMaker.newToast("Stopped recording").show()
 
         callEndTime = Instant.now()
+
+        insertIntoDatabase(savePath)
     }
 
     fun releaseRecorder() {
@@ -99,5 +108,19 @@ class CallRecorder @Inject constructor(
     private fun restoreVolume() {
         am.setStreamVolume(AudioManager.STREAM_VOICE_CALL, currentStreamVolume, 0)
         currentStreamVolume = -1
+    }
+
+    private fun insertIntoDatabase(savePath: String) {
+
+        val callEntry = callLogFetcher.getLastCallEntry() ?: error("No call log Found!")
+
+        recordingQueries.insert(
+            name = callEntry.name,
+            number = callEntry.number,
+            startTime = callStartTime.toEpochMilli(),
+            endTime = callEndTime.toEpochMilli(),
+            callType = callEntry.type,
+            savePath = savePath
+        )
     }
 }

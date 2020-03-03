@@ -6,7 +6,6 @@ import com.redridgeapps.callrecorder.utils.PREF_MEDIA_RECORDER_CHANNELS
 import com.redridgeapps.callrecorder.utils.PREF_MEDIA_RECORDER_SAMPLE_RATE
 import com.redridgeapps.callrecorder.utils.get
 import java.io.File
-import java.time.Instant
 
 class MediaRecorderAPI(
     private val saveDir: File,
@@ -15,11 +14,13 @@ class MediaRecorderAPI(
 
     private val saveFileExt = ".mp3"
     private var recorder: MediaRecorder? = null
+    private var savePath: String? = null
 
-    override fun startRecording() {
+    override fun startRecording(fileName: String) {
 
-        val fileName = Instant.now().toEpochMilli().toString() + saveFileExt
-        val savePath = File(saveDir, fileName)
+        val fileNameWithExt = fileName + saveFileExt
+        val newSavePath = File(saveDir, fileNameWithExt)
+        savePath = newSavePath.absolutePath
 
         val channels = prefs.get(PREF_MEDIA_RECORDER_CHANNELS)
         val sampleRate = prefs.get(PREF_MEDIA_RECORDER_SAMPLE_RATE)
@@ -30,19 +31,21 @@ class MediaRecorderAPI(
             setAudioSamplingRate(sampleRate)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-            setOutputFile(savePath)
+            setOutputFile(newSavePath)
             prepare()
             start()
         }
     }
 
-    override fun stopRecording() {
+    override fun stopRecording(): String {
         recorder?.apply {
             stop()
             reset()
             release()
         }
         recorder = null
+
+        return savePath ?: error("savePath is null")
     }
 
     override fun releaseRecorder() {

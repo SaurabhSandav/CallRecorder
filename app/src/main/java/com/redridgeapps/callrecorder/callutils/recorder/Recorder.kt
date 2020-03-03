@@ -2,9 +2,9 @@ package com.redridgeapps.callrecorder.callutils.recorder
 
 interface Recorder {
 
-    fun startRecording()
+    fun startRecording(fileName: String)
 
-    fun stopRecording()
+    fun stopRecording(): String
 
     fun releaseRecorder()
 }

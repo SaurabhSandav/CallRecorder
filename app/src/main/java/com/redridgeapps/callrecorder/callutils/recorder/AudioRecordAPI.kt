@@ -13,7 +13,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
-import java.time.Instant
 
 class AudioRecordAPI(
     private val saveDir: File,
@@ -24,8 +23,9 @@ class AudioRecordAPI(
     private var recorder: AudioRecord? = null
     private var recordingThread: Thread? = null
     private var isRecording = false
+    private var savePath: String? = null
 
-    override fun startRecording() {
+    override fun startRecording(fileName: String) {
 
         val sampleRate = prefs.get(PREF_AUDIO_RECORD_SAMPLE_RATE)
         val channels = prefs.get(PREF_AUDIO_RECORD_CHANNELS)
@@ -44,11 +44,11 @@ class AudioRecordAPI(
         recorder!!.startRecording()
         isRecording = true
         recordingThread =
-            Thread(Runnable { writeAudioDataToFile(bufferSize) }, "AudioRecorder Thread")
+            Thread(Runnable { writeAudioDataToFile(fileName, bufferSize) }, "AudioRecorder Thread")
         recordingThread!!.start()
     }
 
-    override fun stopRecording() {
+    override fun stopRecording(): String {
         if (recorder != null) {
             isRecording = false
             recorder!!.stop()
@@ -56,6 +56,8 @@ class AudioRecordAPI(
             recorder = null
             recordingThread = null
         }
+
+        return savePath ?: error("savePath is null")
     }
 
     override fun releaseRecorder() {
@@ -63,12 +65,13 @@ class AudioRecordAPI(
         recorder = null
     }
 
-    private fun writeAudioDataToFile(bufferSize: Int) {
+    private fun writeAudioDataToFile(fileName: String, bufferSize: Int) {
 
-        val fileName = Instant.now().toEpochMilli().toString() + saveFileExt
-        val savePath = File(saveDir, fileName)
+        val fileNameWithExt = fileName + saveFileExt
+        val newSavePath = File(saveDir, fileNameWithExt)
+        savePath = newSavePath.absolutePath
 
-        val dos = DataOutputStream(BufferedOutputStream(FileOutputStream(savePath)))
+        val dos = DataOutputStream(BufferedOutputStream(FileOutputStream(newSavePath)))
         val shortBuffer = ShortArray(bufferSize / 2)
 
         while (isRecording) {
