@@ -12,31 +12,28 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.AndroidInjectionModule
-import javax.inject.Singleton
 
 @Module(
     includes = [
         AndroidInjectionModule::class,
         AndroidComponentBuilder::class,
-        UIInitializerModule::class
+        UIInitializerModule::class,
+        DBModule::class
     ]
 )
 abstract class AppModule {
 
     @Binds
-    @Singleton
     abstract fun provideContext(app: App): Context
 
     companion object {
 
         @Provides
-        @Singleton
         fun provideSharedPreferences(context: Context): SharedPreferences {
             return PreferenceManager.getDefaultSharedPreferences(context)
         }
 
         @Provides
-        @Singleton
         fun provideRecordingList(context: Context): List<RecordingItem> {
             return context.getRecordingList()
         }

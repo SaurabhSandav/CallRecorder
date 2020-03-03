@@ -118,3 +118,11 @@ object LibSU {
     const val CORE = "com.github.topjohnwu.libsu:core:$VERSION"
     const val IO = "com.github.topjohnwu.libsu:io:$VERSION"
 }
+
+object SQLDelight {
+    private const val VERSION = "1.2.2"
+
+    const val GRADLE_PLUGIN = "com.squareup.sqldelight:gradle-plugin:$VERSION"
+    const val ANDROID_DRIVER = "com.squareup.sqldelight:android-driver:$VERSION"
+    const val COROUTINES_EXTENSIONS = "com.squareup.sqldelight:coroutines-extensions-jvm:$VERSION"
+}

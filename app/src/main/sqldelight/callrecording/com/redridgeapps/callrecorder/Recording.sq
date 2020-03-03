@@ -1,0 +1,19 @@
+CREATE TABLE IF NOT EXISTS Recording (
+id INTEGER AS Int NOT NULL PRIMARY KEY AUTOINCREMENT,
+name TEXT,
+number TEXT NOT NULL,
+startTime INTEGER NOT NULL,
+endTime INTEGER NOT NULL,
+callType TEXT
+);
+
+insert:
+INSERT OR REPLACE
+INTO Recording (name, number, startTime, endTime, callType)
+VALUES ?;
+
+getAll:
+SELECT * FROM Recording;
+
+deleteWithID:
+DELETE FROM Recording WHERE id = ?;

@@ -5,7 +5,6 @@ import android.telephony.TelephonyManager
 import com.redridgeapps.callrecorder.callutils.CallStateListener.CallStatus.*
 import com.redridgeapps.callrecorder.di.modules.android.PerService
 import timber.log.Timber
-import java.util.*
 import javax.inject.Inject
 
 @PerService
@@ -15,7 +14,6 @@ class CallStateListener @Inject constructor(
 
     private var lastState = TelephonyManager.CALL_STATE_IDLE
     private var isIncoming: Boolean = false
-    private var callStartTime: Date = Date()
 
     override fun onCallStateChanged(state: Int, incomingNumber: String) {
         super.onCallStateChanged(state, incomingNumber)
@@ -54,22 +52,14 @@ class CallStateListener @Inject constructor(
             else -> OutgoingCallEnded
         }
         TelephonyManager.CALL_STATE_OFFHOOK -> {
-            if (lastState != TelephonyManager.CALL_STATE_RINGING) {
-                isIncoming = false
-                callStartTime = Date()
-
-                OutgoingCallStarted
-            } else {
-                isIncoming = true
-                callStartTime = Date()
-
-                IncomingCallAnswered
+            isIncoming = (lastState == TelephonyManager.CALL_STATE_RINGING)
+            when {
+                isIncoming -> IncomingCallAnswered
+                else -> OutgoingCallStarted
             }
         }
         TelephonyManager.CALL_STATE_RINGING -> {
             isIncoming = true
-            callStartTime = Date()
-
             IncomingCallReceived
         }
         else -> error("Unexpected error!")

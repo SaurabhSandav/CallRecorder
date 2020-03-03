@@ -1,8 +1,12 @@
 package com.redridgeapps.callrecorder.callutils.recorder
 
-import android.media.AudioFormat
+import android.content.SharedPreferences
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import com.redridgeapps.callrecorder.utils.PREF_AUDIO_RECORD_AUDIO_ENCODING
+import com.redridgeapps.callrecorder.utils.PREF_AUDIO_RECORD_CHANNELS
+import com.redridgeapps.callrecorder.utils.PREF_AUDIO_RECORD_SAMPLE_RATE
+import com.redridgeapps.callrecorder.utils.get
 import java.io.BufferedOutputStream
 import java.io.DataOutputStream
 import java.io.File
@@ -12,7 +16,8 @@ import java.nio.ByteOrder
 import java.time.Instant
 
 class AudioRecordAPI(
-    private val saveDir: File
+    private val saveDir: File,
+    private val prefs: SharedPreferences
 ) : Recorder {
 
     private val saveFileExt = ".pcm"
@@ -22,17 +27,17 @@ class AudioRecordAPI(
 
     override fun startRecording() {
 
-        val bufferSize = AudioRecord.getMinBufferSize(
-            RECORDER_SAMPLE_RATE,
-            RECORDER_CHANNELS,
-            RECORDER_AUDIO_ENCODING
-        )
+        val sampleRate = prefs.get(PREF_AUDIO_RECORD_SAMPLE_RATE)
+        val channels = prefs.get(PREF_AUDIO_RECORD_CHANNELS)
+        val audioEncoding = prefs.get(PREF_AUDIO_RECORD_AUDIO_ENCODING)
+
+        val bufferSize = AudioRecord.getMinBufferSize(sampleRate, channels, audioEncoding)
 
         recorder = AudioRecord(
             MediaRecorder.AudioSource.VOICE_CALL,
-            RECORDER_SAMPLE_RATE,
-            RECORDER_CHANNELS,
-            RECORDER_AUDIO_ENCODING,
+            sampleRate,
+            channels,
+            audioEncoding,
             bufferSize
         )
 
@@ -86,7 +91,3 @@ class AudioRecordAPI(
         return resultBytes
     }
 }
-
-private const val RECORDER_SAMPLE_RATE = 44_100
-private const val RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_MONO
-private const val RECORDER_AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT

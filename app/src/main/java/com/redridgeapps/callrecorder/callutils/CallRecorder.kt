@@ -13,7 +13,9 @@ import androidx.lifecycle.LifecycleOwner
 import com.redridgeapps.callrecorder.callutils.recorder.Recorder
 import com.redridgeapps.callrecorder.di.modules.android.PerService
 import com.redridgeapps.callrecorder.utils.PREF_RECORDING_API
+import com.redridgeapps.callrecorder.utils.get
 import java.io.File
+import java.time.Instant
 import javax.inject.Inject
 
 @PerService
@@ -29,6 +31,9 @@ class CallRecorder @Inject constructor(
     private var recorder: Recorder? = null
     private var currentStreamVolume = -1
 
+    private lateinit var callStartTime: Instant
+    private lateinit var callEndTime: Instant
+
     private val observer = object : DefaultLifecycleObserver {
         override fun onStop(owner: LifecycleOwner) {
             releaseRecorder()
@@ -37,8 +42,7 @@ class CallRecorder @Inject constructor(
 
     private fun setup() {
 
-        val recordingAPIStr =
-            prefs.getString(PREF_RECORDING_API, null) ?: RecordingAPI.AudioRecord.toString()
+        val recordingAPIStr = prefs.get(PREF_RECORDING_API)
         recordingAPI = RecordingAPI.valueOf(recordingAPIStr)
 
         if (Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED)
@@ -56,7 +60,7 @@ class CallRecorder @Inject constructor(
 
         setup()
 
-        recorder = recordingAPI.init(saveDir)
+        recorder = recordingAPI.init(saveDir, prefs)
         recorder!!.startRecording()
 
         maximizeVolume()
@@ -64,6 +68,8 @@ class CallRecorder @Inject constructor(
         lifecycle.addObserver(observer)
 
         Toast.makeText(context, "Started recording", Toast.LENGTH_LONG).show()
+
+        callStartTime = Instant.now()
     }
 
     fun stopRecording() {
@@ -74,6 +80,8 @@ class CallRecorder @Inject constructor(
         lifecycle.removeObserver(observer)
 
         Toast.makeText(context, "Stopped recording", Toast.LENGTH_LONG).show()
+
+        callEndTime = Instant.now()
     }
 
     fun releaseRecorder() {
