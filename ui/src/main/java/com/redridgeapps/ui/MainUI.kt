@@ -1,10 +1,14 @@
 package com.redridgeapps.ui
 
 import androidx.compose.Composable
+import androidx.compose.state
 import androidx.ui.core.Text
 import androidx.ui.foundation.AdapterList
+import androidx.ui.foundation.Dialog
+import androidx.ui.graphics.Color
 import androidx.ui.layout.LayoutSize
 import androidx.ui.material.*
+import androidx.ui.material.surface.Surface
 import androidx.ui.res.stringResource
 import com.redridgeapps.repository.RecordingItem
 import com.redridgeapps.ui.router.NavigateTo
@@ -55,7 +59,20 @@ fun MainUI(list: List<RecordingItem>) {
 
 @Composable
 fun ContentMain(list: List<RecordingItem>) {
-    AdapterList(data = list, modifier = LayoutSize.Fill) {
-        ListItem(it.name, secondaryText = it.type)
+
+    var selectedItemId by state { -1 }
+
+    if (selectedItemId > -1) {
+        Dialog(onCloseRequest = { selectedItemId = -1 }) {
+            Surface(color = Color.White) {
+                ListItem("Delete")
+            }
+        }
+    }
+
+    AdapterList(data = list, modifier = LayoutSize.Fill) { recordingItem ->
+        ListItem(recordingItem.name, secondaryText = recordingItem.number) {
+            selectedItemId = recordingItem.id
+        }
     }
 }

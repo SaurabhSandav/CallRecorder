@@ -45,8 +45,10 @@ abstract class AppModule {
                 .executeAsList()
                 .map {
                     RecordingItem(
+                        id = it.id,
                         name = it.name,
-                        type = it.number
+                        number = it.number,
+                        type = it.callType
                     )
                 }
         }

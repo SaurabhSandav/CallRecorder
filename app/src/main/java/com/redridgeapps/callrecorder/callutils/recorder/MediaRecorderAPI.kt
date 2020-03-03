@@ -12,7 +12,7 @@ class MediaRecorderAPI(
     private val prefs: SharedPreferences
 ) : Recorder {
 
-    private val saveFileExt = ".mp3"
+    private val saveFileExt = ".m4a"
     private var recorder: MediaRecorder? = null
     private var savePath: String? = null
 
