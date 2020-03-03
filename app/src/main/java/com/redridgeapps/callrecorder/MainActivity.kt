@@ -1,17 +1,16 @@
 package com.redridgeapps.callrecorder
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
 import androidx.ui.core.setContent
-import com.github.zsoltk.compose.backpress.AmbientBackPressHandler
-import com.github.zsoltk.compose.backpress.BackPressHandler
-import com.redridgeapps.callrecorder.callutils.CallRecorder
-import com.redridgeapps.ui.SplashUIInitializer
-import com.redridgeapps.ui.UIInitializer
-import com.redridgeapps.ui.UIInitializersAmbient
-import com.redridgeapps.ui.WithAmbients
+import com.redridgeapps.repository.ISystemizer
+import com.redridgeapps.ui.Root
+import com.redridgeapps.ui.router.BackPressHandler
+import com.redridgeapps.ui.utils.BackPressHandlerAmbient
+import com.redridgeapps.ui.utils.UIInitializer
+import com.redridgeapps.ui.utils.UIInitializersAmbient
+import com.redridgeapps.ui.utils.WithAmbients
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 import javax.inject.Provider
@@ -19,10 +18,7 @@ import javax.inject.Provider
 class MainActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var prefs: SharedPreferences
-
-    @Inject
-    lateinit var callRecorder: CallRecorder
+    lateinit var iSystemizer: ISystemizer
 
     @Inject
     lateinit var uiInitializers: Map<Class<out UIInitializer>, @JvmSuppressWildcards Provider<UIInitializer>>
@@ -35,12 +31,12 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             val content = @Composable() {
-                UIInitializer.get(SplashUIInitializer::class).initialize()
+                Root(iSystemizer)
             }
 
             WithAmbients(
-                AmbientBackPressHandler provides backPressHandler,
                 UIInitializersAmbient provides uiInitializers,
+                BackPressHandlerAmbient provides backPressHandler,
                 content = content
             )
         }

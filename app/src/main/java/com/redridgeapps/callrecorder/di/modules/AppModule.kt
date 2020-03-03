@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.redridgeapps.callrecorder.App
+import com.redridgeapps.callrecorder.callutils.getRecordingList
 import com.redridgeapps.callrecorder.di.modules.android.AndroidComponentBuilder
 import com.redridgeapps.callrecorder.di.modules.android.UIInitializerModule
+import com.redridgeapps.repository.RecordingItem
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -31,6 +33,12 @@ abstract class AppModule {
         @Singleton
         fun provideSharedPreferences(context: Context): SharedPreferences {
             return PreferenceManager.getDefaultSharedPreferences(context)
+        }
+
+        @Provides
+        @Singleton
+        fun provideRecordingList(context: Context): List<RecordingItem> {
+            return context.getRecordingList()
         }
     }
 }

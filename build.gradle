@@ -5,8 +5,10 @@ buildscript {
     repositories {
 
         // Compose from AOSP
-        maven { url "/run/media/saurabh/Extra/Projects/Support/out/ui/build/support_repo/" }
-        maven { url "/run/media/saurabh/Extra/Projects/Support/prebuilts/androidx/external/" }
+        if (Compose.fromAOSP) {
+            maven { url "/run/media/saurabh/Extra/Projects/Support/out/ui/build/support_repo/" }
+            maven { url "/run/media/saurabh/Extra/Projects/Support/prebuilts/androidx/external/" }
+        }
 
         google()
         mavenCentral()
@@ -37,8 +39,10 @@ allprojects {
     repositories {
 
         // Compose from AOSP
-        maven { url "/run/media/saurabh/Extra/Projects/Support/out/ui/build/support_repo/" }
-        maven { url "/run/media/saurabh/Extra/Projects/Support/prebuilts/androidx/external/" }
+        if (Compose.fromAOSP) {
+            maven { url "/run/media/saurabh/Extra/Projects/Support/out/ui/build/support_repo/" }
+            maven { url "/run/media/saurabh/Extra/Projects/Support/prebuilts/androidx/external/" }
+        }
 
         google()
         mavenCentral()
@@ -54,6 +58,8 @@ allprojects {
         // KotlinX EAP
         if (Kotlin.enableKotlinXEAP)
             maven { url "https://kotlin.bintray.com/kotlinx" }
+
+        maven { url "https://kotlin.bintray.com/kotlinx" }
     }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {

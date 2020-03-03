@@ -1,108 +1,61 @@
 package com.redridgeapps.ui
 
 import androidx.compose.Composable
-import androidx.compose.onDispose
-import androidx.compose.state
-import androidx.ui.core.Modifier
 import androidx.ui.core.Text
-import androidx.ui.graphics.Color
-import androidx.ui.layout.Center
-import androidx.ui.layout.Column
+import androidx.ui.foundation.AdapterList
 import androidx.ui.layout.LayoutSize
-import androidx.ui.material.Button
-import androidx.ui.material.MaterialTheme
-import androidx.ui.material.Scaffold
-import androidx.ui.material.TopAppBar
+import androidx.ui.material.*
 import androidx.ui.res.stringResource
-import androidx.ui.text.TextStyle
-import androidx.ui.unit.sp
-import com.redridgeapps.repository.ICallPlayback
-import com.redridgeapps.repository.ICallRecorder
+import com.redridgeapps.repository.RecordingItem
+import com.redridgeapps.ui.router.NavigateTo
+import com.redridgeapps.ui.router.Route
+import com.redridgeapps.ui.utils.BackStackAmbient
+import com.redridgeapps.ui.utils.UIInitializer
 import javax.inject.Inject
 
+object MainRoute : Route {
+
+    override val uiInitializer = MainUIInitializer::class.java
+}
+
 class MainUIInitializer @Inject constructor(
-    private val callRecorder: ICallRecorder,
-    private val callPlayback: ICallPlayback
+    private val list: List<RecordingItem>
 ) : UIInitializer {
 
     @Composable
     override fun initialize() {
-        MainUI(callRecorder, callPlayback)
+        MainUI(list)
     }
 }
 
 @Composable
-fun MainUI(callRecorder: ICallRecorder, callPlayback: ICallPlayback) {
+fun MainUI(list: List<RecordingItem>) {
 
-    MaterialTheme {
-        val topAppBar = @Composable {
-            TopAppBar(title = @Composable { Text(text = stringResource(R.string.app_name)) })
-        }
-        Scaffold(topAppBar = topAppBar) {
-            ContentMain(callRecorder, callPlayback)
-        }
-    }
-}
+    val topAppBar = @Composable {
 
-@Composable
-fun ContentMain(callRecorder: ICallRecorder, callPlayback: ICallPlayback) {
-    Center {
-        Column {
-            RecordButton(LayoutFlexible(.5f), callRecorder)
-            PlaybackButton(LayoutFlexible(.5f), callPlayback)
-        }
-    }
-}
+        TopAppBar(
+            title = @Composable { Text(text = stringResource(R.string.app_name)) },
+            actionData = listOf("Systemization"),
+            action = @Composable {
 
-@Composable
-fun RecordButton(modifier: Modifier = Modifier.None, callRecorder: ICallRecorder) {
+                val backStack = BackStackAmbient.current
+                val onClick = { NavigateTo(backStack, SystemizerRoute) }
 
-    var recording by state { false }
-
-    val onClick = {
-        recording = !recording
-
-        if (recording) callRecorder.startRecording() else callRecorder.stopRecording()
-    }
-
-    onDispose { callRecorder.releaseRecorder() }
-
-    Button(
-        modifier = modifier + LayoutSize.Fill,
-        onClick = onClick,
-        backgroundColor = if (recording) Color.Red else Color.Cyan
-    ) {
-        val buttonTitle = if (recording) "Stop Recording" else "Start Recording"
-
-        Text(
-            text = buttonTitle,
-            style = TextStyle(fontSize = 24.sp)
+                TextButton(contentColor = MaterialTheme.colors().onPrimary, onClick = onClick) {
+                    Text(text = it)
+                }
+            }
         )
     }
+
+    Scaffold(topAppBar = topAppBar) {
+        ContentMain(list)
+    }
 }
 
 @Composable
-fun PlaybackButton(modifier: Modifier = Modifier.None, callPlayback: ICallPlayback) {
-
-    var playing by state { false }
-
-    val onClick = {
-        playing = !playing
-
-        val onComplete = { playing = false }
-        if (playing) callPlayback.startPlaying(onComplete) else callPlayback.stopPlaying()
-    }
-
-    Button(
-        modifier = modifier + LayoutSize.Fill,
-        onClick = onClick,
-        backgroundColor = if (playing) Color.Red else Color.Green
-    ) {
-        val buttonTitle = if (playing) "Stop Playback" else "Start Playback"
-
-        Text(
-            text = buttonTitle,
-            style = TextStyle(fontSize = 24.sp)
-        )
+fun ContentMain(list: List<RecordingItem>) {
+    AdapterList(data = list, modifier = LayoutSize.Fill) {
+        ListItem(it.name, secondaryText = it.type)
     }
 }

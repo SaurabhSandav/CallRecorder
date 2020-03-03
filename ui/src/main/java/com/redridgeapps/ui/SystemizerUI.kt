@@ -15,7 +15,14 @@ import androidx.ui.text.TextStyle
 import androidx.ui.unit.dp
 import androidx.ui.unit.sp
 import com.redridgeapps.repository.ISystemizer
+import com.redridgeapps.ui.router.Route
+import com.redridgeapps.ui.utils.UIInitializer
 import javax.inject.Inject
+
+object SystemizerRoute : Route {
+
+    override val uiInitializer = SystemizerUIInitializer::class.java
+}
 
 class SystemizerUIInitializer @Inject constructor(
     private val systemizer: ISystemizer
@@ -29,16 +36,14 @@ class SystemizerUIInitializer @Inject constructor(
 
 @Composable
 fun SystemizerUI(systemizer: ISystemizer) {
-    MaterialTheme {
-        Column(DrawBackground(MaterialTheme.colors().primary) + LayoutPadding(20.dp)) {
-            val isSystemized = state { checkIsSystemized(systemizer) }
+    Column(DrawBackground(MaterialTheme.colors().primary) + LayoutPadding(20.dp)) {
+        val isSystemized = state { checkIsSystemized(systemizer) }
 
-            ExplanationText(isSystemized)
+        ExplanationText(isSystemized)
 
-            Spacer(LayoutHeight(40.dp))
+        Spacer(LayoutHeight(40.dp))
 
-            SystemizationButton(systemizer, isSystemized)
-        }
+        SystemizationButton(systemizer, isSystemized)
     }
 }
 

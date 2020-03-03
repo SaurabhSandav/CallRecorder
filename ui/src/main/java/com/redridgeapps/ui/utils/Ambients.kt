@@ -1,13 +1,16 @@
-package com.redridgeapps.ui
+package com.redridgeapps.ui.utils
 
-import androidx.compose.Composable
-import androidx.compose.ProvidedValue
-import androidx.compose.Providers
-import androidx.compose.staticAmbientOf
+import androidx.compose.*
+import com.redridgeapps.ui.router.BackPressHandler
+import com.redridgeapps.ui.router.BackStack
 import javax.inject.Provider
 
 val UIInitializersAmbient =
     staticAmbientOf<Map<Class<out UIInitializer>, Provider<UIInitializer>>>()
+
+val BackStackAmbient = ambientOf<BackStack>()
+
+val BackPressHandlerAmbient = ambientOf<BackPressHandler>()
 
 @Composable
 fun WithAmbients(vararg values: ProvidedValue<*>, content: @Composable() () -> Unit) {

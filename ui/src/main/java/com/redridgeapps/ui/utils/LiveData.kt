@@ -1,4 +1,4 @@
-package com.redridgeapps.ui
+package com.redridgeapps.ui.utils
 
 import androidx.compose.Composable
 import androidx.compose.onCommit

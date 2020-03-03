@@ -72,12 +72,8 @@ object Compose {
     const val UI_LAYOUT = "androidx.ui:ui-layout:$VERSION"
     const val UI_MATERIAL = "androidx.ui:ui-material:$VERSION"
     const val UI_TOOLING = "androidx.ui:ui-tooling:$VERSION"
-}
 
-object ComposeRouter {
-    private const val VERSION = "0.5.1"
-
-    const val COMPOSE_ROUTER = "com.github.zsoltk:compose-router:$VERSION"
+    const val fromAOSP = false
 }
 
 object Lifecycle {
