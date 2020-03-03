@@ -13,28 +13,27 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.lifecycle.LifecycleService
-import androidx.preference.PreferenceManager
 import com.redridgeapps.callrecorder.MainActivity
 import com.redridgeapps.callrecorder.R
-import com.redridgeapps.callrecorder.callutils.CallRecorder
 import com.redridgeapps.callrecorder.callutils.CallStateListener
 import com.redridgeapps.callrecorder.utils.NOTIFICATION_CALL_SERVICE_ID
+import dagger.android.AndroidInjection
+import javax.inject.Inject
 
 class CallingService : LifecycleService() {
 
+    @Inject
+    lateinit var callStateListener: CallStateListener
+
     private lateinit var telephonyManager: TelephonyManager
-    private lateinit var callStateListener: CallStateListener
 
     override fun onCreate() {
+        AndroidInjection.inject(this)
         super.onCreate()
 
         createNotification()
 
         telephonyManager = getSystemService()!!
-
-        val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val callRecorder = CallRecorder(applicationContext, prefs, lifecycle)
-        callStateListener = CallStateListener(callRecorder)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

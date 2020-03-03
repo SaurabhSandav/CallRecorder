@@ -3,10 +3,13 @@ package com.redridgeapps.callrecorder.callutils
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import com.redridgeapps.callrecorder.callutils.CallStateListener.CallStatus.*
+import com.redridgeapps.callrecorder.di.modules.android.PerService
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 
-class CallStateListener(
+@PerService
+class CallStateListener @Inject constructor(
     private val callRecorder: CallRecorder
 ) : PhoneStateListener() {
 

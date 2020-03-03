@@ -11,18 +11,17 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.redridgeapps.callrecorder.callutils.recorder.Recorder
-import com.redridgeapps.callrecorder.di.modules.android.PerActivity
+import com.redridgeapps.callrecorder.di.modules.android.PerService
 import com.redridgeapps.callrecorder.utils.PREF_RECORDING_API
-import com.redridgeapps.repository.ICallRecorder
 import java.io.File
 import javax.inject.Inject
 
-@PerActivity
+@PerService
 class CallRecorder @Inject constructor(
     private val context: Context,
     private val prefs: SharedPreferences,
     private val lifecycle: Lifecycle
-) : ICallRecorder {
+) {
 
     private val am = context.getSystemService<AudioManager>()!!
     private lateinit var recordingAPI: RecordingAPI
@@ -53,7 +52,7 @@ class CallRecorder @Inject constructor(
             saveDir.mkdir()
     }
 
-    override fun startRecording() {
+    fun startRecording() {
 
         setup()
 
@@ -67,7 +66,7 @@ class CallRecorder @Inject constructor(
         Toast.makeText(context, "Started recording", Toast.LENGTH_LONG).show()
     }
 
-    override fun stopRecording() {
+    fun stopRecording() {
         recorder!!.stopRecording()
 
         restoreVolume()
@@ -77,7 +76,7 @@ class CallRecorder @Inject constructor(
         Toast.makeText(context, "Stopped recording", Toast.LENGTH_LONG).show()
     }
 
-    override fun releaseRecorder() {
+    fun releaseRecorder() {
         recorder?.releaseRecorder()
 
         lifecycle.removeObserver(observer)
