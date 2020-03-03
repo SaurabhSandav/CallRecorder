@@ -2,7 +2,11 @@ package com.redridgeapps.ui.router
 
 class BackPressHandler {
 
-    var backStack: BackStack? = null
+    private var onBackPressHandler: (() -> Boolean)? = null
 
-    fun handle(): Boolean = backStack?.pop() ?: false
+    fun handle(): Boolean = onBackPressHandler?.invoke() ?: false
+
+    fun addOnBackPressHandler(block: () -> Boolean) {
+        onBackPressHandler = block
+    }
 }

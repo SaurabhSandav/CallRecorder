@@ -9,7 +9,8 @@ import com.redridgeapps.ui.utils.WithAmbients
 @Composable
 fun NewBackStack(rootRoute: Route): BackStack {
     val backStack = BackStack(rootRoute)
-    BackPressHandlerAmbient.current.backStack = backStack
+
+    BackPressHandlerAmbient.current.addOnBackPressHandler { backStack.pop() }
 
     return backStack
 }
