@@ -15,8 +15,8 @@ import androidx.ui.text.TextStyle
 import androidx.ui.unit.dp
 import androidx.ui.unit.sp
 import com.redridgeapps.repository.ISystemizer
-import com.redridgeapps.ui.router.Route
-import com.redridgeapps.ui.utils.UIInitializer
+import com.redridgeapps.ui.initialization.Route
+import com.redridgeapps.ui.initialization.UIInitializer
 import javax.inject.Inject
 
 object SystemizerRoute : Route {

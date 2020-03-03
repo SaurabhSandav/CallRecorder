@@ -76,6 +76,12 @@ object Compose {
     const val fromAOSP = false
 }
 
+object ComposeRouter {
+    private const val VERSION = "0.5.1"
+
+    const val COMPOSE_ROUTER = "com.github.zsoltk:compose-router:$VERSION"
+}
+
 object Lifecycle {
     private const val VERSION = "2.2.0"
 

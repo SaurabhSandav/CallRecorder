@@ -4,11 +4,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
 import androidx.ui.core.setContent
+import com.github.zsoltk.compose.backpress.AmbientBackPressHandler
+import com.github.zsoltk.compose.backpress.BackPressHandler
 import com.redridgeapps.repository.ISystemizer
 import com.redridgeapps.ui.Root
-import com.redridgeapps.ui.router.BackPressHandler
-import com.redridgeapps.ui.utils.BackPressHandlerAmbient
-import com.redridgeapps.ui.utils.UIInitializer
+import com.redridgeapps.ui.initialization.UIInitializer
 import com.redridgeapps.ui.utils.UIInitializersAmbient
 import com.redridgeapps.ui.utils.WithAmbients
 import dagger.android.AndroidInjection
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
             WithAmbients(
                 UIInitializersAmbient provides uiInitializers,
-                BackPressHandlerAmbient provides backPressHandler,
+                AmbientBackPressHandler provides backPressHandler,
                 content = content
             )
         }

@@ -1,6 +1,7 @@
-package com.redridgeapps.ui.utils
+package com.redridgeapps.ui.initialization
 
 import androidx.compose.Composable
+import com.redridgeapps.ui.utils.UIInitializersAmbient
 
 interface UIInitializer {
 

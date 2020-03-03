@@ -2,7 +2,7 @@ package com.redridgeapps.callrecorder.di.modules.android
 
 import com.redridgeapps.ui.MainUIInitializer
 import com.redridgeapps.ui.SystemizerUIInitializer
-import com.redridgeapps.ui.utils.UIInitializer
+import com.redridgeapps.ui.initialization.UIInitializer
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module

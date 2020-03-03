@@ -11,10 +11,9 @@ import androidx.ui.material.*
 import androidx.ui.material.surface.Surface
 import androidx.ui.res.stringResource
 import com.redridgeapps.repository.RecordingItem
-import com.redridgeapps.ui.router.NavigateTo
-import com.redridgeapps.ui.router.Route
+import com.redridgeapps.ui.initialization.Route
+import com.redridgeapps.ui.initialization.UIInitializer
 import com.redridgeapps.ui.utils.BackStackAmbient
-import com.redridgeapps.ui.utils.UIInitializer
 import javax.inject.Inject
 
 object MainRoute : Route {
@@ -43,7 +42,7 @@ fun MainUI(list: List<RecordingItem>) {
             action = @Composable {
 
                 val backStack = BackStackAmbient.current
-                val onClick = { NavigateTo(backStack, SystemizerRoute) }
+                val onClick = { backStack.push(SystemizerRoute) }
 
                 TextButton(contentColor = MaterialTheme.colors().onPrimary, onClick = onClick) {
                     Text(text = it)
