@@ -25,10 +25,10 @@ abstract class UIInitializerModule {
     @Binds
     @IntoMap
     @UIInitializerKey(MainUIInitializer::class)
-    abstract fun bindMainUIInitializer(activity: MainUIInitializer): UIInitializer
+    abstract fun bindMainUIInitializer(initializer: MainUIInitializer): UIInitializer
 
     @Binds
     @IntoMap
     @UIInitializerKey(SystemizerUIInitializer::class)
-    abstract fun bindSystemizerUIInitializer(activity: SystemizerUIInitializer): UIInitializer
+    abstract fun bindSystemizerUIInitializer(initializer: SystemizerUIInitializer): UIInitializer
 }

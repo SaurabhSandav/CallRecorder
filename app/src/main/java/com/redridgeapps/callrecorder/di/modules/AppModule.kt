@@ -8,6 +8,7 @@ import com.redridgeapps.callrecorder.App
 import com.redridgeapps.callrecorder.RecordingQueries
 import com.redridgeapps.callrecorder.di.modules.android.AndroidComponentBuilder
 import com.redridgeapps.callrecorder.di.modules.android.UIInitializerModule
+import com.redridgeapps.callrecorder.di.modules.android.ViewModelModule
 import com.redridgeapps.repository.RecordingItem
 import dagger.Binds
 import dagger.Module
@@ -19,6 +20,7 @@ import dagger.android.AndroidInjectionModule
         AndroidInjectionModule::class,
         AndroidComponentBuilder::class,
         UIInitializerModule::class,
+        ViewModelModule::class,
         DBModule::class
     ]
 )

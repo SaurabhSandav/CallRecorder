@@ -71,4 +71,7 @@ dependencies {
 
     // JSR305
     implementation JavaX.INJECT
+
+    // Timber
+    implementation Timber.TIMBER
 }

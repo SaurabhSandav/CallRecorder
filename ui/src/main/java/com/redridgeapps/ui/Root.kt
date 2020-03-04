@@ -5,6 +5,7 @@ import androidx.ui.material.MaterialTheme
 import com.koduok.compose.navigation.Router
 import com.redridgeapps.repository.ISystemizer
 import com.redridgeapps.ui.initialization.InitializeUI
+import com.redridgeapps.ui.utils.WithViewModelStores
 
 @Composable
 fun Root(systemizer: ISystemizer) {
@@ -15,8 +16,10 @@ fun Root(systemizer: ISystemizer) {
     }
 
     MaterialTheme {
-        Router(start = destination) { currentRoute ->
-            InitializeUI(currentRoute.data.uiInitializer)
+        WithViewModelStores {
+            Router(start = destination) { currentRoute ->
+                InitializeUI(currentRoute.data.uiInitializer)
+            }
         }
     }
 }
