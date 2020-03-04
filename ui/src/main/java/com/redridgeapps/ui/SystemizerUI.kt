@@ -14,9 +14,10 @@ import androidx.ui.material.MaterialTheme
 import androidx.ui.text.TextStyle
 import androidx.ui.unit.dp
 import androidx.ui.unit.sp
-import com.redridgeapps.repository.ISystemizer
+import com.redridgeapps.repository.viewmodel.ISystemizerViewModel
 import com.redridgeapps.ui.initialization.Destination
 import com.redridgeapps.ui.initialization.UIInitializer
+import com.redridgeapps.ui.utils.fetchViewModel
 import javax.inject.Inject
 
 object SystemizerDestination : Destination {
@@ -24,26 +25,25 @@ object SystemizerDestination : Destination {
     override val uiInitializer = SystemizerUIInitializer::class.java
 }
 
-class SystemizerUIInitializer @Inject constructor(
-    private val systemizer: ISystemizer
-) : UIInitializer {
+class SystemizerUIInitializer @Inject constructor() : UIInitializer {
 
     @Composable
     override fun initialize() {
-        SystemizerUI(systemizer)
+        val viewModel = fetchViewModel<ISystemizerViewModel>()
+        SystemizerUI(viewModel)
     }
 }
 
 @Composable
-fun SystemizerUI(systemizer: ISystemizer) {
+fun SystemizerUI(viewModel: ISystemizerViewModel) {
     Column(DrawBackground(MaterialTheme.colors().primary) + LayoutPadding(20.dp)) {
-        val isSystemized = state { checkIsSystemized(systemizer) }
+        val isSystemized = state { checkIsSystemized(viewModel) }
 
         ExplanationText(isSystemized)
 
         Spacer(LayoutHeight(40.dp))
 
-        SystemizationButton(systemizer, isSystemized)
+        SystemizationButton(viewModel, isSystemized)
     }
 }
 
@@ -58,7 +58,10 @@ fun ColumnScope.ExplanationText(isSystemized: MutableState<Boolean>) {
 }
 
 @Composable
-fun ColumnScope.SystemizationButton(systemizer: ISystemizer, isSystemized: MutableState<Boolean>) {
+fun ColumnScope.SystemizationButton(
+    viewModel: ISystemizerViewModel,
+    isSystemized: MutableState<Boolean>
+) {
 
     val backgroundColor: Color
     val text: String
@@ -76,13 +79,13 @@ fun ColumnScope.SystemizationButton(systemizer: ISystemizer, isSystemized: Mutab
     val onClick = {
         inProgress = true
         if (!isSystemized.value) {
-            systemizer.systemize {
-                isSystemized.value = checkIsSystemized(systemizer)
+            viewModel.systemize {
+                isSystemized.value = checkIsSystemized(viewModel)
                 inProgress = false
             }
         } else {
-            systemizer.unSystemize {
-                isSystemized.value = checkIsSystemized(systemizer)
+            viewModel.unSystemize {
+                isSystemized.value = checkIsSystemized(viewModel)
                 inProgress = false
             }
         }
@@ -99,4 +102,4 @@ fun ColumnScope.SystemizationButton(systemizer: ISystemizer, isSystemized: Mutab
     }
 }
 
-fun checkIsSystemized(systemizer: ISystemizer) = systemizer.isAppSystemized()
+fun checkIsSystemized(viewModel: ISystemizerViewModel) = viewModel.isAppSystemized()

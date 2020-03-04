@@ -8,7 +8,6 @@ import com.koduok.compose.navigation.core.Route
 import com.koduok.compose.navigation.core.backStackController
 import com.redridgeapps.repository.viewmodel.ViewModelMarker
 import com.redridgeapps.repository.viewmodel.utils.IComposeViewModelStores
-import com.redridgeapps.repository.viewmodel.utils.IViewModelFetcher
 import timber.log.Timber
 
 @Composable
@@ -19,6 +18,24 @@ fun WithViewModelStores(block: @Composable() () -> Unit) {
     backStackController.addListener(backStackListener)
 
     block()
+}
+
+@Composable
+inline fun <reified T : ViewModelMarker> fetchViewModel(): T {
+    val viewModelFetcher = ViewModelFetcherAmbient.current
+    val key = getViewModelKey()
+    return viewModelFetcher.fetch(key, T::class)
+}
+
+@Composable
+fun getViewModelKey(): String {
+    val backStack = BackStackAmbient.current
+    val currentRoute = backStack.current
+    return createViewModelStoreKey(currentRoute)
+}
+
+fun createViewModelStoreKey(route: Route<*>): String {
+    return route.key.toString() + "_" + route.index
 }
 
 class ViewModelStoreBackStackListener(
@@ -36,10 +53,10 @@ class ViewModelStoreBackStackListener(
             val added = newSnapshot.minus(oldSnapshot).onlySingleOrNull()
 
             if (removed != null)
-                composeViewModelStores.removeViewModelStore(removed.key.toString())
+                composeViewModelStores.removeViewModelStore(createViewModelStoreKey(removed))
 
             if (added != null)
-                composeViewModelStores.addViewModelStore(added.key.toString())
+                composeViewModelStores.addViewModelStore(createViewModelStoreKey(added))
 
             oldSnapshot = newSnapshot
 
@@ -51,17 +68,4 @@ class ViewModelStoreBackStackListener(
         size > 1 -> error("Can only handle single element BackStack changes")
         else -> singleOrNull()
     }
-}
-
-@Composable
-inline fun <reified T : ViewModelMarker> IViewModelFetcher.fetch(): T {
-    val key = getViewModelKey()
-    return fetch(key, T::class)
-}
-
-@Composable
-fun getViewModelKey(): String {
-    val backStack = BackStackAmbient.current
-    val currentDestination = backStack.current
-    return currentDestination.key.toString() + "_" + currentDestination.index
 }

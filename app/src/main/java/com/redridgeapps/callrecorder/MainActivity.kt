@@ -6,9 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
 import androidx.ui.core.setContent
 import com.koduok.compose.navigation.core.backStackController
+import com.redridgeapps.callrecorder.utils.Systemizer
 import com.redridgeapps.callrecorder.viewmodel.utils.ComposeViewModelFetcher
 import com.redridgeapps.callrecorder.viewmodel.utils.ComposeViewModelStores
-import com.redridgeapps.repository.ISystemizer
 import com.redridgeapps.ui.Root
 import com.redridgeapps.ui.initialization.UIInitializer
 import com.redridgeapps.ui.utils.ComposeViewModelStoresAmbient
@@ -22,7 +22,7 @@ import javax.inject.Provider
 class MainActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var iSystemizer: ISystemizer
+    lateinit var systemizer: Systemizer
 
     @Inject
     lateinit var uiInitializers: Map<Class<out UIInitializer>, @JvmSuppressWildcards Provider<UIInitializer>>
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             val content = @Composable() {
-                Root(iSystemizer)
+                Root(systemizer.isAppSystemized())
             }
 
             WithAmbients(

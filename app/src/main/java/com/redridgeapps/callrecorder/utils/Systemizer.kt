@@ -1,61 +1,41 @@
 package com.redridgeapps.callrecorder.utils
 
+import android.content.Context
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import com.redridgeapps.callrecorder.di.modules.android.PerActivity
-import com.redridgeapps.repository.ISystemizer
 import com.topjohnwu.superuser.Shell
 import com.topjohnwu.superuser.io.SuFile
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-@PerActivity
 class Systemizer @Inject constructor(
-    activity: AppCompatActivity
-) : ISystemizer {
+    context: Context
+) {
 
-    private val packageName = activity.packageName
-    private val currentApkLocation = activity.applicationInfo.sourceDir
+    private val packageName = context.packageName
+    private val currentApkLocation = context.applicationInfo.sourceDir
     private val permissions: List<String> = run {
         val info =
-            activity.packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS)
+            context.packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS)
         info.requestedPermissions.asList()
     }
-    private val tmpDir = activity.cacheDir
-    private val coroutineScope = activity.lifecycleScope
+    private val tmpDir = context.cacheDir
     private val outputChannel = BroadcastChannel<String>(Channel.CONFLATED)
 
     // TODO Implement output viewer
     val outputFlow = outputChannel.asFlow()
 
     // TODO Update value automatically on change
-    override fun isAppSystemized(): Boolean =
+    fun isAppSystemized(): Boolean =
         SuFile("/system/priv-app/CallRecorder/CallRecorder.apk").exists() &&
                 SuFile("/system/etc/permissions/privapp-permissions-$packageName.xml").exists()
 
-    override fun systemize(onComplete: () -> Unit) {
-        coroutineScope.launch {
-            systemizeS()
-            onComplete()
-        }
-    }
-
-    override fun unSystemize(onComplete: () -> Unit) {
-        coroutineScope.launch {
-            unSystemizeS()
-            onComplete()
-        }
-    }
-
-    private suspend fun systemizeS() {
+    suspend fun systemize() {
         if (isAppSystemized()) return
 
         withWritableSystem {
@@ -64,7 +44,7 @@ class Systemizer @Inject constructor(
         }
     }
 
-    private suspend fun unSystemizeS() {
+    suspend fun unSystemize() {
         if (!isAppSystemized()) return
 
         withWritableSystem {
