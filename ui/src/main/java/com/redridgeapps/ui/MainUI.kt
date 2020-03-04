@@ -10,13 +10,13 @@ import androidx.ui.layout.LayoutSize
 import androidx.ui.material.*
 import androidx.ui.material.surface.Surface
 import androidx.ui.res.stringResource
+import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.repository.RecordingItem
-import com.redridgeapps.ui.initialization.Route
+import com.redridgeapps.ui.initialization.Destination
 import com.redridgeapps.ui.initialization.UIInitializer
-import com.redridgeapps.ui.utils.BackStackAmbient
 import javax.inject.Inject
 
-object MainRoute : Route {
+object MainDestination : Destination {
 
     override val uiInitializer = MainUIInitializer::class.java
 }
@@ -42,7 +42,7 @@ fun MainUI(list: List<RecordingItem>) {
             action = @Composable {
 
                 val backStack = BackStackAmbient.current
-                val onClick = { backStack.push(SystemizerRoute) }
+                val onClick = { backStack.push(SystemizerDestination) }
 
                 TextButton(contentColor = MaterialTheme.colors().onPrimary, onClick = onClick) {
                     Text(text = it)

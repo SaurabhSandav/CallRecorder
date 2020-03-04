@@ -1,6 +1,6 @@
 package com.redridgeapps.ui.initialization
 
-interface Route {
+interface Destination {
 
     val uiInitializer: Class<out UIInitializer>
 }

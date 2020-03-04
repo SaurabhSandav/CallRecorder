@@ -9,16 +9,13 @@ object AndroidTools {
 }
 
 object Kotlin {
-    private const val VERSION = "1.3.61"
+    private const val VERSION = "1.3.70"
     private const val COROUTINES_VERSION = "1.3.3"
 
     const val GRADLE_PLUGIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:$VERSION"
     const val STDLIB = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$VERSION"
     const val COROUTINES_ANDROID =
         "org.jetbrains.kotlinx:kotlinx-coroutines-android:$COROUTINES_VERSION"
-
-    const val enableKotlinEAP = false
-    const val enableKotlinXEAP = false
 }
 
 object JUnit {
@@ -76,10 +73,11 @@ object Compose {
     const val fromAOSP = false
 }
 
-object ComposeRouter {
-    private const val VERSION = "0.5.1"
+object ComposeNavigation {
+    private const val VERSION = "0.1.1"
 
-    const val COMPOSE_ROUTER = "com.github.zsoltk:compose-router:$VERSION"
+    const val CORE = "com.github.mvarnagiris.compose-navigation:core:$VERSION"
+    const val NAVIGATION = "com.github.mvarnagiris.compose-navigation:navigation:$VERSION"
 }
 
 object Lifecycle {

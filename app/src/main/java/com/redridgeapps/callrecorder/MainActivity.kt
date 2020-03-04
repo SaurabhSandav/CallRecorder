@@ -4,8 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
 import androidx.ui.core.setContent
-import com.github.zsoltk.compose.backpress.AmbientBackPressHandler
-import com.github.zsoltk.compose.backpress.BackPressHandler
+import com.koduok.compose.navigation.core.backStackController
 import com.redridgeapps.repository.ISystemizer
 import com.redridgeapps.ui.Root
 import com.redridgeapps.ui.initialization.UIInitializer
@@ -23,8 +22,6 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var uiInitializers: Map<Class<out UIInitializer>, @JvmSuppressWildcards Provider<UIInitializer>>
 
-    private val backPressHandler = BackPressHandler()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
@@ -36,15 +33,13 @@ class MainActivity : AppCompatActivity() {
 
             WithAmbients(
                 UIInitializersAmbient provides uiInitializers,
-                AmbientBackPressHandler provides backPressHandler,
                 content = content
             )
         }
     }
 
     override fun onBackPressed() {
-        if (!backPressHandler.handle()) {
+        if (!backStackController.pop())
             super.onBackPressed()
-        }
     }
 }

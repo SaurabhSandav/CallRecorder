@@ -62,8 +62,9 @@ dependencies {
     implementation Compose.UI_MATERIAL
     implementation Compose.UI_TOOLING
 
-    // compose-router
-    api ComposeRouter.COMPOSE_ROUTER
+    // compose-navigation
+    api ComposeNavigation.CORE
+    implementation ComposeNavigation.NAVIGATION
 
     // LiveData
     implementation Lifecycle.LIVEDATA_KTX
