@@ -4,9 +4,13 @@ import android.content.Context
 import android.content.pm.PackageManager
 import com.topjohnwu.superuser.Shell
 import com.topjohnwu.superuser.io.SuFile
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -25,15 +29,14 @@ class Systemizer @Inject constructor(
         info.requestedPermissions.asList()
     }
     private val tmpDir = context.cacheDir
-    private val outputChannel = BroadcastChannel<String>(Channel.CONFLATED)
+    private val outputChannel = BroadcastChannel<String>(CONFLATED)
+    private val reCheckAppSystemizedChannel = BroadcastChannel<Unit>(CONFLATED)
 
     // TODO Implement output viewer
     val outputFlow = outputChannel.asFlow()
-
-    // TODO Update value automatically on change
-    fun isAppSystemized(): Boolean =
-        SuFile("/system/priv-app/CallRecorder/CallRecorder.apk").exists() &&
-                SuFile("/system/etc/permissions/privapp-permissions-$packageName.xml").exists()
+    val isAppSystemizedFlow = reCheckAppSystemizedChannel.asFlow()
+        .onStart { emit(Unit) }
+        .map { isAppSystemized() }
 
     suspend fun systemize() {
         if (isAppSystemized()) return
@@ -42,6 +45,8 @@ class Systemizer @Inject constructor(
             installAPK(currentApkLocation)
             installPermissions(permissions, tmpDir)
         }
+
+        reCheckAppSystemizedChannel.send(Unit)
     }
 
     suspend fun unSystemize() {
@@ -58,6 +63,13 @@ class Systemizer @Inject constructor(
             // Delete permissions file
             su("rm $PERMISSIONS_TARGET_DIR/$permissionFileName")
         }
+
+        reCheckAppSystemizedChannel.send(Unit)
+    }
+
+    private suspend fun isAppSystemized(): Boolean = withContext(Dispatchers.IO) {
+        return@withContext SuFile("/system/priv-app/CallRecorder/CallRecorder.apk").exists() &&
+                SuFile("/system/etc/permissions/privapp-permissions-$packageName.xml").exists()
     }
 
     private suspend fun withWritableSystem(block: suspend () -> Unit) {

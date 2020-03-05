@@ -4,14 +4,13 @@ import androidx.compose.Composable
 import androidx.compose.onCommit
 import androidx.compose.remember
 import androidx.compose.state
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
+import com.redridgeapps.repository.ILiveData
 
 @Composable
-fun <T : Any> LiveData<T>.latestValue(): T? {
+fun <T : Any> ILiveData<T>.latestValue(): T? {
 
     var result by state { value }
-    val observer = remember { Observer<T> { result = it } }
+    val observer = remember { { newValue: T -> result = newValue } }
 
     onCommit(this) {
         observeForever(observer)

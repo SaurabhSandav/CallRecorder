@@ -1,7 +1,6 @@
 package com.redridgeapps.ui
 
 import androidx.compose.Composable
-import androidx.compose.MutableState
 import androidx.compose.state
 import androidx.ui.core.Alignment
 import androidx.ui.core.Text
@@ -18,6 +17,7 @@ import com.redridgeapps.repository.viewmodel.ISystemizerViewModel
 import com.redridgeapps.ui.initialization.Destination
 import com.redridgeapps.ui.initialization.UIInitializer
 import com.redridgeapps.ui.utils.fetchViewModel
+import com.redridgeapps.ui.utils.latestValue
 import javax.inject.Inject
 
 object SystemizerDestination : Destination {
@@ -37,19 +37,22 @@ class SystemizerUIInitializer @Inject constructor() : UIInitializer {
 @Composable
 fun SystemizerUI(viewModel: ISystemizerViewModel) {
     Column(DrawBackground(MaterialTheme.colors().primary) + LayoutPadding(20.dp)) {
-        val isSystemized = state { checkIsSystemized(viewModel) }
+        val isSystemized = viewModel.isAppSystemized.latestValue()
 
-        ExplanationText(isSystemized)
+        if (isSystemized != null) {
 
-        Spacer(LayoutHeight(40.dp))
+            ExplanationText(isSystemized)
 
-        SystemizationButton(viewModel, isSystemized)
+            Spacer(LayoutHeight(40.dp))
+
+            SystemizationButton(viewModel, isSystemized)
+        }
     }
 }
 
 @Composable
-fun ColumnScope.ExplanationText(isSystemized: MutableState<Boolean>) {
-    val text = if (isSystemized.value) "App is Systemized."
+fun ColumnScope.ExplanationText(isSystemized: Boolean) {
+    val text = if (isSystemized) "App is Systemized."
     else "App is not a system app. Call Recording only works with System apps."
 
     Container(LayoutFlexible(0.8F), alignment = Alignment.Center) {
@@ -60,7 +63,7 @@ fun ColumnScope.ExplanationText(isSystemized: MutableState<Boolean>) {
 @Composable
 fun ColumnScope.SystemizationButton(
     viewModel: ISystemizerViewModel,
-    isSystemized: MutableState<Boolean>
+    isSystemized: Boolean
 ) {
 
     val backgroundColor: Color
@@ -68,7 +71,7 @@ fun ColumnScope.SystemizationButton(
 
     var inProgress by state { false }
 
-    if (isSystemized.value) {
+    if (isSystemized) {
         backgroundColor = Color.Red
         text = "Unsystemize"
     } else {
@@ -78,16 +81,10 @@ fun ColumnScope.SystemizationButton(
 
     val onClick = {
         inProgress = true
-        if (!isSystemized.value) {
-            viewModel.systemize {
-                isSystemized.value = checkIsSystemized(viewModel)
-                inProgress = false
-            }
+        if (!isSystemized) {
+            viewModel.systemize { inProgress = false }
         } else {
-            viewModel.unSystemize {
-                isSystemized.value = checkIsSystemized(viewModel)
-                inProgress = false
-            }
+            viewModel.unSystemize { inProgress = false }
         }
     }
 
@@ -101,5 +98,3 @@ fun ColumnScope.SystemizationButton(
         }
     }
 }
-
-fun checkIsSystemized(viewModel: ISystemizerViewModel) = viewModel.isAppSystemized()
