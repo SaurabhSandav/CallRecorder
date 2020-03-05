@@ -2,7 +2,7 @@ package com.redridgeapps.repository.uimodel
 
 interface ISystemizerUIModel {
 
-    var isInitialized: Boolean
+    var refreshing: Boolean
 
     var isAppSystemized: Boolean
 }

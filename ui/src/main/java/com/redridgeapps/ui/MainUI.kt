@@ -28,6 +28,7 @@ object MainDestination : Destination {
 
 @Model
 class MainUIModel(
+    override var refreshing: Boolean = true,
     override var recordingList: List<RecordingItem> = listOf()
 ) : IMainUIModel
 
@@ -38,12 +39,12 @@ class MainUIInitializer @Inject constructor() : UIInitializer {
         val viewModel = fetchViewModel<IMainViewModel>()
         val model = MainUIModel()
         viewModel.setModel(model)
-        MainUI(model)
+        MainUI(viewModel, model)
     }
 }
 
 @Composable
-fun MainUI(model: MainUIModel) {
+fun MainUI(viewModel: IMainViewModel, model: MainUIModel) {
 
     val topAppBar = @Composable {
 
@@ -63,24 +64,27 @@ fun MainUI(model: MainUIModel) {
     }
 
     Scaffold(topAppBar = topAppBar) {
-        ContentMain(model)
+        ContentMain(viewModel, model)
     }
 }
 
 @Composable
-private fun ContentMain(model: MainUIModel) {
+private fun ContentMain(viewModel: IMainViewModel, model: MainUIModel) {
 
     var selectedItemId by state { -1 }
 
     if (selectedItemId > -1) {
         Dialog(onCloseRequest = { selectedItemId = -1 }) {
             Surface(color = Color.White) {
-                ListItem("Delete")
+                ListItem("Delete") {
+                    viewModel.deleteRecording(selectedItemId)
+                    selectedItemId = -1
+                }
             }
         }
     }
 
-    if (model.recordingList.isNotEmpty()) {
+    if (!model.refreshing) {
         AdapterList(data = model.recordingList, modifier = LayoutSize.Fill) { recordingItem ->
             ListItem(recordingItem.name, secondaryText = recordingItem.number) {
                 selectedItemId = recordingItem.id

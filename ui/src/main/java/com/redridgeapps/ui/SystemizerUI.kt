@@ -27,7 +27,7 @@ object SystemizerDestination : Destination {
 
 @Model
 class SystemizerUIModel(
-    override var isInitialized: Boolean = false,
+    override var refreshing: Boolean = false,
     override var isAppSystemized: Boolean = false
 ) : ISystemizerUIModel
 
@@ -48,7 +48,7 @@ fun SystemizerUI(
     model: SystemizerUIModel
 ) {
     Container(DrawBackground(MaterialTheme.colors().primary) + LayoutPadding(20.dp)) {
-        if (!model.isInitialized)
+        if (!model.refreshing)
             IsNotInitialized()
         else
             IsInitialized(viewModel, model)

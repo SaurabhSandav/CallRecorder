@@ -20,4 +20,8 @@ class Recordings @Inject constructor(private val recordingQueries: RecordingQuer
             )
         }.asFlow().mapToList(Dispatchers.IO)
     }
+
+    fun deleteRecording(recordingId: Int) {
+        recordingQueries.deleteWithID(recordingId)
+    }
 }

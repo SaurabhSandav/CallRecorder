@@ -20,7 +20,15 @@ class MainViewModel @Inject constructor(
         model = newModel
 
         recordings.getRecordingList()
-            .onEach { model.recordingList = it }
+            .onEach {
+                model.recordingList = it
+                model.refreshing = false
+            }
             .launchIn(viewModelScope)
+    }
+
+    override fun deleteRecording(recordingId: Int) {
+        model.refreshing = true
+        recordings.deleteRecording(recordingId)
     }
 }
