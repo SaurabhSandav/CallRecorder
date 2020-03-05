@@ -1,12 +1,12 @@
 package com.redridgeapps.repository.viewmodel
 
-import com.redridgeapps.repository.ILiveData
+import com.redridgeapps.repository.uimodel.ISystemizerUIModel
 
 interface ISystemizerViewModel : ViewModelMarker {
 
-    val isAppSystemized: ILiveData<Boolean>
+    fun setModel(newModel: ISystemizerUIModel)
 
-    fun systemize(onComplete: () -> Unit)
+    fun systemize()
 
-    fun unSystemize(onComplete: () -> Unit)
+    fun unSystemize()
 }

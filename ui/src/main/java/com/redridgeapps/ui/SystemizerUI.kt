@@ -1,7 +1,7 @@
 package com.redridgeapps.ui
 
 import androidx.compose.Composable
-import androidx.compose.state
+import androidx.compose.Model
 import androidx.ui.core.Alignment
 import androidx.ui.core.Text
 import androidx.ui.foundation.DrawBackground
@@ -13,11 +13,11 @@ import androidx.ui.material.MaterialTheme
 import androidx.ui.text.TextStyle
 import androidx.ui.unit.dp
 import androidx.ui.unit.sp
+import com.redridgeapps.repository.uimodel.ISystemizerUIModel
 import com.redridgeapps.repository.viewmodel.ISystemizerViewModel
 import com.redridgeapps.ui.initialization.Destination
 import com.redridgeapps.ui.initialization.UIInitializer
 import com.redridgeapps.ui.utils.fetchViewModel
-import com.redridgeapps.ui.utils.latestValue
 import javax.inject.Inject
 
 object SystemizerDestination : Destination {
@@ -25,34 +25,57 @@ object SystemizerDestination : Destination {
     override val uiInitializer = SystemizerUIInitializer::class.java
 }
 
+@Model
+class SystemizerUIModel(
+    override var isInitialized: Boolean = false,
+    override var isAppSystemized: Boolean = false
+) : ISystemizerUIModel
+
 class SystemizerUIInitializer @Inject constructor() : UIInitializer {
 
     @Composable
     override fun initialize() {
         val viewModel = fetchViewModel<ISystemizerViewModel>()
-        SystemizerUI(viewModel)
+        val model = SystemizerUIModel()
+        viewModel.setModel(model)
+        SystemizerUI(viewModel, model)
     }
 }
 
 @Composable
-fun SystemizerUI(viewModel: ISystemizerViewModel) {
-    Column(DrawBackground(MaterialTheme.colors().primary) + LayoutPadding(20.dp)) {
-        val isSystemized = viewModel.isAppSystemized.latestValue()
-
-        if (isSystemized != null) {
-
-            ExplanationText(isSystemized)
-
-            Spacer(LayoutHeight(40.dp))
-
-            SystemizationButton(viewModel, isSystemized)
-        }
+fun SystemizerUI(
+    viewModel: ISystemizerViewModel,
+    model: SystemizerUIModel
+) {
+    Container(DrawBackground(MaterialTheme.colors().primary) + LayoutPadding(20.dp)) {
+        if (!model.isInitialized)
+            IsNotInitialized()
+        else
+            IsInitialized(viewModel, model)
     }
 }
 
 @Composable
-fun ColumnScope.ExplanationText(isSystemized: Boolean) {
-    val text = if (isSystemized) "App is Systemized."
+private fun IsNotInitialized() {
+    Center {
+        CircularProgressIndicator(MaterialTheme.colors().secondary)
+    }
+}
+
+@Composable
+private fun IsInitialized(viewModel: ISystemizerViewModel, model: SystemizerUIModel) {
+    Column {
+        ExplanationText(model)
+
+        Spacer(LayoutHeight(40.dp))
+
+        SystemizationButton(viewModel, model)
+    }
+}
+
+@Composable
+fun ColumnScope.ExplanationText(model: SystemizerUIModel) {
+    val text = if (model.isAppSystemized) "App is Systemized."
     else "App is not a system app. Call Recording only works with System apps."
 
     Container(LayoutFlexible(0.8F), alignment = Alignment.Center) {
@@ -63,15 +86,13 @@ fun ColumnScope.ExplanationText(isSystemized: Boolean) {
 @Composable
 fun ColumnScope.SystemizationButton(
     viewModel: ISystemizerViewModel,
-    isSystemized: Boolean
+    model: SystemizerUIModel
 ) {
 
     val backgroundColor: Color
     val text: String
 
-    var inProgress by state { false }
-
-    if (isSystemized) {
+    if (model.isAppSystemized) {
         backgroundColor = Color.Red
         text = "Unsystemize"
     } else {
@@ -80,21 +101,16 @@ fun ColumnScope.SystemizationButton(
     }
 
     val onClick = {
-        inProgress = true
-        if (!isSystemized) {
-            viewModel.systemize { inProgress = false }
+        if (!model.isAppSystemized) {
+            viewModel.systemize()
         } else {
-            viewModel.unSystemize { inProgress = false }
+            viewModel.unSystemize()
         }
     }
 
     Container(LayoutFlexible(0.2F) + LayoutWidth.Fill, alignment = Alignment.Center) {
-        if (!inProgress) {
-            Button(LayoutWidth.Fill, backgroundColor = backgroundColor, onClick = onClick) {
-                Text(text = text, style = TextStyle(fontSize = 25.sp))
-            }
-        } else {
-            CircularProgressIndicator(MaterialTheme.colors().secondary)
+        Button(LayoutWidth.Fill, backgroundColor = backgroundColor, onClick = onClick) {
+            Text(text = text, style = TextStyle(fontSize = 25.sp))
         }
     }
 }
