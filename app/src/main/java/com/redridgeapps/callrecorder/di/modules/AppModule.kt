@@ -5,11 +5,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.redridgeapps.callrecorder.App
-import com.redridgeapps.callrecorder.RecordingQueries
 import com.redridgeapps.callrecorder.di.modules.android.AndroidComponentBuilder
 import com.redridgeapps.callrecorder.di.modules.android.UIInitializerModule
 import com.redridgeapps.callrecorder.di.modules.android.ViewModelModule
-import com.redridgeapps.repository.RecordingItem
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -39,20 +37,6 @@ abstract class AppModule {
         @Provides
         fun provideContentResolver(context: Context): ContentResolver {
             return context.contentResolver
-        }
-
-        @Provides
-        fun provideRecordingList(recordingQueries: RecordingQueries): List<RecordingItem> {
-            return recordingQueries.getAll()
-                .executeAsList()
-                .map {
-                    RecordingItem(
-                        id = it.id,
-                        name = it.name,
-                        number = it.number,
-                        type = it.callType
-                    )
-                }
         }
     }
 }

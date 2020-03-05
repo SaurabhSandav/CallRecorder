@@ -1,19 +1,24 @@
 package com.redridgeapps.ui
 
 import androidx.compose.Composable
+import androidx.compose.Model
 import androidx.compose.state
 import androidx.ui.core.Text
 import androidx.ui.foundation.AdapterList
 import androidx.ui.foundation.Dialog
 import androidx.ui.graphics.Color
+import androidx.ui.layout.Center
 import androidx.ui.layout.LayoutSize
 import androidx.ui.material.*
 import androidx.ui.material.surface.Surface
 import androidx.ui.res.stringResource
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.repository.RecordingItem
+import com.redridgeapps.repository.uimodel.IMainUIModel
+import com.redridgeapps.repository.viewmodel.IMainViewModel
 import com.redridgeapps.ui.initialization.Destination
 import com.redridgeapps.ui.initialization.UIInitializer
+import com.redridgeapps.ui.utils.fetchViewModel
 import javax.inject.Inject
 
 object MainDestination : Destination {
@@ -21,18 +26,24 @@ object MainDestination : Destination {
     override val uiInitializer = MainUIInitializer::class.java
 }
 
-class MainUIInitializer @Inject constructor(
-    private val list: List<RecordingItem>
-) : UIInitializer {
+@Model
+class MainUIModel(
+    override var recordingList: List<RecordingItem> = listOf()
+) : IMainUIModel
+
+class MainUIInitializer @Inject constructor() : UIInitializer {
 
     @Composable
     override fun initialize() {
-        MainUI(list)
+        val viewModel = fetchViewModel<IMainViewModel>()
+        val model = MainUIModel()
+        viewModel.setModel(model)
+        MainUI(model)
     }
 }
 
 @Composable
-fun MainUI(list: List<RecordingItem>) {
+fun MainUI(model: MainUIModel) {
 
     val topAppBar = @Composable {
 
@@ -52,12 +63,12 @@ fun MainUI(list: List<RecordingItem>) {
     }
 
     Scaffold(topAppBar = topAppBar) {
-        ContentMain(list)
+        ContentMain(model)
     }
 }
 
 @Composable
-fun ContentMain(list: List<RecordingItem>) {
+private fun ContentMain(model: MainUIModel) {
 
     var selectedItemId by state { -1 }
 
@@ -69,9 +80,15 @@ fun ContentMain(list: List<RecordingItem>) {
         }
     }
 
-    AdapterList(data = list, modifier = LayoutSize.Fill) { recordingItem ->
-        ListItem(recordingItem.name, secondaryText = recordingItem.number) {
-            selectedItemId = recordingItem.id
+    if (model.recordingList.isNotEmpty()) {
+        AdapterList(data = model.recordingList, modifier = LayoutSize.Fill) { recordingItem ->
+            ListItem(recordingItem.name, secondaryText = recordingItem.number) {
+                selectedItemId = recordingItem.id
+            }
+        }
+    } else {
+        Center {
+            CircularProgressIndicator()
         }
     }
 }

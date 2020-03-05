@@ -1,3 +1,8 @@
 package com.redridgeapps.repository.viewmodel
 
-interface IMainViewModel : ViewModelMarker
+import com.redridgeapps.repository.uimodel.IMainUIModel
+
+interface IMainViewModel : ViewModelMarker {
+
+    fun setModel(newModel: IMainUIModel)
+}
