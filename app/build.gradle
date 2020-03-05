@@ -63,13 +63,6 @@ dependencies {
     implementation Kotlin.STDLIB
     implementation Kotlin.COROUTINES_ANDROID
 
-    // Testing
-    testImplementation JUnit.JUNIT
-    androidTestImplementation AndroidXTest.CORE_KTX
-    androidTestImplementation AndroidXTest.RUNNER
-    androidTestImplementation AndroidXTest.EXT_JUNIT_KTX
-    androidTestImplementation Espresso.CORE
-
     // Material
     implementation Material.MATERIAL
 

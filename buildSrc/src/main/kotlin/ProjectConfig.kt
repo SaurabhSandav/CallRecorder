@@ -18,28 +18,6 @@ object Kotlin {
         "org.jetbrains.kotlinx:kotlinx-coroutines-android:$COROUTINES_VERSION"
 }
 
-object JUnit {
-    private const val JUNIT_VERSION = "4.13"
-
-    const val JUNIT = "junit:junit:$JUNIT_VERSION"
-}
-
-object AndroidXTest {
-    private const val CORE_KTX_VERSION = "1.2.0"
-    private const val RUNNER_VERSION = "1.2.0"
-    private const val EXT_JUNIT_KTX_VERSION = "1.1.1"
-
-    const val CORE_KTX = "androidx.test:core-ktx:$CORE_KTX_VERSION"
-    const val RUNNER = "androidx.test:runner:$RUNNER_VERSION"
-    const val EXT_JUNIT_KTX = "androidx.test.ext:junit-ktx:$EXT_JUNIT_KTX_VERSION"
-}
-
-object Espresso {
-    private const val VERSION = "3.2.0"
-
-    const val CORE = "androidx.test.espresso:espresso-core:$VERSION"
-}
-
 object Material {
     private const val VERSION = "1.2.0-alpha05"
 
@@ -47,10 +25,10 @@ object Material {
 }
 
 object Jetpack {
-    private const val ACTIVITY_KTX_VERSION = "1.1.0"
-    private const val APPCOMPAT_VERSION = "1.2.0-alpha02"
-    private const val CORE_KTX_VERSION = "1.3.0-alpha01"
-    private const val FRAGMENT_KTX_VERSION = "1.2.2"
+    private const val ACTIVITY_KTX_VERSION = "1.2.0-alpha01"
+    private const val APPCOMPAT_VERSION = "1.2.0-alpha03"
+    private const val CORE_KTX_VERSION = "1.3.0-alpha02"
+    private const val FRAGMENT_KTX_VERSION = "1.3.0-alpha01"
     private const val PREFERENCE_KTX_VERSION = "1.1.0"
 
     const val ACTIVITY_KTX = "androidx.activity:activity-ktx:$ACTIVITY_KTX_VERSION"
@@ -81,7 +59,7 @@ object ComposeNavigation {
 }
 
 object Lifecycle {
-    private const val VERSION = "2.2.0"
+    private const val VERSION = "2.3.0-alpha01"
 
     const val SERVICE = "androidx.lifecycle:lifecycle-service:$VERSION"
     const val LIVEDATA_KTX = "androidx.lifecycle:lifecycle-livedata-ktx:$VERSION"

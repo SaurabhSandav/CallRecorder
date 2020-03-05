@@ -47,13 +47,6 @@ dependencies {
     // Kotlin
     implementation Kotlin.STDLIB
 
-    // Testing
-    testImplementation JUnit.JUNIT
-    androidTestImplementation AndroidXTest.CORE_KTX
-    androidTestImplementation AndroidXTest.RUNNER
-    androidTestImplementation AndroidXTest.EXT_JUNIT_KTX
-    androidTestImplementation Espresso.CORE
-
     // Compose
     api Compose.COMPOSE_RUNTIME
     api Compose.UI_FOUNDATION
