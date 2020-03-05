@@ -7,11 +7,11 @@ import com.redridgeapps.ui.initialization.InitializeUI
 import com.redridgeapps.ui.utils.WithViewModelStores
 
 @Composable
-fun Root(isAppSystemized: Boolean) {
+fun Root(firstRun: Boolean) {
 
     val destination = when {
-        isAppSystemized -> MainDestination
-        else -> SystemizerDestination
+        firstRun -> SystemizerDestination
+        else -> MainDestination
     }
 
     MaterialTheme {

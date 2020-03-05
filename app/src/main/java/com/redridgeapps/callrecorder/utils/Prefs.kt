@@ -39,6 +39,11 @@ inline fun <reified T> SharedPreferences.modify(pref: Pref<T>, newValue: T) {
     editor.apply()
 }
 
+val PREF_FIRST_RUN = Pref(
+    key = "FIRST_RUN",
+    defaultValue = true
+)
+
 val PREF_RECORDING_API = Pref(
     key = "RECORDING_API",
     defaultValue = RecordingAPI.AudioRecord.toString()

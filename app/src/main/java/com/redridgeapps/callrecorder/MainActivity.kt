@@ -1,12 +1,14 @@
 package com.redridgeapps.callrecorder
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
 import androidx.ui.core.setContent
 import com.koduok.compose.navigation.core.backStackController
-import com.redridgeapps.callrecorder.utils.Systemizer
+import com.redridgeapps.callrecorder.utils.PREF_FIRST_RUN
+import com.redridgeapps.callrecorder.utils.get
 import com.redridgeapps.callrecorder.viewmodel.utils.ComposeViewModelFetcher
 import com.redridgeapps.callrecorder.viewmodel.utils.ComposeViewModelStores
 import com.redridgeapps.ui.Root
@@ -22,7 +24,7 @@ import javax.inject.Provider
 class MainActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var systemizer: Systemizer
+    lateinit var prefs: SharedPreferences
 
     @Inject
     lateinit var uiInitializers: Map<Class<out UIInitializer>, @JvmSuppressWildcards Provider<UIInitializer>>
@@ -35,10 +37,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val composeViewModelStores by viewModels<ComposeViewModelStores>()
+        val firstRun = prefs.get(PREF_FIRST_RUN)
 
         setContent {
             val content = @Composable() {
-                Root(systemizer.isAppSystemized())
+                Root(firstRun)
             }
 
             WithAmbients(
