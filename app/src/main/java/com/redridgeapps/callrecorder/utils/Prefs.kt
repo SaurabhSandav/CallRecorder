@@ -39,8 +39,8 @@ inline fun <reified T> SharedPreferences.modify(pref: Pref<T>, newValue: T) {
     editor.apply()
 }
 
-val PREF_FIRST_RUN = Pref(
-    key = "FIRST_RUN",
+val PREF_IS_FIRST_RUN = Pref(
+    key = "IS_FIRST_RUN",
     defaultValue = true
 )
 

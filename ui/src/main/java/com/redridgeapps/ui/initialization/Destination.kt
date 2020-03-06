@@ -1,6 +1,9 @@
 package com.redridgeapps.ui.initialization
 
+import androidx.compose.Composable
+
 interface Destination {
 
-    val uiInitializer: Class<out UIInitializer>
+    @Composable
+    fun initializeUI()
 }

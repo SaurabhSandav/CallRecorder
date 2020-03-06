@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.redridgeapps.callrecorder.App
 import com.redridgeapps.callrecorder.di.modules.android.AndroidComponentBuilder
-import com.redridgeapps.callrecorder.di.modules.android.UIInitializerModule
 import com.redridgeapps.callrecorder.di.modules.android.ViewModelModule
 import dagger.Binds
 import dagger.Module
@@ -17,7 +16,6 @@ import dagger.android.AndroidInjectionModule
     includes = [
         AndroidInjectionModule::class,
         AndroidComponentBuilder::class,
-        UIInitializerModule::class,
         ViewModelModule::class,
         DBModule::class
     ]

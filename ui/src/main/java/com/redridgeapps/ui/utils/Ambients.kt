@@ -6,11 +6,6 @@ import androidx.compose.Providers
 import androidx.compose.staticAmbientOf
 import com.redridgeapps.repository.viewmodel.utils.IComposeViewModelStores
 import com.redridgeapps.repository.viewmodel.utils.IViewModelFetcher
-import com.redridgeapps.ui.initialization.UIInitializer
-import javax.inject.Provider
-
-val UIInitializersAmbient =
-    staticAmbientOf<Map<Class<out UIInitializer>, Provider<UIInitializer>>>()
 
 val ComposeViewModelStoresAmbient = staticAmbientOf<IComposeViewModelStores>()
 

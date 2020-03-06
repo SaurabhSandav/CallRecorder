@@ -16,14 +16,7 @@ import androidx.ui.unit.sp
 import com.redridgeapps.repository.uimodel.ISystemizerUIModel
 import com.redridgeapps.repository.viewmodel.ISystemizerViewModel
 import com.redridgeapps.ui.initialization.Destination
-import com.redridgeapps.ui.initialization.UIInitializer
 import com.redridgeapps.ui.utils.fetchViewModel
-import javax.inject.Inject
-
-object SystemizerDestination : Destination {
-
-    override val uiInitializer = SystemizerUIInitializer::class.java
-}
 
 @Model
 class SystemizerUIModel(
@@ -31,13 +24,15 @@ class SystemizerUIModel(
     override var isAppSystemized: Boolean = false
 ) : ISystemizerUIModel
 
-class SystemizerUIInitializer @Inject constructor() : UIInitializer {
+object SystemizerDestination : Destination {
 
     @Composable
-    override fun initialize() {
+    override fun initializeUI() {
+
         val viewModel = fetchViewModel<ISystemizerViewModel>()
         val model = SystemizerUIModel()
         viewModel.setModel(model)
+
         SystemizerUI(viewModel, model)
     }
 }

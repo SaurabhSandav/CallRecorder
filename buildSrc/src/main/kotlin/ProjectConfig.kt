@@ -39,7 +39,7 @@ object Jetpack {
 }
 
 object Compose {
-    private const val VERSION = "0.1.0-dev05"
+    private const val VERSION = "0.1.0-dev06"
 
     const val COMPOSE_RUNTIME = "androidx.compose:compose-runtime:$VERSION"
     const val UI_FOUNDATION = "androidx.ui:ui-foundation:$VERSION"
@@ -52,7 +52,7 @@ object Compose {
 }
 
 object ComposeNavigation {
-    private const val VERSION = "0.1.1"
+    private const val VERSION = "0.1.2"
 
     const val CORE = "com.github.mvarnagiris.compose-navigation:core:$VERSION"
     const val NAVIGATION = "com.github.mvarnagiris.compose-navigation:navigation:$VERSION"

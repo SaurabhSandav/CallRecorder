@@ -17,14 +17,7 @@ import com.redridgeapps.repository.RecordingItem
 import com.redridgeapps.repository.uimodel.IMainUIModel
 import com.redridgeapps.repository.viewmodel.IMainViewModel
 import com.redridgeapps.ui.initialization.Destination
-import com.redridgeapps.ui.initialization.UIInitializer
 import com.redridgeapps.ui.utils.fetchViewModel
-import javax.inject.Inject
-
-object MainDestination : Destination {
-
-    override val uiInitializer = MainUIInitializer::class.java
-}
 
 @Model
 class MainUIModel(
@@ -32,13 +25,15 @@ class MainUIModel(
     override var recordingList: List<RecordingItem> = listOf()
 ) : IMainUIModel
 
-class MainUIInitializer @Inject constructor() : UIInitializer {
+object MainDestination : Destination {
 
     @Composable
-    override fun initialize() {
+    override fun initializeUI() {
+
         val viewModel = fetchViewModel<IMainViewModel>()
         val model = MainUIModel()
         viewModel.setModel(model)
+
         MainUI(viewModel, model)
     }
 }
@@ -50,14 +45,13 @@ fun MainUI(viewModel: IMainViewModel, model: MainUIModel) {
 
         TopAppBar(
             title = @Composable { Text(text = stringResource(R.string.app_name)) },
-            actionData = listOf("Systemization"),
-            action = @Composable {
+            actions = @Composable {
 
                 val backStack = BackStackAmbient.current
                 val onClick = { backStack.push(SystemizerDestination) }
 
                 TextButton(contentColor = MaterialTheme.colors().onPrimary, onClick = onClick) {
-                    Text(text = it)
+                    Text(text = "Systemization")
                 }
             }
         )
