@@ -14,11 +14,11 @@ import androidx.ui.text.TextStyle
 import androidx.ui.unit.dp
 import androidx.ui.unit.sp
 import com.redridgeapps.repository.viewmodel.ISystemizerViewModel
-import com.redridgeapps.ui.initialization.Destination
+import com.redridgeapps.ui.routing.Destination
 import com.redridgeapps.ui.utils.fetchViewModel
 
 @Model
-class SystemizerUIModel(
+class SystemizerState(
     var refreshing: Boolean = false,
     var isAppSystemized: Boolean = false
 )
@@ -29,16 +29,16 @@ object SystemizerDestination : Destination {
     override fun initializeUI() {
 
         val viewModel = fetchViewModel<ISystemizerViewModel>()
-        val model = viewModel.model as SystemizerUIModel
+        val model = viewModel.model as SystemizerState
 
         SystemizerUI(viewModel, model)
     }
 }
 
 @Composable
-fun SystemizerUI(
+private fun SystemizerUI(
     viewModel: ISystemizerViewModel,
-    model: SystemizerUIModel
+    model: SystemizerState
 ) {
     Container(DrawBackground(MaterialTheme.colors().primary) + LayoutPadding(20.dp)) {
         if (!model.refreshing)
@@ -56,7 +56,7 @@ private fun IsNotInitialized() {
 }
 
 @Composable
-private fun IsInitialized(viewModel: ISystemizerViewModel, model: SystemizerUIModel) {
+private fun IsInitialized(viewModel: ISystemizerViewModel, model: SystemizerState) {
     Column {
         ExplanationText(model)
 
@@ -67,7 +67,7 @@ private fun IsInitialized(viewModel: ISystemizerViewModel, model: SystemizerUIMo
 }
 
 @Composable
-fun ColumnScope.ExplanationText(model: SystemizerUIModel) {
+fun ColumnScope.ExplanationText(model: SystemizerState) {
     val text = if (model.isAppSystemized) "App is Systemized."
     else "App is not a system app. Call Recording only works with System apps."
 
@@ -77,9 +77,9 @@ fun ColumnScope.ExplanationText(model: SystemizerUIModel) {
 }
 
 @Composable
-fun ColumnScope.SystemizationButton(
+private fun ColumnScope.SystemizationButton(
     viewModel: ISystemizerViewModel,
-    model: SystemizerUIModel
+    model: SystemizerState
 ) {
 
     val backgroundColor: Color

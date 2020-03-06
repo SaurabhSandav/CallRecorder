@@ -1,4 +1,4 @@
-package com.redridgeapps.ui.initialization
+package com.redridgeapps.ui.routing
 
 import androidx.compose.Composable
 

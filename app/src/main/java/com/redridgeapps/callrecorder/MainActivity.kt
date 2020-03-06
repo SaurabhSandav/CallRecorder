@@ -4,11 +4,11 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.koduok.compose.navigation.core.backStackController
 import com.redridgeapps.callrecorder.utils.PREF_IS_FIRST_RUN
 import com.redridgeapps.callrecorder.utils.get
 import com.redridgeapps.callrecorder.viewmodel.utils.ComposeViewModelFetcher
 import com.redridgeapps.callrecorder.viewmodel.utils.ComposeViewModelStores
+import com.redridgeapps.ui.routing.composeHandleBackPressed
 import com.redridgeapps.ui.showUI
 import dagger.android.AndroidInjection
 import javax.inject.Inject
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (!backStackController.pop())
+        if (!composeHandleBackPressed())
             super.onBackPressed()
     }
 }

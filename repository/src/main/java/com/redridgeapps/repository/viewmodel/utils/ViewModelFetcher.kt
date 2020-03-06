@@ -5,8 +5,5 @@ import kotlin.reflect.KClass
 
 interface IViewModelFetcher {
 
-    fun <T : ViewModelMarker> fetch(
-        key: String,
-        kClass: KClass<T>
-    ): T
+    fun <T : ViewModelMarker> fetch(key: String, kClass: KClass<T>): T
 }

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.callutils.Recordings
 import com.redridgeapps.repository.viewmodel.IMainViewModel
-import com.redridgeapps.ui.MainUIModel
+import com.redridgeapps.ui.MainState
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -23,7 +23,7 @@ class MainViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    override val model = MainUIModel()
+    override val model = MainState()
 
     override fun deleteRecording(recordingId: Int) {
         model.refreshing = true

@@ -48,11 +48,8 @@ dependencies {
     implementation Compose.UI_TOOLING
 
     // compose-navigation
-    api ComposeNavigation.CORE
+    implementation ComposeNavigation.CORE
     implementation ComposeNavigation.NAVIGATION
-
-    // LiveData
-    implementation Lifecycle.LIVEDATA_KTX
 
     // Timber
     implementation Timber.TIMBER

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.utils.Systemizer
 import com.redridgeapps.repository.viewmodel.ISystemizerViewModel
-import com.redridgeapps.ui.SystemizerUIModel
+import com.redridgeapps.ui.SystemizerState
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -24,7 +24,7 @@ class SystemizerViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    override val model = SystemizerUIModel()
+    override val model = SystemizerState()
 
     override fun systemize() {
         viewModelScope.launch {

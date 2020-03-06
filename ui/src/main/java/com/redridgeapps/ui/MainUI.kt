@@ -15,11 +15,11 @@ import androidx.ui.res.stringResource
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.repository.RecordingItem
 import com.redridgeapps.repository.viewmodel.IMainViewModel
-import com.redridgeapps.ui.initialization.Destination
+import com.redridgeapps.ui.routing.Destination
 import com.redridgeapps.ui.utils.fetchViewModel
 
 @Model
-class MainUIModel(
+class MainState(
     var refreshing: Boolean = true,
     var recordingList: List<RecordingItem> = listOf()
 )
@@ -30,14 +30,14 @@ object MainDestination : Destination {
     override fun initializeUI() {
 
         val viewModel = fetchViewModel<IMainViewModel>()
-        val model = viewModel.model as MainUIModel
+        val model = viewModel.model as MainState
 
         MainUI(viewModel, model)
     }
 }
 
 @Composable
-fun MainUI(viewModel: IMainViewModel, model: MainUIModel) {
+private fun MainUI(viewModel: IMainViewModel, model: MainState) {
 
     val topAppBar = @Composable {
 
@@ -61,7 +61,7 @@ fun MainUI(viewModel: IMainViewModel, model: MainUIModel) {
 }
 
 @Composable
-private fun ContentMain(viewModel: IMainViewModel, model: MainUIModel) {
+private fun ContentMain(viewModel: IMainViewModel, model: MainState) {
 
     var selectedItemId by state { -1 }
 
