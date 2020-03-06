@@ -40,8 +40,8 @@ dependencies {
     implementation Kotlin.STDLIB
 
     // Compose
-    api Compose.COMPOSE_RUNTIME
-    api Compose.UI_FOUNDATION
+    implementation Compose.COMPOSE_RUNTIME
+    implementation Compose.UI_FOUNDATION
     implementation Compose.UI_FRAMEWORK
     implementation Compose.UI_LAYOUT
     implementation Compose.UI_MATERIAL
@@ -53,9 +53,6 @@ dependencies {
 
     // LiveData
     implementation Lifecycle.LIVEDATA_KTX
-
-    // JSR305
-    implementation JavaX.INJECT
 
     // Timber
     implementation Timber.TIMBER

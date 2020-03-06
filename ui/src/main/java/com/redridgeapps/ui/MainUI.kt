@@ -14,16 +14,15 @@ import androidx.ui.material.surface.Surface
 import androidx.ui.res.stringResource
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.repository.RecordingItem
-import com.redridgeapps.repository.uimodel.IMainUIModel
 import com.redridgeapps.repository.viewmodel.IMainViewModel
 import com.redridgeapps.ui.initialization.Destination
 import com.redridgeapps.ui.utils.fetchViewModel
 
 @Model
 class MainUIModel(
-    override var refreshing: Boolean = true,
-    override var recordingList: List<RecordingItem> = listOf()
-) : IMainUIModel
+    var refreshing: Boolean = true,
+    var recordingList: List<RecordingItem> = listOf()
+)
 
 object MainDestination : Destination {
 
@@ -31,8 +30,7 @@ object MainDestination : Destination {
     override fun initializeUI() {
 
         val viewModel = fetchViewModel<IMainViewModel>()
-        val model = MainUIModel()
-        viewModel.setModel(model)
+        val model = viewModel.model as MainUIModel
 
         MainUI(viewModel, model)
     }

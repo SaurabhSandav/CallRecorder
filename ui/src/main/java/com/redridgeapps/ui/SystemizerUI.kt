@@ -13,16 +13,15 @@ import androidx.ui.material.MaterialTheme
 import androidx.ui.text.TextStyle
 import androidx.ui.unit.dp
 import androidx.ui.unit.sp
-import com.redridgeapps.repository.uimodel.ISystemizerUIModel
 import com.redridgeapps.repository.viewmodel.ISystemizerViewModel
 import com.redridgeapps.ui.initialization.Destination
 import com.redridgeapps.ui.utils.fetchViewModel
 
 @Model
 class SystemizerUIModel(
-    override var refreshing: Boolean = false,
-    override var isAppSystemized: Boolean = false
-) : ISystemizerUIModel
+    var refreshing: Boolean = false,
+    var isAppSystemized: Boolean = false
+)
 
 object SystemizerDestination : Destination {
 
@@ -30,8 +29,7 @@ object SystemizerDestination : Destination {
     override fun initializeUI() {
 
         val viewModel = fetchViewModel<ISystemizerViewModel>()
-        val model = SystemizerUIModel()
-        viewModel.setModel(model)
+        val model = viewModel.model as SystemizerUIModel
 
         SystemizerUI(viewModel, model)
     }

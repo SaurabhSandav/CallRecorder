@@ -48,24 +48,21 @@ class ViewModelStoreBackStackListener(
 
         val newSnapshot = snapshot.flatMap { it.snapshot }
 
-        if (oldSnapshot != snapshot) {
-            val removed = oldSnapshot.minus(newSnapshot).onlySingleOrNull()
-            val added = newSnapshot.minus(oldSnapshot).onlySingleOrNull()
+        if (oldSnapshot == snapshot) return
 
-            if (removed != null)
-                composeViewModelStores.removeViewModelStore(createViewModelStoreKey(removed))
+        val removed = oldSnapshot.minus(newSnapshot)
+        val added = newSnapshot.minus(oldSnapshot)
 
-            if (added != null)
-                composeViewModelStores.addViewModelStore(createViewModelStoreKey(added))
-
-            oldSnapshot = newSnapshot
-
-            Timber.d("Removed: $removed, Added: $added")
+        removed.forEach {
+            composeViewModelStores.removeViewModelStore(createViewModelStoreKey(it))
         }
-    }
 
-    private fun <T> List<T>.onlySingleOrNull(): T? = when {
-        size > 1 -> error("Can only handle single element BackStack changes")
-        else -> singleOrNull()
+        added.forEach {
+            composeViewModelStores.addViewModelStore(createViewModelStoreKey(it))
+        }
+
+        oldSnapshot = newSnapshot
+
+        Timber.d("Removed: $removed, Added: $added")
     }
 }

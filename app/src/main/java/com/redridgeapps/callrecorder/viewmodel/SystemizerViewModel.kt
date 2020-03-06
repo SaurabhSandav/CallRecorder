@@ -3,8 +3,8 @@ package com.redridgeapps.callrecorder.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.utils.Systemizer
-import com.redridgeapps.repository.uimodel.ISystemizerUIModel
 import com.redridgeapps.repository.viewmodel.ISystemizerViewModel
+import com.redridgeapps.ui.SystemizerUIModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -14,11 +14,7 @@ class SystemizerViewModel @Inject constructor(
     private val systemizer: Systemizer
 ) : ViewModel(), ISystemizerViewModel {
 
-    private lateinit var model: ISystemizerUIModel
-
-    override fun setModel(newModel: ISystemizerUIModel) {
-
-        model = newModel
+    init {
 
         systemizer.isAppSystemizedFlow
             .onEach {
@@ -27,6 +23,8 @@ class SystemizerViewModel @Inject constructor(
             }
             .launchIn(viewModelScope)
     }
+
+    override val model = SystemizerUIModel()
 
     override fun systemize() {
         viewModelScope.launch {
