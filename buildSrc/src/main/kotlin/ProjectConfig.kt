@@ -10,7 +10,7 @@ object AndroidTools {
 
 object Kotlin {
     private const val VERSION = "1.3.70"
-    private const val COROUTINES_VERSION = "1.3.3"
+    private const val COROUTINES_VERSION = "1.3.4"
 
     const val GRADLE_PLUGIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:$VERSION"
     const val STDLIB = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$VERSION"
