@@ -7,6 +7,8 @@ import com.redridgeapps.callrecorder.utils.PREF_AUDIO_RECORD_AUDIO_ENCODING
 import com.redridgeapps.callrecorder.utils.PREF_AUDIO_RECORD_CHANNELS
 import com.redridgeapps.callrecorder.utils.PREF_AUDIO_RECORD_SAMPLE_RATE
 import com.redridgeapps.callrecorder.utils.get
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.BufferedOutputStream
 import java.io.DataOutputStream
 import java.io.File
@@ -15,17 +17,15 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 class AudioRecordAPI(
-    private val saveDir: File,
     private val prefs: SharedPreferences
 ) : Recorder {
 
-    private val saveFileExt = ".pcm"
     private var recorder: AudioRecord? = null
-    private var recordingThread: Thread? = null
     private var isRecording = false
-    private var savePath: String? = null
 
-    override fun startRecording(fileName: String) {
+    override val saveFileExt = "pcm"
+
+    override suspend fun startRecording(saveFile: File) = withContext(Dispatchers.IO) {
 
         val sampleRate = prefs.get(PREF_AUDIO_RECORD_SAMPLE_RATE)
         val channels = prefs.get(PREF_AUDIO_RECORD_CHANNELS)
@@ -43,21 +43,20 @@ class AudioRecordAPI(
 
         recorder!!.startRecording()
         isRecording = true
-        recordingThread =
-            Thread(Runnable { writeAudioDataToFile(fileName, bufferSize) }, "AudioRecorder Thread")
-        recordingThread!!.start()
+
+        writeAudioDataToFile(saveFile, bufferSize)
     }
 
-    override fun stopRecording(): String {
-        if (recorder != null) {
-            isRecording = false
-            recorder!!.stop()
-            recorder!!.release()
-            recorder = null
-            recordingThread = null
+    override fun stopRecording() {
+
+        isRecording = false
+
+        recorder?.apply {
+            stop()
+            release()
         }
 
-        return savePath ?: error("savePath is null")
+        recorder = null
     }
 
     override fun releaseRecorder() {
@@ -65,23 +64,21 @@ class AudioRecordAPI(
         recorder = null
     }
 
-    private fun writeAudioDataToFile(fileName: String, bufferSize: Int) {
+    private suspend fun writeAudioDataToFile(
+        saveFile: File,
+        bufferSize: Int
+    ) = withContext(Dispatchers.IO) {
 
-        val fileNameWithExt = fileName + saveFileExt
-        val newSavePath = File(saveDir, fileNameWithExt)
-        savePath = newSavePath.absolutePath
+        DataOutputStream(BufferedOutputStream(FileOutputStream(saveFile))).use { dos ->
+            val shortBuffer = ShortArray(bufferSize / 2)
 
-        val dos = DataOutputStream(BufferedOutputStream(FileOutputStream(newSavePath)))
-        val shortBuffer = ShortArray(bufferSize / 2)
+            while (isRecording) {
+                recorder!!.read(shortBuffer, 0, shortBuffer.size, AudioRecord.READ_BLOCKING)
 
-        while (isRecording) {
-            recorder!!.read(shortBuffer, 0, shortBuffer.size)
-
-            val byteBuffer = shortBuffer.to2ByteArray()
-            dos.write(byteBuffer)
+                val byteBuffer = shortBuffer.to2ByteArray()
+                dos.write(byteBuffer)
+            }
         }
-
-        dos.close()
     }
 
     private fun ShortArray.to2ByteArray(): ByteArray {

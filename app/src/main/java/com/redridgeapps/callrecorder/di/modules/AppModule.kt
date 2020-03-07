@@ -3,6 +3,8 @@ package com.redridgeapps.callrecorder.di.modules
 import android.content.ContentResolver
 import android.content.Context
 import android.content.SharedPreferences
+import android.media.AudioManager
+import androidx.core.content.getSystemService
 import androidx.preference.PreferenceManager
 import com.redridgeapps.callrecorder.App
 import com.redridgeapps.callrecorder.di.modules.android.AndroidComponentBuilder
@@ -30,6 +32,11 @@ abstract class AppModule {
         @Provides
         fun provideSharedPreferences(context: Context): SharedPreferences {
             return PreferenceManager.getDefaultSharedPreferences(context)
+        }
+
+        @Provides
+        fun provideAudioManager(context: Context): AudioManager {
+            return context.getSystemService()!!
         }
 
         @Provides

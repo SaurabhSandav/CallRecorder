@@ -1,10 +1,14 @@
 package com.redridgeapps.callrecorder.callutils.recorder
 
+import java.io.File
+
 interface Recorder {
 
-    fun startRecording(fileName: String)
+    val saveFileExt: String
 
-    fun stopRecording(): String
+    suspend fun startRecording(saveFile: File)
+
+    fun stopRecording()
 
     fun releaseRecorder()
 }
