@@ -2,7 +2,7 @@ package com.redridgeapps.repository.viewmodel
 
 interface ISystemizerViewModel : ViewModelMarker {
 
-    val model: Any
+    val uiState: Any
 
     fun systemize()
 

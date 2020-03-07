@@ -18,24 +18,24 @@ class SystemizerViewModel @Inject constructor(
 
         systemizer.isAppSystemizedFlow
             .onEach {
-                model.isAppSystemized = it
-                model.refreshing = true
+                uiState.isAppSystemized = it
+                uiState.refreshing = true
             }
             .launchIn(viewModelScope)
     }
 
-    override val model = SystemizerState()
+    override val uiState = SystemizerState()
 
     override fun systemize() {
         viewModelScope.launch {
-            model.refreshing = false
+            uiState.refreshing = false
             systemizer.systemize()
         }
     }
 
     override fun unSystemize() {
         viewModelScope.launch {
-            model.refreshing = false
+            uiState.refreshing = false
             systemizer.unSystemize()
         }
     }

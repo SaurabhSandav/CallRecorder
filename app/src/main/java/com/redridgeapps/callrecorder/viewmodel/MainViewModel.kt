@@ -17,16 +17,16 @@ class MainViewModel @Inject constructor(
 
         recordings.getRecordingList()
             .onEach {
-                model.recordingList = it
-                model.refreshing = false
+                uiState.recordingList = it
+                uiState.refreshing = false
             }
             .launchIn(viewModelScope)
     }
 
-    override val model = MainState()
+    override val uiState = MainState()
 
     override fun deleteRecording(recordingId: Int) {
-        model.refreshing = true
+        uiState.refreshing = true
         recordings.deleteRecording(recordingId)
     }
 }

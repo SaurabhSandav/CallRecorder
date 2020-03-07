@@ -2,8 +2,10 @@ package com.redridgeapps.ui
 
 import androidx.compose.Composable
 import androidx.compose.Model
-import androidx.ui.core.Alignment
+import androidx.ui.core.Modifier
 import androidx.ui.core.Text
+import androidx.ui.foundation.Box
+import androidx.ui.foundation.ContentGravity
 import androidx.ui.foundation.DrawBackground
 import androidx.ui.graphics.Color
 import androidx.ui.layout.*
@@ -29,22 +31,23 @@ object SystemizerDestination : Destination {
     override fun initializeUI() {
 
         val viewModel = fetchViewModel<ISystemizerViewModel>()
-        val model = viewModel.model as SystemizerState
 
-        SystemizerUI(viewModel, model)
+        SystemizerUI(viewModel)
     }
 }
 
+val ISystemizerViewModel.systemizerState: SystemizerState
+    get() = uiState as SystemizerState
+
 @Composable
 private fun SystemizerUI(
-    viewModel: ISystemizerViewModel,
-    model: SystemizerState
+    viewModel: ISystemizerViewModel
 ) {
-    Container(DrawBackground(MaterialTheme.colors().primary) + LayoutPadding(20.dp)) {
-        if (!model.refreshing)
+    Box(DrawBackground(MaterialTheme.colors().primary) + LayoutPadding(20.dp)) {
+        if (!viewModel.systemizerState.refreshing)
             IsNotInitialized()
         else
-            IsInitialized(viewModel, model)
+            IsInitialized(viewModel)
     }
 }
 
@@ -56,52 +59,53 @@ private fun IsNotInitialized() {
 }
 
 @Composable
-private fun IsInitialized(viewModel: ISystemizerViewModel, model: SystemizerState) {
+private fun IsInitialized(viewModel: ISystemizerViewModel) {
     Column {
-        ExplanationText(model)
 
-        Spacer(LayoutHeight(40.dp))
+        Spacer(LayoutFlexible(0.2F))
 
-        SystemizationButton(viewModel, model)
+        ExplanationText(viewModel, LayoutFlexible(0.4F))
+
+        Spacer(LayoutFlexible(0.2F))
+
+        SystemizationButton(viewModel, LayoutFlexible(0.2F))
     }
 }
 
 @Composable
-fun ColumnScope.ExplanationText(model: SystemizerState) {
-    val text = if (model.isAppSystemized) "App is Systemized."
-    else "App is not a system app. Call Recording only works with System apps."
+private fun ExplanationText(viewModel: ISystemizerViewModel, modifier: Modifier = Modifier.None) {
 
-    Container(LayoutFlexible(0.8F), alignment = Alignment.Center) {
+    val text = when {
+        viewModel.systemizerState.isAppSystemized -> "App is a system app."
+        else -> "App is not a system app. Call Recording only works with System apps."
+    }
+
+    Box(modifier, gravity = ContentGravity.TopStart) {
         Text(text, style = MaterialTheme.typography().h3.copy(Color.White))
     }
 }
 
 @Composable
-private fun ColumnScope.SystemizationButton(
+private fun SystemizationButton(
     viewModel: ISystemizerViewModel,
-    model: SystemizerState
+    modifier: Modifier = Modifier.None
 ) {
 
     val backgroundColor: Color
     val text: String
+    val onClick: () -> Unit
 
-    if (model.isAppSystemized) {
+    if (viewModel.systemizerState.isAppSystemized) {
         backgroundColor = Color.Red
         text = "Unsystemize"
+        onClick = { viewModel.unSystemize() }
     } else {
         backgroundColor = MaterialTheme.colors().secondary
         text = "Systemize"
+        onClick = { viewModel.systemize() }
     }
 
-    val onClick = {
-        if (!model.isAppSystemized) {
-            viewModel.systemize()
-        } else {
-            viewModel.unSystemize()
-        }
-    }
-
-    Container(LayoutFlexible(0.2F) + LayoutWidth.Fill, alignment = Alignment.Center) {
+    Box(LayoutWidth.Fill + modifier, gravity = ContentGravity.Center) {
         Button(LayoutWidth.Fill, backgroundColor = backgroundColor, onClick = onClick) {
             Text(text = text, style = TextStyle(fontSize = 25.sp))
         }

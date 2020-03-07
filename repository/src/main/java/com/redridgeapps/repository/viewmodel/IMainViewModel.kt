@@ -2,7 +2,7 @@ package com.redridgeapps.repository.viewmodel
 
 interface IMainViewModel : ViewModelMarker {
 
-    val model: Any
+    val uiState: Any
 
     fun deleteRecording(recordingId: Int)
 }
