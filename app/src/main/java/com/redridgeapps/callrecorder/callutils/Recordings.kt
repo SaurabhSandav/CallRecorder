@@ -57,7 +57,7 @@ class Recordings @Inject constructor(
     }
 
     fun deleteRecording(recordingId: Int) {
-        recordingQueries.deleteWithID(recordingId)
+        recordingQueries.deleteWithId(recordingId)
     }
 
     private fun getRecordingStoragePath(): File {

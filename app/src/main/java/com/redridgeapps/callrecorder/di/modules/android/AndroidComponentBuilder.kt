@@ -2,7 +2,6 @@ package com.redridgeapps.callrecorder.di.modules.android
 
 import com.redridgeapps.callrecorder.MainActivity
 import com.redridgeapps.callrecorder.MainActivityModule
-import com.redridgeapps.callrecorder.di.modules.RepositoryModule
 import com.redridgeapps.callrecorder.services.CallingService
 import com.redridgeapps.callrecorder.services.CallingServiceModule
 import dagger.Module
@@ -14,12 +13,7 @@ abstract class AndroidComponentBuilder {
 
     // region Activities
 
-    @ContributesAndroidInjector(
-        modules = [
-            MainActivityModule::class,
-            RepositoryModule::class
-        ]
-    )
+    @ContributesAndroidInjector(modules = [MainActivityModule::class])
     @PerActivity
     abstract fun bindMainActivity(): MainActivity
 

@@ -1,38 +1,37 @@
 package com.redridgeapps.callrecorder.callutils
 
 import android.media.MediaPlayer
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import com.redridgeapps.callrecorder.di.modules.android.PerActivity
-import com.redridgeapps.repository.ICallPlayback
+import com.redridgeapps.callrecorder.RecordingQueries
+import com.squareup.sqldelight.runtime.coroutines.asFlow
+import com.squareup.sqldelight.runtime.coroutines.mapToOne
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-@PerActivity
 class CallPlayback @Inject constructor(
-    private val activity: AppCompatActivity
-) : ICallPlayback {
+    private val recordingQueries: RecordingQueries
+) {
 
-    private val fileName = "${activity.externalCacheDir!!.absolutePath}/audiorecordtest.mp3"
     private var player: MediaPlayer? = null
 
-    override fun startPlaying(onComplete: () -> Unit) {
-        player = MediaPlayer().apply {
-            setDataSource(fileName)
-            prepare()
-            start()
-            setOnCompletionListener { onComplete() }
-        }
+    suspend fun startPlaying(recordingId: Int, onComplete: () -> Unit) {
+        withContext(Dispatchers.IO) {
 
-        activity.lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onStop(owner: LifecycleOwner) {
-                player?.release()
-                player = null
+            val recording = recordingQueries.getWithId(recordingId).asFlow().mapToOne().first()
+            val recordingPath = recording.savePath
+
+            player = MediaPlayer().apply {
+                setDataSource(recordingPath)
+                prepare()
+                start()
+                setOnCompletionListener { onComplete() }
             }
-        })
+        }
     }
 
-    override fun stopPlaying() {
+    fun stopPlaying() {
+        player?.stop()
         player?.release()
         player = null
     }

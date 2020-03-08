@@ -16,5 +16,8 @@ VALUES (?, ?, ?, ?, ?, ?);
 getAll:
 SELECT * FROM Recording;
 
-deleteWithID:
+getWithId:
+SELECT * FROM Recording WHERE id = ?;
+
+deleteWithId:
 DELETE FROM Recording WHERE id = ?;

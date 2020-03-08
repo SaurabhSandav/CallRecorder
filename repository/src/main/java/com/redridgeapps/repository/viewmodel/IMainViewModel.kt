@@ -4,5 +4,9 @@ interface IMainViewModel : ViewModelMarker {
 
     val uiState: Any
 
-    fun deleteRecording(recordingId: Int)
+    fun startPlayback(recordingId: Int)
+
+    fun stopPlayback()
+
+    fun deleteSelectedRecording()
 }
