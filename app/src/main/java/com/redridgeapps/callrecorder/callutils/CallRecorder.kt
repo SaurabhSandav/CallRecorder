@@ -2,26 +2,17 @@ package com.redridgeapps.callrecorder.callutils
 
 import android.content.SharedPreferences
 import android.media.AudioManager
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import com.redridgeapps.callrecorder.callutils.recorder.Recorder
-import com.redridgeapps.callrecorder.di.modules.android.PerService
 import com.redridgeapps.callrecorder.utils.PREF_RECORDING_API
 import com.redridgeapps.callrecorder.utils.ToastMaker
 import com.redridgeapps.callrecorder.utils.get
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import java.io.File
 import java.time.Instant
 import javax.inject.Inject
 
-@PerService
 class CallRecorder @Inject constructor(
     private val am: AudioManager,
     private val prefs: SharedPreferences,
-    private val lifecycle: Lifecycle,
-    private val coroutineScope: CoroutineScope,
     private val toastMaker: ToastMaker,
     private val recordings: Recordings
 ) {
@@ -32,13 +23,7 @@ class CallRecorder @Inject constructor(
     private var recordingStartTime: Long = -1
     private var recordingEndTime: Long = -1
 
-    private val observer = object : DefaultLifecycleObserver {
-        override fun onStop(owner: LifecycleOwner) {
-            releaseRecorder()
-        }
-    }
-
-    fun startRecording() {
+    suspend fun startRecording() {
 
         val recordingAPIStr = prefs.get(PREF_RECORDING_API)
         val recordingAPI = RecordingAPI.valueOf(recordingAPIStr)
@@ -47,30 +32,26 @@ class CallRecorder @Inject constructor(
         saveFile = recordings.generateFileName(recorder!!.saveFileExt)
         recordingStartTime = Instant.now().toEpochMilli()
 
-        coroutineScope.launch {
-            recorder!!.startRecording(saveFile!!)
-        }
+        recorder!!.startRecording(saveFile!!)
 
         maximizeVolume()
-        lifecycle.addObserver(observer)
         toastMaker.newToast("Started recording").show()
     }
 
     fun stopRecording() {
 
         recorder!!.stopRecording()
+        recorder = null
 
         recordingEndTime = Instant.now().toEpochMilli()
         restoreVolume()
-        lifecycle.removeObserver(observer)
         toastMaker.newToast("Stopped recording").show()
         recordings.insertRecording(recordingStartTime, recordingEndTime, saveFile!!)
     }
 
     fun releaseRecorder() {
         recorder?.releaseRecorder()
-
-        lifecycle.removeObserver(observer)
+        recorder = null
     }
 
     private fun maximizeVolume() {

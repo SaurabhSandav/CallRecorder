@@ -11,38 +11,48 @@ import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.getSystemService
 import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.lifecycleScope
 import com.redridgeapps.callrecorder.MainActivity
 import com.redridgeapps.callrecorder.R
-import com.redridgeapps.callrecorder.callutils.CallStateListener
+import com.redridgeapps.callrecorder.callutils.CallRecorder
+import com.redridgeapps.callrecorder.callutils.CallStatus.*
+import com.redridgeapps.callrecorder.callutils.CallStatusListener
 import com.redridgeapps.callrecorder.utils.NOTIFICATION_CALL_SERVICE_ID
 import dagger.android.AndroidInjection
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CallingService : LifecycleService() {
 
     @Inject
-    lateinit var callStateListener: CallStateListener
+    lateinit var callRecorder: CallRecorder
 
-    private lateinit var telephonyManager: TelephonyManager
+    @Inject
+    lateinit var telephonyManager: TelephonyManager
+
+    @Inject
+    lateinit var notificationManager: NotificationManager
+
+    private val callStatusListener = CallStatusListener { status ->
+        when (status) {
+            MissedCall, IncomingCallReceived -> Unit
+            IncomingCallAnswered, OutgoingCallStarted -> lifecycleScope.launch { callRecorder.startRecording() }
+            IncomingCallEnded, OutgoingCallEnded -> callRecorder.stopRecording()
+        }
+    }
 
     override fun onCreate() {
         AndroidInjection.inject(this)
         super.onCreate()
 
         createNotification()
-
-        telephonyManager = getSystemService()!!
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
 
-        telephonyManager.listen(
-            callStateListener,
-            PhoneStateListener.LISTEN_CALL_STATE
-        )
+        telephonyManager.listen(callStatusListener, PhoneStateListener.LISTEN_CALL_STATE)
 
         return START_STICKY
     }
@@ -55,7 +65,8 @@ class CallingService : LifecycleService() {
     override fun onDestroy() {
         super.onDestroy()
 
-        telephonyManager.listen(callStateListener, PhoneStateListener.LISTEN_NONE)
+        telephonyManager.listen(callStatusListener, PhoneStateListener.LISTEN_NONE)
+        callRecorder.releaseRecorder()
     }
 
     private fun createNotification() {
@@ -79,9 +90,11 @@ class CallingService : LifecycleService() {
             javaClass.simpleName,
             "Call Recorder",
             NotificationManager.IMPORTANCE_LOW
-        ).apply { lockscreenVisibility = Notification.VISIBILITY_SECRET }
+        )
 
-        getSystemService<NotificationManager>()!!.createNotificationChannel(channel)
+        channel.lockscreenVisibility = Notification.VISIBILITY_SECRET
+
+        notificationManager.createNotificationChannel(channel)
 
         return channel.id
     }

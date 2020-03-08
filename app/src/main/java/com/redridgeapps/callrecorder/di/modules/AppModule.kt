@@ -1,9 +1,11 @@
 package com.redridgeapps.callrecorder.di.modules
 
+import android.app.NotificationManager
 import android.content.ContentResolver
 import android.content.Context
 import android.content.SharedPreferences
 import android.media.AudioManager
+import android.telephony.TelephonyManager
 import androidx.core.content.getSystemService
 import androidx.preference.PreferenceManager
 import com.redridgeapps.callrecorder.App
@@ -36,6 +38,16 @@ abstract class AppModule {
 
         @Provides
         fun provideAudioManager(context: Context): AudioManager {
+            return context.getSystemService()!!
+        }
+
+        @Provides
+        fun provideTelephonyManager(context: Context): TelephonyManager {
+            return context.getSystemService()!!
+        }
+
+        @Provides
+        fun provideNotificationManager(context: Context): NotificationManager {
             return context.getSystemService()!!
         }
 
