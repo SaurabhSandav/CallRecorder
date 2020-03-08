@@ -64,12 +64,12 @@ val PREF_AUDIO_RECORD_SAMPLE_RATE = Pref(
     defaultValue = 44_100
 )
 
-val PREF_AUDIO_RECORD_CHANNELS = Pref(
-    key = "AUDIO_RECORD_CHANNELS",
+val PREF_AUDIO_RECORD_CHANNEL = Pref(
+    key = "AUDIO_RECORD_CHANNEL",
     defaultValue = AudioFormat.CHANNEL_IN_MONO
 )
 
-val PREF_AUDIO_RECORD_AUDIO_ENCODING = Pref(
-    key = "AUDIO_RECORD_AUDIO_ENCODING",
+val PREF_AUDIO_RECORD_ENCODING = Pref(
+    key = "AUDIO_RECORD_ENCODING",
     defaultValue = AudioFormat.ENCODING_PCM_16BIT
 )
