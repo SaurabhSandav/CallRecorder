@@ -48,6 +48,6 @@ class MainViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        callPlayback.stopPlaying()
+        callPlayback.releasePlayer()
     }
 }

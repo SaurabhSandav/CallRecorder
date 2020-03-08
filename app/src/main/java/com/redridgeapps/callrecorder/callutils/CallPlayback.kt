@@ -35,4 +35,9 @@ class CallPlayback @Inject constructor(
         player?.release()
         player = null
     }
+
+    fun releasePlayer() {
+        player?.release()
+        player = null
+    }
 }
