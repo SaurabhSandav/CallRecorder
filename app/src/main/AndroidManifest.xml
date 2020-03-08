@@ -37,10 +37,21 @@
             </intent-filter>
         </receiver>
 
-        <!--            android:description="Call Recording"-->
         <service
             android:name=".services.CallingService"
             android:permission="android.permission.FOREGROUND_SERVICE" />
+
+        <service
+            android:name=".services.RecordingSwitchTileService"
+            android:icon="@drawable/ic_stat_name"
+            android:label="Call Recording"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+
+        </service>
 
     </application>
 

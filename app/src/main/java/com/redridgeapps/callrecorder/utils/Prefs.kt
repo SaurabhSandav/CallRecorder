@@ -44,6 +44,11 @@ val PREF_IS_FIRST_RUN = Pref(
     defaultValue = true
 )
 
+val PREF_IS_RECORDING_ON = Pref(
+    key = "IS_RECORDING_ON",
+    defaultValue = true
+)
+
 val PREF_RECORDING_API = Pref(
     key = "RECORDING_API",
     defaultValue = RecordingAPI.AudioRecord.toString()

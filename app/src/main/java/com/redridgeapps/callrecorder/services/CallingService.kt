@@ -6,6 +6,8 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.IBinder
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
@@ -19,14 +21,17 @@ import com.redridgeapps.callrecorder.callutils.CallRecorder
 import com.redridgeapps.callrecorder.callutils.CallStatus.*
 import com.redridgeapps.callrecorder.callutils.CallStatusListener
 import com.redridgeapps.callrecorder.utils.NOTIFICATION_CALL_SERVICE_ID
+import com.redridgeapps.callrecorder.utils.PREF_IS_RECORDING_ON
+import com.redridgeapps.callrecorder.utils.get
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.LazyThreadSafetyMode.NONE
 
 class CallingService : LifecycleService() {
 
     @Inject
-    lateinit var callRecorder: CallRecorder
+    lateinit var prefs: SharedPreferences
 
     @Inject
     lateinit var telephonyManager: TelephonyManager
@@ -34,19 +39,19 @@ class CallingService : LifecycleService() {
     @Inject
     lateinit var notificationManager: NotificationManager
 
-    private val callStatusListener = CallStatusListener { status ->
-        when (status) {
-            MissedCall, IncomingCallReceived -> Unit
-            IncomingCallAnswered, OutgoingCallStarted -> lifecycleScope.launch { callRecorder.startRecording() }
-            IncomingCallEnded, OutgoingCallEnded -> callRecorder.stopRecording()
-        }
-    }
+    @Inject
+    lateinit var callRecorder: CallRecorder
+
+    private val callStatusListener = createCallStatusListener()
+    private val prefsListener by lazy(NONE) { createPrefsListener(prefs) }
 
     override fun onCreate() {
         AndroidInjection.inject(this)
         super.onCreate()
 
         createNotification()
+
+        prefs.registerOnSharedPreferenceChangeListener(prefsListener)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -67,6 +72,26 @@ class CallingService : LifecycleService() {
 
         telephonyManager.listen(callStatusListener, PhoneStateListener.LISTEN_NONE)
         callRecorder.releaseRecorder()
+    }
+
+    private fun createCallStatusListener() = CallStatusListener { status ->
+        when (status) {
+            MissedCall, IncomingCallReceived -> Unit
+            IncomingCallAnswered, OutgoingCallStarted -> lifecycleScope.launch { callRecorder.startRecording() }
+            IncomingCallEnded, OutgoingCallEnded -> callRecorder.stopRecording()
+        }
+    }
+
+    private fun createPrefsListener(prefs: SharedPreferences): OnSharedPreferenceChangeListener {
+        return OnSharedPreferenceChangeListener { _, key ->
+
+            if (key != PREF_IS_RECORDING_ON.key)
+                return@OnSharedPreferenceChangeListener
+
+            if (!prefs.get(PREF_IS_RECORDING_ON)) {
+                stopForeground(true)
+            }
+        }
     }
 
     private fun createNotification() {
