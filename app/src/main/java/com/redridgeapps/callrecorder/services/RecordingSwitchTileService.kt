@@ -1,18 +1,16 @@
 package com.redridgeapps.callrecorder.services
 
-import android.content.SharedPreferences
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import com.redridgeapps.callrecorder.utils.PREF_IS_RECORDING_ON
-import com.redridgeapps.callrecorder.utils.get
-import com.redridgeapps.callrecorder.utils.modify
+import com.redridgeapps.callrecorder.utils.Prefs
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
 class RecordingSwitchTileService : TileService() {
 
     @Inject
-    lateinit var prefs: SharedPreferences
+    lateinit var prefs: Prefs
 
     private var isRecordingOn = false
 

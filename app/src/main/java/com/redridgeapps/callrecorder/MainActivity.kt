@@ -1,12 +1,10 @@
 package com.redridgeapps.callrecorder
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.redridgeapps.callrecorder.utils.PREF_IS_FIRST_RUN
-import com.redridgeapps.callrecorder.utils.get
-import com.redridgeapps.callrecorder.utils.modify
+import com.redridgeapps.callrecorder.utils.Prefs
 import com.redridgeapps.callrecorder.viewmodel.utils.ComposeViewModelFetcher
 import com.redridgeapps.callrecorder.viewmodel.utils.ComposeViewModelStores
 import com.redridgeapps.ui.routing.composeHandleBackPressed
@@ -17,7 +15,7 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var prefs: SharedPreferences
+    lateinit var prefs: Prefs
 
     @Inject
     lateinit var composeViewModelFetcher: ComposeViewModelFetcher

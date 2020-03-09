@@ -6,8 +6,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.IBinder
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
@@ -22,16 +20,15 @@ import com.redridgeapps.callrecorder.callutils.CallStatus.*
 import com.redridgeapps.callrecorder.callutils.CallStatusListener
 import com.redridgeapps.callrecorder.utils.NOTIFICATION_CALL_SERVICE_ID
 import com.redridgeapps.callrecorder.utils.PREF_IS_RECORDING_ON
-import com.redridgeapps.callrecorder.utils.get
+import com.redridgeapps.callrecorder.utils.Prefs
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.LazyThreadSafetyMode.NONE
 
 class CallingService : LifecycleService() {
 
     @Inject
-    lateinit var prefs: SharedPreferences
+    lateinit var prefs: Prefs
 
     @Inject
     lateinit var telephonyManager: TelephonyManager
@@ -43,7 +40,10 @@ class CallingService : LifecycleService() {
     lateinit var callRecorder: CallRecorder
 
     private val callStatusListener = createCallStatusListener()
-    private val prefsListener by lazy(NONE) { createPrefsListener(prefs) }
+    private val prefsListener = { key: String ->
+        if (key == PREF_IS_RECORDING_ON.key && !prefs.get(PREF_IS_RECORDING_ON))
+            stopForeground(true)
+    }
 
     override fun onCreate() {
         AndroidInjection.inject(this)
@@ -51,11 +51,13 @@ class CallingService : LifecycleService() {
 
         createNotification()
 
-        prefs.registerOnSharedPreferenceChangeListener(prefsListener)
+        prefs.addListener(prefsListener)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
+
+        createNotification()
 
         telephonyManager.listen(callStatusListener, PhoneStateListener.LISTEN_CALL_STATE)
 
@@ -71,6 +73,8 @@ class CallingService : LifecycleService() {
         super.onDestroy()
 
         telephonyManager.listen(callStatusListener, PhoneStateListener.LISTEN_NONE)
+        prefs.removeListener(prefsListener)
+
         callRecorder.releaseRecorder()
     }
 
@@ -79,18 +83,6 @@ class CallingService : LifecycleService() {
             MissedCall, IncomingCallReceived -> Unit
             IncomingCallAnswered, OutgoingCallStarted -> lifecycleScope.launch { callRecorder.startRecording() }
             IncomingCallEnded, OutgoingCallEnded -> callRecorder.stopRecording()
-        }
-    }
-
-    private fun createPrefsListener(prefs: SharedPreferences): OnSharedPreferenceChangeListener {
-        return OnSharedPreferenceChangeListener { _, key ->
-
-            if (key != PREF_IS_RECORDING_ON.key)
-                return@OnSharedPreferenceChangeListener
-
-            if (!prefs.get(PREF_IS_RECORDING_ON)) {
-                stopForeground(true)
-            }
         }
     }
 

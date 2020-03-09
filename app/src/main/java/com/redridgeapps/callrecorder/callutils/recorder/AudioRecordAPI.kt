@@ -1,13 +1,12 @@
 package com.redridgeapps.callrecorder.callutils.recorder
 
-import android.content.SharedPreferences
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import com.redridgeapps.callrecorder.utils.PREF_AUDIO_RECORD_CHANNEL
 import com.redridgeapps.callrecorder.utils.PREF_AUDIO_RECORD_ENCODING
 import com.redridgeapps.callrecorder.utils.PREF_AUDIO_RECORD_SAMPLE_RATE
-import com.redridgeapps.callrecorder.utils.get
+import com.redridgeapps.callrecorder.utils.Prefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -17,7 +16,7 @@ import java.nio.ByteOrder
 import java.nio.channels.FileChannel
 
 class AudioRecordAPI(
-    prefs: SharedPreferences
+    prefs: Prefs
 ) : Recorder {
 
     private var recorder: AudioRecord? = null

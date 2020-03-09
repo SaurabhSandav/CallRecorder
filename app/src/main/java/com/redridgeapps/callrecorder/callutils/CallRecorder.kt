@@ -1,22 +1,21 @@
 package com.redridgeapps.callrecorder.callutils
 
 import android.annotation.SuppressLint
-import android.content.SharedPreferences
 import android.media.AudioManager
 import android.os.PowerManager
 import android.os.PowerManager.WakeLock
 import com.redridgeapps.callrecorder.callutils.recorder.Recorder
 import com.redridgeapps.callrecorder.utils.PREF_RECORDING_API
+import com.redridgeapps.callrecorder.utils.Prefs
 import com.redridgeapps.callrecorder.utils.ToastMaker
-import com.redridgeapps.callrecorder.utils.get
 import java.io.File
 import java.time.Instant
 import javax.inject.Inject
 
 class CallRecorder @Inject constructor(
-    private val prefs: SharedPreferences,
     private val audioManager: AudioManager,
     private val powerManager: PowerManager,
+    private val prefs: Prefs,
     private val toastMaker: ToastMaker,
     private val recordings: Recordings
 ) {

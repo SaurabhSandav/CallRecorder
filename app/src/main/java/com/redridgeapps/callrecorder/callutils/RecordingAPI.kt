@@ -1,12 +1,12 @@
 package com.redridgeapps.callrecorder.callutils
 
-import android.content.SharedPreferences
 import com.redridgeapps.callrecorder.callutils.recorder.AudioRecordAPI
 import com.redridgeapps.callrecorder.callutils.recorder.MediaRecorderAPI
 import com.redridgeapps.callrecorder.callutils.recorder.Recorder
+import com.redridgeapps.callrecorder.utils.Prefs
 
 enum class RecordingAPI(
-    val init: (prefs: SharedPreferences) -> Recorder
+    val init: (prefs: Prefs) -> Recorder
 ) {
     MediaRecorder(::MediaRecorderAPI),
     AudioRecord(::AudioRecordAPI)

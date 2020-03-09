@@ -1,12 +1,11 @@
 package com.redridgeapps.callrecorder
 
 import android.app.Application
-import android.content.SharedPreferences
 import com.redridgeapps.callrecorder.di.AppComponent
 import com.redridgeapps.callrecorder.di.DaggerAppComponent
 import com.redridgeapps.callrecorder.services.CallingService
 import com.redridgeapps.callrecorder.utils.PREF_IS_RECORDING_ON
-import com.redridgeapps.callrecorder.utils.get
+import com.redridgeapps.callrecorder.utils.Prefs
 import com.topjohnwu.superuser.Shell
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -20,7 +19,7 @@ class App : Application(), HasAndroidInjector {
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
     @Inject
-    lateinit var prefs: SharedPreferences
+    lateinit var prefs: Prefs
 
     lateinit var appComponent: AppComponent
 
