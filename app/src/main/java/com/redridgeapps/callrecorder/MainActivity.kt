@@ -7,6 +7,7 @@ import com.redridgeapps.callrecorder.utils.PREF_IS_FIRST_RUN
 import com.redridgeapps.callrecorder.utils.Prefs
 import com.redridgeapps.callrecorder.viewmodel.utils.ComposeViewModelFetcher
 import com.redridgeapps.callrecorder.viewmodel.utils.ComposeViewModelStores
+import com.redridgeapps.ui.destroyUI
 import com.redridgeapps.ui.routing.composeHandleBackPressed
 import com.redridgeapps.ui.showUI
 import dagger.android.AndroidInjection
@@ -30,6 +31,11 @@ class MainActivity : AppCompatActivity() {
         val isFirstRun = prefs.get(PREF_IS_FIRST_RUN)
 
         showUI(isFirstRun, composeViewModelStores, composeViewModelFetcher)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        destroyUI()
     }
 
     override fun onBackPressed() {

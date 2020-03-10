@@ -29,6 +29,11 @@ fun Activity.showUI(
     }
 }
 
+// TODO Remove when disposition bug fixed
+fun Activity.destroyUI() {
+    setContent {}
+}
+
 @Composable
 fun Root(isFirstRun: Boolean) {
 

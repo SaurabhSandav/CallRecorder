@@ -1,6 +1,7 @@
 package com.redridgeapps.ui.utils
 
 import androidx.compose.Composable
+import androidx.compose.onDispose
 import com.koduok.compose.navigation.BackStackAmbient
 import com.koduok.compose.navigation.core.BackStackController
 import com.koduok.compose.navigation.core.GlobalRoute
@@ -15,7 +16,9 @@ fun WithViewModelStores(block: @Composable() () -> Unit) {
 
     val composeViewModelStores = ComposeViewModelStoresAmbient.current
     val backStackListener = ViewModelStoreBackStackListener(composeViewModelStores)
+
     backStackController.addListener(backStackListener)
+    onDispose { backStackController.removeListener(backStackListener) }
 
     block()
 }
@@ -34,11 +37,11 @@ fun getViewModelKey(): String {
     return createViewModelStoreKey(currentRoute)
 }
 
-fun createViewModelStoreKey(route: Route<*>): String {
+private fun createViewModelStoreKey(route: Route<*>): String {
     return route.key.toString() + "_" + route.index
 }
 
-class ViewModelStoreBackStackListener(
+private class ViewModelStoreBackStackListener(
     private val composeViewModelStores: IComposeViewModelStores
 ) : BackStackController.Listener {
 
