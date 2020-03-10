@@ -36,7 +36,7 @@ class Recordings @Inject constructor(
         val callEntry = callLogFetcher.getLastCallEntry() ?: error("No call log Found!")
 
         recordingQueries.insert(
-            name = callEntry.name,
+            name = if (callEntry.name.isBlank()) "Unknown" else callEntry.name,
             number = callEntry.number,
             startTime = recordingStartTime,
             endTime = recordingEndTime,

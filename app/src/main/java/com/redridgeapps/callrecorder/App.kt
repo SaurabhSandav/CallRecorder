@@ -21,7 +21,7 @@ class App : Application(), HasAndroidInjector {
     @Inject
     lateinit var prefs: Prefs
 
-    lateinit var appComponent: AppComponent
+    private lateinit var appComponent: AppComponent
 
     init {
         Shell.Config.setFlags(Shell.FLAG_REDIRECT_STDERR)

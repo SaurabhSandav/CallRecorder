@@ -14,7 +14,8 @@ INTO Recording (name, number, startTime, endTime, callType, savePath)
 VALUES (?, ?, ?, ?, ?, ?);
 
 getAll:
-SELECT * FROM Recording;
+SELECT * FROM Recording
+ORDER BY id DESC;
 
 getWithId:
 SELECT * FROM Recording WHERE id = ?;
