@@ -41,8 +41,8 @@ class CallingService : LifecycleService() {
     lateinit var callRecorder: CallRecorder
 
     private val callStatusListener = createCallStatusListener()
-    private val prefsListener = { prefObject: TypedPref<*> ->
-        if (prefObject == PREF_IS_RECORDING_ON && !prefs.get(PREF_IS_RECORDING_ON))
+    private val prefsListener = { pref: TypedPref<*> ->
+        if (pref == PREF_IS_RECORDING_ON && !prefs.get(PREF_IS_RECORDING_ON))
             stopForeground(true)
     }
 
@@ -119,7 +119,9 @@ class CallingService : LifecycleService() {
 
     companion object {
 
-        fun startSurveillance(context: Context) {
+        fun startIfRecordingOn(context: Context, prefs: Prefs) {
+
+            if (!prefs.get(PREF_IS_RECORDING_ON)) return
 
             val callingServiceIntent = Intent(context, CallingService::class.java)
             ContextCompat.startForegroundService(context, callingServiceIntent)

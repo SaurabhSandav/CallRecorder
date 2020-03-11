@@ -12,8 +12,6 @@ class RecordingSwitchTileService : TileService() {
     @Inject
     lateinit var prefs: Prefs
 
-    private var isRecordingOn = false
-
     override fun onCreate() {
         AndroidInjection.inject(this)
         super.onCreate()
@@ -34,26 +32,22 @@ class RecordingSwitchTileService : TileService() {
         flipTile()
     }
 
-    private fun updateTile() {
-
-        isRecordingOn = prefs.get(PREF_IS_RECORDING_ON)
-
-        qsTile.state = if (isRecordingOn) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
-        qsTile.updateTile()
-    }
-
     private fun flipTile() {
 
-        val prefIsRecordingOn = prefs.get(PREF_IS_RECORDING_ON)
-        isRecordingOn = !prefIsRecordingOn
+        prefs.set(
+            typedPref = PREF_IS_RECORDING_ON,
+            newValue = !prefs.get(PREF_IS_RECORDING_ON),
+            commit = true
+        )
 
-        prefs.set(PREF_IS_RECORDING_ON, isRecordingOn)
+        updateTile()
+    }
 
-        qsTile.state = if (!isRecordingOn) Tile.STATE_INACTIVE else {
-            CallingService.startSurveillance(applicationContext)
-            Tile.STATE_ACTIVE
-        }
+    private fun updateTile() {
 
+        val isRecordingOn = prefs.get(PREF_IS_RECORDING_ON)
+
+        qsTile.state = if (isRecordingOn) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
         qsTile.updateTile()
     }
 }

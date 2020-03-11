@@ -29,6 +29,8 @@ class App : Application(), HasAndroidInjector {
         Shell.Config.setTimeout(10)
     }
 
+    override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
+
     override fun onCreate() {
         super.onCreate()
 
@@ -36,16 +38,22 @@ class App : Application(), HasAndroidInjector {
         appComponent.inject(this)
 
         setupTimber()
-
-        if (prefs.get(PREF_IS_RECORDING_ON))
-            CallingService.startSurveillance(this)
+        setupCallingService()
     }
-
-    override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
 
     private fun setupTimber() {
         if (BuildConfig.DEBUG)
             Timber.plant(Timber.DebugTree())
         else TODO()
+    }
+
+    private fun setupCallingService() {
+
+        CallingService.startIfRecordingOn(this, prefs)
+
+        prefs.addListener { pref ->
+            if (pref == PREF_IS_RECORDING_ON)
+                CallingService.startIfRecordingOn(this, prefs)
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.redridgeapps.callrecorder.di.modules.android
 
 import com.redridgeapps.callrecorder.MainActivity
 import com.redridgeapps.callrecorder.MainActivityModule
+import com.redridgeapps.callrecorder.broadcastreceivers.OnBootReceiver
 import com.redridgeapps.callrecorder.services.CallingService
 import com.redridgeapps.callrecorder.services.CallingServiceModule
 import com.redridgeapps.callrecorder.services.RecordingSwitchTileService
@@ -31,6 +32,14 @@ abstract class AndroidComponentBuilder {
     abstract fun bindRecordingSwitchTileService(): RecordingSwitchTileService
 
     // endregion Services
+
+    // region BroadcastReceivers
+
+    @ContributesAndroidInjector
+    @PerBroadcastReceiver
+    abstract fun bindOnBootReceiver(): OnBootReceiver
+
+    // endregion BroadcastReceivers
 }
 
 @Scope
@@ -40,3 +49,7 @@ annotation class PerActivity
 @Scope
 @Retention(AnnotationRetention.RUNTIME)
 annotation class PerService
+
+@Scope
+@Retention(AnnotationRetention.RUNTIME)
+annotation class PerBroadcastReceiver
