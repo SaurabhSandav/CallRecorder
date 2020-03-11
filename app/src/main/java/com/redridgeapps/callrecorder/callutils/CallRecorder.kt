@@ -5,9 +5,9 @@ import android.media.AudioManager
 import android.os.PowerManager
 import android.os.PowerManager.WakeLock
 import com.redridgeapps.callrecorder.callutils.recorder.Recorder
-import com.redridgeapps.callrecorder.utils.PREF_RECORDING_API
-import com.redridgeapps.callrecorder.utils.Prefs
 import com.redridgeapps.callrecorder.utils.ToastMaker
+import com.redridgeapps.callrecorder.utils.prefs.PREF_RECORDING_API
+import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import java.io.File
 import java.time.Instant
 import javax.inject.Inject

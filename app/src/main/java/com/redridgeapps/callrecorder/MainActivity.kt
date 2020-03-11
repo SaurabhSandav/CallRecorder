@@ -3,8 +3,8 @@ package com.redridgeapps.callrecorder
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.redridgeapps.callrecorder.utils.PREF_IS_FIRST_RUN
-import com.redridgeapps.callrecorder.utils.Prefs
+import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_FIRST_RUN
+import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import com.redridgeapps.callrecorder.viewmodel.utils.ComposeViewModelFetcher
 import com.redridgeapps.callrecorder.viewmodel.utils.ComposeViewModelStores
 import com.redridgeapps.ui.destroyUI
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         val composeViewModelStores by viewModels<ComposeViewModelStores>()
 
-        prefs.modify(PREF_IS_FIRST_RUN, false)
+        prefs.set(PREF_IS_FIRST_RUN, false)
         val isFirstRun = prefs.get(PREF_IS_FIRST_RUN)
 
         showUI(isFirstRun, composeViewModelStores, composeViewModelFetcher)

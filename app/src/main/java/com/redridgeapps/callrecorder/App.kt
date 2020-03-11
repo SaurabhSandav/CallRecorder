@@ -4,8 +4,8 @@ import android.app.Application
 import com.redridgeapps.callrecorder.di.AppComponent
 import com.redridgeapps.callrecorder.di.DaggerAppComponent
 import com.redridgeapps.callrecorder.services.CallingService
-import com.redridgeapps.callrecorder.utils.PREF_IS_RECORDING_ON
-import com.redridgeapps.callrecorder.utils.Prefs
+import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_RECORDING_ON
+import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import com.topjohnwu.superuser.Shell
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector

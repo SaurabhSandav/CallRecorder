@@ -19,8 +19,9 @@ import com.redridgeapps.callrecorder.callutils.CallRecorder
 import com.redridgeapps.callrecorder.callutils.CallStatus.*
 import com.redridgeapps.callrecorder.callutils.CallStatusListener
 import com.redridgeapps.callrecorder.utils.NOTIFICATION_CALL_SERVICE_ID
-import com.redridgeapps.callrecorder.utils.PREF_IS_RECORDING_ON
-import com.redridgeapps.callrecorder.utils.Prefs
+import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_RECORDING_ON
+import com.redridgeapps.callrecorder.utils.prefs.Prefs
+import com.redridgeapps.callrecorder.utils.prefs.TypedPref
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,8 +41,8 @@ class CallingService : LifecycleService() {
     lateinit var callRecorder: CallRecorder
 
     private val callStatusListener = createCallStatusListener()
-    private val prefsListener = { key: String ->
-        if (key == PREF_IS_RECORDING_ON.key && !prefs.get(PREF_IS_RECORDING_ON))
+    private val prefsListener = { prefObject: TypedPref<*> ->
+        if (prefObject == PREF_IS_RECORDING_ON && !prefs.get(PREF_IS_RECORDING_ON))
             stopForeground(true)
     }
 

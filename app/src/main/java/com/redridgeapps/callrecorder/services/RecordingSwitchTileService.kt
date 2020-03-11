@@ -2,8 +2,8 @@ package com.redridgeapps.callrecorder.services
 
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import com.redridgeapps.callrecorder.utils.PREF_IS_RECORDING_ON
-import com.redridgeapps.callrecorder.utils.Prefs
+import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_RECORDING_ON
+import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
@@ -47,7 +47,7 @@ class RecordingSwitchTileService : TileService() {
         val prefIsRecordingOn = prefs.get(PREF_IS_RECORDING_ON)
         isRecordingOn = !prefIsRecordingOn
 
-        prefs.modify(PREF_IS_RECORDING_ON, isRecordingOn)
+        prefs.set(PREF_IS_RECORDING_ON, isRecordingOn)
 
         qsTile.state = if (!isRecordingOn) Tile.STATE_INACTIVE else {
             CallingService.startSurveillance(applicationContext)

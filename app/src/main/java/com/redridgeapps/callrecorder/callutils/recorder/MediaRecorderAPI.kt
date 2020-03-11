@@ -1,9 +1,9 @@
 package com.redridgeapps.callrecorder.callutils.recorder
 
 import android.media.MediaRecorder
-import com.redridgeapps.callrecorder.utils.PREF_MEDIA_RECORDER_CHANNELS
-import com.redridgeapps.callrecorder.utils.PREF_MEDIA_RECORDER_SAMPLE_RATE
-import com.redridgeapps.callrecorder.utils.Prefs
+import com.redridgeapps.callrecorder.utils.prefs.PREF_MEDIA_RECORDER_CHANNELS
+import com.redridgeapps.callrecorder.utils.prefs.PREF_MEDIA_RECORDER_SAMPLE_RATE
+import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
