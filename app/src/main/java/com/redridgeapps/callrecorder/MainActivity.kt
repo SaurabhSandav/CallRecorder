@@ -3,6 +3,7 @@ package com.redridgeapps.callrecorder
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_FIRST_RUN
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import com.redridgeapps.callrecorder.viewmodel.utils.ComposeViewModelFetcher
@@ -11,6 +12,8 @@ import com.redridgeapps.ui.destroyUI
 import com.redridgeapps.ui.routing.composeHandleBackPressed
 import com.redridgeapps.ui.showUI
 import dagger.android.AndroidInjection
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -25,12 +28,15 @@ class MainActivity : AppCompatActivity() {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
 
-        val composeViewModelStores by viewModels<ComposeViewModelStores>()
+        lifecycleScope.launch {
 
-        prefs.set(PREF_IS_FIRST_RUN, false)
-        val isFirstRun = prefs.get(PREF_IS_FIRST_RUN)
+            val composeViewModelStores by viewModels<ComposeViewModelStores>()
 
-        showUI(isFirstRun, composeViewModelStores, composeViewModelFetcher)
+            prefs.set(PREF_IS_FIRST_RUN, false)
+            val isFirstRun = prefs.get(PREF_IS_FIRST_RUN).first()
+
+            showUI(isFirstRun, composeViewModelStores, composeViewModelFetcher)
+        }
     }
 
     override fun onDestroy() {

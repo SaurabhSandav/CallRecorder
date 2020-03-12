@@ -21,8 +21,10 @@ import com.redridgeapps.callrecorder.callutils.CallStatusListener
 import com.redridgeapps.callrecorder.utils.NOTIFICATION_CALL_SERVICE_ID
 import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_RECORDING_ON
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
-import com.redridgeapps.callrecorder.utils.prefs.TypedPref
 import dagger.android.AndroidInjection
+import kotlinx.coroutines.flow.filterNot
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -41,10 +43,6 @@ class CallingService : LifecycleService() {
     lateinit var callRecorder: CallRecorder
 
     private val callStatusListener = createCallStatusListener()
-    private val prefsListener = { pref: TypedPref<*> ->
-        if (pref == PREF_IS_RECORDING_ON && !prefs.get(PREF_IS_RECORDING_ON))
-            stopForeground(true)
-    }
 
     override fun onCreate() {
         AndroidInjection.inject(this)
@@ -52,7 +50,10 @@ class CallingService : LifecycleService() {
 
         createNotification()
 
-        prefs.addListener(prefsListener)
+        prefs.get(PREF_IS_RECORDING_ON)
+            .filterNot { isRecordingOn -> isRecordingOn }
+            .onEach { stopForeground(true) }
+            .launchIn(lifecycleScope)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -74,8 +75,6 @@ class CallingService : LifecycleService() {
         super.onDestroy()
 
         telephonyManager.listen(callStatusListener, PhoneStateListener.LISTEN_NONE)
-        prefs.removeListener(prefsListener)
-
         callRecorder.releaseRecorder()
     }
 
@@ -119,12 +118,12 @@ class CallingService : LifecycleService() {
 
     companion object {
 
-        fun startIfRecordingOn(context: Context, prefs: Prefs) {
+        fun start(context: Context) {
 
-            if (!prefs.get(PREF_IS_RECORDING_ON)) return
-
-            val callingServiceIntent = Intent(context, CallingService::class.java)
-            ContextCompat.startForegroundService(context, callingServiceIntent)
+            ContextCompat.startForegroundService(
+                context,
+                Intent(context, CallingService::class.java)
+            )
         }
     }
 }

@@ -1,97 +1,92 @@
 package com.redridgeapps.callrecorder.utils.prefs
 
-import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class Prefs @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) {
 
-    private val listeners = mutableListOf<(TypedPref<*>) -> Unit>()
+    private val prefsChannel = BroadcastChannel<TypedPref<*>>(Channel.BUFFERED)
     private val preferenceListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-        prefList.firstOrNull { key == it.key }?.let {
-            listeners.forEach { listener -> listener(it) }
-        }
+        prefList.firstOrNull { key == it.key }
+            ?.let { prefsChannel.offer(it) }
     }
 
     init {
         sharedPreferences.registerOnSharedPreferenceChangeListener(preferenceListener)
     }
 
-    @Suppress("UNCHECKED_CAST")
-    fun <T : Any?> get(typedPref: TypedPref<T>): T = with(sharedPreferences) {
-        return when (typedPref) {
-            is PrefString -> getString(typedPref.key, typedPref.defaultValue) as T
-            is PrefStringNullable -> getString(typedPref.key, typedPref.defaultValue) as T
-            is PrefBoolean -> getBoolean(typedPref.key, typedPref.defaultValue) as T
-            is PrefInt -> getInt(typedPref.key, typedPref.defaultValue) as T
-            is PrefLong -> getLong(typedPref.key, typedPref.defaultValue) as T
-            is PrefFloat -> getFloat(typedPref.key, typedPref.defaultValue) as T
-            else -> error("Unsupported class")
-        }
+    fun <T : Any?> get(pref: TypedPref<T>): Flow<T> {
+        return prefsChannel.asFlow()
+            .filter { it == pref }
+            .onStart { emit(pref) }
+            .map { getInternal(pref) }
     }
 
-    @SuppressLint("ApplySharedPref")
-    fun <T> set(typedPref: TypedPref<T>, newValue: T, commit: Boolean = false) {
+    suspend fun <T : Any?> set(pref: TypedPref<T>, newValue: T) {
+        withContext(Dispatchers.IO) {
 
-        val editor = sharedPreferences.edit()
+            val editor = sharedPreferences.edit()
 
-        when (typedPref) {
-            is PrefString, is PrefStringNullable -> editor.putString(
-                typedPref.key,
-                newValue as String?
-            )
-            is PrefBoolean -> editor.putBoolean(typedPref.key, newValue as Boolean)
-            is PrefInt -> editor.putInt(typedPref.key, newValue as Int)
-            is PrefLong -> editor.putLong(typedPref.key, newValue as Long)
-            is PrefFloat -> editor.putFloat(typedPref.key, newValue as Float)
-            else -> error("Unsupported class")
-        }
+            when (pref) {
+                is PrefString -> editor.putString(pref.key, newValue as String)
+                is PrefStringNullable -> editor.putString(pref.key, newValue as String?)
+                is PrefBoolean -> editor.putBoolean(pref.key, newValue as Boolean)
+                is PrefInt -> editor.putInt(pref.key, newValue as Int)
+                is PrefLong -> editor.putLong(pref.key, newValue as Long)
+                is PrefFloat -> editor.putFloat(pref.key, newValue as Float)
+                else -> error("Unsupported class")
+            }
 
-        if (commit)
             editor.commit()
-        else
-            editor.apply()
-    }
-
-    fun edit(block: Editor.() -> Unit) {
-
-        Editor(sharedPreferences).run {
-            block()
-            apply()
         }
     }
 
-    fun addListener(listener: (TypedPref<*>) -> Unit) {
-        listeners.add(listener)
+    suspend fun edit(block: Editor.() -> Unit) {
+        withContext(Dispatchers.IO) {
+            Editor(sharedPreferences).run {
+                block()
+                commit()
+            }
+        }
     }
 
-    fun removeListener(listener: (TypedPref<*>) -> Unit) {
-        listeners.remove(listener)
+    private fun <T : Any?> getInternal(pref: TypedPref<T>): T = with(sharedPreferences) {
+        @Suppress("UNCHECKED_CAST")
+        return when (pref) {
+            is PrefString -> getString(pref.key, pref.defaultValue) as T
+            is PrefStringNullable -> getString(pref.key, pref.defaultValue) as T
+            is PrefBoolean -> getBoolean(pref.key, pref.defaultValue) as T
+            is PrefInt -> getInt(pref.key, pref.defaultValue) as T
+            is PrefLong -> getLong(pref.key, pref.defaultValue) as T
+            is PrefFloat -> getFloat(pref.key, pref.defaultValue) as T
+            else -> error("Unsupported class")
+        }
     }
 
     class Editor(sharedPreferences: SharedPreferences) {
 
         private val editor = sharedPreferences.edit()
 
-        fun <T> put(typedPref: TypedPref<T>, newValue: T) {
+        fun <T : Any?> put(pref: TypedPref<T>, newValue: T) {
 
-            when (typedPref) {
+            when (pref) {
                 is PrefString, is PrefStringNullable -> editor.putString(
-                    typedPref.key,
+                    pref.key,
                     newValue as String?
                 )
-                is PrefBoolean -> editor.putBoolean(typedPref.key, newValue as Boolean)
-                is PrefInt -> editor.putInt(typedPref.key, newValue as Int)
-                is PrefLong -> editor.putLong(typedPref.key, newValue as Long)
-                is PrefFloat -> editor.putFloat(typedPref.key, newValue as Float)
+                is PrefBoolean -> editor.putBoolean(pref.key, newValue as Boolean)
+                is PrefInt -> editor.putInt(pref.key, newValue as Int)
+                is PrefLong -> editor.putLong(pref.key, newValue as Long)
+                is PrefFloat -> editor.putFloat(pref.key, newValue as Float)
                 else -> error("Unsupported class")
             }
-        }
-
-        fun apply() {
-            editor.apply()
         }
 
         fun commit() {

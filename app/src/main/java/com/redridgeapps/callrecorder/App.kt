@@ -10,6 +10,10 @@ import com.topjohnwu.superuser.Shell
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -49,11 +53,9 @@ class App : Application(), HasAndroidInjector {
 
     private fun setupCallingService() {
 
-        CallingService.startIfRecordingOn(this, prefs)
-
-        prefs.addListener { pref ->
-            if (pref == PREF_IS_RECORDING_ON)
-                CallingService.startIfRecordingOn(this, prefs)
-        }
+        prefs.get(PREF_IS_RECORDING_ON)
+            .filter { isRecordingOn -> isRecordingOn }
+            .onEach { CallingService.start(this@App) }
+            .launchIn(GlobalScope)
     }
 }

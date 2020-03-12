@@ -1,6 +1,5 @@
 package com.redridgeapps.callrecorder.callutils
 
-import android.annotation.SuppressLint
 import android.media.AudioManager
 import android.os.PowerManager
 import android.os.PowerManager.WakeLock
@@ -8,6 +7,7 @@ import com.redridgeapps.callrecorder.callutils.recorder.Recorder
 import com.redridgeapps.callrecorder.utils.ToastMaker
 import com.redridgeapps.callrecorder.utils.prefs.PREF_RECORDING_API
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
+import kotlinx.coroutines.flow.first
 import java.io.File
 import java.time.Instant
 import javax.inject.Inject
@@ -29,7 +29,7 @@ class CallRecorder @Inject constructor(
 
     suspend fun startRecording() {
 
-        val recordingAPIStr = prefs.get(PREF_RECORDING_API)
+        val recordingAPIStr = prefs.get(PREF_RECORDING_API).first()
         val recordingAPI = RecordingAPI.valueOf(recordingAPIStr)
 
         recorder = recordingAPI.init(prefs)
@@ -65,9 +65,9 @@ class CallRecorder @Inject constructor(
         releaseWakeLock()
     }
 
-    @SuppressLint("WakelockTimeout")
     private fun acquireWakeLock() {
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyApp::MyWakelockTag")
+        //noinspection WakelockTimeout
         wakeLock!!.acquire()
     }
 

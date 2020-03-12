@@ -2,7 +2,6 @@ package com.redridgeapps.callrecorder.di.modules.android
 
 import com.redridgeapps.callrecorder.MainActivity
 import com.redridgeapps.callrecorder.MainActivityModule
-import com.redridgeapps.callrecorder.broadcastreceivers.OnBootReceiver
 import com.redridgeapps.callrecorder.services.CallingService
 import com.redridgeapps.callrecorder.services.CallingServiceModule
 import com.redridgeapps.callrecorder.services.RecordingSwitchTileService
@@ -34,10 +33,6 @@ abstract class AndroidComponentBuilder {
     // endregion Services
 
     // region BroadcastReceivers
-
-    @ContributesAndroidInjector
-    @PerBroadcastReceiver
-    abstract fun bindOnBootReceiver(): OnBootReceiver
 
     // endregion BroadcastReceivers
 }

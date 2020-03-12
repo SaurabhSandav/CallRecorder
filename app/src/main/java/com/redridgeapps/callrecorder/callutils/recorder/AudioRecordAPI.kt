@@ -8,6 +8,8 @@ import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_ENCODING
 import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_SAMPLE_RATE
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
@@ -16,26 +18,31 @@ import java.nio.ByteOrder
 import java.nio.channels.FileChannel
 
 class AudioRecordAPI(
-    prefs: Prefs
+    private val prefs: Prefs
 ) : Recorder {
 
     private var recorder: AudioRecord? = null
     private var isRecording = false
-    private val sampleRate = prefs.get(PREF_AUDIO_RECORD_SAMPLE_RATE)
-    private val audioChannel = prefs.get(PREF_AUDIO_RECORD_CHANNEL)
-    private val audioEncoding = prefs.get(PREF_AUDIO_RECORD_ENCODING)
 
     override val saveFileExt = "wav"
 
     override suspend fun startRecording(saveFile: File) = withContext(Dispatchers.IO) {
 
-        val bufferSize = AudioRecord.getMinBufferSize(sampleRate, audioChannel, audioEncoding)
+        val sampleRate = async { prefs.get(PREF_AUDIO_RECORD_SAMPLE_RATE).first() }
+        val audioChannel = async { prefs.get(PREF_AUDIO_RECORD_CHANNEL).first() }
+        val audioEncoding = async { prefs.get(PREF_AUDIO_RECORD_ENCODING).first() }
+
+        val bufferSize = AudioRecord.getMinBufferSize(
+            sampleRate.await(),
+            audioChannel.await(),
+            audioEncoding.await()
+        )
 
         recorder = AudioRecord(
             MediaRecorder.AudioSource.VOICE_CALL,
-            sampleRate,
-            audioChannel,
-            audioEncoding,
+            sampleRate.await(),
+            audioChannel.await(),
+            audioEncoding.await(),
             bufferSize
         )
 
@@ -92,12 +99,9 @@ class AudioRecordAPI(
     private fun writeHeader(channel: FileChannel) {
 
         val byteBuffer = ByteBuffer.allocateDirect(44).order(ByteOrder.LITTLE_ENDIAN)
-        val channels = when (audioChannel) {
-            AudioFormat.CHANNEL_IN_MONO -> 1
-            AudioFormat.CHANNEL_IN_STEREO -> 2
-            else -> error("Invalid audio channel")
-        }
-        val bitsPerSample = when (audioEncoding) {
+        val sampleRate = recorder!!.sampleRate
+        val channels = recorder!!.channelCount
+        val bitsPerSample = when (recorder!!.audioFormat) {
             AudioFormat.ENCODING_PCM_16BIT -> 16
             AudioFormat.ENCODING_PCM_8BIT -> 8
             else -> error("Invalid audio encoding")
