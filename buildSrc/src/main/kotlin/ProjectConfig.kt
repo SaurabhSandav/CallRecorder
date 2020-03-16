@@ -68,7 +68,7 @@ object Lifecycle {
 }
 
 object Dagger {
-    private const val VERSION = "2.26"
+    private const val VERSION = "2.27"
 
     const val DAGGER = "com.google.dagger:dagger:$VERSION"
     const val ANDROID_SUPPORT = "com.google.dagger:dagger-android-support:$VERSION"

@@ -19,12 +19,8 @@ import com.redridgeapps.callrecorder.callutils.CallRecorder
 import com.redridgeapps.callrecorder.callutils.CallStatus.*
 import com.redridgeapps.callrecorder.callutils.CallStatusListener
 import com.redridgeapps.callrecorder.utils.NOTIFICATION_CALL_SERVICE_ID
-import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_RECORDING_ON
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import dagger.android.AndroidInjection
-import kotlinx.coroutines.flow.filterNot
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -49,15 +45,17 @@ class CallingService : LifecycleService() {
         super.onCreate()
 
         createNotification()
-
-        prefs.get(PREF_IS_RECORDING_ON)
-            .filterNot { isRecordingOn -> isRecordingOn }
-            .onEach { stopForeground(true) }
-            .launchIn(lifecycleScope)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
+
+        if (intent?.action == ACTION_STOP) {
+            stopForeground(true)
+            stopSelf()
+
+            return START_NOT_STICKY
+        }
 
         createNotification()
 
@@ -118,12 +116,22 @@ class CallingService : LifecycleService() {
 
     companion object {
 
+        private const val ACTION_STOP = "ACTION_STOP"
+
         fun start(context: Context) {
 
             ContextCompat.startForegroundService(
                 context,
                 Intent(context, CallingService::class.java)
             )
+        }
+
+        fun stop(context: Context) {
+
+            val intent = Intent(context, CallingService::class.java)
+            intent.action = ACTION_STOP
+
+            ContextCompat.startForegroundService(context, intent)
         }
     }
 }
