@@ -36,7 +36,7 @@ object SystemizerDestination : Destination {
     }
 }
 
-val ISystemizerViewModel.systemizerState: SystemizerState
+private val ISystemizerViewModel.systemizerState: SystemizerState
     get() = uiState as SystemizerState
 
 @Composable

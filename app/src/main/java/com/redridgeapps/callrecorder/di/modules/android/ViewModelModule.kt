@@ -2,6 +2,7 @@ package com.redridgeapps.callrecorder.di.modules.android
 
 import androidx.lifecycle.ViewModel
 import com.redridgeapps.callrecorder.viewmodel.MainViewModel
+import com.redridgeapps.callrecorder.viewmodel.SettingsViewModel
 import com.redridgeapps.callrecorder.viewmodel.SystemizerViewModel
 import dagger.Binds
 import dagger.MapKey
@@ -26,6 +27,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MainViewModel::class)
     abstract fun bindMainViewModel(viewModel: MainViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SettingsViewModel::class)
+    abstract fun bindSettingsViewModel(viewModel: SettingsViewModel): ViewModel
 
     @Binds
     @IntoMap

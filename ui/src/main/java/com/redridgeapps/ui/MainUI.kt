@@ -41,7 +41,7 @@ object MainDestination : Destination {
     }
 }
 
-val IMainViewModel.mainState: MainState
+private val IMainViewModel.mainState: MainState
     get() = uiState as MainState
 
 @Composable
@@ -51,7 +51,7 @@ private fun MainUI(viewModel: IMainViewModel) {
         @Composable { it: BottomAppBar.FabConfiguration? -> MainBottomAppBar(viewModel, it) }
 
     Scaffold(
-        topAppBar = @Composable { MainTopAppBar() },
+        topAppBar = { MainTopAppBar() },
         bottomAppBar = if (viewModel.mainState.selectedId == -1) null else bottomAppBar
     ) { modifier ->
         ContentMain(viewModel, modifier)
@@ -62,8 +62,8 @@ private fun MainUI(viewModel: IMainViewModel) {
 private fun MainTopAppBar() {
 
     TopAppBar(
-        title = @Composable { Text(text = stringResource(R.string.app_name)) },
-        actions = @Composable {
+        title = { Text(text = stringResource(R.string.app_name)) },
+        actions = {
 
             val backStack = BackStackAmbient.current
             val onClick = { backStack.push(SystemizerDestination) }
