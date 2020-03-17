@@ -16,8 +16,9 @@ import java.io.FileOutputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.channels.FileChannel
+import javax.inject.Inject
 
-class AudioRecordAPI(
+class AudioRecordAPI @Inject constructor(
     private val prefs: Prefs
 ) : Recorder {
 

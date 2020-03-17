@@ -3,21 +3,27 @@ package com.redridgeapps.callrecorder.callutils
 import android.media.AudioManager
 import android.os.PowerManager
 import android.os.PowerManager.WakeLock
+import com.redridgeapps.callrecorder.callutils.recorder.AudioRecordAPI
+import com.redridgeapps.callrecorder.callutils.recorder.MediaRecorderAPI
 import com.redridgeapps.callrecorder.callutils.recorder.Recorder
 import com.redridgeapps.callrecorder.utils.ToastMaker
 import com.redridgeapps.callrecorder.utils.prefs.PREF_RECORDING_API
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
+import com.redridgeapps.repository.callutils.RecordingAPI
 import kotlinx.coroutines.flow.first
 import java.io.File
 import java.time.Instant
 import javax.inject.Inject
+import javax.inject.Provider
 
 class CallRecorder @Inject constructor(
     private val audioManager: AudioManager,
     private val powerManager: PowerManager,
     private val prefs: Prefs,
     private val toastMaker: ToastMaker,
-    private val recordings: Recordings
+    private val recordings: Recordings,
+    private val audioRecordAPI: Provider<AudioRecordAPI>,
+    private val mediaRecorderAPI: Provider<MediaRecorderAPI>
 ) {
 
     private var recorder: Recorder? = null
@@ -32,7 +38,10 @@ class CallRecorder @Inject constructor(
         val recordingAPIStr = prefs.get(PREF_RECORDING_API).first()
         val recordingAPI = RecordingAPI.valueOf(recordingAPIStr)
 
-        recorder = recordingAPI.init(prefs)
+        recorder = when (recordingAPI) {
+            RecordingAPI.MediaRecorder -> mediaRecorderAPI.get()
+            RecordingAPI.AudioRecord -> audioRecordAPI.get()
+        }
         saveFile = recordings.generateFileName(recorder!!.saveFileExt)
         recordingStartTime = Instant.now().toEpochMilli()
 

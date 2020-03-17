@@ -1,7 +1,7 @@
 package com.redridgeapps.callrecorder.utils.prefs
 
 import android.media.AudioFormat
-import com.redridgeapps.callrecorder.callutils.RecordingAPI
+import com.redridgeapps.repository.callutils.RecordingAPI
 
 var prefList: List<TypedPref<*>> = emptyList()
     private set

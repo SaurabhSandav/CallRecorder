@@ -8,8 +8,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import java.io.File
+import javax.inject.Inject
 
-class MediaRecorderAPI(
+class MediaRecorderAPI @Inject constructor(
     private val prefs: Prefs
 ) : Recorder {
 
