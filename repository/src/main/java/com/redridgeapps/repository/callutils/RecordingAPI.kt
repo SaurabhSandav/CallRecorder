@@ -1,6 +1,6 @@
 package com.redridgeapps.repository.callutils
 
 enum class RecordingAPI {
-    MediaRecorder,
-    AudioRecord
+    MEDIA_RECORDER,
+    AUDIO_RECORD
 }

@@ -1,6 +1,8 @@
 package com.redridgeapps.callrecorder.utils.prefs
 
 import android.media.AudioFormat
+import com.redridgeapps.repository.callutils.MediaRecorderChannel
+import com.redridgeapps.repository.callutils.MediaRecorderSampleRate
 import com.redridgeapps.repository.callutils.RecordingAPI
 
 var prefList: List<TypedPref<*>> = emptyList()
@@ -23,17 +25,17 @@ val PREF_IS_RECORDING_ON = PrefBoolean(
 
 val PREF_RECORDING_API = PrefString(
     key = "RECORDING_API",
-    defaultValue = RecordingAPI.AudioRecord.toString()
+    defaultValue = RecordingAPI.AUDIO_RECORD.toString()
 ).addToPrefList()
 
 val PREF_MEDIA_RECORDER_CHANNELS = PrefInt(
     key = "MEDIA_RECORDER_CHANNELS",
-    defaultValue = 1
+    defaultValue = MediaRecorderChannel.MONO.numChannels
 ).addToPrefList()
 
 val PREF_MEDIA_RECORDER_SAMPLE_RATE = PrefInt(
     key = "MEDIA_RECORDER_SAMPLE_RATE",
-    defaultValue = 44_100
+    defaultValue = MediaRecorderSampleRate.S44_100.sampleRate
 ).addToPrefList()
 
 val PREF_AUDIO_RECORD_SAMPLE_RATE = PrefInt(

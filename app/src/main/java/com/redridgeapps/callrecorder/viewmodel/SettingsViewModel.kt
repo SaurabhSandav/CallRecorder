@@ -3,10 +3,9 @@ package com.redridgeapps.callrecorder.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.utils.Systemizer
-import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_RECORDING_ON
-import com.redridgeapps.callrecorder.utils.prefs.PREF_RECORDING_API
-import com.redridgeapps.callrecorder.utils.prefs.Prefs
-import com.redridgeapps.callrecorder.utils.prefs.TypedPref
+import com.redridgeapps.callrecorder.utils.prefs.*
+import com.redridgeapps.repository.callutils.MediaRecorderChannel
+import com.redridgeapps.repository.callutils.MediaRecorderSampleRate
 import com.redridgeapps.repository.callutils.RecordingAPI
 import com.redridgeapps.repository.viewmodel.ISettingsViewModel
 import com.redridgeapps.ui.SettingsState
@@ -28,6 +27,12 @@ class SettingsViewModel @Inject constructor(
 
             observePref(PREF_IS_RECORDING_ON) { uiState.isRecordingOn = it }
             observePref(PREF_RECORDING_API) { uiState.recordingAPI = RecordingAPI.valueOf(it) }
+            observePref(PREF_MEDIA_RECORDER_CHANNELS) { channels ->
+                uiState.mediaRecorderChannels = MediaRecorderChannel.valueOf(channels)
+            }
+            observePref(PREF_MEDIA_RECORDER_SAMPLE_RATE) { sampleRate ->
+                uiState.mediaRecorderSampleRate = MediaRecorderSampleRate.valueOf(sampleRate)
+            }
 
             systemizer.isAppSystemizedFlow
                 .onEach { uiState.isSystemized = it }
@@ -63,6 +68,24 @@ class SettingsViewModel @Inject constructor(
             uiState.recordingAPI = null
 
             prefs.set(PREF_RECORDING_API, recordingAPI.toString())
+        }
+    }
+
+    override fun setMediaRecorderChannels(mediaRecorderChannel: MediaRecorderChannel) {
+        viewModelScope.launch {
+
+            uiState.mediaRecorderChannels = null
+
+            prefs.set(PREF_MEDIA_RECORDER_CHANNELS, mediaRecorderChannel.numChannels)
+        }
+    }
+
+    override fun setMediaRecorderSampleRate(mediaRecorderSampleRate: MediaRecorderSampleRate) {
+        viewModelScope.launch {
+
+            uiState.mediaRecorderSampleRate = null
+
+            prefs.set(PREF_MEDIA_RECORDER_SAMPLE_RATE, mediaRecorderSampleRate.sampleRate)
         }
     }
 

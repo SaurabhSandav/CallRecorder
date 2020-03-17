@@ -39,8 +39,8 @@ class CallRecorder @Inject constructor(
         val recordingAPI = RecordingAPI.valueOf(recordingAPIStr)
 
         recorder = when (recordingAPI) {
-            RecordingAPI.MediaRecorder -> mediaRecorderAPI.get()
-            RecordingAPI.AudioRecord -> audioRecordAPI.get()
+            RecordingAPI.MEDIA_RECORDER -> mediaRecorderAPI.get()
+            RecordingAPI.AUDIO_RECORD -> audioRecordAPI.get()
         }
         saveFile = recordings.generateFileName(recorder!!.saveFileExt)
         recordingStartTime = Instant.now().toEpochMilli()

@@ -61,19 +61,27 @@ fun SwitchPreference(
 }
 
 @Composable
-fun SingleSelectListPreference(
+fun <T> SingleSelectListPreference(
     title: String,
-    items: List<String>,
-    selectedItem: String? = null,
-    onSelectedChange: (String) -> Unit
+    items: List<T>,
+    keyToTextMapper: (T) -> String,
+    selectedItem: T? = null,
+    onSelectedChange: (T) -> Unit
 ) {
 
     val showDialog = state { false }
 
-    ListItem(
-        text = { Text(title) }
-    ) {
-        showDialog.value = true
+    if (selectedItem != null) {
+        ListItem(
+            text = { Text(title) },
+            secondaryText = { Text(keyToTextMapper(selectedItem)) },
+            onClick = { showDialog.value = true }
+        )
+    } else {
+        ListItem(
+            text = { Text(title) },
+            onClick = { showDialog.value = true }
+        )
     }
 
     if (showDialog.value) {
@@ -81,19 +89,21 @@ fun SingleSelectListPreference(
             title = title,
             showDialog = showDialog,
             items = items,
-            selectedItem = selectedItem,
+            keyToTextMapper = keyToTextMapper,
+            selectedOption = selectedItem,
             onSelectedChange = onSelectedChange
         )
     }
 }
 
 @Composable
-private fun RadioGroupDialogPreference(
+private fun <T> RadioGroupDialogPreference(
     title: String,
     showDialog: MutableState<Boolean>,
-    items: List<String>,
-    selectedItem: String? = null,
-    onSelectedChange: (String) -> Unit
+    items: List<T>,
+    keyToTextMapper: (T) -> String,
+    selectedOption: T?,
+    onSelectedChange: (T) -> Unit
 ) {
 
     DialogPreference(
@@ -101,11 +111,37 @@ private fun RadioGroupDialogPreference(
         onCloseRequest = { showDialog.value = false },
         onPositiveButtonClick = { showDialog.value = false }
     ) {
-        RadioGroup(
+        KeyedRadioGroup(
             options = items,
-            selectedOption = selectedItem,
+            keyToTextMapper = keyToTextMapper,
+            selectedOption = selectedOption,
             onSelectedChange = onSelectedChange
         )
+    }
+}
+
+@Composable
+private fun <T> KeyedRadioGroup(
+    options: List<T>,
+    keyToTextMapper: (T) -> String,
+    selectedOption: T?,
+    onSelectedChange: (T) -> Unit,
+    radioColor: Color = MaterialTheme.colors().secondary,
+    textStyle: TextStyle? = null
+) {
+
+    RadioGroup {
+        Column {
+            options.forEach { key ->
+                RadioGroupTextItem(
+                    selected = (key == selectedOption),
+                    onSelect = { onSelectedChange(key) },
+                    text = keyToTextMapper(key),
+                    radioColor = radioColor,
+                    textStyle = textStyle
+                )
+            }
+        }
     }
 }
 
