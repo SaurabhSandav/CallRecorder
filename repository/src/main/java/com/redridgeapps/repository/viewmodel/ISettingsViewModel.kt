@@ -1,8 +1,6 @@
 package com.redridgeapps.repository.viewmodel
 
-import com.redridgeapps.repository.callutils.MediaRecorderChannel
-import com.redridgeapps.repository.callutils.MediaRecorderSampleRate
-import com.redridgeapps.repository.callutils.RecordingAPI
+import com.redridgeapps.repository.callutils.*
 
 interface ISettingsViewModel : ViewModelMarker {
 
@@ -14,7 +12,13 @@ interface ISettingsViewModel : ViewModelMarker {
 
     fun setRecordingAPI(recordingAPI: RecordingAPI)
 
-    fun setMediaRecorderChannels(mediaRecorderChannel: MediaRecorderChannel)
+    fun setMediaRecorderChannels(mediaRecorderChannels: MediaRecorderChannels)
 
     fun setMediaRecorderSampleRate(mediaRecorderSampleRate: MediaRecorderSampleRate)
+
+    fun setAudioRecordSampleRate(audioRecordSampleRate: AudioRecordSampleRate)
+
+    fun setAudioRecordChannels(audioRecordChannels: AudioRecordChannels)
+
+    fun setAudioRecordEncoding(audioRecordEncoding: AudioRecordEncoding)
 }

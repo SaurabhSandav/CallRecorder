@@ -37,7 +37,7 @@ fun Activity.destroyUI() {
 @Composable
 fun Root(isFirstRun: Boolean) {
 
-    val destination = SettingsDestination ?: when {
+    val destination = when {
         isFirstRun -> SystemizerDestination
         else -> MainDestination
     }

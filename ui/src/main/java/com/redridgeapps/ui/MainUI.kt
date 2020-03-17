@@ -66,10 +66,10 @@ private fun MainTopAppBar() {
         actions = {
 
             val backStack = BackStackAmbient.current
-            val onClick = { backStack.push(SystemizerDestination) }
+            val onClick = { backStack.push(SettingsDestination) }
 
             TextButton(contentColor = MaterialTheme.colors().onPrimary, onClick = onClick) {
-                Text(text = "Systemization")
+                Text(text = "Settings")
             }
         }
     )

@@ -1,9 +1,6 @@
 package com.redridgeapps.callrecorder.utils.prefs
 
-import android.media.AudioFormat
-import com.redridgeapps.repository.callutils.MediaRecorderChannel
-import com.redridgeapps.repository.callutils.MediaRecorderSampleRate
-import com.redridgeapps.repository.callutils.RecordingAPI
+import com.redridgeapps.repository.callutils.*
 
 var prefList: List<TypedPref<*>> = emptyList()
     private set
@@ -28,27 +25,27 @@ val PREF_RECORDING_API = PrefString(
     defaultValue = RecordingAPI.AUDIO_RECORD.toString()
 ).addToPrefList()
 
-val PREF_MEDIA_RECORDER_CHANNELS = PrefInt(
-    key = "MEDIA_RECORDER_CHANNELS",
-    defaultValue = MediaRecorderChannel.MONO.numChannels
-).addToPrefList()
-
 val PREF_MEDIA_RECORDER_SAMPLE_RATE = PrefInt(
     key = "MEDIA_RECORDER_SAMPLE_RATE",
     defaultValue = MediaRecorderSampleRate.S44_100.sampleRate
 ).addToPrefList()
 
+val PREF_MEDIA_RECORDER_CHANNELS = PrefInt(
+    key = "MEDIA_RECORDER_CHANNELS",
+    defaultValue = MediaRecorderChannels.MONO.numChannels
+).addToPrefList()
+
 val PREF_AUDIO_RECORD_SAMPLE_RATE = PrefInt(
     key = "AUDIO_RECORD_SAMPLE_RATE",
-    defaultValue = 44_100
+    defaultValue = AudioRecordSampleRate.S44_100.sampleRate
 ).addToPrefList()
 
-val PREF_AUDIO_RECORD_CHANNEL = PrefInt(
-    key = "AUDIO_RECORD_CHANNEL",
-    defaultValue = AudioFormat.CHANNEL_IN_MONO
+val PREF_AUDIO_RECORD_CHANNELS = PrefInt(
+    key = "AUDIO_RECORD_CHANNELS",
+    defaultValue = AudioRecordChannels.MONO.numChannels
 ).addToPrefList()
 
-val PREF_AUDIO_RECORD_ENCODING = PrefInt(
+val PREF_AUDIO_RECORD_ENCODING = PrefString(
     key = "AUDIO_RECORD_ENCODING",
-    defaultValue = AudioFormat.ENCODING_PCM_16BIT
+    defaultValue = AudioRecordEncoding.ENCODING_PCM_16BIT.toString()
 ).addToPrefList()

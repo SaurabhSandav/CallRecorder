@@ -7,9 +7,7 @@ import androidx.ui.core.Text
 import androidx.ui.layout.Column
 import androidx.ui.material.Scaffold
 import androidx.ui.material.TopAppBar
-import com.redridgeapps.repository.callutils.MediaRecorderChannel
-import com.redridgeapps.repository.callutils.MediaRecorderSampleRate
-import com.redridgeapps.repository.callutils.RecordingAPI
+import com.redridgeapps.repository.callutils.*
 import com.redridgeapps.repository.viewmodel.ISettingsViewModel
 import com.redridgeapps.ui.routing.Destination
 import com.redridgeapps.ui.utils.SingleSelectListPreference
@@ -22,8 +20,11 @@ class SettingsState(
     var isSystemized: Boolean? = null,
     var isRecordingOn: Boolean? = null,
     var recordingAPI: RecordingAPI? = null,
-    var mediaRecorderChannels: MediaRecorderChannel? = null,
-    var mediaRecorderSampleRate: MediaRecorderSampleRate? = null
+    var mediaRecorderChannels: MediaRecorderChannels? = null,
+    var mediaRecorderSampleRate: MediaRecorderSampleRate? = null,
+    var audioRecordSampleRate: AudioRecordSampleRate? = null,
+    var audioRecordChannels: AudioRecordChannels? = null,
+    var audioRecordEncoding: AudioRecordEncoding? = null
 )
 
 object SettingsDestination : Destination {
@@ -88,19 +89,19 @@ private fun MediaRecorderAPIPreference(viewModel: ISettingsViewModel) {
         TitlePreference(text = "MediaRecorder API")
 
         SingleSelectListPreference(
-            title = "Channels",
-            items = MediaRecorderChannel.values().asList(),
-            keyToTextMapper = { it.toReadableString() },
-            selectedItem = viewModel.settingsState.mediaRecorderChannels,
-            onSelectedChange = { viewModel.setMediaRecorderChannels(it) }
-        )
-
-        SingleSelectListPreference(
             title = "Sample Rate",
             items = MediaRecorderSampleRate.values().asList(),
             keyToTextMapper = { it.toReadableString() },
             selectedItem = viewModel.settingsState.mediaRecorderSampleRate,
             onSelectedChange = { viewModel.setMediaRecorderSampleRate(it) }
+        )
+
+        SingleSelectListPreference(
+            title = "Channels",
+            items = MediaRecorderChannels.values().asList(),
+            keyToTextMapper = { it.toReadableString() },
+            selectedItem = viewModel.settingsState.mediaRecorderChannels,
+            onSelectedChange = { viewModel.setMediaRecorderChannels(it) }
         )
     }
 }
@@ -111,6 +112,30 @@ private fun AudioRecordAPIPreference(viewModel: ISettingsViewModel) {
     Column {
 
         TitlePreference(text = "AudioRecord API")
+
+        SingleSelectListPreference(
+            title = "Sample Rate",
+            items = AudioRecordSampleRate.values().asList(),
+            keyToTextMapper = { it.toReadableString() },
+            selectedItem = viewModel.settingsState.audioRecordSampleRate,
+            onSelectedChange = { viewModel.setAudioRecordSampleRate(it) }
+        )
+
+        SingleSelectListPreference(
+            title = "Channels",
+            items = AudioRecordChannels.values().asList(),
+            keyToTextMapper = { it.toReadableString() },
+            selectedItem = viewModel.settingsState.audioRecordChannels,
+            onSelectedChange = { viewModel.setAudioRecordChannels(it) }
+        )
+
+        SingleSelectListPreference(
+            title = "Encoding",
+            items = AudioRecordEncoding.values().asList(),
+            keyToTextMapper = { it.toReadableString() },
+            selectedItem = viewModel.settingsState.audioRecordEncoding,
+            onSelectedChange = { viewModel.setAudioRecordEncoding(it) }
+        )
     }
 }
 
@@ -119,12 +144,28 @@ private fun RecordingAPI.toReadableString(): String = when (this) {
     RecordingAPI.AUDIO_RECORD -> "AudioRecord"
 }
 
-private fun MediaRecorderChannel.toReadableString(): String = when (this) {
-    MediaRecorderChannel.MONO -> "Mono"
-    MediaRecorderChannel.STEREO -> "Stereo"
+private fun MediaRecorderChannels.toReadableString(): String = when (this) {
+    MediaRecorderChannels.MONO -> "Mono"
+    MediaRecorderChannels.STEREO -> "Stereo"
 }
 
 private fun MediaRecorderSampleRate.toReadableString(): String = when (this) {
     MediaRecorderSampleRate.S44_100 -> "44_100"
     MediaRecorderSampleRate.S48_000 -> "48_000"
+}
+
+private fun AudioRecordSampleRate.toReadableString(): String = when (this) {
+    AudioRecordSampleRate.S44_100 -> "44_100"
+    AudioRecordSampleRate.S48_000 -> "48_000"
+}
+
+private fun AudioRecordChannels.toReadableString(): String = when (this) {
+    AudioRecordChannels.MONO -> "Mono"
+    AudioRecordChannels.STEREO -> "Stereo"
+}
+
+private fun AudioRecordEncoding.toReadableString(): String = when (this) {
+    AudioRecordEncoding.ENCODING_PCM_8BIT -> "PCM_8BIT"
+    AudioRecordEncoding.ENCODING_PCM_16BIT -> "PCM_16BIT"
+    AudioRecordEncoding.ENCODING_PCM_FLOAT -> "PCM_FLOAT"
 }

@@ -20,13 +20,13 @@ class MediaRecorderAPI @Inject constructor(
 
     override suspend fun startRecording(saveFile: File) = withContext(Dispatchers.IO) {
 
-        val channels = prefs.get(PREF_MEDIA_RECORDER_CHANNELS).first()
         val sampleRate = prefs.get(PREF_MEDIA_RECORDER_SAMPLE_RATE).first()
+        val channels = prefs.get(PREF_MEDIA_RECORDER_CHANNELS).first()
 
         recorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.VOICE_CALL)
-            setAudioChannels(channels)
             setAudioSamplingRate(sampleRate)
+            setAudioChannels(channels)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             setOutputFile(saveFile)

@@ -4,9 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.utils.Systemizer
 import com.redridgeapps.callrecorder.utils.prefs.*
-import com.redridgeapps.repository.callutils.MediaRecorderChannel
-import com.redridgeapps.repository.callutils.MediaRecorderSampleRate
-import com.redridgeapps.repository.callutils.RecordingAPI
+import com.redridgeapps.repository.callutils.*
 import com.redridgeapps.repository.viewmodel.ISettingsViewModel
 import com.redridgeapps.ui.SettingsState
 import kotlinx.coroutines.flow.first
@@ -23,21 +21,28 @@ class SettingsViewModel @Inject constructor(
     override val uiState: SettingsState = SettingsState()
 
     init {
-        viewModelScope.launch {
 
-            observePref(PREF_IS_RECORDING_ON) { uiState.isRecordingOn = it }
-            observePref(PREF_RECORDING_API) { uiState.recordingAPI = RecordingAPI.valueOf(it) }
-            observePref(PREF_MEDIA_RECORDER_CHANNELS) { channels ->
-                uiState.mediaRecorderChannels = MediaRecorderChannel.valueOf(channels)
-            }
-            observePref(PREF_MEDIA_RECORDER_SAMPLE_RATE) { sampleRate ->
-                uiState.mediaRecorderSampleRate = MediaRecorderSampleRate.valueOf(sampleRate)
-            }
-
-            systemizer.isAppSystemizedFlow
-                .onEach { uiState.isSystemized = it }
-                .launchIn(viewModelScope)
+        observePref(PREF_IS_RECORDING_ON) { uiState.isRecordingOn = it }
+        observePref(PREF_RECORDING_API) { uiState.recordingAPI = RecordingAPI.valueOf(it) }
+        observePref(PREF_MEDIA_RECORDER_CHANNELS) { channels ->
+            uiState.mediaRecorderChannels = MediaRecorderChannels.valueOf(channels)
         }
+        observePref(PREF_MEDIA_RECORDER_SAMPLE_RATE) { sampleRate ->
+            uiState.mediaRecorderSampleRate = MediaRecorderSampleRate.valueOf(sampleRate)
+        }
+        observePref(PREF_AUDIO_RECORD_SAMPLE_RATE) { sampleRate ->
+            uiState.audioRecordSampleRate = AudioRecordSampleRate.valueOf(sampleRate)
+        }
+        observePref(PREF_AUDIO_RECORD_CHANNELS) { numChannels ->
+            uiState.audioRecordChannels = AudioRecordChannels.valueOf(numChannels)
+        }
+        observePref(PREF_AUDIO_RECORD_ENCODING) { encoding ->
+            uiState.audioRecordEncoding = AudioRecordEncoding.valueOf(encoding)
+        }
+
+        systemizer.isAppSystemizedFlow
+            .onEach { uiState.isSystemized = it }
+            .launchIn(viewModelScope)
     }
 
     override fun flipSystemization() {
@@ -71,12 +76,12 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    override fun setMediaRecorderChannels(mediaRecorderChannel: MediaRecorderChannel) {
+    override fun setMediaRecorderChannels(mediaRecorderChannels: MediaRecorderChannels) {
         viewModelScope.launch {
 
             uiState.mediaRecorderChannels = null
 
-            prefs.set(PREF_MEDIA_RECORDER_CHANNELS, mediaRecorderChannel.numChannels)
+            prefs.set(PREF_MEDIA_RECORDER_CHANNELS, mediaRecorderChannels.numChannels)
         }
     }
 
@@ -86,6 +91,33 @@ class SettingsViewModel @Inject constructor(
             uiState.mediaRecorderSampleRate = null
 
             prefs.set(PREF_MEDIA_RECORDER_SAMPLE_RATE, mediaRecorderSampleRate.sampleRate)
+        }
+    }
+
+    override fun setAudioRecordSampleRate(audioRecordSampleRate: AudioRecordSampleRate) {
+        viewModelScope.launch {
+
+            uiState.audioRecordSampleRate = null
+
+            prefs.set(PREF_AUDIO_RECORD_SAMPLE_RATE, audioRecordSampleRate.sampleRate)
+        }
+    }
+
+    override fun setAudioRecordChannels(audioRecordChannels: AudioRecordChannels) {
+        viewModelScope.launch {
+
+            uiState.audioRecordChannels = null
+
+            prefs.set(PREF_AUDIO_RECORD_CHANNELS, audioRecordChannels.numChannels)
+        }
+    }
+
+    override fun setAudioRecordEncoding(audioRecordEncoding: AudioRecordEncoding) {
+        viewModelScope.launch {
+
+            uiState.audioRecordEncoding = null
+
+            prefs.set(PREF_AUDIO_RECORD_ENCODING, audioRecordEncoding.toString())
         }
     }
 
