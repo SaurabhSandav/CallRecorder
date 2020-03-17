@@ -7,15 +7,18 @@ import androidx.ui.core.Text
 import androidx.ui.layout.Column
 import androidx.ui.material.Scaffold
 import androidx.ui.material.TopAppBar
+import com.redridgeapps.repository.callutils.RecordingAPI
 import com.redridgeapps.repository.viewmodel.ISettingsViewModel
 import com.redridgeapps.ui.routing.Destination
+import com.redridgeapps.ui.utils.SingleSelectListPreference
 import com.redridgeapps.ui.utils.SwitchPreference
 import com.redridgeapps.ui.utils.fetchViewModel
 
 @Model
 class SettingsState(
     var isSystemized: Boolean? = null,
-    var isRecordingOn: Boolean? = null
+    var isRecordingOn: Boolean? = null,
+    var recordingAPI: RecordingAPI? = null
 )
 
 object SettingsDestination : Destination {
@@ -56,5 +59,12 @@ private fun ContentMain(viewModel: ISettingsViewModel, modifier: Modifier) {
         SwitchPreference("Systemize", viewModel.settingsState.isSystemized) {
             viewModel.flipSystemization()
         }
+
+        SingleSelectListPreference(
+            title = "Recording API",
+            items = RecordingAPI.values().map { it.toString() },
+            selectedItem = viewModel.settingsState.recordingAPI.toString(),
+            onSelectedChange = { viewModel.setRecordingAPI(RecordingAPI.valueOf(it)) }
+        )
     }
 }

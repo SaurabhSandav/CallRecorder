@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.utils.Systemizer
 import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_RECORDING_ON
+import com.redridgeapps.callrecorder.utils.prefs.PREF_RECORDING_API
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import com.redridgeapps.callrecorder.utils.prefs.TypedPref
+import com.redridgeapps.repository.callutils.RecordingAPI
 import com.redridgeapps.repository.viewmodel.ISettingsViewModel
 import com.redridgeapps.ui.SettingsState
 import kotlinx.coroutines.flow.first
@@ -25,6 +27,7 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
 
             observePref(PREF_IS_RECORDING_ON) { uiState.isRecordingOn = it }
+            observePref(PREF_RECORDING_API) { uiState.recordingAPI = RecordingAPI.valueOf(it) }
 
             systemizer.isAppSystemizedFlow
                 .onEach { uiState.isSystemized = it }
@@ -51,6 +54,15 @@ class SettingsViewModel @Inject constructor(
 
             val flippedIsRecording = !prefs.get(PREF_IS_RECORDING_ON).first()
             prefs.set(PREF_IS_RECORDING_ON, flippedIsRecording)
+        }
+    }
+
+    override fun setRecordingAPI(recordingAPI: RecordingAPI) {
+        viewModelScope.launch {
+
+            uiState.recordingAPI = null
+
+            prefs.set(PREF_RECORDING_API, recordingAPI.toString())
         }
     }
 

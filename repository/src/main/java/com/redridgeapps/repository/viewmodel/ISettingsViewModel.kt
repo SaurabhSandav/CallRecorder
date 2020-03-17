@@ -1,5 +1,7 @@
 package com.redridgeapps.repository.viewmodel
 
+import com.redridgeapps.repository.callutils.RecordingAPI
+
 interface ISettingsViewModel : ViewModelMarker {
 
     val uiState: Any
@@ -7,4 +9,6 @@ interface ISettingsViewModel : ViewModelMarker {
     fun flipSystemization()
 
     fun flipRecording()
+
+    fun setRecordingAPI(recordingAPI: RecordingAPI)
 }
