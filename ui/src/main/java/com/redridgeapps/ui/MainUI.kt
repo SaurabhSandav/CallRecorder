@@ -11,6 +11,7 @@ import androidx.ui.foundation.Box
 import androidx.ui.foundation.ContentGravity
 import androidx.ui.foundation.Icon
 import androidx.ui.layout.Align
+import androidx.ui.layout.LayoutSize
 import androidx.ui.material.*
 import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.Close
@@ -149,7 +150,7 @@ private fun ContentMain(
 @Composable
 private fun IsRefreshing(modifier: Modifier = Modifier.None) {
 
-    Box(modifier, gravity = ContentGravity.Center) {
+    Box(modifier + LayoutSize.Fill, gravity = ContentGravity.Center) {
         CircularProgressIndicator()
     }
 }

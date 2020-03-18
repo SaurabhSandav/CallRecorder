@@ -6,8 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_FIRST_RUN
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
-import com.redridgeapps.callrecorder.viewmodel.utils.ComposeViewModelFetcher
-import com.redridgeapps.callrecorder.viewmodel.utils.ComposeViewModelStores
+import com.redridgeapps.callrecorder.viewmodel.ComposeViewModelStores
+import com.redridgeapps.callrecorder.viewmodel.utils.ComposeViewModelFetcherFactory
 import com.redridgeapps.ui.destroyUI
 import com.redridgeapps.ui.routing.composeHandleBackPressed
 import com.redridgeapps.ui.showUI
@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var prefs: Prefs
 
     @Inject
-    lateinit var composeViewModelFetcher: ComposeViewModelFetcher
+    lateinit var composeViewModelFetcherFactory: ComposeViewModelFetcherFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -31,6 +31,8 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
 
             val composeViewModelStores by viewModels<ComposeViewModelStores>()
+            val composeViewModelFetcher =
+                composeViewModelFetcherFactory.create(composeViewModelStores)
 
             prefs.set(PREF_IS_FIRST_RUN, false)
             val isFirstRun = prefs.get(PREF_IS_FIRST_RUN).first()
