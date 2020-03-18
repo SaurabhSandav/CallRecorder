@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Environment
 import androidx.core.content.ContextCompat
 import com.redridgeapps.callrecorder.RecordingQueries
-import com.redridgeapps.callrecorder.utils.CallLogFetcher
 import com.redridgeapps.repository.RecordingItem
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
@@ -19,7 +18,7 @@ import javax.inject.Singleton
 class Recordings @Inject constructor(
     private val context: Context,
     private val recordingQueries: RecordingQueries,
-    private val callLogFetcher: CallLogFetcher
+    private val contactNameFetcher: ContactNameFetcher
 ) {
 
     fun generateFileName(saveFileExt: String): File {
@@ -28,19 +27,21 @@ class Recordings @Inject constructor(
     }
 
     fun insertRecording(
+        phoneNumber: String,
+        callType: String,
         recordingStartTime: Long,
         recordingEndTime: Long,
         saveFile: File
     ) {
 
-        val callEntry = callLogFetcher.getLastCallEntry() ?: error("No call log Found!")
+        val name = contactNameFetcher.getContactName(phoneNumber) ?: "Unknown"
 
         recordingQueries.insert(
-            name = if (callEntry.name.isBlank()) "Unknown" else callEntry.name,
-            number = callEntry.number,
+            name = name,
+            number = phoneNumber,
             startTime = recordingStartTime,
             endTime = recordingEndTime,
-            callType = callEntry.type,
+            callType = callType,
             savePath = saveFile.toString()
         )
     }

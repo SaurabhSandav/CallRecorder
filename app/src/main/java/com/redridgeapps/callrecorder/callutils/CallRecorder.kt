@@ -53,18 +53,24 @@ class CallRecorder @Inject constructor(
         toastMaker.newToast("Started recording").show()
     }
 
-    fun stopRecording() {
+     fun stopRecording(phoneNumber: String, callType: String) {
 
-        recorder!!.stopRecording()
+         recorder!!.stopRecording()
 
-        recorder = null
-        recordingEndTime = Instant.now().toEpochMilli()
+         recorder = null
+         recordingEndTime = Instant.now().toEpochMilli()
 
-        releaseWakeLock()
-        restoreVolume()
+         releaseWakeLock()
+         restoreVolume()
 
-        toastMaker.newToast("Stopped recording").show()
-        recordings.insertRecording(recordingStartTime, recordingEndTime, saveFile!!)
+         toastMaker.newToast("Stopped recording").show()
+         recordings.insertRecording(
+             phoneNumber,
+             callType,
+             recordingStartTime,
+             recordingEndTime,
+             saveFile!!
+         )
     }
 
     fun releaseRecorder() {

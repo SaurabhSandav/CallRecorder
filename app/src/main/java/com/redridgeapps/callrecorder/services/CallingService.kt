@@ -76,11 +76,14 @@ class CallingService : LifecycleService() {
         callRecorder.releaseRecorder()
     }
 
-    private fun createCallStatusListener() = CallStatusListener { status ->
+    private fun createCallStatusListener() = CallStatusListener { status, phoneNumber, callType ->
         when (status) {
             MissedCall, IncomingCallReceived -> Unit
             IncomingCallAnswered, OutgoingCallStarted -> lifecycleScope.launch { callRecorder.startRecording() }
-            IncomingCallEnded, OutgoingCallEnded -> callRecorder.stopRecording()
+            IncomingCallEnded, OutgoingCallEnded -> callRecorder.stopRecording(
+                phoneNumber,
+                callType
+            )
         }
     }
 

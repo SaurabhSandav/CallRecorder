@@ -5,21 +5,27 @@ import android.telephony.TelephonyManager
 import com.redridgeapps.callrecorder.callutils.CallStatus.*
 import timber.log.Timber
 
+private typealias OnCallStateChanged = (
+    callStatus: CallStatus,
+    phoneNumber: String,
+    callType: String
+) -> Unit
+
 class CallStatusListener constructor(
-    private val onCallStateChanged: (CallStatus) -> Unit
+    private val onCallStateChanged: OnCallStateChanged
 ) : PhoneStateListener() {
 
     private var lastState = TelephonyManager.CALL_STATE_IDLE
     private var isIncoming: Boolean = false
 
-    override fun onCallStateChanged(state: Int, incomingNumber: String) {
-        super.onCallStateChanged(state, incomingNumber)
+    override fun onCallStateChanged(state: Int, phoneNumber: String) {
+        super.onCallStateChanged(state, phoneNumber)
 
         if (lastState == state) return
 
         val callStatus = inferCallStatus(state)
 
-        onCallStateChanged(callStatus)
+        onCallStateChanged(callStatus, phoneNumber, callStatus.callType())
         logCallStatus(callStatus)
 
         lastState = state
@@ -59,6 +65,12 @@ class CallStatusListener constructor(
             }
             else -> error("Unexpected error!")
         }
+    }
+
+    private fun CallStatus.callType(): String = when (this) {
+        MissedCall -> "Missed Call"
+        IncomingCallReceived, IncomingCallAnswered, IncomingCallEnded -> "Incoming Call"
+        OutgoingCallStarted, OutgoingCallEnded -> "Outgoing Call"
     }
 }
 
