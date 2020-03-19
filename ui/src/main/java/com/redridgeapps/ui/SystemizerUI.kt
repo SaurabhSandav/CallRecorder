@@ -43,7 +43,7 @@ private val ISystemizerViewModel.systemizerState: SystemizerState
 private fun SystemizerUI(
     viewModel: ISystemizerViewModel
 ) {
-    Box(DrawBackground(MaterialTheme.colors().primary) + LayoutPadding(20.dp)) {
+    Box(DrawBackground(MaterialTheme.colors().primary) + LayoutPadding(20.dp) + LayoutSize.Fill) {
         if (!viewModel.systemizerState.refreshing)
             IsNotInitialized()
         else
@@ -62,13 +62,13 @@ private fun IsNotInitialized() {
 private fun IsInitialized(viewModel: ISystemizerViewModel) {
     Column {
 
-        Spacer(LayoutFlexible(0.2F))
+        Spacer(LayoutWeight(0.2F))
 
-        ExplanationText(viewModel, LayoutFlexible(0.4F))
+        ExplanationText(viewModel, LayoutWeight(0.4F))
 
-        Spacer(LayoutFlexible(0.2F))
+        Spacer(LayoutWeight(0.2F))
 
-        SystemizationButton(viewModel, LayoutFlexible(0.2F))
+        SystemizationButton(viewModel, LayoutWeight(0.2F))
     }
 }
 
@@ -106,7 +106,7 @@ private fun SystemizationButton(
     }
 
     Box(LayoutWidth.Fill + modifier, gravity = ContentGravity.Center) {
-        Button(LayoutWidth.Fill, backgroundColor = backgroundColor, onClick = onClick) {
+        Button(onClick, LayoutWidth.Fill, backgroundColor = backgroundColor) {
             Text(text = text, style = TextStyle(fontSize = 25.sp))
         }
     }

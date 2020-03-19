@@ -3,14 +3,12 @@ package com.redridgeapps.ui
 import androidx.annotation.DrawableRes
 import androidx.compose.Composable
 import androidx.compose.Model
-import androidx.ui.core.Alignment
 import androidx.ui.core.Modifier
 import androidx.ui.core.Text
 import androidx.ui.foundation.AdapterList
 import androidx.ui.foundation.Box
 import androidx.ui.foundation.ContentGravity
 import androidx.ui.foundation.Icon
-import androidx.ui.layout.Align
 import androidx.ui.layout.LayoutSize
 import androidx.ui.material.*
 import androidx.ui.material.icons.Icons
@@ -87,7 +85,8 @@ private fun MainBottomAppBar(
         IconButtonPlayback(viewModel)
         IconButtonDelete(viewModel)
 
-        Align(alignment = Alignment.CenterEnd) {
+
+        Box(gravity = ContentGravity.CenterEnd) {
             IconButtonClose(viewModel)
         }
     }

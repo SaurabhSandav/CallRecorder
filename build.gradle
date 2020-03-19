@@ -10,6 +10,7 @@ buildscript {
             maven { url "/run/media/saurabh/Extra/Projects/Support/prebuilts/androidx/external/" }
         }
 
+        mavenLocal()
         google()
         mavenCentral()
         jcenter()
@@ -39,6 +40,7 @@ allprojects {
             maven { url "/run/media/saurabh/Extra/Projects/Support/prebuilts/androidx/external/" }
         }
 
+        mavenLocal()
         google()
         mavenCentral()
         maven { url "https://jitpack.io" }

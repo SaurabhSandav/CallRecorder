@@ -1,7 +1,7 @@
 @file:Suppress("unused")
 
 object AndroidTools {
-    private const val GRADLE_PLUGIN_VERSION = "4.1.0-alpha02"
+    private const val GRADLE_PLUGIN_VERSION = "4.1.0-alpha03"
     private const val DESUGAR_JDK_LIBS_VERSION = "1.0.4"
 
     const val GRADLE_PLUGIN = "com.android.tools.build:gradle:$GRADLE_PLUGIN_VERSION"
@@ -25,10 +25,10 @@ object Material {
 }
 
 object Jetpack {
-    private const val ACTIVITY_KTX_VERSION = "1.2.0-alpha01"
+    private const val ACTIVITY_KTX_VERSION = "1.2.0-alpha02"
     private const val APPCOMPAT_VERSION = "1.2.0-alpha03"
     private const val CORE_KTX_VERSION = "1.3.0-alpha02"
-    private const val FRAGMENT_KTX_VERSION = "1.3.0-alpha01"
+    private const val FRAGMENT_KTX_VERSION = "1.3.0-alpha02"
     private const val PREFERENCE_KTX_VERSION = "1.1.0"
 
     const val ACTIVITY_KTX = "androidx.activity:activity-ktx:$ACTIVITY_KTX_VERSION"
@@ -39,7 +39,7 @@ object Jetpack {
 }
 
 object Compose {
-    private const val VERSION = "0.1.0-dev06"
+    private const val VERSION = "0.1.0-dev07"
 
     const val COMPOSE_RUNTIME = "androidx.compose:compose-runtime:$VERSION"
     const val UI_FOUNDATION = "androidx.ui:ui-foundation:$VERSION"
@@ -52,7 +52,7 @@ object Compose {
 }
 
 object ComposeNavigation {
-    private const val VERSION = "0.1.2"
+    private const val VERSION = "dev07"
 
     const val CORE = "com.github.mvarnagiris.compose-navigation:core:$VERSION"
     const val NAVIGATION = "com.github.mvarnagiris.compose-navigation:navigation:$VERSION"
