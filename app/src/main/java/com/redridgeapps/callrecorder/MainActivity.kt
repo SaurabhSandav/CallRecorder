@@ -28,17 +28,10 @@ class MainActivity : AppCompatActivity() {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
 
-        lifecycleScope.launch {
+        setupCompose()
 
-            val composeViewModelStores by viewModels<ComposeViewModelStores>()
-            val composeViewModelFetcher =
-                composeViewModelFetcherFactory.create(composeViewModelStores)
-
-            prefs.set(PREF_IS_FIRST_RUN, false)
-            val isFirstRun = prefs.get(PREF_IS_FIRST_RUN).first()
-
-            showUI(isFirstRun, composeViewModelStores, composeViewModelFetcher)
-        }
+        // Remove Splash Screen
+        window.setBackgroundDrawableResource(android.R.color.transparent)
     }
 
     override fun onDestroy() {
@@ -49,5 +42,20 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (!composeHandleBackPressed())
             super.onBackPressed()
+    }
+
+    private fun setupCompose() = lifecycleScope.launch {
+
+        val composeViewModelStores by viewModels<ComposeViewModelStores>()
+        val composeViewModelFetcher = composeViewModelFetcherFactory.create(composeViewModelStores)
+        val isFirstRun = prefs.get(PREF_IS_FIRST_RUN).first()
+
+        showUI(
+            isFirstRun,
+            lifecycle,
+            activityResultRegistry,
+            composeViewModelStores,
+            composeViewModelFetcher
+        )
     }
 }

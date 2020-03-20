@@ -1,19 +1,21 @@
 package com.redridgeapps.ui
 
 import android.app.Activity
+import androidx.activity.result.ActivityResultRegistry
 import androidx.compose.Composable
+import androidx.lifecycle.Lifecycle
 import androidx.ui.core.setContent
 import androidx.ui.material.MaterialTheme
 import com.koduok.compose.navigation.Router
 import com.redridgeapps.repository.viewmodel.utils.IComposeViewModelStores
 import com.redridgeapps.repository.viewmodel.utils.IViewModelFetcher
-import com.redridgeapps.ui.utils.ComposeViewModelStoresAmbient
-import com.redridgeapps.ui.utils.ViewModelFetcherAmbient
-import com.redridgeapps.ui.utils.WithAmbients
-import com.redridgeapps.ui.utils.WithViewModelStores
+import com.redridgeapps.ui.routing.Destination
+import com.redridgeapps.ui.utils.*
 
 fun Activity.showUI(
     isFirstRun: Boolean,
+    lifecycle: Lifecycle,
+    activityResultRegistry: ActivityResultRegistry,
     composeViewModelStores: IComposeViewModelStores,
     composeViewModelFetcher: IViewModelFetcher
 ) {
@@ -22,6 +24,8 @@ fun Activity.showUI(
         val content = @Composable() { Root(isFirstRun) }
 
         WithAmbients(
+            LifecycleAmbient provides lifecycle,
+            ActivityResultRegistryAmbient provides activityResultRegistry,
             ComposeViewModelStoresAmbient provides composeViewModelStores,
             ViewModelFetcherAmbient provides composeViewModelFetcher,
             content = content
@@ -37,8 +41,8 @@ fun Activity.destroyUI() {
 @Composable
 fun Root(isFirstRun: Boolean) {
 
-    val destination = when {
-        isFirstRun -> SystemizerDestination
+    val destination: Destination = when {
+        isFirstRun -> FirstRunDestination
         else -> MainDestination
     }
 

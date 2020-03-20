@@ -1,10 +1,10 @@
 package com.redridgeapps.repository.viewmodel
 
-interface ISystemizerViewModel : ViewModelMarker {
+interface IFirstRunViewModel : ViewModelMarker {
 
     val uiState: Any
 
     fun systemize()
 
-    fun unSystemize()
+    fun configurationFinished()
 }

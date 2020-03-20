@@ -3,40 +3,42 @@ package com.redridgeapps.callrecorder.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.utils.Systemizer
-import com.redridgeapps.repository.viewmodel.ISystemizerViewModel
-import com.redridgeapps.ui.SystemizerState
+import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_FIRST_RUN
+import com.redridgeapps.callrecorder.utils.prefs.Prefs
+import com.redridgeapps.repository.viewmodel.IFirstRunViewModel
+import com.redridgeapps.ui.FirstRunState
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class SystemizerViewModel @Inject constructor(
-    private val systemizer: Systemizer
-) : ViewModel(), ISystemizerViewModel {
+class FirstRunViewModel @Inject constructor(
+    private val systemizer: Systemizer,
+    private val prefs: Prefs
+) : ViewModel(), IFirstRunViewModel {
 
     init {
 
         systemizer.isAppSystemizedFlow
             .onEach {
                 uiState.isAppSystemized = it
-                uiState.refreshing = true
+                uiState.isRefreshing = false
             }
             .launchIn(viewModelScope)
     }
 
-    override val uiState = SystemizerState()
+    override val uiState = FirstRunState()
 
     override fun systemize() {
         viewModelScope.launch {
-            uiState.refreshing = false
+            uiState.isRefreshing = true
             systemizer.systemize()
         }
     }
 
-    override fun unSystemize() {
+    override fun configurationFinished() {
         viewModelScope.launch {
-            uiState.refreshing = false
-            systemizer.unSystemize()
+            prefs.set(PREF_IS_FIRST_RUN, false)
         }
     }
 }
