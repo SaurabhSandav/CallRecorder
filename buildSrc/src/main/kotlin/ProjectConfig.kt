@@ -52,7 +52,7 @@ object Compose {
 }
 
 object ComposeNavigation {
-    private const val VERSION = "dev07"
+    private const val VERSION = "0.1.3"
 
     const val CORE = "com.github.mvarnagiris.compose-navigation:core:$VERSION"
     const val NAVIGATION = "com.github.mvarnagiris.compose-navigation:navigation:$VERSION"

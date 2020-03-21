@@ -44,9 +44,8 @@ private val ISettingsViewModel.settingsState: SettingsState
 @Composable
 private fun SettingsUI(viewModel: ISettingsViewModel) {
 
-    val topAppBar = @Composable() {
-        TopAppBar({ Text("Settings") })
-    }
+    // TODO Add back/up button
+    val topAppBar = @Composable() { TopAppBar({ Text("Settings") }) }
 
     Scaffold(topAppBar = topAppBar) { modifier ->
         ContentMain(viewModel, modifier)

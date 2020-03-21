@@ -72,11 +72,13 @@ class PermissionsManager(
             }
 
         return permissions
-            .filter {
-                val permissionStatus = ContextCompat.checkSelfPermission(this, it)
-                permissionStatus != PackageManager.PERMISSION_GRANTED
-            }
+            .filter { !checkPermissionGranted(it) }
             .toTypedArray()
+    }
+
+    fun checkPermissionGranted(permission: String): Boolean {
+        val permissionStatus = ContextCompat.checkSelfPermission(context, permission)
+        return permissionStatus == PackageManager.PERMISSION_GRANTED
     }
 
     data class Result(val granted: List<String>, val denied: List<String>)
