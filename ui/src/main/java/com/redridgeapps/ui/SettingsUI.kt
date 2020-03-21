@@ -67,7 +67,7 @@ private fun ContentMain(viewModel: ISettingsViewModel, modifier: Modifier) {
 
         SingleSelectListPreference(
             title = "Recording API",
-            items = RecordingAPI.values().asList(),
+            keys = RecordingAPI.values().asList(),
             keyToTextMapper = { it.toReadableString() },
             selectedItem = viewModel.settingsState.recordingAPI,
             onSelectedChange = { viewModel.setRecordingAPI(it) }
@@ -89,7 +89,7 @@ private fun MediaRecorderAPIPreference(viewModel: ISettingsViewModel) {
 
         SingleSelectListPreference(
             title = "Sample Rate",
-            items = MediaRecorderSampleRate.values().asList(),
+            keys = MediaRecorderSampleRate.values().asList(),
             keyToTextMapper = { it.toReadableString() },
             selectedItem = viewModel.settingsState.mediaRecorderSampleRate,
             onSelectedChange = { viewModel.setMediaRecorderSampleRate(it) }
@@ -97,7 +97,7 @@ private fun MediaRecorderAPIPreference(viewModel: ISettingsViewModel) {
 
         SingleSelectListPreference(
             title = "Channels",
-            items = MediaRecorderChannels.values().asList(),
+            keys = MediaRecorderChannels.values().asList(),
             keyToTextMapper = { it.toReadableString() },
             selectedItem = viewModel.settingsState.mediaRecorderChannels,
             onSelectedChange = { viewModel.setMediaRecorderChannels(it) }
@@ -114,7 +114,7 @@ private fun AudioRecordAPIPreference(viewModel: ISettingsViewModel) {
 
         SingleSelectListPreference(
             title = "Sample Rate",
-            items = AudioRecordSampleRate.values().asList(),
+            keys = AudioRecordSampleRate.values().asList(),
             keyToTextMapper = { it.toReadableString() },
             selectedItem = viewModel.settingsState.audioRecordSampleRate,
             onSelectedChange = { viewModel.setAudioRecordSampleRate(it) }
@@ -122,7 +122,7 @@ private fun AudioRecordAPIPreference(viewModel: ISettingsViewModel) {
 
         SingleSelectListPreference(
             title = "Channels",
-            items = AudioRecordChannels.values().asList(),
+            keys = AudioRecordChannels.values().asList(),
             keyToTextMapper = { it.toReadableString() },
             selectedItem = viewModel.settingsState.audioRecordChannels,
             onSelectedChange = { viewModel.setAudioRecordChannels(it) }
@@ -130,7 +130,7 @@ private fun AudioRecordAPIPreference(viewModel: ISettingsViewModel) {
 
         SingleSelectListPreference(
             title = "Encoding",
-            items = AudioRecordEncoding.values().asList(),
+            keys = AudioRecordEncoding.values().asList(),
             keyToTextMapper = { it.toReadableString() },
             selectedItem = viewModel.settingsState.audioRecordEncoding,
             onSelectedChange = { viewModel.setAudioRecordEncoding(it) }

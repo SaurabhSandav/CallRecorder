@@ -18,27 +18,9 @@ import androidx.ui.unit.dp
 fun TitlePreference(text: String) {
 
     Text(
-        text,
-        LayoutPadding(top = 20.dp, start = 10.dp),
-        TextStyle(color = MaterialTheme.colors().secondary, fontWeight = FontWeight.Bold)
-    )
-}
-
-@Composable
-fun CheckBoxPreference(
-    text: String,
-    checked: Boolean? = null,
-    onCheckedChange: (Boolean) -> Unit
-) {
-
-    ListItem(
-        text = { Text(text) },
-        trailing = {
-            if (checked != null)
-                Checkbox(checked = checked, onCheckedChange = onCheckedChange)
-            else
-                CircularProgressIndicator()
-        }
+        text = text,
+        modifier = LayoutPadding(top = 20.dp, start = 10.dp),
+        style = TextStyle(color = MaterialTheme.colors().secondary, fontWeight = FontWeight.Bold)
     )
 }
 
@@ -63,7 +45,7 @@ fun SwitchPreference(
 @Composable
 fun <T> SingleSelectListPreference(
     title: String,
-    items: List<T>,
+    keys: List<T>,
     keyToTextMapper: (T) -> String,
     selectedItem: T? = null,
     onSelectedChange: (T) -> Unit
@@ -71,15 +53,15 @@ fun <T> SingleSelectListPreference(
 
     val showDialog = state { false }
 
-    if (selectedItem != null) {
+    // Wrapping ListItem Somehow prevents bugs where other ListItem disappears or
+    // this ListItem replaces the other one.
+    Box {
+
+        val secondaryText = if (selectedItem == null) "" else keyToTextMapper(selectedItem)
+
         ListItem(
             text = { Text(title) },
-            secondaryText = { Text(keyToTextMapper(selectedItem)) },
-            onClick = { showDialog.value = true }
-        )
-    } else {
-        ListItem(
-            text = { Text(title) },
+            secondaryText = { Text(secondaryText) },
             onClick = { showDialog.value = true }
         )
     }
@@ -88,7 +70,7 @@ fun <T> SingleSelectListPreference(
         RadioGroupDialogPreference(
             title = title,
             showDialog = showDialog,
-            items = items,
+            keys = keys,
             keyToTextMapper = keyToTextMapper,
             selectedOption = selectedItem,
             onSelectedChange = onSelectedChange
@@ -100,7 +82,7 @@ fun <T> SingleSelectListPreference(
 private fun <T> RadioGroupDialogPreference(
     title: String,
     showDialog: MutableState<Boolean>,
-    items: List<T>,
+    keys: List<T>,
     keyToTextMapper: (T) -> String,
     selectedOption: T?,
     onSelectedChange: (T) -> Unit
@@ -112,7 +94,7 @@ private fun <T> RadioGroupDialogPreference(
         onPositiveButtonClick = { showDialog.value = false }
     ) {
         KeyedRadioGroup(
-            options = items,
+            keys = keys,
             keyToTextMapper = keyToTextMapper,
             selectedOption = selectedOption,
             onSelectedChange = onSelectedChange
@@ -122,7 +104,7 @@ private fun <T> RadioGroupDialogPreference(
 
 @Composable
 private fun <T> KeyedRadioGroup(
-    options: List<T>,
+    keys: List<T>,
     keyToTextMapper: (T) -> String,
     selectedOption: T?,
     onSelectedChange: (T) -> Unit,
@@ -132,7 +114,7 @@ private fun <T> KeyedRadioGroup(
 
     RadioGroup {
         Column {
-            options.forEach { key ->
+            keys.forEach { key ->
                 RadioGroupTextItem(
                     selected = (key == selectedOption),
                     onSelect = { onSelectedChange(key) },

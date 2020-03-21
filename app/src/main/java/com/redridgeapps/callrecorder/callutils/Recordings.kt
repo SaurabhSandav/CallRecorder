@@ -26,7 +26,7 @@ class Recordings @Inject constructor(
         return File(getRecordingStoragePath(), fileName)
     }
 
-    fun insertRecording(
+    fun saveRecording(
         phoneNumber: String,
         callType: String,
         recordingStartTime: Long,

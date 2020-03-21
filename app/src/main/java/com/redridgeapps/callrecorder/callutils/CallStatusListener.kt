@@ -26,23 +26,8 @@ class CallStatusListener constructor(
         val callStatus = inferCallStatus(state)
 
         onCallStateChanged(callStatus, phoneNumber, callStatus.callType())
-        logCallStatus(callStatus)
 
         lastState = state
-    }
-
-    private fun logCallStatus(status: CallStatus) {
-
-        val message = when (status) {
-            MissedCall -> "Missed call"
-            IncomingCallReceived -> "Incoming call received"
-            IncomingCallAnswered -> "Incoming call answered"
-            IncomingCallEnded -> "Incoming call ended"
-            OutgoingCallStarted -> "Outgoing call started"
-            OutgoingCallEnded -> "Outgoing call ended"
-        }
-
-        Timber.d(message)
     }
 
     private fun inferCallStatus(state: Int): CallStatus {
@@ -64,7 +49,7 @@ class CallStatusListener constructor(
                 IncomingCallReceived
             }
             else -> error("Unexpected error!")
-        }
+        }.also { Timber.d(it.name) }
     }
 
     private fun CallStatus.callType(): String = when (this) {

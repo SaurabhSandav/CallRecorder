@@ -52,7 +52,7 @@ class AudioRecordAPI @Inject constructor(
         recorder!!.startRecording()
         isRecording = true
 
-        writeAudioDataToFile(saveFile, bufferSize)
+        writeAudioDataToWavFile(saveFile, bufferSize)
     }
 
     override fun stopRecording() {
@@ -99,7 +99,7 @@ class AudioRecordAPI @Inject constructor(
         }
     }
 
-    private fun writeAudioDataToFile(saveFile: File, bufferSize: Int) {
+    private fun writeAudioDataToWavFile(saveFile: File, bufferSize: Int) {
 
         FileOutputStream(saveFile).channel.use { channel ->
 

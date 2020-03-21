@@ -2,7 +2,6 @@ package com.redridgeapps.callrecorder.di.modules.android
 
 import com.redridgeapps.callrecorder.MainActivity
 import com.redridgeapps.callrecorder.services.CallingService
-import com.redridgeapps.callrecorder.services.CallingServiceModule
 import com.redridgeapps.callrecorder.services.RecordingSwitchTileService
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -21,7 +20,7 @@ abstract class AndroidComponentBuilder {
 
     // region Services
 
-    @ContributesAndroidInjector(modules = [CallingServiceModule::class])
+    @ContributesAndroidInjector
     @PerService
     abstract fun bindCallingService(): CallingService
 

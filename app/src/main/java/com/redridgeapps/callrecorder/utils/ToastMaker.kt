@@ -6,9 +6,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ToastMaker @Inject constructor(
-    val context: Context
-) {
+class ToastMaker @Inject constructor(val context: Context) {
 
     fun newToast(text: String, duration: Int = Toast.LENGTH_LONG): Toast {
         return Toast.makeText(context, text, duration)

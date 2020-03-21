@@ -64,7 +64,7 @@ class CallRecorder @Inject constructor(
          restoreVolume()
 
          toastMaker.newToast("Stopped recording").show()
-         recordings.insertRecording(
+         recordings.saveRecording(
              phoneNumber,
              callType,
              recordingStartTime,
@@ -81,7 +81,7 @@ class CallRecorder @Inject constructor(
     }
 
     private fun acquireWakeLock() {
-        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyApp::MyWakelockTag")
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, javaClass.simpleName)
         //noinspection WakelockTimeout
         wakeLock!!.acquire()
     }

@@ -13,7 +13,6 @@ import androidx.ui.layout.LayoutSize
 import androidx.ui.material.*
 import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.Close
-import androidx.ui.res.stringResource
 import androidx.ui.res.vectorResource
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.repository.RecordingItem
@@ -46,12 +45,9 @@ private val IMainViewModel.mainState: MainState
 @Composable
 private fun MainUI(viewModel: IMainViewModel) {
 
-    val bottomAppBar =
-        @Composable { it: BottomAppBar.FabConfiguration? -> MainBottomAppBar(viewModel, it) }
-
     Scaffold(
         topAppBar = { MainTopAppBar() },
-        bottomAppBar = if (viewModel.mainState.selectedId == -1) null else bottomAppBar
+        bottomAppBar = { MainBottomAppBar(viewModel, it) }
     ) { modifier ->
         ContentMain(viewModel, modifier)
     }
@@ -61,7 +57,7 @@ private fun MainUI(viewModel: IMainViewModel) {
 private fun MainTopAppBar() {
 
     TopAppBar(
-        title = { Text(text = stringResource(R.string.app_name)) },
+        title = { Text(text = "Call Recorder") },
         actions = {
 
             val backStack = BackStackAmbient.current
@@ -80,15 +76,13 @@ private fun MainBottomAppBar(
     fabConfiguration: BottomAppBar.FabConfiguration?
 ) {
 
+    if (viewModel.mainState.selectedId == -1) return
+
     BottomAppBar(fabConfiguration = fabConfiguration) {
 
         IconButtonPlayback(viewModel)
         IconButtonDelete(viewModel)
-
-
-        Box(gravity = ContentGravity.CenterEnd) {
-            IconButtonClose(viewModel)
-        }
+        IconButtonClose(viewModel)
     }
 }
 
@@ -159,7 +153,7 @@ private fun RecordingList(viewModel: IMainViewModel, modifier: Modifier = Modifi
 
     AdapterList(
         data = viewModel.mainState.recordingList,
-        modifier = modifier
+        modifier = modifier + LayoutSize.Fill
     ) { recordingItem ->
         RecordingListItem(recordingItem, viewModel)
     }

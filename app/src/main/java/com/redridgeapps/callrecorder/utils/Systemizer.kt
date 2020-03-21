@@ -29,17 +29,14 @@ class Systemizer @Inject constructor(
         info.requestedPermissions.asList()
     }
     private val tmpDir = context.cacheDir
-    private val outputChannel = BroadcastChannel<String>(CONFLATED)
     private val reCheckAppSystemizedChannel = BroadcastChannel<Unit>(CONFLATED)
 
-    // TODO Implement output viewer
-    val outputFlow = outputChannel.asFlow()
     val isAppSystemizedFlow = reCheckAppSystemizedChannel.asFlow()
         .onStart { emit(Unit) }
         .map { isAppSystemized() }
 
-    suspend fun systemize() {
-        if (isAppSystemized()) return
+    suspend fun systemize() = withContext(Dispatchers.IO) {
+        if (isAppSystemized()) return@withContext
 
         withWritableSystem {
             installAPK(currentApkLocation)
@@ -49,8 +46,8 @@ class Systemizer @Inject constructor(
         reCheckAppSystemizedChannel.send(Unit)
     }
 
-    suspend fun unSystemize() {
-        if (!isAppSystemized()) return
+    suspend fun unSystemize() = withContext(Dispatchers.IO) {
+        if (!isAppSystemized()) return@withContext
 
         withWritableSystem {
 
@@ -143,10 +140,8 @@ class Systemizer @Inject constructor(
             Shell.su(*commands).submit { result ->
 
                 if (result.isSuccess) {
-                    result.out.forEach { outputChannel.offer(it) }
                     continuation.resume(result)
                 } else {
-
                     val exception = CommandFailedException(*commands, result = result)
                     continuation.resumeWithException(exception)
                 }

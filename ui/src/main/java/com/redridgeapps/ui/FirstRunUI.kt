@@ -45,7 +45,7 @@ private fun FirstRunUI(viewModel: IFirstRunViewModel) {
             configurationFinished(viewModel, BackStackAmbient.current)
     }
 
-    val topAppBar = @Composable() { TopAppBar(title = { Text("Configure App") }) }
+    val topAppBar = @Composable { TopAppBar(title = { Text("Configure App") }) }
 
     Scaffold(topAppBar = topAppBar) { modifier ->
 
@@ -90,10 +90,7 @@ private fun SystemizationConfig(viewModel: IFirstRunViewModel) {
 private fun PermissionsConfig(viewModel: IFirstRunViewModel) {
     Column {
 
-        Text(
-            text = "Permissions",
-            style = MaterialTheme.typography().h6
-        )
+        Text(text = "Permissions", style = MaterialTheme.typography().h6)
 
         Spacer(modifier = LayoutHeight(10.dp))
 
@@ -106,10 +103,7 @@ private fun PermissionsConfig(viewModel: IFirstRunViewModel) {
             | - READ_CONTACTS
         """.trimMargin()
 
-        Text(
-            text = explanationText,
-            style = MaterialTheme.typography().subtitle1
-        )
+        Text(text = explanationText, style = MaterialTheme.typography().subtitle1)
 
         Spacer(modifier = LayoutHeight(10.dp))
 
@@ -124,8 +118,7 @@ private fun PermissionsConfig(viewModel: IFirstRunViewModel) {
 
                 val onClick = {
                     permissionsManager.requestPermissions {
-                        if (it.denied.isEmpty())
-                            viewModel.firstRunState.permissionsGranted = true
+                        viewModel.firstRunState.permissionsGranted = it.denied.isEmpty()
                     }
                 }
 
@@ -141,10 +134,7 @@ private fun PermissionsConfig(viewModel: IFirstRunViewModel) {
 private fun CaptureAudioConfig(viewModel: IFirstRunViewModel) {
     Column {
 
-        Text(
-            text = "Permission CAPTURE_AUDIO_OUTPUT",
-            style = MaterialTheme.typography().h6
-        )
+        Text(text = "Permission CAPTURE_AUDIO_OUTPUT", style = MaterialTheme.typography().h6)
 
         Spacer(modifier = LayoutHeight(10.dp))
 
@@ -152,10 +142,7 @@ private fun CaptureAudioConfig(viewModel: IFirstRunViewModel) {
             "CAPTURE_AUDIO_OUTPUT is a special permission to enable high quality " +
                     "audio capture. It's granted automatically to system apps on boot. Please restart your device to finish configuration."
 
-        Text(
-            text = explanationText,
-            style = MaterialTheme.typography().subtitle1
-        )
+        Text(text = explanationText, style = MaterialTheme.typography().subtitle1)
 
         Spacer(modifier = LayoutHeight(10.dp))
 
@@ -167,10 +154,7 @@ private fun CaptureAudioConfig(viewModel: IFirstRunViewModel) {
                 permissionsManager.checkPermissionGranted(Manifest.permission.CAPTURE_AUDIO_OUTPUT)
 
             if (viewModel.firstRunState.captureAudioOutputPermissionGranted) {
-                Text(
-                    text = "✔ Permission granted",
-                    style = MaterialTheme.typography().subtitle1
-                )
+                Text(text = "✔ Permission granted", style = MaterialTheme.typography().subtitle1)
             } else {
                 Text(
                     text = "✘ Permission not granted. Please restart device.",

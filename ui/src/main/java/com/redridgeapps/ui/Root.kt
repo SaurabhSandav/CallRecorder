@@ -21,7 +21,7 @@ fun Activity.showUI(
 ) {
 
     setContent {
-        val content = @Composable() { Root(isFirstRun) }
+        val content = @Composable { Root(isFirstRun) }
 
         WithAmbients(
             LifecycleAmbient provides lifecycle,
