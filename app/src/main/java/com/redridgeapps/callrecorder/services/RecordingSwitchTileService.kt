@@ -8,7 +8,6 @@ import dagger.android.AndroidInjection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,14 +45,14 @@ class RecordingSwitchTileService : TileService() {
 
     private fun flipTile() = coroutineScope.launch {
 
-        prefs.set(PREF_IS_RECORDING_ON, !prefs.get(PREF_IS_RECORDING_ON).first())
+        prefs.set(PREF_IS_RECORDING_ON, !prefs.get(PREF_IS_RECORDING_ON))
 
         updateTile()
     }
 
     private fun updateTile() = coroutineScope.launch {
 
-        val isRecordingOn = prefs.get(PREF_IS_RECORDING_ON).first()
+        val isRecordingOn = prefs.get(PREF_IS_RECORDING_ON)
 
         qsTile.state = if (isRecordingOn) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
         qsTile.updateTile()

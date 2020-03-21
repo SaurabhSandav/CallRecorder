@@ -5,7 +5,6 @@ import com.redridgeapps.callrecorder.utils.prefs.PREF_MEDIA_RECORDER_CHANNELS
 import com.redridgeapps.callrecorder.utils.prefs.PREF_MEDIA_RECORDER_SAMPLE_RATE
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
@@ -20,8 +19,8 @@ class MediaRecorderAPI @Inject constructor(
 
     override suspend fun startRecording(saveFile: File) = withContext(Dispatchers.IO) {
 
-        val sampleRate = prefs.get(PREF_MEDIA_RECORDER_SAMPLE_RATE).first()
-        val channels = prefs.get(PREF_MEDIA_RECORDER_CHANNELS).first()
+        val sampleRate = prefs.get(PREF_MEDIA_RECORDER_SAMPLE_RATE).sampleRate
+        val channels = prefs.get(PREF_MEDIA_RECORDER_CHANNELS).numChannels
 
         recorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.VOICE_CALL)

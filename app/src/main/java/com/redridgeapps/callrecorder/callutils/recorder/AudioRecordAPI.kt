@@ -7,11 +7,8 @@ import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_CHANNELS
 import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_ENCODING
 import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_SAMPLE_RATE
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
-import com.redridgeapps.repository.callutils.AudioRecordChannels
-import com.redridgeapps.repository.callutils.AudioRecordEncoding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
@@ -31,9 +28,9 @@ class AudioRecordAPI @Inject constructor(
 
     override suspend fun startRecording(saveFile: File) = withContext(Dispatchers.IO) {
 
-        val sampleRate = async { prefs.get(PREF_AUDIO_RECORD_SAMPLE_RATE).first() }
-        val audioChannel = async { getAudioChannels() }
-        val audioEncoding = async { getAudioEncoding() }
+        val sampleRate = async { prefs.get(PREF_AUDIO_RECORD_SAMPLE_RATE).sampleRate }
+        val audioChannel = async { prefs.get(PREF_AUDIO_RECORD_CHANNELS).channels }
+        val audioEncoding = async { prefs.get(PREF_AUDIO_RECORD_ENCODING).encoding }
 
         val bufferSize = AudioRecord.getMinBufferSize(
             sampleRate.await(),
@@ -70,33 +67,6 @@ class AudioRecordAPI @Inject constructor(
     override fun releaseRecorder() {
         recorder?.release()
         recorder = null
-    }
-
-    private suspend fun getAudioChannels(): Int {
-
-        val prefChannels = prefs.get(PREF_AUDIO_RECORD_CHANNELS).first()
-
-        @Suppress("MoveVariableDeclarationIntoWhen")
-        val channels = AudioRecordChannels.valueOf(prefChannels)
-
-        return when (channels) {
-            AudioRecordChannels.MONO -> AudioFormat.CHANNEL_IN_MONO
-            AudioRecordChannels.STEREO -> AudioFormat.CHANNEL_IN_STEREO
-        }
-    }
-
-    private suspend fun getAudioEncoding(): Int {
-
-        val prefEncoding = prefs.get(PREF_AUDIO_RECORD_ENCODING).first()
-
-        @Suppress("MoveVariableDeclarationIntoWhen")
-        val encoding = AudioRecordEncoding.valueOf(prefEncoding)
-
-        return when (encoding) {
-            AudioRecordEncoding.ENCODING_PCM_8BIT -> AudioFormat.ENCODING_PCM_8BIT
-            AudioRecordEncoding.ENCODING_PCM_16BIT -> AudioFormat.ENCODING_PCM_16BIT
-            AudioRecordEncoding.ENCODING_PCM_FLOAT -> AudioFormat.ENCODING_PCM_FLOAT
-        }
     }
 
     private fun writeAudioDataToWavFile(saveFile: File, bufferSize: Int) {

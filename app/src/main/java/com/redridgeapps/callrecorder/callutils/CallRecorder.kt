@@ -10,7 +10,6 @@ import com.redridgeapps.callrecorder.utils.ToastMaker
 import com.redridgeapps.callrecorder.utils.prefs.PREF_RECORDING_API
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import com.redridgeapps.repository.callutils.RecordingAPI
-import kotlinx.coroutines.flow.first
 import java.io.File
 import java.time.Instant
 import javax.inject.Inject
@@ -35,8 +34,7 @@ class CallRecorder @Inject constructor(
 
     suspend fun startRecording() {
 
-        val recordingAPIStr = prefs.get(PREF_RECORDING_API).first()
-        val recordingAPI = RecordingAPI.valueOf(recordingAPIStr)
+        val recordingAPI = prefs.get(PREF_RECORDING_API)
 
         recorder = when (recordingAPI) {
             RecordingAPI.MEDIA_RECORDER -> mediaRecorderAPI.get()

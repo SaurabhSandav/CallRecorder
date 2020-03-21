@@ -1,33 +1,20 @@
 package com.redridgeapps.repository.callutils
 
-enum class AudioRecordChannels(val numChannels: Int) {
-    MONO(1),
-    STEREO(2);
-
-    companion object {
-
-        fun valueOf(numChannels: Int): AudioRecordChannels {
-            return values().firstOrNull { it.numChannels == numChannels }
-                ?: error("Invalid num of channels")
-        }
-    }
-}
+import android.media.AudioFormat
 
 enum class AudioRecordSampleRate(val sampleRate: Int) {
     S44_100(44_100),
     S48_000(48_000);
-
-    companion object {
-
-        fun valueOf(sampleRate: Int): AudioRecordSampleRate {
-            return values().firstOrNull { it.sampleRate == sampleRate }
-                ?: error("Invalid sample rate")
-        }
-    }
 }
 
-enum class AudioRecordEncoding {
-    ENCODING_PCM_8BIT,
-    ENCODING_PCM_16BIT,
-    ENCODING_PCM_FLOAT;
+enum class AudioRecordChannels(val channels: Int) {
+    MONO(AudioFormat.CHANNEL_IN_MONO),
+    STEREO(AudioFormat.CHANNEL_IN_STEREO)
+
+}
+
+enum class AudioRecordEncoding(val encoding: Int) {
+    ENCODING_PCM_8BIT(AudioFormat.ENCODING_PCM_8BIT),
+    ENCODING_PCM_16BIT(AudioFormat.ENCODING_PCM_16BIT),
+    ENCODING_PCM_FLOAT(AudioFormat.ENCODING_PCM_FLOAT)
 }

@@ -20,32 +20,38 @@ val PREF_IS_RECORDING_ON = PrefBoolean(
     defaultValue = true
 ).addToPrefList()
 
-val PREF_RECORDING_API = PrefString(
+val PREF_RECORDING_API = PrefEnum(
     key = "RECORDING_API",
-    defaultValue = RecordingAPI.AUDIO_RECORD.toString()
+    defaultValue = RecordingAPI.AUDIO_RECORD,
+    valueOf = ::enumValueOf
 ).addToPrefList()
 
-val PREF_MEDIA_RECORDER_SAMPLE_RATE = PrefInt(
+val PREF_MEDIA_RECORDER_SAMPLE_RATE = PrefEnum(
     key = "MEDIA_RECORDER_SAMPLE_RATE",
-    defaultValue = MediaRecorderSampleRate.S44_100.sampleRate
+    defaultValue = MediaRecorderSampleRate.S44_100,
+    valueOf = ::enumValueOf
 ).addToPrefList()
 
-val PREF_MEDIA_RECORDER_CHANNELS = PrefInt(
+val PREF_MEDIA_RECORDER_CHANNELS = PrefEnum(
     key = "MEDIA_RECORDER_CHANNELS",
-    defaultValue = MediaRecorderChannels.MONO.numChannels
+    defaultValue = MediaRecorderChannels.MONO,
+    valueOf = ::enumValueOf
 ).addToPrefList()
 
-val PREF_AUDIO_RECORD_SAMPLE_RATE = PrefInt(
+val PREF_AUDIO_RECORD_SAMPLE_RATE = PrefEnum(
     key = "AUDIO_RECORD_SAMPLE_RATE",
-    defaultValue = AudioRecordSampleRate.S44_100.sampleRate
+    defaultValue = AudioRecordSampleRate.S44_100,
+    valueOf = ::enumValueOf
 ).addToPrefList()
 
-val PREF_AUDIO_RECORD_CHANNELS = PrefInt(
+val PREF_AUDIO_RECORD_CHANNELS = PrefEnum(
     key = "AUDIO_RECORD_CHANNELS",
-    defaultValue = AudioRecordChannels.MONO.numChannels
+    defaultValue = AudioRecordChannels.MONO,
+    valueOf = ::enumValueOf
 ).addToPrefList()
 
-val PREF_AUDIO_RECORD_ENCODING = PrefString(
+val PREF_AUDIO_RECORD_ENCODING = PrefEnum(
     key = "AUDIO_RECORD_ENCODING",
-    defaultValue = AudioRecordEncoding.ENCODING_PCM_16BIT.toString()
+    defaultValue = AudioRecordEncoding.ENCODING_PCM_16BIT,
+    valueOf = ::enumValueOf
 ).addToPrefList()

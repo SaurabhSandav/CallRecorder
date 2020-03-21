@@ -12,7 +12,6 @@ import com.redridgeapps.ui.destroyUI
 import com.redridgeapps.ui.routing.composeHandleBackPressed
 import com.redridgeapps.ui.showUI
 import dagger.android.AndroidInjection
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -48,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
         val composeViewModelStores by viewModels<ComposeViewModelStores>()
         val composeViewModelFetcher = composeViewModelFetcherFactory.create(composeViewModelStores)
-        val isFirstRun = prefs.get(PREF_IS_FIRST_RUN).first()
+        val isFirstRun = prefs.get(PREF_IS_FIRST_RUN)
 
         showUI(
             isFirstRun,

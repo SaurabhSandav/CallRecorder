@@ -23,22 +23,12 @@ class SettingsViewModel @Inject constructor(
     init {
 
         observePref(PREF_IS_RECORDING_ON) { uiState.isRecordingOn = it }
-        observePref(PREF_RECORDING_API) { uiState.recordingAPI = RecordingAPI.valueOf(it) }
-        observePref(PREF_MEDIA_RECORDER_CHANNELS) { channels ->
-            uiState.mediaRecorderChannels = MediaRecorderChannels.valueOf(channels)
-        }
-        observePref(PREF_MEDIA_RECORDER_SAMPLE_RATE) { sampleRate ->
-            uiState.mediaRecorderSampleRate = MediaRecorderSampleRate.valueOf(sampleRate)
-        }
-        observePref(PREF_AUDIO_RECORD_SAMPLE_RATE) { sampleRate ->
-            uiState.audioRecordSampleRate = AudioRecordSampleRate.valueOf(sampleRate)
-        }
-        observePref(PREF_AUDIO_RECORD_CHANNELS) { numChannels ->
-            uiState.audioRecordChannels = AudioRecordChannels.valueOf(numChannels)
-        }
-        observePref(PREF_AUDIO_RECORD_ENCODING) { encoding ->
-            uiState.audioRecordEncoding = AudioRecordEncoding.valueOf(encoding)
-        }
+        observePref(PREF_RECORDING_API) { uiState.recordingAPI = it }
+        observePref(PREF_MEDIA_RECORDER_CHANNELS) { uiState.mediaRecorderChannels = it }
+        observePref(PREF_MEDIA_RECORDER_SAMPLE_RATE) { uiState.mediaRecorderSampleRate = it }
+        observePref(PREF_AUDIO_RECORD_SAMPLE_RATE) { uiState.audioRecordSampleRate = it }
+        observePref(PREF_AUDIO_RECORD_CHANNELS) { uiState.audioRecordChannels = it }
+        observePref(PREF_AUDIO_RECORD_ENCODING) { uiState.audioRecordEncoding = it }
 
         systemizer.isAppSystemizedFlow
             .onEach { uiState.isSystemized = it }
@@ -62,7 +52,7 @@ class SettingsViewModel @Inject constructor(
 
             uiState.isRecordingOn = null
 
-            val flippedIsRecording = !prefs.get(PREF_IS_RECORDING_ON).first()
+            val flippedIsRecording = !prefs.get(PREF_IS_RECORDING_ON)
             prefs.set(PREF_IS_RECORDING_ON, flippedIsRecording)
         }
     }
@@ -72,7 +62,7 @@ class SettingsViewModel @Inject constructor(
 
             uiState.recordingAPI = null
 
-            prefs.set(PREF_RECORDING_API, recordingAPI.toString())
+            prefs.set(PREF_RECORDING_API, recordingAPI)
         }
     }
 
@@ -81,7 +71,7 @@ class SettingsViewModel @Inject constructor(
 
             uiState.mediaRecorderChannels = null
 
-            prefs.set(PREF_MEDIA_RECORDER_CHANNELS, mediaRecorderChannels.numChannels)
+            prefs.set(PREF_MEDIA_RECORDER_CHANNELS, mediaRecorderChannels)
         }
     }
 
@@ -90,7 +80,7 @@ class SettingsViewModel @Inject constructor(
 
             uiState.mediaRecorderSampleRate = null
 
-            prefs.set(PREF_MEDIA_RECORDER_SAMPLE_RATE, mediaRecorderSampleRate.sampleRate)
+            prefs.set(PREF_MEDIA_RECORDER_SAMPLE_RATE, mediaRecorderSampleRate)
         }
     }
 
@@ -99,7 +89,7 @@ class SettingsViewModel @Inject constructor(
 
             uiState.audioRecordSampleRate = null
 
-            prefs.set(PREF_AUDIO_RECORD_SAMPLE_RATE, audioRecordSampleRate.sampleRate)
+            prefs.set(PREF_AUDIO_RECORD_SAMPLE_RATE, audioRecordSampleRate)
         }
     }
 
@@ -108,7 +98,7 @@ class SettingsViewModel @Inject constructor(
 
             uiState.audioRecordChannels = null
 
-            prefs.set(PREF_AUDIO_RECORD_CHANNELS, audioRecordChannels.numChannels)
+            prefs.set(PREF_AUDIO_RECORD_CHANNELS, audioRecordChannels)
         }
     }
 
@@ -117,12 +107,12 @@ class SettingsViewModel @Inject constructor(
 
             uiState.audioRecordEncoding = null
 
-            prefs.set(PREF_AUDIO_RECORD_ENCODING, audioRecordEncoding.toString())
+            prefs.set(PREF_AUDIO_RECORD_ENCODING, audioRecordEncoding)
         }
     }
 
     private fun <T> observePref(pref: TypedPref<T>, action: suspend (T) -> Unit) {
-        prefs.get(pref)
+        prefs.getFlow(pref)
             .onEach(action)
             .launchIn(viewModelScope)
     }

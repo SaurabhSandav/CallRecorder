@@ -34,3 +34,9 @@ class PrefFloat(
     override val key: String,
     override val defaultValue: Float
 ) : TypedPref<Float>
+
+class PrefEnum<T : Enum<T>>(
+    override val key: String,
+    override val defaultValue: T,
+    val valueOf: (String) -> T
+) : TypedPref<T>

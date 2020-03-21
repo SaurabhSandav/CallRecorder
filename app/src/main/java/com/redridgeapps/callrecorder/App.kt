@@ -52,7 +52,7 @@ class App : Application(), HasAndroidInjector {
 
     private fun setupCallingService() {
 
-        prefs.get(PREF_IS_RECORDING_ON)
+        prefs.getFlow(PREF_IS_RECORDING_ON)
             .onEach { recordingOn ->
                 if (recordingOn)
                     CallingService.start(this@App)

@@ -22,7 +22,11 @@ class Prefs @Inject constructor(
         sharedPreferences.registerOnSharedPreferenceChangeListener(preferenceListener)
     }
 
-    fun <T : Any?> get(pref: TypedPref<T>): Flow<T> {
+    suspend fun <T : Any?> get(pref: TypedPref<T>): T {
+        return getFlow(pref).first()
+    }
+
+    fun <T : Any?> getFlow(pref: TypedPref<T>): Flow<T> {
         return prefsChannel.asFlow()
             .filter { it == pref }
             .onStart { emit(pref) }
@@ -41,6 +45,7 @@ class Prefs @Inject constructor(
                 is PrefInt -> editor.putInt(pref.key, newValue as Int)
                 is PrefLong -> editor.putLong(pref.key, newValue as Long)
                 is PrefFloat -> editor.putFloat(pref.key, newValue as Float)
+                is PrefEnum -> editor.putString(pref.key, newValue.toString())
                 else -> error("Unsupported class")
             }
 
@@ -66,6 +71,7 @@ class Prefs @Inject constructor(
             is PrefInt -> getInt(pref.key, pref.defaultValue) as T
             is PrefLong -> getLong(pref.key, pref.defaultValue) as T
             is PrefFloat -> getFloat(pref.key, pref.defaultValue) as T
+            is PrefEnum -> pref.valueOf(getString(pref.key, pref.defaultValue.toString())!!)
             else -> error("Unsupported class")
         }
     }
@@ -85,6 +91,7 @@ class Prefs @Inject constructor(
                 is PrefInt -> editor.putInt(pref.key, newValue as Int)
                 is PrefLong -> editor.putLong(pref.key, newValue as Long)
                 is PrefFloat -> editor.putFloat(pref.key, newValue as Float)
+                is PrefEnum -> editor.putString(pref.key, newValue.toString())
                 else -> error("Unsupported class")
             }
         }
