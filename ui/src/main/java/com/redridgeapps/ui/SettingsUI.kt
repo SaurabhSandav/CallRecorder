@@ -2,6 +2,7 @@ package com.redridgeapps.ui
 
 import androidx.compose.Composable
 import androidx.compose.Model
+import androidx.ui.animation.Crossfade
 import androidx.ui.core.Modifier
 import androidx.ui.core.Text
 import androidx.ui.layout.Column
@@ -73,9 +74,11 @@ private fun ContentMain(viewModel: ISettingsViewModel, modifier: Modifier) {
             onSelectedChange = { viewModel.setRecordingAPI(it) }
         )
 
-        when (viewModel.settingsState.recordingAPI) {
-            RecordingAPI.MEDIA_RECORDER -> MediaRecorderAPIPreference(viewModel)
-            RecordingAPI.AUDIO_RECORD -> AudioRecordAPIPreference(viewModel)
+        Crossfade(current = viewModel.settingsState.recordingAPI) { recordingAPI ->
+            when (recordingAPI) {
+                RecordingAPI.MEDIA_RECORDER -> MediaRecorderAPIPreference(viewModel)
+                RecordingAPI.AUDIO_RECORD -> AudioRecordAPIPreference(viewModel)
+            }
         }
     }
 }

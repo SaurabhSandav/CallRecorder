@@ -3,6 +3,8 @@ package com.redridgeapps.ui
 import android.Manifest
 import androidx.compose.Composable
 import androidx.compose.Model
+import androidx.compose.onActive
+import androidx.ui.animation.Crossfade
 import androidx.ui.core.Text
 import androidx.ui.graphics.Color
 import androidx.ui.layout.*
@@ -17,10 +19,9 @@ import com.redridgeapps.ui.utils.fetchViewModel
 
 @Model
 class FirstRunState(
-    var isRefreshing: Boolean = false,
-    var isAppSystemized: Boolean = false,
-    var permissionsGranted: Boolean = false,
-    var captureAudioOutputPermissionGranted: Boolean = false
+    var isAppSystemized: Boolean? = null,
+    var permissionsGranted: Boolean? = null,
+    var captureAudioOutputPermissionGranted: Boolean? = null
 )
 
 private val IFirstRunViewModel.firstRunState: FirstRunState
@@ -41,7 +42,7 @@ object FirstRunDestination : Destination {
 private fun FirstRunUI(viewModel: IFirstRunViewModel) {
 
     with(viewModel.firstRunState) {
-        if (isAppSystemized && permissionsGranted && captureAudioOutputPermissionGranted)
+        if (isAppSystemized == true && permissionsGranted == true && captureAudioOutputPermissionGranted == true)
             configurationFinished(viewModel, BackStackAmbient.current)
     }
 
@@ -63,6 +64,11 @@ private fun FirstRunUI(viewModel: IFirstRunViewModel) {
     }
 }
 
+private fun configurationFinished(viewModel: IFirstRunViewModel, backStack: BackStack<Any>) {
+    viewModel.configurationFinished()
+    backStack.push(MainDestination)
+}
+
 @Composable
 private fun SystemizationConfig(viewModel: IFirstRunViewModel) {
     Column {
@@ -78,10 +84,12 @@ private fun SystemizationConfig(viewModel: IFirstRunViewModel) {
 
         Spacer(modifier = LayoutHeight(10.dp))
 
-        when {
-            viewModel.firstRunState.isRefreshing -> CircularProgressIndicator()
-            viewModel.firstRunState.isAppSystemized -> Text(text = "✔ App is systemized")
-            else -> Button(onClick = { viewModel.systemize() }) { Text(text = "Systemize App") }
+        Crossfade(current = viewModel.firstRunState.isAppSystemized) { isAppSystemized ->
+            when (isAppSystemized) {
+                null -> CircularProgressIndicator()
+                true -> Text(text = "✔ App is systemized")
+                false -> Button(onClick = { viewModel.systemize() }) { Text(text = "Systemize App") }
+            }
         }
     }
 }
@@ -109,16 +117,24 @@ private fun PermissionsConfig(viewModel: IFirstRunViewModel) {
 
         val permissionsManager = PermissionsManager()
 
-        when {
-            permissionsManager.getUnGrantedPermissions().isEmpty() -> {
-                viewModel.firstRunState.permissionsGranted = true
+        onActive {
+            viewModel.firstRunState.permissionsGranted =
+                permissionsManager.getUnGrantedPermissions().isEmpty()
+        }
+
+        Crossfade(
+            current = viewModel.firstRunState.permissionsGranted
+        ) { permissionsGranted ->
+
+            permissionsGranted ?: return@Crossfade
+
+            if (permissionsGranted) {
                 Text("✔ All permissions granted")
-            }
-            viewModel.firstRunState.isAppSystemized -> {
+            } else {
 
                 val onClick = {
-                    permissionsManager.requestPermissions {
-                        viewModel.firstRunState.permissionsGranted = it.denied.isEmpty()
+                    permissionsManager.requestPermissions { result ->
+                        viewModel.firstRunState.permissionsGranted = result.denied.isEmpty()
                     }
                 }
 
@@ -138,34 +154,36 @@ private fun CaptureAudioConfig(viewModel: IFirstRunViewModel) {
 
         Spacer(modifier = LayoutHeight(10.dp))
 
-        val explanationText =
-            "CAPTURE_AUDIO_OUTPUT is a special permission to enable high quality " +
-                    "audio capture. It's granted automatically to system apps on boot. Please restart your device to finish configuration."
-
-        Text(text = explanationText, style = MaterialTheme.typography().subtitle1)
+        Text(
+            text = "CAPTURE_AUDIO_OUTPUT is a special permission to enable high quality audio capture. " +
+                    "It's granted automatically to system apps on boot. " +
+                    "Please restart your device to finish configuration.",
+            style = MaterialTheme.typography().subtitle1
+        )
 
         Spacer(modifier = LayoutHeight(10.dp))
 
         val permissionsManager = PermissionsManager()
 
-        if (viewModel.firstRunState.isAppSystemized && viewModel.firstRunState.permissionsGranted) {
-
+        onActive {
             viewModel.firstRunState.captureAudioOutputPermissionGranted =
                 permissionsManager.checkPermissionGranted(Manifest.permission.CAPTURE_AUDIO_OUTPUT)
+        }
 
-            if (viewModel.firstRunState.captureAudioOutputPermissionGranted) {
+        Crossfade(
+            current = viewModel.firstRunState.captureAudioOutputPermissionGranted
+        ) { permissionGranted ->
+
+            permissionGranted ?: return@Crossfade
+
+            if (permissionGranted) {
                 Text(text = "✔ Permission granted", style = MaterialTheme.typography().subtitle1)
             } else {
                 Text(
-                    text = "✘ Permission not granted. Please restart device.",
+                    text = "✘ Permission not granted. Please restart device after systemization.",
                     style = MaterialTheme.typography().subtitle1.copy(Color.Red)
                 )
             }
         }
     }
-}
-
-private fun configurationFinished(viewModel: IFirstRunViewModel, backStack: BackStack<Any>) {
-    viewModel.configurationFinished()
-    backStack.push(MainDestination)
 }

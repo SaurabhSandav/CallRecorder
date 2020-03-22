@@ -3,6 +3,7 @@ package com.redridgeapps.ui
 import androidx.annotation.DrawableRes
 import androidx.compose.Composable
 import androidx.compose.Model
+import androidx.ui.animation.Crossfade
 import androidx.ui.core.Modifier
 import androidx.ui.core.Text
 import androidx.ui.foundation.AdapterList
@@ -22,7 +23,7 @@ import com.redridgeapps.ui.utils.fetchViewModel
 
 @Model
 class MainState(
-    var refreshing: Boolean = true,
+    var isRefreshing: Boolean = true,
     var recordingList: List<RecordingItem> = listOf(),
     var selectedId: Int = -1,
     var playing: Int = -1
@@ -134,10 +135,12 @@ private fun ContentMain(
     modifier: Modifier
 ) {
 
-    if (viewModel.mainState.refreshing)
-        IsRefreshing(modifier)
-    else
-        RecordingList(viewModel, modifier)
+    Crossfade(current = viewModel.mainState.isRefreshing) { isRefreshing ->
+        if (isRefreshing)
+            IsRefreshing(modifier)
+        else
+            RecordingList(viewModel, modifier)
+    }
 }
 
 @Composable

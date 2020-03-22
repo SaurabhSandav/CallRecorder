@@ -3,6 +3,7 @@ package com.redridgeapps.ui.utils
 import androidx.compose.Composable
 import androidx.compose.MutableState
 import androidx.compose.state
+import androidx.ui.animation.Crossfade
 import androidx.ui.core.ConfigurationAmbient
 import androidx.ui.core.Modifier
 import androidx.ui.core.Text
@@ -34,10 +35,10 @@ fun SwitchPreference(
     ListItem(
         text = { Text(text) },
         trailing = {
-            if (checked != null)
-                Switch(checked = checked, onCheckedChange = onCheckedChange)
-            else
-                CircularProgressIndicator()
+            Crossfade(current = checked) {
+                if (it != null)
+                    Switch(checked = it, onCheckedChange = onCheckedChange)
+            }
         }
     )
 }
@@ -61,7 +62,11 @@ fun <T> SingleSelectListPreference(
 
         ListItem(
             text = { Text(title) },
-            secondaryText = { Text(secondaryText) },
+            secondaryText = {
+                Crossfade(current = secondaryText) {
+                    Text(it)
+                }
+            },
             onClick = { showDialog.value = true }
         )
     }

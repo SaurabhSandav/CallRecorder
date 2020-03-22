@@ -20,10 +20,7 @@ class FirstRunViewModel @Inject constructor(
     init {
 
         systemizer.isAppSystemizedFlow
-            .onEach {
-                uiState.isAppSystemized = it
-                uiState.isRefreshing = false
-            }
+            .onEach { uiState.isAppSystemized = it }
             .launchIn(viewModelScope)
     }
 
@@ -31,7 +28,7 @@ class FirstRunViewModel @Inject constructor(
 
     override fun systemize() {
         viewModelScope.launch {
-            uiState.isRefreshing = true
+            uiState.isAppSystemized = null
             systemizer.systemize()
         }
     }

@@ -21,7 +21,7 @@ class MainViewModel @Inject constructor(
         recordings.getRecordingList()
             .onEach {
                 uiState.recordingList = it
-                uiState.refreshing = false
+                uiState.isRefreshing = false
             }
             .launchIn(viewModelScope)
     }
@@ -42,7 +42,7 @@ class MainViewModel @Inject constructor(
     }
 
     override fun deleteSelectedRecording() {
-        uiState.refreshing = true
+        uiState.isRefreshing = true
         recordings.deleteRecording(uiState.selectedId)
     }
 

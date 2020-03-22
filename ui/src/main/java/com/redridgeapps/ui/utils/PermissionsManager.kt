@@ -6,17 +6,19 @@ import android.content.pm.PermissionInfo.PROTECTION_DANGEROUS
 import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.Composable
+import androidx.compose.remember
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.ui.core.ContextAmbient
 
 @Composable
 fun PermissionsManager(): PermissionsManager {
-    return PermissionsManager(
-        ContextAmbient.current,
-        LifecycleAmbient.current,
-        ActivityResultRegistryAmbient.current
-    )
+
+    val context = ContextAmbient.current
+    val lifecycle = LifecycleAmbient.current
+    val activityResultRegistry = ActivityResultRegistryAmbient.current
+
+    return remember { PermissionsManager(context, lifecycle, activityResultRegistry) }
 }
 
 class PermissionsManager(

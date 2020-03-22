@@ -3,6 +3,7 @@ package com.redridgeapps.ui
 import android.app.Activity
 import androidx.activity.result.ActivityResultRegistry
 import androidx.compose.Composable
+import androidx.compose.Providers
 import androidx.lifecycle.Lifecycle
 import androidx.ui.core.setContent
 import androidx.ui.material.MaterialTheme
@@ -23,12 +24,12 @@ fun Activity.showUI(
     setContent {
         val content = @Composable { Root(isFirstRun) }
 
-        WithAmbients(
+        Providers(
             LifecycleAmbient provides lifecycle,
             ActivityResultRegistryAmbient provides activityResultRegistry,
             ComposeViewModelStoresAmbient provides composeViewModelStores,
             ViewModelFetcherAmbient provides composeViewModelFetcher,
-            content = content
+            children = content
         )
     }
 }
