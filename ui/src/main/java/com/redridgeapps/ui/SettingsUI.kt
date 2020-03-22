@@ -5,16 +5,19 @@ import androidx.compose.Model
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.Modifier
 import androidx.ui.core.Text
+import androidx.ui.foundation.Icon
 import androidx.ui.layout.Column
+import androidx.ui.layout.LayoutPadding
+import androidx.ui.material.IconButton
 import androidx.ui.material.Scaffold
 import androidx.ui.material.TopAppBar
+import androidx.ui.material.icons.Icons
+import androidx.ui.unit.dp
+import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.repository.callutils.*
 import com.redridgeapps.repository.viewmodel.ISettingsViewModel
 import com.redridgeapps.ui.routing.Destination
-import com.redridgeapps.ui.utils.SingleSelectListPreference
-import com.redridgeapps.ui.utils.SwitchPreference
-import com.redridgeapps.ui.utils.TitlePreference
-import com.redridgeapps.ui.utils.fetchViewModel
+import com.redridgeapps.ui.utils.*
 
 @Model
 class SettingsState(
@@ -45,8 +48,21 @@ private val ISettingsViewModel.settingsState: SettingsState
 @Composable
 private fun SettingsUI(viewModel: ISettingsViewModel) {
 
-    // TODO Add back/up button
-    val topAppBar = @Composable() { TopAppBar({ Text("Settings") }) }
+    val navigationIcon = @Composable {
+
+        val backStack = BackStackAmbient.current
+
+        IconButton(onClick = { backStack.pop() }) {
+            Icon(Icons.Default.ArrowBack)
+        }
+    }
+
+    val topAppBar = @Composable {
+        TopAppBar(
+            title = { Text("Settings", modifier = LayoutPadding(bottom = 16.dp)) },
+            navigationIcon = navigationIcon
+        )
+    }
 
     Scaffold(topAppBar = topAppBar) { modifier ->
         ContentMain(viewModel, modifier)

@@ -1,6 +1,5 @@
 package com.redridgeapps.ui
 
-import androidx.annotation.DrawableRes
 import androidx.compose.Composable
 import androidx.compose.Model
 import androidx.ui.animation.Crossfade
@@ -10,6 +9,7 @@ import androidx.ui.foundation.AdapterList
 import androidx.ui.foundation.Box
 import androidx.ui.foundation.ContentGravity
 import androidx.ui.foundation.Icon
+import androidx.ui.graphics.vector.VectorAsset
 import androidx.ui.layout.Column
 import androidx.ui.layout.LayoutPadding
 import androidx.ui.layout.LayoutSize
@@ -17,11 +17,13 @@ import androidx.ui.layout.LayoutWidth
 import androidx.ui.material.*
 import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.Close
-import androidx.ui.res.vectorResource
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.repository.viewmodel.IMainViewModel
 import com.redridgeapps.ui.routing.Destination
+import com.redridgeapps.ui.utils.Delete
+import com.redridgeapps.ui.utils.PlayArrow
+import com.redridgeapps.ui.utils.Stop
 import com.redridgeapps.ui.utils.fetchViewModel
 
 @Model
@@ -72,7 +74,7 @@ private fun MainUI(viewModel: IMainViewModel) {
 private fun MainTopAppBar() {
 
     TopAppBar(
-        title = { Text(text = "Call Recorder") },
+        title = { Text(text = "Call Recorder", modifier = LayoutPadding(bottom = 16.dp)) },
         actions = {
 
             val backStack = BackStackAmbient.current
@@ -104,19 +106,19 @@ private fun MainBottomAppBar(
 @Composable
 private fun IconButtonPlayback(viewModel: IMainViewModel) {
 
-    @DrawableRes val drawableResId: Int
+    val vectorAsset: VectorAsset
     val onClick: () -> Unit
 
     if (viewModel.mainState.playing == -1) {
-        drawableResId = R.drawable.ic_baseline_play_arrow_24
+        vectorAsset = Icons.Default.PlayArrow
         onClick = { viewModel.startPlayback(viewModel.mainState.selectedId) }
     } else {
-        drawableResId = R.drawable.ic_baseline_stop_24
+        vectorAsset = Icons.Default.Stop
         onClick = { viewModel.stopPlayback() }
     }
 
     IconButton(onClick) {
-        Icon(vectorResource(id = drawableResId))
+        Icon(vectorAsset)
     }
 }
 
@@ -129,7 +131,7 @@ private fun IconButtonDelete(viewModel: IMainViewModel) {
     }
 
     IconButton(onClick) {
-        Icon(vectorResource(id = R.drawable.ic_baseline_delete_24))
+        Icon(Icons.Default.Delete)
     }
 }
 

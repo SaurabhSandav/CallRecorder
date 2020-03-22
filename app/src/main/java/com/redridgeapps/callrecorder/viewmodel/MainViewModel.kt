@@ -70,7 +70,7 @@ class MainViewModel @Inject constructor(
             // Format call Interval
             val startTime = it.startInstant.toLocalDateTime().format(overlineFormatter)
             val endTime = it.endInstant.toLocalDateTime().format(overlineFormatter)
-            val overlineText = "$startTime -> $endTime"
+            val overlineText = "$startTime -> $endTime (${it.callType})"
 
             // Calculate and format call duration
             val duration = Duration.between(it.startInstant, it.endInstant)

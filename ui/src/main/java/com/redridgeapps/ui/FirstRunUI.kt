@@ -46,7 +46,11 @@ private fun FirstRunUI(viewModel: IFirstRunViewModel) {
             configurationFinished(viewModel, BackStackAmbient.current)
     }
 
-    val topAppBar = @Composable { TopAppBar(title = { Text("Configure App") }) }
+    val topAppBar = @Composable {
+        TopAppBar(
+            title = { Text("Configure App", LayoutPadding(bottom = 16.dp)) }
+        )
+    }
 
     Scaffold(topAppBar = topAppBar) { modifier ->
 
