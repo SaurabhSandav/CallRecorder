@@ -1,9 +1,11 @@
+import java.time.Instant;
+
 CREATE TABLE IF NOT EXISTS Recording (
 id INTEGER AS Int NOT NULL PRIMARY KEY AUTOINCREMENT,
 name TEXT NOT NULL,
 number TEXT NOT NULL,
-startTime INTEGER NOT NULL,
-endTime INTEGER NOT NULL,
+startInstant INTEGER AS Instant NOT NULL,
+endInstant INTEGER AS Instant NOT NULL,
 callType TEXT NOT NULL,
 savePath TEXT NOT NULL,
 saveFormat TEXT NOT NULL
@@ -11,7 +13,7 @@ saveFormat TEXT NOT NULL
 
 insert:
 INSERT OR REPLACE
-INTO Recording (name, number, startTime, endTime, callType, savePath, saveFormat)
+INTO Recording (name, number, startInstant, endInstant, callType, savePath, saveFormat)
 VALUES (?, ?, ?, ?, ?, ?, ?);
 
 getAll:

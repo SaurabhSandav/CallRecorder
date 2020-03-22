@@ -3,8 +3,8 @@ package com.redridgeapps.callrecorder.callutils
 import android.content.Context
 import android.os.Environment
 import androidx.core.content.ContextCompat
+import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.RecordingQueries
-import com.redridgeapps.repository.RecordingItem
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.Dispatchers
@@ -39,26 +39,16 @@ class Recordings @Inject constructor(
         recordingQueries.insert(
             name = name,
             number = phoneNumber,
-            startTime = recordingStartInstant.toEpochMilli(),
-            endTime = recordingEndInstant.toEpochMilli(),
+            startInstant = recordingStartInstant,
+            endInstant = recordingEndInstant,
             callType = callType,
             savePath = saveFile.toString(),
             saveFormat = saveFile.extension
         )
     }
 
-    fun getRecordingList(): Flow<List<RecordingItem>> {
-        return recordingQueries.getAll { id, name, number, startTime, endTime, callType, _, saveFormat ->
-            RecordingItem(
-                id = id,
-                name = name,
-                startInstant = Instant.ofEpochMilli(startTime),
-                endInstant = Instant.ofEpochMilli(endTime),
-                number = number,
-                callType = callType,
-                saveFormat = saveFormat
-            )
-        }.asFlow().mapToList(Dispatchers.IO)
+    fun getRecordingList(): Flow<List<Recording>> {
+        return recordingQueries.getAll().asFlow().mapToList(Dispatchers.IO)
     }
 
     fun deleteRecording(recordingId: Int) {

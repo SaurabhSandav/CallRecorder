@@ -3,7 +3,6 @@ package com.redridgeapps.ui
 import androidx.annotation.DrawableRes
 import androidx.compose.Composable
 import androidx.compose.Model
-import androidx.compose.remember
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.Modifier
 import androidx.ui.core.Text
@@ -11,6 +10,7 @@ import androidx.ui.foundation.AdapterList
 import androidx.ui.foundation.Box
 import androidx.ui.foundation.ContentGravity
 import androidx.ui.foundation.Icon
+import androidx.ui.layout.Column
 import androidx.ui.layout.LayoutPadding
 import androidx.ui.layout.LayoutSize
 import androidx.ui.layout.LayoutWidth
@@ -20,20 +20,28 @@ import androidx.ui.material.icons.filled.Close
 import androidx.ui.res.vectorResource
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
-import com.redridgeapps.repository.RecordingItem
 import com.redridgeapps.repository.viewmodel.IMainViewModel
 import com.redridgeapps.ui.routing.Destination
 import com.redridgeapps.ui.utils.fetchViewModel
-import java.time.*
-import java.time.format.DateTimeFormatter
 
 @Model
 class MainState(
     var isRefreshing: Boolean = true,
-    var recordingList: List<RecordingItem> = listOf(),
+    var recordingList: List<RecordingListItem> = listOf(),
     var selectedId: Int = -1,
     var playing: Int = -1
 )
+
+sealed class RecordingListItem {
+    class Divider(val title: String) : RecordingListItem()
+    class Entry(
+        val id: Int,
+        val name: String,
+        val number: String,
+        val overlineText: String,
+        val metaText: String
+    ) : RecordingListItem()
+}
 
 object MainDestination : Destination {
 
@@ -160,85 +168,48 @@ private fun IsRefreshing(modifier: Modifier = Modifier.None) {
 @Composable
 private fun RecordingList(viewModel: IMainViewModel, modifier: Modifier = Modifier.None) {
 
-    var currentDate: LocalDate? = null
-
     AdapterList(
         data = viewModel.mainState.recordingList,
         modifier = modifier + LayoutSize.Fill
-    ) { recordingItem ->
+    ) { recordingListItem ->
 
-        val newDate = recordingItem.startInstant.toLocalDate()
-
-        if (currentDate != newDate) {
-
-            Divider(
-                modifier = LayoutPadding(start = 10.dp, end = 10.dp),
-                color = MaterialTheme.colors().onSurface.copy(alpha = 0.12F)
-            )
-
-            val newDayText = remember { formatNewDayText(newDate) }
-
-            Box(LayoutWidth.Fill + LayoutPadding(5.dp), gravity = ContentGravity.Center) {
-                Text(newDayText, style = MaterialTheme.typography().subtitle1)
-            }
-
-            Divider(
-                modifier = LayoutPadding(start = 10.dp, end = 10.dp),
-                color = MaterialTheme.colors().onSurface.copy(alpha = 0.12F)
-            )
-
-            currentDate = newDate
+        when (recordingListItem) {
+            is RecordingListItem.Divider -> RecordingListDateDivider(dateText = recordingListItem.title)
+            is RecordingListItem.Entry -> RecordingListItem(recordingListItem, viewModel)
         }
-
-        RecordingListItem(recordingItem, viewModel)
     }
 }
 
 @Composable
-private fun RecordingListItem(recordingItem: RecordingItem, viewModel: IMainViewModel) {
+private fun RecordingListDateDivider(dateText: String) {
 
-    val overlineText = remember {
-        val startTime = formatOverlineText(recordingItem.startInstant)
-        val endTime = formatOverlineText(recordingItem.endInstant)
-        "$startTime -> $endTime"
+    Column {
+
+        Divider(
+            modifier = LayoutPadding(start = 10.dp, end = 10.dp),
+            color = MaterialTheme.colors().onSurface.copy(alpha = 0.12F)
+        )
+
+        Box(LayoutWidth.Fill + LayoutPadding(5.dp), gravity = ContentGravity.Center) {
+            Text(dateText, style = MaterialTheme.typography().subtitle1)
+        }
+
+        Divider(
+            modifier = LayoutPadding(start = 10.dp, end = 10.dp),
+            color = MaterialTheme.colors().onSurface.copy(alpha = 0.12F)
+        )
     }
-    val durationText = remember {
-        createCallDurationText(recordingItem.startInstant, recordingItem.endInstant)
-    }
+}
+
+@Composable
+private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel: IMainViewModel) {
 
     ListItem(
-        text = recordingItem.name,
-        secondaryText = recordingItem.number,
-        overlineText = overlineText,
-        metaText = durationText
+        text = recordingEntry.name,
+        secondaryText = recordingEntry.number,
+        overlineText = recordingEntry.overlineText,
+        metaText = recordingEntry.metaText
     ) {
-        viewModel.mainState.selectedId = recordingItem.id
+        viewModel.mainState.selectedId = recordingEntry.id
     }
-}
-
-private fun createCallDurationText(startInstant: Instant, endInstant: Instant): String {
-
-    val duration = Duration.between(startInstant, endInstant)
-
-    return "%d:%02d:%02d".format(duration.toHours(), duration.toMinutes(), duration.seconds)
-}
-
-private val newDayFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM uuuu")
-private val overlineFormatter: DateTimeFormatter =
-    DateTimeFormatter.ofPattern("d MMM uuuu HH:mm:ss")
-
-private fun Instant.toLocalDateTime(): LocalDateTime {
-    return LocalDateTime.ofInstant(this, ZoneId.systemDefault())
-}
-
-private fun Instant.toLocalDate(): LocalDate {
-    return toLocalDateTime().toLocalDate()
-}
-
-private fun formatNewDayText(localDate: LocalDate): String {
-    return localDate.format(newDayFormatter)
-}
-
-private fun formatOverlineText(instant: Instant): String {
-    return instant.toLocalDateTime().format(overlineFormatter)
 }
