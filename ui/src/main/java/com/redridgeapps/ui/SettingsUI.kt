@@ -93,7 +93,7 @@ private fun MediaRecorderAPIPreference(viewModel: ISettingsViewModel) {
         SingleSelectListPreference(
             title = "Sample Rate",
             keys = MediaRecorderSampleRate.values().asList(),
-            keyToTextMapper = { it.toReadableString() },
+            keyToTextMapper = { it.sampleRate.toString() },
             selectedItem = viewModel.settingsState.mediaRecorderSampleRate,
             onSelectedChange = { viewModel.setMediaRecorderSampleRate(it) }
         )
@@ -118,7 +118,7 @@ private fun AudioRecordAPIPreference(viewModel: ISettingsViewModel) {
         SingleSelectListPreference(
             title = "Sample Rate",
             keys = AudioRecordSampleRate.values().asList(),
-            keyToTextMapper = { it.toReadableString() },
+            keyToTextMapper = { it.sampleRate.toString() },
             selectedItem = viewModel.settingsState.audioRecordSampleRate,
             onSelectedChange = { viewModel.setAudioRecordSampleRate(it) }
         )
@@ -149,16 +149,6 @@ private fun RecordingAPI.toReadableString(): String = when (this) {
 private fun MediaRecorderChannels.toReadableString(): String = when (this) {
     MediaRecorderChannels.MONO -> "Mono"
     MediaRecorderChannels.STEREO -> "Stereo"
-}
-
-private fun MediaRecorderSampleRate.toReadableString(): String = when (this) {
-    MediaRecorderSampleRate.S44_100 -> "44_100"
-    MediaRecorderSampleRate.S48_000 -> "48_000"
-}
-
-private fun AudioRecordSampleRate.toReadableString(): String = when (this) {
-    AudioRecordSampleRate.S44_100 -> "44_100"
-    AudioRecordSampleRate.S48_000 -> "48_000"
 }
 
 private fun AudioRecordChannels.toReadableString(): String = when (this) {

@@ -5,13 +5,14 @@ number TEXT NOT NULL,
 startTime INTEGER NOT NULL,
 endTime INTEGER NOT NULL,
 callType TEXT NOT NULL,
-savePath TEXT NOT NULL
+savePath TEXT NOT NULL,
+saveFormat TEXT NOT NULL
 );
 
 insert:
 INSERT OR REPLACE
-INTO Recording (name, number, startTime, endTime, callType, savePath)
-VALUES (?, ?, ?, ?, ?, ?);
+INTO Recording (name, number, startTime, endTime, callType, savePath, saveFormat)
+VALUES (?, ?, ?, ?, ?, ?, ?);
 
 getAll:
 SELECT * FROM Recording

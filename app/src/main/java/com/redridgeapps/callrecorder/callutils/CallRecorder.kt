@@ -29,8 +29,8 @@ class CallRecorder @Inject constructor(
     private var saveFile: File? = null
     private var wakeLock: WakeLock? = null
     private var currentStreamVolume = -1
-    private var recordingStartTime: Long = -1
-    private var recordingEndTime: Long = -1
+    private var recordingStartInstant: Instant = Instant.MIN
+    private var recordingEndInstant: Instant = Instant.MIN
 
     suspend fun startRecording() {
 
@@ -41,7 +41,7 @@ class CallRecorder @Inject constructor(
             RecordingAPI.AUDIO_RECORD -> audioRecordAPI.get()
         }
         saveFile = recordings.generateFileName(recorder!!.saveFileExt)
-        recordingStartTime = Instant.now().toEpochMilli()
+        recordingStartInstant = Instant.now()
 
         recorder!!.startRecording(saveFile!!)
 
@@ -56,7 +56,7 @@ class CallRecorder @Inject constructor(
          recorder!!.stopRecording()
 
          recorder = null
-         recordingEndTime = Instant.now().toEpochMilli()
+         recordingEndInstant = Instant.now()
 
          releaseWakeLock()
          restoreVolume()
@@ -65,8 +65,8 @@ class CallRecorder @Inject constructor(
          recordings.saveRecording(
              phoneNumber,
              callType,
-             recordingStartTime,
-             recordingEndTime,
+             recordingStartInstant,
+             recordingEndInstant,
              saveFile!!
          )
     }

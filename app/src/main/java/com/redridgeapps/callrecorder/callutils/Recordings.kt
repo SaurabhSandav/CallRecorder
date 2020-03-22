@@ -29,30 +29,34 @@ class Recordings @Inject constructor(
     fun saveRecording(
         phoneNumber: String,
         callType: String,
-        recordingStartTime: Long,
-        recordingEndTime: Long,
+        recordingStartInstant: Instant,
+        recordingEndInstant: Instant,
         saveFile: File
     ) {
 
-        val name = contactNameFetcher.getContactName(phoneNumber) ?: "Unknown"
+        val name = contactNameFetcher.getContactName(phoneNumber) ?: "Unknown ($phoneNumber)"
 
         recordingQueries.insert(
             name = name,
             number = phoneNumber,
-            startTime = recordingStartTime,
-            endTime = recordingEndTime,
+            startTime = recordingStartInstant.toEpochMilli(),
+            endTime = recordingEndInstant.toEpochMilli(),
             callType = callType,
-            savePath = saveFile.toString()
+            savePath = saveFile.toString(),
+            saveFormat = saveFile.extension
         )
     }
 
     fun getRecordingList(): Flow<List<RecordingItem>> {
-        return recordingQueries.getAll { id, name, number, _, _, callType, _ ->
+        return recordingQueries.getAll { id, name, number, startTime, endTime, callType, _, saveFormat ->
             RecordingItem(
                 id = id,
                 name = name,
+                startInstant = Instant.ofEpochMilli(startTime),
+                endInstant = Instant.ofEpochMilli(endTime),
                 number = number,
-                type = callType
+                callType = callType,
+                saveFormat = saveFormat
             )
         }.asFlow().mapToList(Dispatchers.IO)
     }

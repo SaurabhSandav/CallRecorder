@@ -6,6 +6,10 @@ enum class MediaRecorderChannels(val numChannels: Int) {
 }
 
 enum class MediaRecorderSampleRate(val sampleRate: Int) {
+    S8_000(8_000),
+    S11_025(11_025),
+    S16_000(16_000),
+    S22_050(22_050),
     S44_100(44_100),
     S48_000(48_000)
 }
