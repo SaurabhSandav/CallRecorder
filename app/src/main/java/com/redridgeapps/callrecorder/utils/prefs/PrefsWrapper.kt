@@ -1,6 +1,7 @@
 package com.redridgeapps.callrecorder.utils.prefs
 
 import android.content.SharedPreferences
+import com.redridgeapps.callrecorder.utils.prefs.TypedPref.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
@@ -14,8 +15,7 @@ class Prefs @Inject constructor(
 
     private val prefsChannel = BroadcastChannel<TypedPref<*>>(Channel.BUFFERED)
     private val preferenceListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-        prefList.firstOrNull { key == it.key }
-            ?.let { prefsChannel.offer(it) }
+        prefList.firstOrNull { key == it.key }?.let { prefsChannel.offer(it) }
     }
 
     init {
@@ -34,31 +34,17 @@ class Prefs @Inject constructor(
     }
 
     suspend fun <T : Any?> set(pref: TypedPref<T>, newValue: T) {
-        withContext(Dispatchers.IO) {
-
-            val editor = sharedPreferences.edit()
-
-            when (pref) {
-                is PrefString -> editor.putString(pref.key, newValue as String)
-                is PrefStringNullable -> editor.putString(pref.key, newValue as String?)
-                is PrefBoolean -> editor.putBoolean(pref.key, newValue as Boolean)
-                is PrefInt -> editor.putInt(pref.key, newValue as Int)
-                is PrefLong -> editor.putLong(pref.key, newValue as Long)
-                is PrefFloat -> editor.putFloat(pref.key, newValue as Float)
-                is PrefEnum -> editor.putString(pref.key, newValue.toString())
-                else -> error("Unsupported class")
-            }
-
-            editor.commit()
-        }
+        edit { put(pref, newValue) }
     }
 
     suspend fun edit(block: Editor.() -> Unit) {
         withContext(Dispatchers.IO) {
-            Editor(sharedPreferences).run {
-                block()
-                commit()
-            }
+
+            val editor = sharedPreferences.edit()
+
+            Editor(editor).block()
+
+            editor.commit()
         }
     }
 
@@ -72,13 +58,10 @@ class Prefs @Inject constructor(
             is PrefLong -> getLong(pref.key, pref.defaultValue) as T
             is PrefFloat -> getFloat(pref.key, pref.defaultValue) as T
             is PrefEnum -> pref.valueOf(getString(pref.key, pref.defaultValue.toString())!!)
-            else -> error("Unsupported class")
         }
     }
 
-    class Editor(sharedPreferences: SharedPreferences) {
-
-        private val editor = sharedPreferences.edit()
+    class Editor(private val editor: SharedPreferences.Editor) {
 
         fun <T : Any?> put(pref: TypedPref<T>, newValue: T) {
 
@@ -90,12 +73,7 @@ class Prefs @Inject constructor(
                 is PrefLong -> editor.putLong(pref.key, newValue as Long)
                 is PrefFloat -> editor.putFloat(pref.key, newValue as Float)
                 is PrefEnum -> editor.putString(pref.key, newValue.toString())
-                else -> error("Unsupported class")
             }
-        }
-
-        fun commit() {
-            editor.commit()
         }
     }
 }

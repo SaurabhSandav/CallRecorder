@@ -1,7 +1,7 @@
 package com.redridgeapps.callrecorder.callutils
 
-import android.media.AudioFormat
 import android.media.AudioRecord
+import com.redridgeapps.repository.callutils.AudioRecordEncoding
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.channels.FileChannel
@@ -16,19 +16,20 @@ class WavFileWriter(
         val byteBuffer = ByteBuffer.allocateDirect(44).order(ByteOrder.LITTLE_ENDIAN)
         val sampleRate = recorder.sampleRate
         val channels = recorder.channelCount
-        val bitsPerSample = when (recorder.audioFormat) {
-            AudioFormat.ENCODING_PCM_FLOAT -> 32
-            AudioFormat.ENCODING_PCM_16BIT -> 16
-            AudioFormat.ENCODING_PCM_8BIT -> 8
-            else -> error("Invalid audio encoding")
-        }
+        val encoding = AudioRecordEncoding.values().first { it.encoding == recorder.audioFormat }
+        val bitsPerSample = encoding.bitsPerSample
 
         "RIFF".forEach { byteBuffer.put(it.toByte()) }
         byteBuffer.putInt(0)
         "WAVE".forEach { byteBuffer.put(it.toByte()) }
         "fmt ".forEach { byteBuffer.put(it.toByte()) }
         byteBuffer.putInt(16)
-        byteBuffer.putShort(1)
+
+        if (encoding == AudioRecordEncoding.ENCODING_PCM_FLOAT)
+            byteBuffer.putShort(3) // WAVE_FORMAT_IEEE_FLOAT
+        else
+            byteBuffer.putShort(1) // WAVE_FORMAT_PCM
+
         byteBuffer.putShort(channels.toShort())
         byteBuffer.putInt(sampleRate)
         byteBuffer.putInt(sampleRate * channels * bitsPerSample / 8)

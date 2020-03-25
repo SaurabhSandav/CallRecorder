@@ -16,8 +16,8 @@ enum class AudioRecordChannels(val channels: Int) {
     STEREO(AudioFormat.CHANNEL_IN_STEREO)
 }
 
-enum class AudioRecordEncoding(val encoding: Int) {
-    ENCODING_PCM_8BIT(AudioFormat.ENCODING_PCM_8BIT),
-    ENCODING_PCM_16BIT(AudioFormat.ENCODING_PCM_16BIT),
-    ENCODING_PCM_FLOAT(AudioFormat.ENCODING_PCM_FLOAT)
+enum class AudioRecordEncoding(val encoding: Int, val bitsPerSample: Int) {
+    ENCODING_PCM_8BIT(AudioFormat.ENCODING_PCM_8BIT, 8),
+    ENCODING_PCM_16BIT(AudioFormat.ENCODING_PCM_16BIT, 16),
+    ENCODING_PCM_FLOAT(AudioFormat.ENCODING_PCM_FLOAT, 32)
 }

@@ -1,5 +1,7 @@
 package com.redridgeapps.callrecorder.utils.prefs
 
+import com.redridgeapps.callrecorder.utils.prefs.TypedPref.PrefBoolean
+import com.redridgeapps.callrecorder.utils.prefs.TypedPref.PrefEnum
 import com.redridgeapps.repository.callutils.AudioRecordChannels
 import com.redridgeapps.repository.callutils.AudioRecordEncoding
 import com.redridgeapps.repository.callutils.AudioRecordSampleRate
@@ -19,7 +21,7 @@ val PREF_IS_FIRST_RUN = PrefBoolean(
 
 val PREF_IS_RECORDING_ON = PrefBoolean(
     key = "IS_RECORDING_ON",
-    defaultValue = true
+    defaultValue = false
 ).addToPrefList()
 
 val PREF_AUDIO_RECORD_SAMPLE_RATE = PrefEnum(
