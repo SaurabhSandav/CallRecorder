@@ -1,6 +1,8 @@
 package com.redridgeapps.callrecorder.utils.prefs
 
-import com.redridgeapps.repository.callutils.*
+import com.redridgeapps.repository.callutils.AudioRecordChannels
+import com.redridgeapps.repository.callutils.AudioRecordEncoding
+import com.redridgeapps.repository.callutils.AudioRecordSampleRate
 
 var prefList: List<TypedPref<*>> = emptyList()
     private set
@@ -18,24 +20,6 @@ val PREF_IS_FIRST_RUN = PrefBoolean(
 val PREF_IS_RECORDING_ON = PrefBoolean(
     key = "IS_RECORDING_ON",
     defaultValue = true
-).addToPrefList()
-
-val PREF_RECORDING_API = PrefEnum(
-    key = "RECORDING_API",
-    defaultValue = RecordingAPI.AUDIO_RECORD,
-    valueOf = ::enumValueOf
-).addToPrefList()
-
-val PREF_MEDIA_RECORDER_SAMPLE_RATE = PrefEnum(
-    key = "MEDIA_RECORDER_SAMPLE_RATE",
-    defaultValue = MediaRecorderSampleRate.S44_100,
-    valueOf = ::enumValueOf
-).addToPrefList()
-
-val PREF_MEDIA_RECORDER_CHANNELS = PrefEnum(
-    key = "MEDIA_RECORDER_CHANNELS",
-    defaultValue = MediaRecorderChannels.MONO,
-    valueOf = ::enumValueOf
 ).addToPrefList()
 
 val PREF_AUDIO_RECORD_SAMPLE_RATE = PrefEnum(
