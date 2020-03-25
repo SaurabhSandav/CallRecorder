@@ -65,8 +65,11 @@ class Systemizer @Inject constructor(
     }
 
     private suspend fun isAppSystemized(): Boolean = withContext(Dispatchers.IO) {
-        return@withContext SuFile("/system/priv-app/CallRecorder/CallRecorder.apk").exists() &&
-                SuFile("/system/etc/permissions/privapp-permissions-$packageName.xml").exists()
+
+        val apkFile = "$APK_TARGET_DIR/$APK_NAME"
+        val permissionFile = "$PERMISSIONS_TARGET_DIR/${PERMISSIONS_FILE_NAME.format(packageName)}"
+
+        return@withContext SuFile(apkFile).exists() && SuFile(permissionFile).exists()
     }
 
     private suspend fun withWritableSystem(block: suspend () -> Unit) {
@@ -86,7 +89,7 @@ class Systemizer @Inject constructor(
         // App needs to reside in an individual directory in /system/priv-app
         su("mkdir -p $APK_TARGET_DIR")
 
-        // Move APK to its own directory in /system/priv-app
+        // Copy APK to its own directory in /system/priv-app
         su("cp $currentApkLocation $APK_TARGET_DIR/$APK_NAME")
 
         // Fix permissions
@@ -145,7 +148,6 @@ class Systemizer @Inject constructor(
                     val exception = CommandFailedException(*commands, result = result)
                     continuation.resumeWithException(exception)
                 }
-
             }
         }
 

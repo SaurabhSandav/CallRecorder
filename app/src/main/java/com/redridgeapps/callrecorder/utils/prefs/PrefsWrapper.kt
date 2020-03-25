@@ -83,10 +83,8 @@ class Prefs @Inject constructor(
         fun <T : Any?> put(pref: TypedPref<T>, newValue: T) {
 
             when (pref) {
-                is PrefString, is PrefStringNullable -> editor.putString(
-                    pref.key,
-                    newValue as String?
-                )
+                is PrefString -> editor.putString(pref.key, newValue as String)
+                is PrefStringNullable -> editor.putString(pref.key, newValue as String?)
                 is PrefBoolean -> editor.putBoolean(pref.key, newValue as Boolean)
                 is PrefInt -> editor.putInt(pref.key, newValue as Int)
                 is PrefLong -> editor.putLong(pref.key, newValue as Long)

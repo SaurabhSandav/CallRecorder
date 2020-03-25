@@ -2,6 +2,7 @@ package com.redridgeapps.ui
 
 import androidx.compose.Composable
 import androidx.compose.Model
+import androidx.compose.key
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.Modifier
 import androidx.ui.core.Text
@@ -106,19 +107,24 @@ private fun MainBottomAppBar(
 @Composable
 private fun IconButtonPlayback(viewModel: IMainViewModel) {
 
-    val vectorAsset: VectorAsset
-    val onClick: () -> Unit
+    val isPlaying = viewModel.mainState.playing == -1
 
-    if (viewModel.mainState.playing == -1) {
-        vectorAsset = Icons.Default.PlayArrow
-        onClick = { viewModel.startPlayback(viewModel.mainState.selectedId) }
-    } else {
-        vectorAsset = Icons.Default.Stop
-        onClick = { viewModel.stopPlayback() }
-    }
+    key(isPlaying) {
 
-    IconButton(onClick) {
-        Icon(vectorAsset)
+        val vectorAsset: VectorAsset
+        val onClick: () -> Unit
+
+        if (isPlaying) {
+            vectorAsset = Icons.Default.PlayArrow
+            onClick = { viewModel.startPlayback(viewModel.mainState.selectedId) }
+        } else {
+            vectorAsset = Icons.Default.Stop
+            onClick = { viewModel.stopPlayback() }
+        }
+
+        IconButton(onClick) {
+            Icon(vectorAsset)
+        }
     }
 }
 
@@ -160,7 +166,7 @@ private fun ContentMain(
 }
 
 @Composable
-private fun IsRefreshing(modifier: Modifier = Modifier.None) {
+private fun IsRefreshing(modifier: Modifier) {
 
     Box(modifier + LayoutSize.Fill, gravity = ContentGravity.Center) {
         CircularProgressIndicator()
@@ -168,7 +174,7 @@ private fun IsRefreshing(modifier: Modifier = Modifier.None) {
 }
 
 @Composable
-private fun RecordingList(viewModel: IMainViewModel, modifier: Modifier = Modifier.None) {
+private fun RecordingList(viewModel: IMainViewModel, modifier: Modifier) {
 
     AdapterList(
         data = viewModel.mainState.recordingList,

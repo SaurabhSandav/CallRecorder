@@ -1,7 +1,7 @@
 @file:Suppress("unused")
 
 object AndroidTools {
-    private const val GRADLE_PLUGIN_VERSION = "4.1.0-alpha03"
+    private const val GRADLE_PLUGIN_VERSION = "4.1.0-alpha04"
     private const val DESUGAR_JDK_LIBS_VERSION = "1.0.4"
 
     const val GRADLE_PLUGIN = "com.android.tools.build:gradle:$GRADLE_PLUGIN_VERSION"
@@ -9,7 +9,7 @@ object AndroidTools {
 }
 
 object Kotlin {
-    private const val VERSION = "1.3.70"
+    private const val VERSION = "1.3.71"
     private const val COROUTINES_VERSION = "1.3.5"
 
     const val GRADLE_PLUGIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:$VERSION"
