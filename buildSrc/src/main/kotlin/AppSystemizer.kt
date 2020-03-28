@@ -7,7 +7,7 @@ const val APP_PACKAGE = "com.redridgeapps.callrecorder"
 const val APP_DIR_NAME = "CallRecorder"
 const val MAIN_ACTIVITY = "MainActivity"
 
-open class AppSystemizer : DefaultTask() {
+abstract class AppSystemizer : DefaultTask() {
 
     private val terminalTools = TerminalTools(project.rootDir)
     private val manifestParser = ManifestParser(project.projectDir.path)

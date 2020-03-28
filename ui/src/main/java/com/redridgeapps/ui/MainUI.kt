@@ -18,13 +18,13 @@ import androidx.ui.layout.LayoutWidth
 import androidx.ui.material.*
 import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.Close
+import androidx.ui.material.icons.filled.Delete
+import androidx.ui.material.icons.filled.PlayArrow
+import androidx.ui.material.icons.filled.Stop
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.repository.viewmodel.IMainViewModel
 import com.redridgeapps.ui.routing.Destination
-import com.redridgeapps.ui.utils.Delete
-import com.redridgeapps.ui.utils.PlayArrow
-import com.redridgeapps.ui.utils.Stop
 import com.redridgeapps.ui.utils.fetchViewModel
 
 @Model

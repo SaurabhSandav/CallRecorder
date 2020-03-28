@@ -11,6 +11,7 @@ import androidx.ui.material.IconButton
 import androidx.ui.material.Scaffold
 import androidx.ui.material.TopAppBar
 import androidx.ui.material.icons.Icons
+import androidx.ui.material.icons.filled.ArrowBack
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.repository.callutils.AudioRecordChannels
@@ -18,7 +19,10 @@ import com.redridgeapps.repository.callutils.AudioRecordEncoding
 import com.redridgeapps.repository.callutils.AudioRecordSampleRate
 import com.redridgeapps.repository.viewmodel.ISettingsViewModel
 import com.redridgeapps.ui.routing.Destination
-import com.redridgeapps.ui.utils.*
+import com.redridgeapps.ui.utils.SingleSelectListPreference
+import com.redridgeapps.ui.utils.SwitchPreference
+import com.redridgeapps.ui.utils.TitlePreference
+import com.redridgeapps.ui.utils.fetchViewModel
 
 @Model
 class SettingsState(

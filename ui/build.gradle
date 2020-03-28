@@ -45,6 +45,7 @@ dependencies {
     implementation Compose.UI_FRAMEWORK
     implementation Compose.UI_LAYOUT
     implementation Compose.UI_MATERIAL
+    implementation Compose.UI_MATERIAL_ICONS_EXTENDED
     implementation Compose.UI_TOOLING
 
     // compose-navigation
