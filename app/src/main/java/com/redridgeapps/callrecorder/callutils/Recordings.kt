@@ -9,7 +9,9 @@ import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
 import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,9 +23,9 @@ class Recordings @Inject constructor(
     private val contactNameFetcher: ContactNameFetcher
 ) {
 
-    fun generateFileName(saveFileExt: String): File {
+    fun generateFilePath(saveFileExt: String): Path {
         val fileName = "${Instant.now().epochSecond}.$saveFileExt"
-        return File(getRecordingStoragePath(), fileName)
+        return getRecordingStoragePath().resolve(fileName)
     }
 
     fun saveRecording(
@@ -31,7 +33,7 @@ class Recordings @Inject constructor(
         callType: String,
         recordingStartInstant: Instant,
         recordingEndInstant: Instant,
-        saveFile: File
+        savePath: Path
     ) {
 
         val name = contactNameFetcher.getContactName(phoneNumber) ?: "Unknown ($phoneNumber)"
@@ -42,8 +44,8 @@ class Recordings @Inject constructor(
             startInstant = recordingStartInstant,
             endInstant = recordingEndInstant,
             callType = callType,
-            savePath = saveFile.toString(),
-            saveFormat = saveFile.extension
+            savePath = savePath.toString(),
+            saveFormat = savePath.toString().substringAfterLast('.', "")
         )
     }
 
@@ -55,18 +57,18 @@ class Recordings @Inject constructor(
         recordingQueries.deleteWithId(recordingId)
     }
 
-    private fun getRecordingStoragePath(): File {
+    private fun getRecordingStoragePath(): Path {
 
         if (Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED)
             error("External storage is not writable")
 
         val externalStorageVolumes = ContextCompat.getExternalFilesDirs(context, null)
         val primaryExternalStorage = externalStorageVolumes[0]
-        val saveDir = File(primaryExternalStorage, "CallRecordings")
+        val savePath = Paths.get(primaryExternalStorage.path, "CallRecordings")
 
-        if (!saveDir.exists())
-            saveDir.mkdir()
+        if (!Files.exists(savePath))
+            Files.createDirectory(savePath)
 
-        return saveDir
+        return savePath
     }
 }

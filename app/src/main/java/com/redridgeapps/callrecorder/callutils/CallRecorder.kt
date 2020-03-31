@@ -13,9 +13,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.io.File
-import java.io.FileOutputStream
 import java.nio.ByteBuffer
+import java.nio.channels.FileChannel
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.StandardOpenOption.CREATE
+import java.nio.file.StandardOpenOption.WRITE
 import java.time.Instant
 import javax.inject.Inject
 
@@ -34,7 +37,7 @@ class CallRecorder @Inject constructor(
 
     private var recorder: AudioRecord? = null
     private var isRecording = false
-    private var saveFile: File? = null
+    private var savePath: Path? = null
     private var recordingStartInstant: Instant = Instant.MIN
     private var recordingEndInstant: Instant = Instant.MIN
 
@@ -45,7 +48,7 @@ class CallRecorder @Inject constructor(
 
         withContext(Dispatchers.IO) {
 
-            saveFile = recordings.generateFileName(saveFileExt)
+            savePath = recordings.generateFilePath(saveFileExt)
             recordingStartInstant = Instant.now()
 
             val sampleRate = async { prefs.get(PREF_AUDIO_RECORD_SAMPLE_RATE).sampleRate }
@@ -69,7 +72,7 @@ class CallRecorder @Inject constructor(
             recorder!!.startRecording()
             isRecording = true
 
-            writeAudioDataToWavFile(saveFile!!, bufferSize)
+            writeAudioDataToWavFile(bufferSize)
         }
     }
 
@@ -93,7 +96,7 @@ class CallRecorder @Inject constructor(
             callType,
             recordingStartInstant,
             recordingEndInstant,
-            saveFile!!
+            savePath!!
         )
     }
 
@@ -104,16 +107,16 @@ class CallRecorder @Inject constructor(
         releaseWakeLock()
     }
 
-    private suspend fun writeAudioDataToWavFile(saveFile: File, bufferSize: Int) {
+    private suspend fun writeAudioDataToWavFile(bufferSize: Int) {
         withContext(Dispatchers.IO) {
 
-            FileOutputStream(saveFile).channel.use { channel ->
+            FileChannel.open(savePath, CREATE, WRITE).use { channel ->
 
                 val encoding =
                     AudioRecordEncoding.values().first { it.encodingFlag == recorder!!.audioFormat }
                 val bitsPerSample = encoding.bitsPerSample
 
-                WavFileWriter.writeHeader(
+                WavFileUtils.writeHeader(
                     fileChannel = channel,
                     sampleRate = recorder!!.sampleRate,
                     channelCount = recorder!!.channelCount,
@@ -131,7 +134,7 @@ class CallRecorder @Inject constructor(
                         AudioRecord.READ_BLOCKING
                     )
 
-                    crashIfError(saveFile, bytesRead)
+                    crashIfError(bytesRead)
 
                     byteBuffer.position(bytesRead)
                     byteBuffer.flip()
@@ -139,13 +142,13 @@ class CallRecorder @Inject constructor(
                     channel.write(byteBuffer)
                 }
 
-                WavFileWriter.updateHeaderWithSize(channel)
+                WavFileUtils.updateHeaderWithSize(channel)
             }
         }
     }
 
-    private suspend fun crashIfError(saveFile: File, bytesRead: Int) {
-        withContext(Dispatchers.Main) {
+    private suspend fun crashIfError(bytesRead: Int) {
+        withContext(Dispatchers.IO) {
 
             val errorStr: String? = when (bytesRead) {
                 AudioRecord.ERROR_INVALID_OPERATION -> "AudioRecord: ERROR_INVALID_OPERATION"
@@ -156,10 +159,12 @@ class CallRecorder @Inject constructor(
 
             errorStr?.let {
 
-                toastMaker.newToast("Call recording stopped with error")
-                Timber.d(it)
+                withContext(Dispatchers.Main) {
+                    toastMaker.newToast("Call recording stopped with error")
+                    Timber.d(it)
+                }
 
-                saveFile.delete()
+                Files.delete(savePath)
 
                 error(it)
             }
