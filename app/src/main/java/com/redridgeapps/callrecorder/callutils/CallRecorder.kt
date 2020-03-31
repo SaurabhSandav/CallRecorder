@@ -8,6 +8,7 @@ import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_CHANNELS
 import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_ENCODING
 import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_SAMPLE_RATE
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
+import com.redridgeapps.repository.callutils.AudioRecordEncoding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
@@ -108,9 +109,16 @@ class CallRecorder @Inject constructor(
 
             FileOutputStream(saveFile).channel.use { channel ->
 
-                val wavFileWriter = WavFileWriter(recorder!!, channel)
+                val encoding =
+                    AudioRecordEncoding.values().first { it.encodingFlag == recorder!!.audioFormat }
+                val bitsPerSample = encoding.bitsPerSample
 
-                wavFileWriter.writeHeader()
+                WavFileWriter.writeHeader(
+                    fileChannel = channel,
+                    sampleRate = recorder!!.sampleRate,
+                    channelCount = recorder!!.channelCount,
+                    bitsPerSample = bitsPerSample
+                )
 
                 val byteBuffer = ByteBuffer.allocateDirect(bufferSize)
 
@@ -131,7 +139,7 @@ class CallRecorder @Inject constructor(
                     channel.write(byteBuffer)
                 }
 
-                wavFileWriter.updateHeaderWithSize()
+                WavFileWriter.updateHeaderWithSize(channel)
             }
         }
     }
