@@ -16,7 +16,8 @@ class WavFileWriter(
         val byteBuffer = ByteBuffer.allocateDirect(44).order(ByteOrder.LITTLE_ENDIAN)
         val sampleRate = recorder.sampleRate
         val channels = recorder.channelCount
-        val encoding = AudioRecordEncoding.values().first { it.encoding == recorder.audioFormat }
+        val encoding =
+            AudioRecordEncoding.values().first { it.encodingFlag == recorder.audioFormat }
         val bitsPerSample = encoding.bitsPerSample
 
         "RIFF".forEach { byteBuffer.put(it.toByte()) }

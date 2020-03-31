@@ -27,7 +27,7 @@ void checkFOpenError(JNIEnv *env, FILE *file) {
     }
 }
 
-FILE *openFile(JNIEnv *env, char *filename, char *mode) {
+FILE *openFile(JNIEnv *env, const char *filename, const char *mode) {
 
     FILE *file = fopen(filename, mode);
     checkFOpenError(env, file);

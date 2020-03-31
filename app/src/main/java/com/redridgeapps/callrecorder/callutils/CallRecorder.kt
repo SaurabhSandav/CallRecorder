@@ -48,8 +48,8 @@ class CallRecorder @Inject constructor(
             recordingStartInstant = Instant.now()
 
             val sampleRate = async { prefs.get(PREF_AUDIO_RECORD_SAMPLE_RATE).sampleRate }
-            val audioChannel = async { prefs.get(PREF_AUDIO_RECORD_CHANNELS).channels }
-            val audioEncoding = async { prefs.get(PREF_AUDIO_RECORD_ENCODING).encoding }
+            val audioChannel = async { prefs.get(PREF_AUDIO_RECORD_CHANNELS).channelFlag }
+            val audioEncoding = async { prefs.get(PREF_AUDIO_RECORD_ENCODING).encodingFlag }
 
             val bufferSize = AudioRecord.getMinBufferSize(
                 sampleRate.await(),

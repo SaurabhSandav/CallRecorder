@@ -4,3 +4,7 @@ include ':ui'
 include ':app'
 
 rootProject.name = "Call Recorder"
+
+rootProject.children.each { subproject ->
+    subproject.buildFileName = "${subproject.name}.gradle"
+}

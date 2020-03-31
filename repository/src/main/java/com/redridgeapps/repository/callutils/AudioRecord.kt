@@ -11,12 +11,12 @@ enum class AudioRecordSampleRate(val sampleRate: Int) {
     S48_000(48_000);
 }
 
-enum class AudioRecordChannels(val channels: Int) {
-    MONO(AudioFormat.CHANNEL_IN_MONO),
-    STEREO(AudioFormat.CHANNEL_IN_STEREO)
+enum class AudioRecordChannels(val channelFlag: Int, val channelCount: Int) {
+    MONO(AudioFormat.CHANNEL_IN_MONO, 1),
+    STEREO(AudioFormat.CHANNEL_IN_STEREO, 2)
 }
 
-enum class AudioRecordEncoding(val encoding: Int, val bitsPerSample: Int) {
+enum class AudioRecordEncoding(val encodingFlag: Int, val bitsPerSample: Int) {
     ENCODING_PCM_8BIT(AudioFormat.ENCODING_PCM_8BIT, 8),
     ENCODING_PCM_16BIT(AudioFormat.ENCODING_PCM_16BIT, 16),
     ENCODING_PCM_FLOAT(AudioFormat.ENCODING_PCM_FLOAT, 32)
