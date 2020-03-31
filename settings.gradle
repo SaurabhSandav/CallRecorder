@@ -1,4 +1,6 @@
+include ':libmp3lame'
 include ':repository'
 include ':ui'
 include ':app'
+
 rootProject.name = "Call Recorder"
