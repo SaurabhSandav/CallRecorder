@@ -44,6 +44,8 @@ class Systemizer @Inject constructor(
         }
 
         reCheckAppSystemizedChannel.send(Unit)
+
+        return@withContext
     }
 
     suspend fun unSystemize() = withContext(Dispatchers.IO) {
@@ -62,6 +64,8 @@ class Systemizer @Inject constructor(
         }
 
         reCheckAppSystemizedChannel.send(Unit)
+
+        return@withContext
     }
 
     private suspend fun isAppSystemized(): Boolean = withContext(Dispatchers.IO) {

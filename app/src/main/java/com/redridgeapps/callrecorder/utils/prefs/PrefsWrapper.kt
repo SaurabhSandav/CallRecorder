@@ -1,5 +1,6 @@
 package com.redridgeapps.callrecorder.utils.prefs
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import com.redridgeapps.callrecorder.utils.prefs.TypedPref.*
 import kotlinx.coroutines.Dispatchers
@@ -37,15 +38,16 @@ class Prefs @Inject constructor(
         edit { put(pref, newValue) }
     }
 
-    suspend fun edit(block: Editor.() -> Unit) {
-        withContext(Dispatchers.IO) {
+    @SuppressLint("ApplySharedPref")
+    suspend fun edit(block: Editor.() -> Unit) = withContext(Dispatchers.IO) {
 
-            val editor = sharedPreferences.edit()
+        val editor = sharedPreferences.edit()
 
-            Editor(editor).block()
+        Editor(editor).block()
 
-            editor.commit()
-        }
+        editor.commit()
+
+        return@withContext
     }
 
     private fun <T : Any?> getInternal(pref: TypedPref<T>): T = with(sharedPreferences) {

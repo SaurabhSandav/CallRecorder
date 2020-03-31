@@ -15,19 +15,22 @@ class CallPlayback @Inject constructor(
 
     private var player: MediaPlayer? = null
 
-    suspend fun startPlaying(recordingId: Int, onComplete: () -> Unit) {
-        withContext(Dispatchers.IO) {
+    suspend fun startPlaying(
+        recordingId: Int,
+        onComplete: () -> Unit
+    ) = withContext(Dispatchers.IO) {
 
-            val recording = recordingQueries.getWithId(recordingId).asFlow().mapToOne().first()
-            val recordingPath = recording.savePath
+        val recording = recordingQueries.getWithId(recordingId).asFlow().mapToOne().first()
+        val recordingPath = recording.savePath
 
-            player = MediaPlayer().apply {
-                setDataSource(recordingPath)
-                prepare()
-                start()
-                setOnCompletionListener { onComplete() }
-            }
+        player = MediaPlayer().apply {
+            setDataSource(recordingPath)
+            prepare()
+            start()
+            setOnCompletionListener { onComplete() }
         }
+
+        return@withContext
     }
 
     fun stopPlaying() {

@@ -1,5 +1,7 @@
 package com.redridgeapps.callrecorder.callutils
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.channels.FileChannel
@@ -8,13 +10,13 @@ import java.nio.file.StandardOpenOption.*
 
 object WavFileUtils {
 
-    fun writeHeader(
+    suspend fun writeHeader(
         fileChannel: FileChannel,
         sampleRate: Int,
         channelCount: Int,
         bitsPerSample: Int,
         size: Int = 0
-    ) {
+    ) = withContext(Dispatchers.IO) {
 
         fileChannel.position(0)
 
@@ -42,9 +44,11 @@ object WavFileUtils {
         byteBuffer.flip()
 
         fileChannel.write(byteBuffer)
+
+        return@withContext
     }
 
-    fun updateHeaderWithSize(fileChannel: FileChannel) {
+    suspend fun updateHeaderWithSize(fileChannel: FileChannel) = withContext(Dispatchers.IO) {
 
         val size = fileChannel.size().toInt() - 44
         val byteBuffer = ByteBuffer.allocateDirect(8).order(ByteOrder.LITTLE_ENDIAN)
@@ -58,16 +62,21 @@ object WavFileUtils {
 
         byteBuffer.limit(byteBuffer.capacity())
         fileChannel.write(byteBuffer, 40)
+
+        return@withContext
     }
 
-    fun convertWav8BitTo16Bit(inputFilePath: Path, outputFilePath: Path) {
+    suspend fun convertWav8BitTo16Bit(
+        inputFilePath: Path,
+        outputFilePath: Path
+    ) = withContext(Dispatchers.IO) {
 
-        FileChannel.open(outputFilePath, CREATE, WRITE).use { outputChannel ->
+        FileChannel.open(outputFilePath, CREATE_NEW, WRITE).use { outputChannel ->
 
             val inputChannel = FileChannel.open(inputFilePath, READ)
             val input8BitWavData = readWavData(inputChannel)
 
-            if (input8BitWavData.bitsPerSample != 8) return
+            if (input8BitWavData.bitsPerSample != 8) return@withContext
 
             writeHeader(
                 fileChannel = outputChannel,
@@ -102,21 +111,23 @@ object WavFileUtils {
 
             updateHeaderWithSize(outputChannel)
         }
+
+        return@withContext
     }
 
-    fun readWavData(fileChannel: FileChannel): WavData {
+    suspend fun readWavData(fileChannel: FileChannel): WavData = withContext(Dispatchers.IO) {
 
         fileChannel.position(0)
 
-        val byteBuffer = ByteBuffer.allocate(44).order(ByteOrder.LITTLE_ENDIAN)
+        val byteBuffer = ByteBuffer.allocateDirect(44).order(ByteOrder.LITTLE_ENDIAN)
         fileChannel.read(byteBuffer)
 
-        return WavData(
+        return@withContext WavData(
             fileSize = byteBuffer.getInt(4),
             channelCount = byteBuffer.getShort(22).toInt(),
             sampleRate = byteBuffer.getInt(24),
             byteRate = byteBuffer.getInt(28),
-            bitsPerSample = byteBuffer.getInt(34)
+            bitsPerSample = byteBuffer.getShort(34).toInt()
         )
     }
 
