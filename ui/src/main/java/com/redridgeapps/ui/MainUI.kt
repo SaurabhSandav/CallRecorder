@@ -2,25 +2,18 @@ package com.redridgeapps.ui
 
 import androidx.compose.Composable
 import androidx.compose.Model
-import androidx.compose.key
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.Modifier
 import androidx.ui.core.Text
-import androidx.ui.foundation.AdapterList
-import androidx.ui.foundation.Box
-import androidx.ui.foundation.ContentGravity
-import androidx.ui.foundation.Icon
-import androidx.ui.graphics.vector.VectorAsset
+import androidx.ui.foundation.*
+import androidx.ui.graphics.Color
 import androidx.ui.layout.Column
 import androidx.ui.layout.LayoutPadding
 import androidx.ui.layout.LayoutSize
 import androidx.ui.layout.LayoutWidth
 import androidx.ui.material.*
 import androidx.ui.material.icons.Icons
-import androidx.ui.material.icons.filled.Close
-import androidx.ui.material.icons.filled.Delete
-import androidx.ui.material.icons.filled.PlayArrow
-import androidx.ui.material.icons.filled.Stop
+import androidx.ui.material.icons.filled.Settings
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.repository.viewmodel.IMainViewModel
@@ -36,7 +29,9 @@ class MainState(
 )
 
 sealed class RecordingListItem {
+
     class Divider(val title: String) : RecordingListItem()
+
     class Entry(
         val id: Int,
         val name: String,
@@ -64,8 +59,7 @@ private val IMainViewModel.mainState: MainState
 private fun MainUI(viewModel: IMainViewModel) {
 
     Scaffold(
-        topAppBar = { MainTopAppBar() },
-        bottomAppBar = { MainBottomAppBar(viewModel, it) }
+        topAppBar = { MainTopAppBar() }
     ) { modifier ->
         ContentMain(viewModel, modifier)
     }
@@ -77,78 +71,13 @@ private fun MainTopAppBar() {
     TopAppBar(
         title = { Text(text = "Call Recorder", modifier = LayoutPadding(bottom = 16.dp)) },
         actions = {
-
             val backStack = BackStackAmbient.current
-            val onClick = { backStack.push(SettingsDestination) }
 
-            TextButton(contentColor = MaterialTheme.colors().onPrimary, onClick = onClick) {
-                Text(text = "Settings")
+            IconButton(onClick = { backStack.push(SettingsDestination) }) {
+                Icon(Icons.Default.Settings)
             }
         }
     )
-}
-
-@Composable
-private fun MainBottomAppBar(
-    viewModel: IMainViewModel,
-    fabConfiguration: BottomAppBar.FabConfiguration?
-) {
-
-    if (viewModel.mainState.selectedId == -1) return
-
-    BottomAppBar(fabConfiguration = fabConfiguration) {
-
-        IconButtonPlayback(viewModel)
-        IconButtonDelete(viewModel)
-        IconButtonClose(viewModel)
-    }
-}
-
-@Composable
-private fun IconButtonPlayback(viewModel: IMainViewModel) {
-
-    val isPlaying = viewModel.mainState.playing == -1
-
-    key(isPlaying) {
-
-        val vectorAsset: VectorAsset
-        val onClick: () -> Unit
-
-        if (isPlaying) {
-            vectorAsset = Icons.Default.PlayArrow
-            onClick = { viewModel.startPlayback(viewModel.mainState.selectedId) }
-        } else {
-            vectorAsset = Icons.Default.Stop
-            onClick = { viewModel.stopPlayback() }
-        }
-
-        IconButton(onClick) {
-            Icon(vectorAsset)
-        }
-    }
-}
-
-@Composable
-private fun IconButtonDelete(viewModel: IMainViewModel) {
-
-    val onClick = {
-        viewModel.deleteSelectedRecording()
-        viewModel.mainState.selectedId = -1
-    }
-
-    IconButton(onClick) {
-        Icon(Icons.Default.Delete)
-    }
-}
-
-@Composable
-private fun IconButtonClose(viewModel: IMainViewModel) {
-
-    val onClick = { viewModel.mainState.selectedId = -1 }
-
-    IconButton(onClick) {
-        Icon(Icons.Default.Close)
-    }
 }
 
 @Composable
@@ -163,6 +92,8 @@ private fun ContentMain(
         else
             RecordingList(viewModel, modifier)
     }
+
+    OptionsDialog(viewModel = viewModel)
 }
 
 @Composable
@@ -219,5 +150,31 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
         metaText = recordingEntry.metaText
     ) {
         viewModel.mainState.selectedId = recordingEntry.id
+    }
+}
+
+@Composable
+private fun OptionsDialog(viewModel: IMainViewModel) {
+
+    if (viewModel.mainState.selectedId == -1) return
+
+    val onCloseRequest = { viewModel.mainState.selectedId = -1 }
+
+    Dialog(onCloseRequest = onCloseRequest) {
+        Column(DrawBackground(Color.White)) {
+
+            // TODO Move to separate Player
+            if (viewModel.mainState.playing == -1)
+                ListItem("Play") { viewModel.startPlayback(viewModel.mainState.selectedId) }
+            else
+                ListItem("Stop") { viewModel.stopPlayback() }
+
+            ListItem("Info")
+
+            ListItem("Delete") {
+                viewModel.deleteSelectedRecording()
+                viewModel.mainState.selectedId = -1
+            }
+        }
     }
 }
