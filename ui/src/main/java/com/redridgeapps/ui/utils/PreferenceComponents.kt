@@ -6,7 +6,6 @@ import androidx.compose.state
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.ConfigurationAmbient
 import androidx.ui.core.Modifier
-import androidx.ui.core.Text
 import androidx.ui.foundation.*
 import androidx.ui.graphics.Color
 import androidx.ui.layout.*
@@ -20,8 +19,8 @@ fun TitlePreference(text: String) {
 
     Text(
         text = text,
-        modifier = LayoutPadding(top = 20.dp, start = 10.dp),
-        style = TextStyle(color = MaterialTheme.colors().secondary, fontWeight = FontWeight.Bold)
+        modifier = Modifier.padding(start = 10.dp, top = 20.dp),
+        style = TextStyle(color = MaterialTheme.colors.secondary, fontWeight = FontWeight.Bold)
     )
 }
 
@@ -113,7 +112,7 @@ private fun <T> KeyedRadioGroup(
     keyToTextMapper: (T) -> String,
     selectedOption: T?,
     onSelectedChange: (T) -> Unit,
-    radioColor: Color = MaterialTheme.colors().secondary,
+    radioColor: Color = MaterialTheme.colors.secondary,
     textStyle: TextStyle? = null
 ) {
 
@@ -141,37 +140,38 @@ private fun DialogPreference(
     mainContent: @Composable() () -> Unit
 ) {
     Dialog(onCloseRequest = onCloseRequest) {
-        Column(DrawBackground(Color.White)) {
+        Column(Modifier.drawBackground(Color.White)) {
 
             // Title
 
             Box(
-                LayoutHeight(64.dp) + LayoutPadding(start = 24.dp),
+                Modifier.preferredHeight(64.dp).padding(start = 24.dp),
                 gravity = ContentGravity.CenterStart
             ) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography().h6.copy(MaterialTheme.colors().onSurface)
+                    style = MaterialTheme.typography.h6.copy(MaterialTheme.colors.onSurface)
                 )
             }
 
             // Divider
 
-            Divider(color = MaterialTheme.colors().onSurface.copy(alpha = 0.12F))
+            Divider(color = MaterialTheme.colors.onSurface.copy(alpha = 0.12F))
 
             // Main content
 
             val mainContentHeight = ConfigurationAmbient.current.screenHeightDp - 150
 
             VerticalScroller(
-                modifier = LayoutPadding(start = 24.dp) + LayoutHeight.Max(mainContentHeight.dp)
+                modifier = Modifier.padding(start = 24.dp)
+                    .preferredHeightIn(maxHeight = mainContentHeight.dp)
             ) {
                 mainContent()
             }
 
             // Divider
 
-            Divider(color = MaterialTheme.colors().onSurface.copy(alpha = 0.12F))
+            Divider(color = MaterialTheme.colors.onSurface.copy(alpha = 0.12F))
 
             // Button Bar
 
@@ -183,7 +183,7 @@ private fun DialogPreference(
             if (onPositiveButtonClick != null)
                 buttonList.add(ButtonBarButton("OK", onPositiveButtonClick))
 
-            ButtonBar(LayoutGravity.End, buttonList)
+            ButtonBar(Modifier.gravity(ColumnAlign.End), buttonList)
         }
     }
 }
@@ -194,12 +194,12 @@ private fun ButtonBar(
     buttonList: List<ButtonBarButton>
 ) {
 
-    Row(modifier + LayoutPadding(8.dp)) {
+    Row(modifier + Modifier.padding(8.dp)) {
 
         for (button in buttonList) {
 
             TextButton(
-                modifier = LayoutPadding(start = 8.dp),
+                modifier = Modifier.padding(start = 8.dp),
                 onClick = { button.onClick() }
             ) {
                 Text(button.title)

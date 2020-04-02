@@ -5,7 +5,9 @@ import androidx.compose.Composable
 import androidx.compose.Model
 import androidx.compose.onActive
 import androidx.ui.animation.Crossfade
-import androidx.ui.core.Text
+import androidx.ui.core.Alignment
+import androidx.ui.core.Modifier
+import androidx.ui.foundation.Text
 import androidx.ui.graphics.Color
 import androidx.ui.layout.*
 import androidx.ui.material.*
@@ -48,20 +50,20 @@ private fun FirstRunUI(viewModel: IFirstRunViewModel) {
 
     val topAppBar = @Composable {
         TopAppBar(
-            title = { Text("Configure App", LayoutPadding(bottom = 16.dp)) }
+            title = { Text("Configure App", Modifier.padding(bottom = 16.dp)) }
         )
     }
 
     Scaffold(topAppBar = topAppBar) { modifier ->
 
-        Column(LayoutSize.Fill + LayoutPadding(20.dp) + LayoutAlign.Center + modifier) {
+        Column(Modifier.fillMaxSize().padding(20.dp).wrapContentSize(Alignment.Center) + modifier) {
             SystemizationConfig(viewModel)
 
-            Spacer(modifier = LayoutHeight(20.dp))
+            Spacer(modifier = Modifier.preferredHeight(20.dp))
 
             PermissionsConfig(viewModel)
 
-            Spacer(modifier = LayoutHeight(20.dp))
+            Spacer(modifier = Modifier.preferredHeight(20.dp))
 
             CaptureAudioConfig(viewModel)
         }
@@ -77,16 +79,16 @@ private fun configurationFinished(viewModel: IFirstRunViewModel, backStack: Back
 private fun SystemizationConfig(viewModel: IFirstRunViewModel) {
     Column {
 
-        Text(text = "Systemization", style = MaterialTheme.typography().h6)
+        Text(text = "Systemization", style = MaterialTheme.typography.h6)
 
-        Spacer(modifier = LayoutHeight(10.dp))
+        Spacer(modifier = Modifier.preferredHeight(10.dp))
 
         Text(
             text = "App needs to be a system app. High quality call recording only works with system apps.",
-            style = MaterialTheme.typography().subtitle1
+            style = MaterialTheme.typography.subtitle1
         )
 
-        Spacer(modifier = LayoutHeight(10.dp))
+        Spacer(modifier = Modifier.preferredHeight(10.dp))
 
         Crossfade(current = viewModel.firstRunState.isAppSystemized) { isAppSystemized ->
             when (isAppSystemized) {
@@ -102,9 +104,9 @@ private fun SystemizationConfig(viewModel: IFirstRunViewModel) {
 private fun PermissionsConfig(viewModel: IFirstRunViewModel) {
     Column {
 
-        Text(text = "Permissions", style = MaterialTheme.typography().h6)
+        Text(text = "Permissions", style = MaterialTheme.typography.h6)
 
-        Spacer(modifier = LayoutHeight(10.dp))
+        Spacer(modifier = Modifier.preferredHeight(10.dp))
 
         val explanationText = """
             |App needs the following permissions:
@@ -115,9 +117,9 @@ private fun PermissionsConfig(viewModel: IFirstRunViewModel) {
             | - READ_CONTACTS
         """.trimMargin()
 
-        Text(text = explanationText, style = MaterialTheme.typography().subtitle1)
+        Text(text = explanationText, style = MaterialTheme.typography.subtitle1)
 
-        Spacer(modifier = LayoutHeight(10.dp))
+        Spacer(modifier = Modifier.preferredHeight(10.dp))
 
         val permissionsManager = PermissionsManager()
 
@@ -154,18 +156,18 @@ private fun PermissionsConfig(viewModel: IFirstRunViewModel) {
 private fun CaptureAudioConfig(viewModel: IFirstRunViewModel) {
     Column {
 
-        Text(text = "Permission CAPTURE_AUDIO_OUTPUT", style = MaterialTheme.typography().h6)
+        Text(text = "Permission CAPTURE_AUDIO_OUTPUT", style = MaterialTheme.typography.h6)
 
-        Spacer(modifier = LayoutHeight(10.dp))
+        Spacer(modifier = Modifier.preferredHeight(10.dp))
 
         Text(
             text = "CAPTURE_AUDIO_OUTPUT is a special permission to enable high quality audio capture. " +
                     "It's granted automatically to system apps on boot. " +
                     "Please restart your device to finish configuration.",
-            style = MaterialTheme.typography().subtitle1
+            style = MaterialTheme.typography.subtitle1
         )
 
-        Spacer(modifier = LayoutHeight(10.dp))
+        Spacer(modifier = Modifier.preferredHeight(10.dp))
 
         val permissionsManager = PermissionsManager()
 
@@ -181,11 +183,11 @@ private fun CaptureAudioConfig(viewModel: IFirstRunViewModel) {
             permissionGranted ?: return@Crossfade
 
             if (permissionGranted) {
-                Text(text = "✔ Permission granted", style = MaterialTheme.typography().subtitle1)
+                Text(text = "✔ Permission granted", style = MaterialTheme.typography.subtitle1)
             } else {
                 Text(
                     text = "✘ Permission not granted. Please restart device after systemization.",
-                    style = MaterialTheme.typography().subtitle1.copy(Color.Red)
+                    style = MaterialTheme.typography.subtitle1.copy(Color.Red)
                 )
             }
         }

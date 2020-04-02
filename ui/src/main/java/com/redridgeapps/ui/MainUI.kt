@@ -4,13 +4,12 @@ import androidx.compose.Composable
 import androidx.compose.Model
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.Modifier
-import androidx.ui.core.Text
 import androidx.ui.foundation.*
 import androidx.ui.graphics.Color
 import androidx.ui.layout.Column
-import androidx.ui.layout.LayoutPadding
-import androidx.ui.layout.LayoutSize
-import androidx.ui.layout.LayoutWidth
+import androidx.ui.layout.fillMaxSize
+import androidx.ui.layout.fillMaxWidth
+import androidx.ui.layout.padding
 import androidx.ui.material.*
 import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.Settings
@@ -69,7 +68,7 @@ private fun MainUI(viewModel: IMainViewModel) {
 private fun MainTopAppBar() {
 
     TopAppBar(
-        title = { Text(text = "Call Recorder", modifier = LayoutPadding(bottom = 16.dp)) },
+        title = { Text(text = "Call Recorder", modifier = Modifier.padding(bottom = 16.dp)) },
         actions = {
             val backStack = BackStackAmbient.current
 
@@ -99,7 +98,7 @@ private fun ContentMain(
 @Composable
 private fun IsRefreshing(modifier: Modifier) {
 
-    Box(modifier + LayoutSize.Fill, gravity = ContentGravity.Center) {
+    Box(modifier + Modifier.fillMaxSize(), gravity = ContentGravity.Center) {
         CircularProgressIndicator()
     }
 }
@@ -109,7 +108,7 @@ private fun RecordingList(viewModel: IMainViewModel, modifier: Modifier) {
 
     AdapterList(
         data = viewModel.mainState.recordingList,
-        modifier = modifier + LayoutSize.Fill
+        modifier = modifier + Modifier.fillMaxSize()
     ) { recordingListItem ->
 
         when (recordingListItem) {
@@ -125,17 +124,17 @@ private fun RecordingListDateDivider(dateText: String) {
     Column {
 
         Divider(
-            modifier = LayoutPadding(start = 10.dp, end = 10.dp),
-            color = MaterialTheme.colors().onSurface.copy(alpha = 0.12F)
+            modifier = Modifier.padding(start = 10.dp, end = 10.dp),
+            color = MaterialTheme.colors.onSurface.copy(alpha = 0.12F)
         )
 
-        Box(LayoutWidth.Fill + LayoutPadding(5.dp), gravity = ContentGravity.Center) {
-            Text(dateText, style = MaterialTheme.typography().subtitle1)
+        Box(Modifier.fillMaxWidth().padding(5.dp), gravity = ContentGravity.Center) {
+            Text(dateText, style = MaterialTheme.typography.subtitle1)
         }
 
         Divider(
-            modifier = LayoutPadding(start = 10.dp, end = 10.dp),
-            color = MaterialTheme.colors().onSurface.copy(alpha = 0.12F)
+            modifier = Modifier.padding(start = 10.dp, end = 10.dp),
+            color = MaterialTheme.colors.onSurface.copy(alpha = 0.12F)
         )
     }
 }
@@ -161,7 +160,7 @@ private fun OptionsDialog(viewModel: IMainViewModel) {
     val onCloseRequest = { viewModel.mainState.selectedId = -1 }
 
     Dialog(onCloseRequest = onCloseRequest) {
-        Column(DrawBackground(Color.White)) {
+        Column(Modifier.drawBackground(Color.White)) {
 
             // TODO Move to separate Player
             if (viewModel.mainState.playing == -1)

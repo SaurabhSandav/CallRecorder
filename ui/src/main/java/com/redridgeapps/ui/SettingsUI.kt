@@ -3,10 +3,10 @@ package com.redridgeapps.ui
 import androidx.compose.Composable
 import androidx.compose.Model
 import androidx.ui.core.Modifier
-import androidx.ui.core.Text
 import androidx.ui.foundation.Icon
+import androidx.ui.foundation.Text
 import androidx.ui.layout.Column
-import androidx.ui.layout.LayoutPadding
+import androidx.ui.layout.padding
 import androidx.ui.material.IconButton
 import androidx.ui.material.Scaffold
 import androidx.ui.material.TopAppBar
@@ -61,7 +61,7 @@ private fun SettingsUI(viewModel: ISettingsViewModel) {
 
     val topAppBar = @Composable {
         TopAppBar(
-            title = { Text("Settings", modifier = LayoutPadding(bottom = 16.dp)) },
+            title = { Text("Settings", modifier = Modifier.padding(bottom = 16.dp)) },
             navigationIcon = navigationIcon
         )
     }
