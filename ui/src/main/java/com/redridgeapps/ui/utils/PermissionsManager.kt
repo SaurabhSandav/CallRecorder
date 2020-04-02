@@ -46,7 +46,7 @@ class PermissionsManager(
 
         val key = unGrantedPermissions.contentToString()
 
-        val permissionRequest = activityResultRegistry.registerActivityResultCallback(
+        val permissionRequest = activityResultRegistry.register(
             key,
             { lifecycle },
             ActivityResultContracts.RequestPermissions()

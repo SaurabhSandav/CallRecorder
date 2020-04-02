@@ -25,10 +25,10 @@ object Material {
 }
 
 object Jetpack {
-    private const val ACTIVITY_KTX_VERSION = "1.2.0-alpha02"
-    private const val APPCOMPAT_VERSION = "1.2.0-alpha03"
-    private const val CORE_KTX_VERSION = "1.3.0-alpha02"
-    private const val FRAGMENT_KTX_VERSION = "1.3.0-alpha02"
+    private const val ACTIVITY_KTX_VERSION = "1.2.0-alpha03"
+    private const val APPCOMPAT_VERSION = "1.2.0-beta01"
+    private const val CORE_KTX_VERSION = "1.3.0-beta01"
+    private const val FRAGMENT_KTX_VERSION = "1.3.0-alpha03"
     private const val PREFERENCE_KTX_VERSION = "1.1.0"
 
     const val ACTIVITY_KTX = "androidx.activity:activity-ktx:$ACTIVITY_KTX_VERSION"
