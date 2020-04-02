@@ -179,6 +179,7 @@ class CallRecorder @Inject constructor(
     }
 
     private fun releaseWakeLock() {
-        wakeLock.release()
+        if (wakeLock.isHeld)
+            wakeLock.release()
     }
 }

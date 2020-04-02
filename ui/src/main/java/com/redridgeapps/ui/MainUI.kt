@@ -4,13 +4,25 @@ import androidx.compose.Composable
 import androidx.compose.Model
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.Modifier
-import androidx.ui.foundation.*
+import androidx.ui.foundation.AdapterList
+import androidx.ui.foundation.Box
+import androidx.ui.foundation.ContentGravity
+import androidx.ui.foundation.Dialog
+import androidx.ui.foundation.Icon
+import androidx.ui.foundation.Text
+import androidx.ui.foundation.drawBackground
 import androidx.ui.graphics.Color
 import androidx.ui.layout.Column
 import androidx.ui.layout.fillMaxSize
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
-import androidx.ui.material.*
+import androidx.ui.material.CircularProgressIndicator
+import androidx.ui.material.Divider
+import androidx.ui.material.IconButton
+import androidx.ui.material.ListItem
+import androidx.ui.material.MaterialTheme
+import androidx.ui.material.Scaffold
+import androidx.ui.material.TopAppBar
 import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.Settings
 import androidx.ui.unit.dp
@@ -23,8 +35,8 @@ import com.redridgeapps.ui.utils.fetchViewModel
 class MainState(
     var isRefreshing: Boolean = true,
     var recordingList: List<RecordingListItem> = listOf(),
-    var selectedId: Int = -1,
-    var playing: Int = -1
+    var selectedId: Int? = null,
+    var playingId: Int? = null
 )
 
 sealed class RecordingListItem {
@@ -155,16 +167,20 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
 @Composable
 private fun OptionsDialog(viewModel: IMainViewModel) {
 
-    if (viewModel.mainState.selectedId == -1) return
+    val selectedId = viewModel.mainState.selectedId
 
-    val onCloseRequest = { viewModel.mainState.selectedId = -1 }
+    // Prevents start/end imbalance error
+    @Suppress("FoldInitializerAndIfToElvis")
+    if (selectedId == null) return
+
+    val onCloseRequest = { viewModel.mainState.selectedId = null }
 
     Dialog(onCloseRequest = onCloseRequest) {
         Column(Modifier.drawBackground(Color.White)) {
 
             // TODO Move to separate Player
-            if (viewModel.mainState.playing == -1)
-                ListItem("Play") { viewModel.startPlayback(viewModel.mainState.selectedId) }
+            if (viewModel.mainState.playingId == null)
+                ListItem("Play") { viewModel.startPlayback(selectedId) }
             else
                 ListItem("Stop") { viewModel.stopPlayback() }
 
@@ -172,7 +188,7 @@ private fun OptionsDialog(viewModel: IMainViewModel) {
 
             ListItem("Delete") {
                 viewModel.deleteSelectedRecording()
-                viewModel.mainState.selectedId = -1
+                viewModel.mainState.selectedId = null
             }
         }
     }

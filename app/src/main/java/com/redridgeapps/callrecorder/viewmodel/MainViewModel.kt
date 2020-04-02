@@ -36,21 +36,21 @@ class MainViewModel @Inject constructor(
     override val uiState = MainState()
 
     override fun startPlayback(recordingId: Int) {
-        uiState.playing = recordingId
+        uiState.playingId = recordingId
 
         viewModelScope.launch {
-            callPlayback.startPlaying(recordingId) { uiState.playing = -1 }
+            callPlayback.startPlaying(recordingId) { uiState.playingId = null }
         }
     }
 
     override fun stopPlayback() {
         callPlayback.stopPlaying()
-        uiState.playing = -1
+        uiState.playingId = null
     }
 
     override fun deleteSelectedRecording() {
         uiState.isRefreshing = true
-        recordings.deleteRecording(uiState.selectedId)
+        recordings.deleteRecording(uiState.selectedId!!)
     }
 
     override fun onCleared() {

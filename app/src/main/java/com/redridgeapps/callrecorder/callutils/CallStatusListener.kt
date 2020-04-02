@@ -2,7 +2,12 @@ package com.redridgeapps.callrecorder.callutils
 
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
-import com.redridgeapps.callrecorder.callutils.CallStatus.*
+import com.redridgeapps.callrecorder.callutils.CallStatus.IncomingCallAnswered
+import com.redridgeapps.callrecorder.callutils.CallStatus.IncomingCallEnded
+import com.redridgeapps.callrecorder.callutils.CallStatus.IncomingCallReceived
+import com.redridgeapps.callrecorder.callutils.CallStatus.MissedCall
+import com.redridgeapps.callrecorder.callutils.CallStatus.OutgoingCallEnded
+import com.redridgeapps.callrecorder.callutils.CallStatus.OutgoingCallStarted
 import com.redridgeapps.repository.callutils.CallDirection
 import com.redridgeapps.repository.callutils.CallDirection.INCOMING
 import com.redridgeapps.repository.callutils.CallDirection.OUTGOING

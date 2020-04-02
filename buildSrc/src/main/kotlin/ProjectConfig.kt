@@ -18,23 +18,15 @@ object Kotlin {
         "org.jetbrains.kotlinx:kotlinx-coroutines-android:$COROUTINES_VERSION"
 }
 
-object Material {
-    private const val VERSION = "1.2.0-alpha05"
-
-    const val MATERIAL = "com.google.android.material:material:$VERSION"
-}
-
 object Jetpack {
     private const val ACTIVITY_KTX_VERSION = "1.2.0-alpha03"
     private const val APPCOMPAT_VERSION = "1.2.0-beta01"
     private const val CORE_KTX_VERSION = "1.3.0-beta01"
-    private const val FRAGMENT_KTX_VERSION = "1.3.0-alpha03"
     private const val PREFERENCE_KTX_VERSION = "1.1.0"
 
     const val ACTIVITY_KTX = "androidx.activity:activity-ktx:$ACTIVITY_KTX_VERSION"
     const val APPCOMPAT = "androidx.appcompat:appcompat:$APPCOMPAT_VERSION"
     const val CORE_KTX = "androidx.core:core-ktx:$CORE_KTX_VERSION"
-    const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:$FRAGMENT_KTX_VERSION"
     const val PREFERENCE_KTX = "androidx.preference:preference-ktx:$PREFERENCE_KTX_VERSION"
 }
 
@@ -75,18 +67,6 @@ object Dagger {
     const val ANDROID_SUPPORT = "com.google.dagger:dagger-android-support:$VERSION"
     const val COMPILER = "com.google.dagger:dagger-compiler:$VERSION"
     const val ANDROID_PROCESSOR = "com.google.dagger:dagger-android-processor:$VERSION"
-}
-
-object JavaX {
-    private const val VERSION = "1"
-
-    const val INJECT = "javax.inject:javax.inject:$VERSION"
-}
-
-object LeakCanary {
-    private const val VERSION = "2.1"
-
-    const val ANDROID = "com.squareup.leakcanary:leakcanary-android:$VERSION"
 }
 
 object Timber {

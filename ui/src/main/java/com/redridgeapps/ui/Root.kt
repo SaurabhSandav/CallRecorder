@@ -11,7 +11,11 @@ import com.koduok.compose.navigation.Router
 import com.redridgeapps.repository.viewmodel.utils.IComposeViewModelStores
 import com.redridgeapps.repository.viewmodel.utils.IViewModelFetcher
 import com.redridgeapps.ui.routing.Destination
-import com.redridgeapps.ui.utils.*
+import com.redridgeapps.ui.utils.ActivityResultRegistryAmbient
+import com.redridgeapps.ui.utils.ComposeViewModelStoresAmbient
+import com.redridgeapps.ui.utils.LifecycleAmbient
+import com.redridgeapps.ui.utils.ViewModelFetcherAmbient
+import com.redridgeapps.ui.utils.WithViewModelStores
 
 fun Activity.showUI(
     isFirstRun: Boolean,
