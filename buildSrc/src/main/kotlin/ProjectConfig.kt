@@ -109,3 +109,9 @@ object SQLDelight {
     const val ANDROID_DRIVER = "com.squareup.sqldelight:android-driver:$VERSION"
     const val COROUTINES_EXTENSIONS = "com.squareup.sqldelight:coroutines-extensions-jvm:$VERSION"
 }
+
+object RedRidgeApps {
+    private const val ANDROID_WAV_TO_MP3_VERSION = "1.0"
+
+    const val ANDROID_WAV_TO_MP3 = "com.redridgeapps:androidwavtomp3:$ANDROID_WAV_TO_MP3_VERSION"
+}
