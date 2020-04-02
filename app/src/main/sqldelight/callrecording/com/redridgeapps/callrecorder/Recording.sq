@@ -1,19 +1,20 @@
+import com.redridgeapps.repository.callutils.CallDirection;
 import java.time.Instant;
 
 CREATE TABLE IF NOT EXISTS Recording (
 id INTEGER AS Int NOT NULL PRIMARY KEY AUTOINCREMENT,
 name TEXT NOT NULL,
 number TEXT NOT NULL,
-startInstant INTEGER AS Instant NOT NULL,
-endInstant INTEGER AS Instant NOT NULL,
-callType TEXT NOT NULL,
-savePath TEXT NOT NULL,
-saveFormat TEXT NOT NULL
+start_instant INTEGER AS Instant NOT NULL,
+end_instant INTEGER AS Instant NOT NULL,
+call_direction TEXT AS CallDirection NOT NULL,
+save_path TEXT NOT NULL,
+save_format TEXT NOT NULL
 );
 
 insert:
 INSERT OR REPLACE
-INTO Recording (name, number, startInstant, endInstant, callType, savePath, saveFormat)
+INTO Recording (name, number, start_instant, end_instant, call_direction, save_path, save_format)
 VALUES (?, ?, ?, ?, ?, ?, ?);
 
 getAll:

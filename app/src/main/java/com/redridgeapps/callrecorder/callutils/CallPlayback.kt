@@ -21,7 +21,7 @@ class CallPlayback @Inject constructor(
     ) = withContext(Dispatchers.IO) {
 
         val recording = recordingQueries.getWithId(recordingId).asFlow().mapToOne().first()
-        val recordingPath = recording.savePath
+        val recordingPath = recording.save_path
 
         player = MediaPlayer().apply {
             setDataSource(recordingPath)

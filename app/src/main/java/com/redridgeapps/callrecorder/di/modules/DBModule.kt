@@ -4,7 +4,10 @@ import android.content.Context
 import com.redridgeapps.callrecorder.CallRecordingDB
 import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.RecordingQueries
+import com.redridgeapps.callrecorder.db.EnumTextColumnAdapter
 import com.redridgeapps.callrecorder.db.InstantIntegerColumnAdapter
+import com.redridgeapps.repository.callutils.CallDirection
+import com.squareup.sqldelight.ColumnAdapter
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import dagger.Module
 import dagger.Provides
@@ -13,6 +16,7 @@ import javax.inject.Singleton
 @Module
 object DBModule {
 
+    @Suppress("UNCHECKED_CAST")
     @Provides
     @Singleton
     fun provideCallRecordingDB(context: Context): CallRecordingDB {
@@ -23,8 +27,9 @@ object DBModule {
         return CallRecordingDB(
             driver,
             RecordingAdapter = Recording.Adapter(
-                startInstantAdapter = InstantIntegerColumnAdapter,
-                endInstantAdapter = InstantIntegerColumnAdapter
+                start_instantAdapter = InstantIntegerColumnAdapter,
+                end_instantAdapter = InstantIntegerColumnAdapter,
+                call_directionAdapter = EnumTextColumnAdapter(CallDirection::valueOf) as ColumnAdapter<CallDirection, String>
             )
         )
     }

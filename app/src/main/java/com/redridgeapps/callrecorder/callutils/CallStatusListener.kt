@@ -3,12 +3,15 @@ package com.redridgeapps.callrecorder.callutils
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import com.redridgeapps.callrecorder.callutils.CallStatus.*
+import com.redridgeapps.repository.callutils.CallDirection
+import com.redridgeapps.repository.callutils.CallDirection.INCOMING
+import com.redridgeapps.repository.callutils.CallDirection.OUTGOING
 import timber.log.Timber
 
 private typealias OnCallStateChanged = (
     callStatus: CallStatus,
     phoneNumber: String,
-    callType: String
+    callDirection: CallDirection
 ) -> Unit
 
 class CallStatusListener constructor(
@@ -52,10 +55,9 @@ class CallStatusListener constructor(
         }.also { Timber.d(it.name) }
     }
 
-    private fun CallStatus.callType(): String = when (this) {
-        MissedCall -> "Missed Call"
-        IncomingCallReceived, IncomingCallAnswered, IncomingCallEnded -> "Incoming Call"
-        OutgoingCallStarted, OutgoingCallEnded -> "Outgoing Call"
+    private fun CallStatus.callType(): CallDirection = when (this) {
+        MissedCall, IncomingCallReceived, IncomingCallAnswered, IncomingCallEnded -> INCOMING
+        OutgoingCallStarted, OutgoingCallEnded -> OUTGOING
     }
 }
 

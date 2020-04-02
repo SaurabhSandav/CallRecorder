@@ -5,6 +5,7 @@ import android.os.Environment
 import androidx.core.content.ContextCompat
 import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.RecordingQueries
+import com.redridgeapps.repository.callutils.CallDirection
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +31,7 @@ class Recordings @Inject constructor(
 
     fun saveRecording(
         phoneNumber: String,
-        callType: String,
+        callDirection: CallDirection,
         recordingStartInstant: Instant,
         recordingEndInstant: Instant,
         savePath: Path
@@ -41,11 +42,11 @@ class Recordings @Inject constructor(
         recordingQueries.insert(
             name = name,
             number = phoneNumber,
-            startInstant = recordingStartInstant,
-            endInstant = recordingEndInstant,
-            callType = callType,
-            savePath = savePath.toString(),
-            saveFormat = savePath.toString().substringAfterLast('.', "")
+            start_instant = recordingStartInstant,
+            end_instant = recordingEndInstant,
+            call_direction = callDirection,
+            save_path = savePath.toString(),
+            save_format = savePath.toString().substringAfterLast('.', "")
         )
     }
 

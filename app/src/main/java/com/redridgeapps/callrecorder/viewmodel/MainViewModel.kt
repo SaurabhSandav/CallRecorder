@@ -68,17 +68,17 @@ class MainViewModel @Inject constructor(
         recordingList.forEach {
 
             // Format call Interval
-            val startTime = it.startInstant.toLocalDateTime().format(overlineFormatter)
-            val endTime = it.endInstant.toLocalDateTime().format(overlineFormatter)
-            val overlineText = "$startTime -> $endTime (${it.callType})"
+            val startTime = it.start_instant.toLocalDateTime().format(overlineFormatter)
+            val endTime = it.end_instant.toLocalDateTime().format(overlineFormatter)
+            val overlineText = "$startTime -> $endTime (${it.call_direction})"
 
             // Calculate and format call duration
-            val duration = Duration.between(it.startInstant, it.endInstant)
+            val duration = Duration.between(it.start_instant, it.end_instant)
             val metaText = durationFormat
                 .format(duration.toHours(), duration.toMinutes(), duration.seconds)
 
             // Date of current recording
-            val recordingDate = it.startInstant.toLocalDate()
+            val recordingDate = it.start_instant.toLocalDate()
 
             // Add Divider if recording was made on a new day
             if (currentDate != recordingDate) {
