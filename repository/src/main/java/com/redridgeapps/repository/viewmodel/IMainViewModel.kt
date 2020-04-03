@@ -8,5 +8,7 @@ interface IMainViewModel : ViewModelMarker {
 
     fun stopPlayback()
 
+    fun convertToMp3()
+
     fun deleteSelectedRecording()
 }

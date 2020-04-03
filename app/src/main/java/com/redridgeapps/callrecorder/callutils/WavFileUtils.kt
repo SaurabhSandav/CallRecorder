@@ -1,5 +1,8 @@
 package com.redridgeapps.callrecorder.callutils
 
+import com.redridgeapps.repository.callutils.AudioRecordChannels
+import com.redridgeapps.repository.callutils.AudioRecordEncoding
+import com.redridgeapps.repository.callutils.AudioRecordSampleRate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.nio.ByteBuffer
@@ -78,12 +81,12 @@ object WavFileUtils {
             val inputChannel = FileChannel.open(inputFilePath, READ)
             val input8BitWavData = readWavData(inputChannel)
 
-            if (input8BitWavData.bitsPerSample != 8) return@withContext
+            if (input8BitWavData.encoding != AudioRecordEncoding.ENCODING_PCM_8BIT) return@withContext
 
             writeHeader(
                 fileChannel = outputChannel,
-                sampleRate = input8BitWavData.sampleRate,
-                channelCount = input8BitWavData.channelCount,
+                sampleRate = input8BitWavData.sampleRate.sampleRate,
+                channelCount = input8BitWavData.channels.channelCount,
                 bitsPerSample = 16
             )
 
@@ -124,20 +127,32 @@ object WavFileUtils {
         val byteBuffer = ByteBuffer.allocateDirect(44).order(ByteOrder.LITTLE_ENDIAN)
         fileChannel.read(byteBuffer)
 
+        val fileSize = byteBuffer.getInt(4)
+        val channelCount = byteBuffer.getShort(22).toInt()
+        val sampleRateInt = byteBuffer.getInt(24)
+        val byteRate = byteBuffer.getInt(28)
+        val bitsPerSample = byteBuffer.getShort(34).toInt()
+
+        val channels = AudioRecordChannels.values().first { it.channelCount == channelCount }
+        val sampleRate = AudioRecordSampleRate.values().first { it.sampleRate == sampleRateInt }
+        val encoding = AudioRecordEncoding.values().first { it.bitsPerSample == bitsPerSample }
+
         return@withContext WavData(
-            fileSize = byteBuffer.getInt(4),
-            channelCount = byteBuffer.getShort(22).toInt(),
-            sampleRate = byteBuffer.getInt(24),
-            byteRate = byteBuffer.getInt(28),
-            bitsPerSample = byteBuffer.getShort(34).toInt()
+            fileSize = fileSize,
+            channels = channels,
+            sampleRate = sampleRate,
+            encoding = encoding,
+            byteRate = byteRate
         )
     }
 
     data class WavData(
         val fileSize: Int,
-        val channelCount: Int,
-        val sampleRate: Int,
-        val byteRate: Int,
-        val bitsPerSample: Int
-    )
+        val channels: AudioRecordChannels,
+        val sampleRate: AudioRecordSampleRate,
+        val encoding: AudioRecordEncoding,
+        val byteRate: Int
+    ) {
+        val bitRate: Float = byteRate * 0.008F
+    }
 }

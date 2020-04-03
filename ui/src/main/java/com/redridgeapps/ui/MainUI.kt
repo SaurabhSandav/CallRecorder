@@ -186,6 +186,8 @@ private fun OptionsDialog(viewModel: IMainViewModel) {
 
             ListItem("Info")
 
+            ListItem("Convert to Mp3") { viewModel.convertToMp3() }
+
             ListItem("Delete") {
                 viewModel.deleteSelectedRecording()
                 viewModel.mainState.selectedId = null

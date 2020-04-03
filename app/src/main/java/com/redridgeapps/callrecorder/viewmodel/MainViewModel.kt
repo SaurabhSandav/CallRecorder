@@ -48,9 +48,17 @@ class MainViewModel @Inject constructor(
         uiState.playingId = null
     }
 
+    override fun convertToMp3() {
+        viewModelScope.launch {
+            recordings.convertToMp3(uiState.selectedId!!)
+            uiState.selectedId = null
+        }
+    }
+
     override fun deleteSelectedRecording() {
-        uiState.isRefreshing = true
-        recordings.deleteRecording(uiState.selectedId!!)
+        viewModelScope.launch {
+            recordings.deleteRecording(uiState.selectedId!!)
+        }
     }
 
     override fun onCleared() {
