@@ -4,11 +4,11 @@ interface IMainViewModel : ViewModelMarker {
 
     val uiState: Any
 
-    fun startPlayback(recordingId: Int)
+    fun startPlayback()
 
     fun stopPlayback()
 
     fun convertToMp3()
 
-    fun deleteSelectedRecording()
+    fun deleteRecordings()
 }

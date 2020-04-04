@@ -2,6 +2,7 @@ package com.redridgeapps.ui
 
 import androidx.compose.Composable
 import androidx.compose.Model
+import androidx.compose.frames.modelListOf
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.Modifier
 import androidx.ui.foundation.AdapterList
@@ -24,18 +25,23 @@ import androidx.ui.material.MaterialTheme
 import androidx.ui.material.Scaffold
 import androidx.ui.material.TopAppBar
 import androidx.ui.material.icons.Icons
+import androidx.ui.material.icons.filled.Ballot
+import androidx.ui.material.icons.filled.Delete
 import androidx.ui.material.icons.filled.Settings
+import androidx.ui.material.icons.outlined.Ballot
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.repository.viewmodel.IMainViewModel
 import com.redridgeapps.ui.routing.Destination
+import com.redridgeapps.ui.utils.Highlight
 import com.redridgeapps.ui.utils.fetchViewModel
 
 @Model
 class MainState(
     var isRefreshing: Boolean = true,
     var recordingList: List<RecordingListItem> = listOf(),
-    var selectedId: Int? = null,
+    var selectionMode: Boolean = false,
+    var selection: MutableList<Int> = modelListOf(),
     var playingId: Int? = null
 )
 
@@ -70,25 +76,62 @@ private val IMainViewModel.mainState: MainState
 private fun MainUI(viewModel: IMainViewModel) {
 
     Scaffold(
-        topAppBar = { MainTopAppBar() }
+        topAppBar = { MainTopAppBar(viewModel) }
     ) { modifier ->
         ContentMain(viewModel, modifier)
     }
 }
 
 @Composable
-private fun MainTopAppBar() {
+private fun MainTopAppBar(viewModel: IMainViewModel) {
 
     TopAppBar(
         title = { Text(text = "Call Recorder", modifier = Modifier.padding(bottom = 16.dp)) },
         actions = {
-            val backStack = BackStackAmbient.current
 
-            IconButton(onClick = { backStack.push(SettingsDestination) }) {
-                Icon(Icons.Default.Settings)
-            }
+            if (viewModel.mainState.selectionMode && viewModel.mainState.selection.isNotEmpty())
+                IconDelete(viewModel)
+
+            IconSelectionMode(viewModel)
+            IconSettings()
         }
     )
+}
+
+@Composable
+private fun IconDelete(viewModel: IMainViewModel) {
+
+    IconButton(onClick = { viewModel.deleteRecordings() }) {
+        Icon(Icons.Default.Delete)
+    }
+}
+
+@Composable
+private fun IconSelectionMode(viewModel: IMainViewModel) {
+
+    val onClick = {
+        val selectionMode = viewModel.mainState.selectionMode
+        if (selectionMode) viewModel.mainState.selection.clear()
+        viewModel.mainState.selectionMode = !selectionMode
+    }
+
+    IconButton(onClick) {
+
+        if (viewModel.mainState.selectionMode)
+            Icon(Icons.Filled.Ballot)
+        else
+            Icon(Icons.Outlined.Ballot)
+    }
+}
+
+@Composable
+private fun IconSettings() {
+
+    val backStack = BackStackAmbient.current
+
+    IconButton(onClick = { backStack.push(SettingsDestination) }) {
+        Icon(Icons.Default.Settings)
+    }
 }
 
 @Composable
@@ -154,44 +197,53 @@ private fun RecordingListDateDivider(dateText: String) {
 @Composable
 private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel: IMainViewModel) {
 
-    ListItem(
-        text = recordingEntry.name,
-        secondaryText = recordingEntry.number,
-        overlineText = recordingEntry.overlineText,
-        metaText = recordingEntry.metaText
-    ) {
-        viewModel.mainState.selectedId = recordingEntry.id
+    Highlight(enabled = recordingEntry.id in viewModel.mainState.selection) {
+
+        val onClick = {
+            if (viewModel.mainState.selectionMode)
+                viewModel.mainState.selection.addOrRemove(recordingEntry.id)
+            else
+                viewModel.mainState.selection.clearAndAdd(recordingEntry.id)
+        }
+
+        ListItem(
+            text = recordingEntry.name,
+            secondaryText = recordingEntry.number,
+            overlineText = recordingEntry.overlineText,
+            metaText = recordingEntry.metaText,
+            onClick = onClick
+        )
     }
 }
 
 @Composable
 private fun OptionsDialog(viewModel: IMainViewModel) {
 
-    val selectedId = viewModel.mainState.selectedId
+    if (viewModel.mainState.selectionMode || viewModel.mainState.selection.size != 1) return
 
-    // Prevents start/end imbalance error
-    @Suppress("FoldInitializerAndIfToElvis")
-    if (selectedId == null) return
-
-    val onCloseRequest = { viewModel.mainState.selectedId = null }
+    val onCloseRequest = { viewModel.mainState.selection.clear() }
 
     Dialog(onCloseRequest = onCloseRequest) {
         Column(Modifier.drawBackground(Color.White)) {
 
             // TODO Move to separate Player
             if (viewModel.mainState.playingId == null)
-                ListItem("Play") { viewModel.startPlayback(selectedId) }
+                ListItem("Play") { viewModel.startPlayback() }
             else
                 ListItem("Stop") { viewModel.stopPlayback() }
 
             ListItem("Info")
-
             ListItem("Convert to Mp3") { viewModel.convertToMp3() }
-
-            ListItem("Delete") {
-                viewModel.deleteSelectedRecording()
-                viewModel.mainState.selectedId = null
-            }
+            ListItem("Delete") { viewModel.deleteRecordings() }
         }
     }
+}
+
+private fun <T> MutableList<T>.addOrRemove(item: T) {
+    if (item in this) remove(item) else add(item)
+}
+
+private fun <T> MutableList<T>.clearAndAdd(item: T) {
+    clear()
+    add(item)
 }

@@ -35,11 +35,16 @@ class MainViewModel @Inject constructor(
 
     override val uiState = MainState()
 
-    override fun startPlayback(recordingId: Int) {
-        uiState.playingId = recordingId
+    override fun startPlayback() {
 
         viewModelScope.launch {
-            callPlayback.startPlaying(recordingId) { uiState.playingId = null }
+
+            val selection = uiState.selection.single()
+
+            uiState.playingId = selection
+            uiState.selection.clear()
+
+            callPlayback.startPlaying(selection) { uiState.playingId = null }
         }
     }
 
@@ -50,14 +55,17 @@ class MainViewModel @Inject constructor(
 
     override fun convertToMp3() {
         viewModelScope.launch {
-            recordings.convertToMp3(uiState.selectedId!!)
-            uiState.selectedId = null
+            recordings.convertToMp3(uiState.selection.single())
+            uiState.selection.clear()
         }
     }
 
-    override fun deleteSelectedRecording() {
+    override fun deleteRecordings() {
         viewModelScope.launch {
-            recordings.deleteRecording(uiState.selectedId!!)
+            uiState.selection.forEach {
+                recordings.deleteRecording(it)
+            }
+            uiState.selection.clear()
         }
     }
 
@@ -78,7 +86,7 @@ class MainViewModel @Inject constructor(
             // Format call Interval
             val startTime = it.start_instant.toLocalDateTime().format(overlineFormatter)
             val endTime = it.end_instant.toLocalDateTime().format(overlineFormatter)
-            val overlineText = "$startTime -> $endTime (${it.call_direction})"
+            val overlineText = "$startTime -> $endTime • ${it.call_direction}"
 
             // Calculate and format call duration
             val duration = Duration.between(it.start_instant, it.end_instant)

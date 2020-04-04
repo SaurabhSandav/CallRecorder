@@ -83,7 +83,7 @@ object LibSU {
 }
 
 object SQLDelight {
-    private const val VERSION = "1.2.2"
+    private const val VERSION = "1.3.0"
 
     const val GRADLE_PLUGIN = "com.squareup.sqldelight:gradle-plugin:$VERSION"
     const val ANDROID_DRIVER = "com.squareup.sqldelight:android-driver:$VERSION"
