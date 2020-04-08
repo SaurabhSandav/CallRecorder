@@ -39,6 +39,7 @@ object Compose {
     const val UI_LAYOUT = "androidx.ui:ui-layout:$VERSION"
     const val UI_MATERIAL = "androidx.ui:ui-material:$VERSION"
     const val UI_MATERIAL_ICONS_EXTENDED = "androidx.ui:ui-material-icons-extended:$VERSION"
+    const val UI_UTIL = "androidx.ui:ui-util:$VERSION"
     const val UI_TOOLING = "androidx.ui:ui-tooling:$VERSION"
 
     const val fromAOSP = false
