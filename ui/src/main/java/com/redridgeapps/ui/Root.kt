@@ -1,10 +1,9 @@
 package com.redridgeapps.ui
 
-import android.app.Activity
+import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultRegistry
 import androidx.compose.Composable
 import androidx.compose.Providers
-import androidx.lifecycle.Lifecycle
 import androidx.ui.core.setContent
 import androidx.ui.material.MaterialTheme
 import com.koduok.compose.navigation.Router
@@ -13,13 +12,11 @@ import com.redridgeapps.repository.viewmodel.utils.IViewModelFetcher
 import com.redridgeapps.ui.routing.Destination
 import com.redridgeapps.ui.utils.ActivityResultRegistryAmbient
 import com.redridgeapps.ui.utils.ComposeViewModelStoresAmbient
-import com.redridgeapps.ui.utils.LifecycleAmbient
 import com.redridgeapps.ui.utils.ViewModelFetcherAmbient
 import com.redridgeapps.ui.utils.WithViewModelStores
 
-fun Activity.showUI(
+fun ComponentActivity.showUI(
     isFirstRun: Boolean,
-    lifecycle: Lifecycle,
     activityResultRegistry: ActivityResultRegistry,
     composeViewModelStores: IComposeViewModelStores,
     composeViewModelFetcher: IViewModelFetcher
@@ -29,7 +26,6 @@ fun Activity.showUI(
         val content = @Composable { Root(isFirstRun) }
 
         Providers(
-            LifecycleAmbient provides lifecycle,
             ActivityResultRegistryAmbient provides activityResultRegistry,
             ComposeViewModelStoresAmbient provides composeViewModelStores,
             ViewModelFetcherAmbient provides composeViewModelFetcher,
@@ -39,7 +35,7 @@ fun Activity.showUI(
 }
 
 // TODO Remove when disposition bug fixed
-fun Activity.destroyUI() {
+fun ComponentActivity.destroyUI() {
     setContent {}
 }
 

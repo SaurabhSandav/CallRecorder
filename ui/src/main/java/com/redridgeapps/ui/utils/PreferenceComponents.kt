@@ -4,6 +4,7 @@ import androidx.compose.Composable
 import androidx.compose.MutableState
 import androidx.compose.state
 import androidx.ui.animation.Crossfade
+import androidx.ui.core.Alignment
 import androidx.ui.core.ConfigurationAmbient
 import androidx.ui.core.Modifier
 import androidx.ui.foundation.Box
@@ -14,7 +15,6 @@ import androidx.ui.foundation.VerticalScroller
 import androidx.ui.foundation.drawBackground
 import androidx.ui.graphics.Color
 import androidx.ui.layout.Column
-import androidx.ui.layout.ColumnAlign
 import androidx.ui.layout.Row
 import androidx.ui.layout.padding
 import androidx.ui.layout.preferredHeight
@@ -198,14 +198,14 @@ private fun DialogPreference(
             if (onPositiveButtonClick != null)
                 buttonList.add(ButtonBarButton("OK", onPositiveButtonClick))
 
-            ButtonBar(Modifier.gravity(ColumnAlign.End), buttonList)
+            ButtonBar(Modifier.gravity(Alignment.End), buttonList)
         }
     }
 }
 
 @Composable
 private fun ButtonBar(
-    modifier: Modifier = Modifier.None,
+    modifier: Modifier = Modifier,
     buttonList: List<ButtonBarButton>
 ) {
 

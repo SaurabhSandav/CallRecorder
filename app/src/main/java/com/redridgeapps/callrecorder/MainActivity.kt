@@ -51,7 +51,6 @@ class MainActivity : AppCompatActivity() {
 
         showUI(
             isFirstRun,
-            lifecycle,
             activityResultRegistry,
             composeViewModelStores,
             composeViewModelFetcher

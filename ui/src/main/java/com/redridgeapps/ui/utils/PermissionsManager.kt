@@ -8,22 +8,23 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.Composable
 import androidx.compose.remember
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.ui.core.ContextAmbient
+import androidx.ui.core.LifecycleOwnerAmbient
 
 @Composable
 fun PermissionsManager(): PermissionsManager {
 
     val context = ContextAmbient.current
-    val lifecycle = LifecycleAmbient.current
+    val lifecycleOwner = LifecycleOwnerAmbient.current
     val activityResultRegistry = ActivityResultRegistryAmbient.current
 
-    return remember { PermissionsManager(context, lifecycle, activityResultRegistry) }
+    return remember { PermissionsManager(context, lifecycleOwner, activityResultRegistry) }
 }
 
 class PermissionsManager(
     private val context: Context,
-    private val lifecycle: Lifecycle,
+    private val lifecycleOwner: LifecycleOwner,
     private val activityResultRegistry: ActivityResultRegistry
 ) {
 
@@ -48,7 +49,7 @@ class PermissionsManager(
 
         val permissionRequest = activityResultRegistry.register(
             key,
-            { lifecycle },
+            { lifecycleOwner.lifecycle }, // FIXME Type Inference bug
             ActivityResultContracts.RequestPermissions()
         ) { permissionResult ->
 

@@ -228,13 +228,13 @@ private fun OptionsDialog(viewModel: IMainViewModel) {
 
             // TODO Move to separate Player
             if (viewModel.mainState.playingId == null)
-                ListItem("Play") { viewModel.startPlayback() }
+                ListItem("Play", onClick = { viewModel.startPlayback() })
             else
-                ListItem("Stop") { viewModel.stopPlayback() }
+                ListItem("Stop", onClick = { viewModel.stopPlayback() })
 
             ListItem("Info")
-            ListItem("Convert to Mp3") { viewModel.convertToMp3() }
-            ListItem("Delete") { viewModel.deleteRecordings() }
+            ListItem("Convert to Mp3", onClick = { viewModel.convertToMp3() })
+            ListItem("Delete", onClick = { viewModel.deleteRecordings() })
         }
     }
 }
