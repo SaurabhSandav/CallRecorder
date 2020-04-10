@@ -15,7 +15,7 @@ class CallPlayback @Inject constructor(
 
     private var player: MediaPlayer? = null
 
-    suspend fun startPlaying(
+    suspend fun startPlayback(
         recordingId: Int,
         onComplete: () -> Unit
     ) = withContext(Dispatchers.IO) {
@@ -33,7 +33,7 @@ class CallPlayback @Inject constructor(
         return@withContext
     }
 
-    fun stopPlaying() {
+    fun stopPlayback() {
         player?.stop()
         player?.release()
         player = null

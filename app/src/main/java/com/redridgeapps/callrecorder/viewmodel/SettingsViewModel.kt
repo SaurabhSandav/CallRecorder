@@ -9,6 +9,7 @@ import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_SAMPLE_RATE
 import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_RECORDING_ON
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import com.redridgeapps.callrecorder.utils.prefs.TypedPref
+import com.redridgeapps.callrecorder.viewmodel.utils.launchNoJob
 import com.redridgeapps.repository.callutils.AudioRecordChannels
 import com.redridgeapps.repository.callutils.AudioRecordEncoding
 import com.redridgeapps.repository.callutils.AudioRecordSampleRate
@@ -17,7 +18,6 @@ import com.redridgeapps.ui.SettingsState
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SettingsViewModel @Inject constructor(
@@ -39,53 +39,49 @@ class SettingsViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    override fun flipSystemization() {
-        viewModelScope.launch {
+    override fun flipSystemization() = viewModelScope.launchNoJob {
 
-            uiState.isSystemized = null
+        uiState.isSystemized = null
 
-            if (systemizer.isAppSystemizedFlow.first())
-                systemizer.unSystemize()
-            else
-                systemizer.systemize()
-        }
+        if (systemizer.isAppSystemizedFlow.first())
+            systemizer.unSystemize()
+        else
+            systemizer.systemize()
     }
 
-    override fun flipRecording() {
-        viewModelScope.launch {
+    override fun flipRecording() = viewModelScope.launchNoJob {
 
-            uiState.isRecordingOn = null
+        uiState.isRecordingOn = null
 
-            val flippedIsRecording = !prefs.get(PREF_IS_RECORDING_ON)
-            prefs.set(PREF_IS_RECORDING_ON, flippedIsRecording)
-        }
+        val flippedIsRecording = !prefs.get(PREF_IS_RECORDING_ON)
+        prefs.set(PREF_IS_RECORDING_ON, flippedIsRecording)
     }
 
-    override fun setAudioRecordSampleRate(audioRecordSampleRate: AudioRecordSampleRate) {
-        viewModelScope.launch {
+    override fun setAudioRecordSampleRate(
+        audioRecordSampleRate: AudioRecordSampleRate
+    ) = viewModelScope.launchNoJob {
 
-            uiState.audioRecordSampleRate = null
+        uiState.audioRecordSampleRate = null
 
-            prefs.set(PREF_AUDIO_RECORD_SAMPLE_RATE, audioRecordSampleRate)
-        }
+        prefs.set(PREF_AUDIO_RECORD_SAMPLE_RATE, audioRecordSampleRate)
     }
 
-    override fun setAudioRecordChannels(audioRecordChannels: AudioRecordChannels) {
-        viewModelScope.launch {
+    override fun setAudioRecordChannels(
+        audioRecordChannels: AudioRecordChannels
+    ) = viewModelScope.launchNoJob {
 
-            uiState.audioRecordChannels = null
+        uiState.audioRecordChannels = null
 
-            prefs.set(PREF_AUDIO_RECORD_CHANNELS, audioRecordChannels)
-        }
+        prefs.set(PREF_AUDIO_RECORD_CHANNELS, audioRecordChannels)
     }
 
-    override fun setAudioRecordEncoding(audioRecordEncoding: AudioRecordEncoding) {
-        viewModelScope.launch {
+    override fun setAudioRecordEncoding(
+        audioRecordEncoding: AudioRecordEncoding
+    ) = viewModelScope.launchNoJob {
 
-            uiState.audioRecordEncoding = null
+        uiState.audioRecordEncoding = null
 
-            prefs.set(PREF_AUDIO_RECORD_ENCODING, audioRecordEncoding)
-        }
+        prefs.set(PREF_AUDIO_RECORD_ENCODING, audioRecordEncoding)
     }
 
     private fun <T> observePref(pref: TypedPref<T>, action: suspend (T) -> Unit) {

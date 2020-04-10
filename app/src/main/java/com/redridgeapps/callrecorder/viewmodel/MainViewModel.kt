@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.callutils.CallPlayback
 import com.redridgeapps.callrecorder.callutils.Recordings
+import com.redridgeapps.callrecorder.viewmodel.utils.launchNoJob
 import com.redridgeapps.repository.toLocalDate
 import com.redridgeapps.repository.toLocalDateTime
 import com.redridgeapps.repository.viewmodel.IMainViewModel
@@ -12,7 +13,6 @@ import com.redridgeapps.ui.MainState
 import com.redridgeapps.ui.RecordingListItem
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -35,38 +35,27 @@ class MainViewModel @Inject constructor(
 
     override val uiState = MainState()
 
-    override fun startPlayback() {
-
-        viewModelScope.launch {
-
-            val selection = uiState.selection.single()
-
-            uiState.playingId = selection
-            uiState.selection.clear()
-
-            callPlayback.startPlaying(selection) { uiState.playingId = null }
-        }
+    override fun startPlayback(recordingId: Int) = viewModelScope.launchNoJob {
+        stopPlayback()
+        uiState.playing = recordingId
+        callPlayback.startPlayback(recordingId) { uiState.playing = null }
     }
 
     override fun stopPlayback() {
-        callPlayback.stopPlaying()
-        uiState.playingId = null
+        callPlayback.stopPlayback()
+        uiState.playing = null
     }
 
-    override fun convertToMp3() {
-        viewModelScope.launch {
-            recordings.convertToMp3(uiState.selection.single())
-            uiState.selection.clear()
-        }
+    override fun convertToMp3() = viewModelScope.launchNoJob {
+        recordings.convertToMp3(uiState.selection.single())
+        uiState.selection.clear()
     }
 
-    override fun deleteRecordings() {
-        viewModelScope.launch {
-            uiState.selection.forEach {
-                recordings.deleteRecording(it)
-            }
-            uiState.selection.clear()
+    override fun deleteRecordings() = viewModelScope.launchNoJob {
+        uiState.selection.forEach {
+            recordings.deleteRecording(it)
         }
+        uiState.selection.clear()
     }
 
     override fun onCleared() {

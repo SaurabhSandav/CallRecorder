@@ -4,7 +4,7 @@ interface IMainViewModel : ViewModelMarker {
 
     val uiState: Any
 
-    fun startPlayback()
+    fun startPlayback(recordingId: Int)
 
     fun stopPlayback()
 

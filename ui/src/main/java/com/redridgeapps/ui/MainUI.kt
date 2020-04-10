@@ -3,6 +3,7 @@ package com.redridgeapps.ui
 import androidx.compose.Composable
 import androidx.compose.Model
 import androidx.compose.frames.modelListOf
+import androidx.compose.key
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.Modifier
 import androidx.ui.foundation.AdapterList
@@ -27,8 +28,11 @@ import androidx.ui.material.TopAppBar
 import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.Ballot
 import androidx.ui.material.icons.filled.Delete
+import androidx.ui.material.icons.filled.PlayCircleOutline
 import androidx.ui.material.icons.filled.Settings
+import androidx.ui.material.icons.filled.Stop
 import androidx.ui.material.icons.outlined.Ballot
+import androidx.ui.text.style.TextOverflow
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.repository.viewmodel.IMainViewModel
@@ -42,7 +46,7 @@ class MainState(
     var recordingList: List<RecordingListItem> = listOf(),
     var selectionMode: Boolean = false,
     var selection: MutableList<Int> = modelListOf(),
-    var playingId: Int? = null
+    var playing: Int? = null
 )
 
 sealed class RecordingListItem {
@@ -207,30 +211,68 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
         }
 
         ListItem(
-            text = recordingEntry.name,
-            secondaryText = recordingEntry.number,
-            overlineText = recordingEntry.overlineText,
-            metaText = recordingEntry.metaText,
-            onClick = onClick
+            onClick = onClick,
+            icon = { PlayPauseIcon(viewModel, recordingEntry.id) },
+            secondaryText = { SingleLineText(recordingEntry.number) },
+            overlineText = { SingleLineText(recordingEntry.overlineText) },
+            trailing = { SingleLineText(recordingEntry.metaText) },
+            text = { SingleLineText(recordingEntry.name) }
         )
+    }
+}
+
+@Composable
+private fun SingleLineText(text: String) {
+    Text(
+        text = text,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+    )
+}
+
+@Composable
+private fun PlayPauseIcon(
+    viewModel: IMainViewModel,
+    recordingId: Int
+) {
+
+    val playing = viewModel.mainState.playing
+
+    val onClick = {
+
+        if (playing == recordingId)
+            viewModel.stopPlayback()
+        else
+            viewModel.startPlayback(recordingId)
+    }
+
+    IconButton(onClick) {
+
+        val icon = when {
+            playing == null || playing != recordingId -> Icons.Default.PlayCircleOutline
+            else -> Icons.Default.Stop
+        }
+
+        key(icon) {
+            Icon(
+                asset = icon.copy(defaultWidth = 40.dp, defaultHeight = 40.dp),
+                tint = MaterialTheme.colors.secondary
+            )
+        }
     }
 }
 
 @Composable
 private fun OptionsDialog(viewModel: IMainViewModel) {
 
-    if (viewModel.mainState.selectionMode || viewModel.mainState.selection.size != 1) return
+    val selection = viewModel.mainState.selection
 
-    val onCloseRequest = { viewModel.mainState.selection.clear() }
+    if (viewModel.mainState.selectionMode || selection.size != 1) return
+
+    val onCloseRequest = { selection.clear() }
 
     Dialog(onCloseRequest = onCloseRequest) {
         Column(Modifier.drawBackground(Color.White)) {
-
-            // TODO Move to separate Player
-            if (viewModel.mainState.playingId == null)
-                ListItem("Play", onClick = { viewModel.startPlayback() })
-            else
-                ListItem("Stop", onClick = { viewModel.stopPlayback() })
 
             ListItem("Info")
             ListItem("Convert to Mp3", onClick = { viewModel.convertToMp3() })
