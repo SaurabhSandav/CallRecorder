@@ -10,6 +10,9 @@ import com.redridgeapps.repository.toLocalDate
 import com.redridgeapps.repository.toLocalDateTime
 import com.redridgeapps.repository.viewmodel.IMainViewModel
 import com.redridgeapps.ui.MainState
+import com.redridgeapps.ui.Playback.PAUSED
+import com.redridgeapps.ui.Playback.PLAYING
+import com.redridgeapps.ui.Playback.STOPPED
 import com.redridgeapps.ui.RecordingListItem
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -36,14 +39,31 @@ class MainViewModel @Inject constructor(
     override val uiState = MainState()
 
     override fun startPlayback(recordingId: Int) = viewModelScope.launchNoJob {
-        stopPlayback()
-        uiState.playing = recordingId
-        callPlayback.startPlayback(recordingId) { uiState.playing = null }
+
+        val playbackStatus = uiState.playback
+
+        if (playbackStatus is PAUSED && playbackStatus.recordingId == recordingId) {
+            uiState.playback = PLAYING(recordingId)
+            callPlayback.resumePlayback()
+            return@launchNoJob
+        } else {
+
+            if (playbackStatus is PLAYING)
+                stopPlayback()
+
+            uiState.playback = PLAYING(recordingId)
+            callPlayback.startPlayback(recordingId) { uiState.playback = STOPPED }
+        }
+    }
+
+    override fun pausePlayback(recordingId: Int) {
+        uiState.playback = PAUSED(recordingId)
+        callPlayback.pausePlayback()
     }
 
     override fun stopPlayback() {
+        uiState.playback = STOPPED
         callPlayback.stopPlayback()
-        uiState.playing = null
     }
 
     override fun convertToMp3() = viewModelScope.launchNoJob {

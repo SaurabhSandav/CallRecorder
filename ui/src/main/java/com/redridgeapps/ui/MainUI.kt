@@ -28,14 +28,16 @@ import androidx.ui.material.TopAppBar
 import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.Ballot
 import androidx.ui.material.icons.filled.Delete
+import androidx.ui.material.icons.filled.PauseCircleOutline
 import androidx.ui.material.icons.filled.PlayCircleOutline
 import androidx.ui.material.icons.filled.Settings
-import androidx.ui.material.icons.filled.Stop
 import androidx.ui.material.icons.outlined.Ballot
 import androidx.ui.text.style.TextOverflow
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.repository.viewmodel.IMainViewModel
+import com.redridgeapps.ui.Playback.PLAYING
+import com.redridgeapps.ui.Playback.STOPPED
 import com.redridgeapps.ui.routing.Destination
 import com.redridgeapps.ui.utils.Highlight
 import com.redridgeapps.ui.utils.fetchViewModel
@@ -46,7 +48,7 @@ class MainState(
     var recordingList: List<RecordingListItem> = listOf(),
     var selectionMode: Boolean = false,
     var selection: MutableList<Int> = modelListOf(),
-    var playing: Int? = null
+    var playback: Playback = STOPPED
 )
 
 sealed class RecordingListItem {
@@ -60,6 +62,12 @@ sealed class RecordingListItem {
         val overlineText: String,
         val metaText: String
     ) : RecordingListItem()
+}
+
+sealed class Playback {
+    class PLAYING(val recordingId: Int) : Playback()
+    class PAUSED(val recordingId: Int) : Playback()
+    object STOPPED : Playback()
 }
 
 object MainDestination : Destination {
@@ -144,30 +152,25 @@ private fun ContentMain(
     modifier: Modifier
 ) {
 
-    Crossfade(current = viewModel.mainState.isRefreshing) { isRefreshing ->
-        if (isRefreshing)
-            IsRefreshing(modifier)
-        else
-            RecordingList(viewModel, modifier)
+    Box(modifier + Modifier.fillMaxSize(), gravity = ContentGravity.Center) {
+
+        Crossfade(current = viewModel.mainState.isRefreshing) { isRefreshing ->
+            when {
+                isRefreshing -> CircularProgressIndicator()
+                else -> RecordingList(viewModel)
+            }
+        }
     }
 
     OptionsDialog(viewModel = viewModel)
 }
 
 @Composable
-private fun IsRefreshing(modifier: Modifier) {
-
-    Box(modifier + Modifier.fillMaxSize(), gravity = ContentGravity.Center) {
-        CircularProgressIndicator()
-    }
-}
-
-@Composable
-private fun RecordingList(viewModel: IMainViewModel, modifier: Modifier) {
+private fun RecordingList(viewModel: IMainViewModel) {
 
     AdapterList(
         data = viewModel.mainState.recordingList,
-        modifier = modifier + Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) { recordingListItem ->
 
         when (recordingListItem) {
@@ -236,12 +239,13 @@ private fun PlayPauseIcon(
     recordingId: Int
 ) {
 
-    val playing = viewModel.mainState.playing
+    val playback = viewModel.mainState.playback
+    val recordingIdIsPlaying = playback is PLAYING && playback.recordingId == recordingId
 
     val onClick = {
 
-        if (playing == recordingId)
-            viewModel.stopPlayback()
+        if (recordingIdIsPlaying)
+            viewModel.pausePlayback(recordingId)
         else
             viewModel.startPlayback(recordingId)
     }
@@ -249,8 +253,8 @@ private fun PlayPauseIcon(
     IconButton(onClick) {
 
         val icon = when {
-            playing == null || playing != recordingId -> Icons.Default.PlayCircleOutline
-            else -> Icons.Default.Stop
+            recordingIdIsPlaying -> Icons.Default.PauseCircleOutline
+            else -> Icons.Default.PlayCircleOutline
         }
 
         key(icon) {

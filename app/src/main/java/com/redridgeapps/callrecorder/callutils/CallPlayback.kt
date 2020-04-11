@@ -33,9 +33,17 @@ class CallPlayback @Inject constructor(
         return@withContext
     }
 
+    fun resumePlayback() {
+        player!!.start()
+    }
+
+    fun pausePlayback() {
+        player!!.pause()
+    }
+
     fun stopPlayback() {
-        player?.stop()
-        player?.release()
+        player!!.stop()
+        player!!.release()
         player = null
     }
 

@@ -6,6 +6,8 @@ interface IMainViewModel : ViewModelMarker {
 
     fun startPlayback(recordingId: Int)
 
+    fun pausePlayback(recordingId: Int)
+
     fun stopPlayback()
 
     fun convertToMp3()
