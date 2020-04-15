@@ -2,14 +2,14 @@
 
 object AndroidTools {
     private const val GRADLE_PLUGIN_VERSION = "4.1.0-alpha05"
-    private const val DESUGAR_JDK_LIBS_VERSION = "1.0.4"
+    private const val DESUGAR_JDK_LIBS_VERSION = "1.0.5"
 
     const val GRADLE_PLUGIN = "com.android.tools.build:gradle:$GRADLE_PLUGIN_VERSION"
     const val DESUGAR_JDK_LIBS = "com.android.tools:desugar_jdk_libs:$DESUGAR_JDK_LIBS_VERSION"
 }
 
 object Kotlin {
-    private const val VERSION = "1.3.71"
+    private const val VERSION = "1.3.72"
     private const val COROUTINES_VERSION = "1.3.5"
 
     const val GRADLE_PLUGIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:$VERSION"

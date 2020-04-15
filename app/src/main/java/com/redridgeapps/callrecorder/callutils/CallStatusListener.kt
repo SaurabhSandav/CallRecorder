@@ -56,7 +56,7 @@ class CallStatusListener constructor(
                 isIncoming = true
                 IncomingCallReceived
             }
-            else -> error("Unexpected error!")
+            else -> error("Unexpected call state!")
         }.also { Timber.d(it.name) }
     }
 

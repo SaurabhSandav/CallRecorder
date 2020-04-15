@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.viewmodel.utils
+package com.redridgeapps.callrecorder.utils
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

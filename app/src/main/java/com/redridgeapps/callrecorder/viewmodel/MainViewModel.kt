@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.callutils.CallPlayback
 import com.redridgeapps.callrecorder.callutils.Recordings
-import com.redridgeapps.callrecorder.viewmodel.utils.launchNoJob
+import com.redridgeapps.callrecorder.utils.launchNoJob
 import com.redridgeapps.repository.toLocalDate
 import com.redridgeapps.repository.toLocalDateTime
 import com.redridgeapps.repository.viewmodel.IMainViewModel

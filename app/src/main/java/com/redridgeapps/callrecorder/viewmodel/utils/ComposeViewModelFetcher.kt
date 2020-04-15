@@ -22,7 +22,7 @@ class ComposeViewModelFetcher(
 
         val clazz: Class<out ViewModel> = creators.keys.firstOrNull {
             kClass.java.isAssignableFrom(it)
-        } ?: error("Invalid class")
+        } ?: error("Invalid class: ${kClass.qualifiedName}")
 
         @Suppress("UNCHECKED_CAST")
         return viewModelProvider.get(clazz) as T
