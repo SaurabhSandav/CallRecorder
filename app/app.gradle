@@ -47,6 +47,8 @@ android {
             ]
         }
     }
+
+    ndkVersion "21.1.6352462"
 }
 
 dependencies {
@@ -54,9 +56,9 @@ dependencies {
 
     coreLibraryDesugaring AndroidTools.DESUGAR_JDK_LIBS
 
-    implementation RedRidgeApps.ANDROID_WAV_TO_MP3
     implementation project(":repository")
     implementation project(":ui")
+    implementation project(":mp3encoding")
 
     // Kotlin
     implementation Kotlin.STDLIB

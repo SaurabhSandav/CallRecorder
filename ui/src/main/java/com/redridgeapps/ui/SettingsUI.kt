@@ -14,9 +14,9 @@ import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.ArrowBack
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
-import com.redridgeapps.repository.callutils.AudioRecordChannels
-import com.redridgeapps.repository.callutils.AudioRecordEncoding
-import com.redridgeapps.repository.callutils.AudioRecordSampleRate
+import com.redridgeapps.repository.callutils.PcmChannels
+import com.redridgeapps.repository.callutils.PcmEncoding
+import com.redridgeapps.repository.callutils.PcmSampleRate
 import com.redridgeapps.repository.viewmodel.ISettingsViewModel
 import com.redridgeapps.ui.routing.Destination
 import com.redridgeapps.ui.utils.SingleSelectListPreference
@@ -28,9 +28,9 @@ import com.redridgeapps.ui.utils.fetchViewModel
 class SettingsState(
     var isSystemized: Boolean? = null,
     var isRecordingOn: Boolean? = null,
-    var audioRecordSampleRate: AudioRecordSampleRate? = null,
-    var audioRecordChannels: AudioRecordChannels? = null,
-    var audioRecordEncoding: AudioRecordEncoding? = null
+    var audioRecordSampleRate: PcmSampleRate? = null,
+    var audioRecordChannels: PcmChannels? = null,
+    var audioRecordEncoding: PcmEncoding? = null
 )
 
 object SettingsDestination : Destination {
@@ -97,7 +97,7 @@ private fun AudioRecordAPIPreference(viewModel: ISettingsViewModel) {
 
         SingleSelectListPreference(
             title = "Sample Rate",
-            keys = AudioRecordSampleRate.values().asList(),
+            keys = PcmSampleRate.values().asList(),
             keyToTextMapper = { it.sampleRate.toString() },
             selectedItem = viewModel.settingsState.audioRecordSampleRate,
             onSelectedChange = { viewModel.setAudioRecordSampleRate(it) }
@@ -105,7 +105,7 @@ private fun AudioRecordAPIPreference(viewModel: ISettingsViewModel) {
 
         SingleSelectListPreference(
             title = "Channels",
-            keys = AudioRecordChannels.values().asList(),
+            keys = PcmChannels.values().asList(),
             keyToTextMapper = { it.toReadableString() },
             selectedItem = viewModel.settingsState.audioRecordChannels,
             onSelectedChange = { viewModel.setAudioRecordChannels(it) }
@@ -113,7 +113,7 @@ private fun AudioRecordAPIPreference(viewModel: ISettingsViewModel) {
 
         SingleSelectListPreference(
             title = "Encoding",
-            keys = AudioRecordEncoding.values().asList(),
+            keys = PcmEncoding.values().asList(),
             keyToTextMapper = { it.toReadableString() },
             selectedItem = viewModel.settingsState.audioRecordEncoding,
             onSelectedChange = { viewModel.setAudioRecordEncoding(it) }
@@ -121,13 +121,13 @@ private fun AudioRecordAPIPreference(viewModel: ISettingsViewModel) {
     }
 }
 
-private fun AudioRecordChannels.toReadableString(): String = when (this) {
-    AudioRecordChannels.MONO -> "Mono"
-    AudioRecordChannels.STEREO -> "Stereo"
+private fun PcmChannels.toReadableString(): String = when (this) {
+    PcmChannels.MONO -> "Mono"
+    PcmChannels.STEREO -> "Stereo"
 }
 
-private fun AudioRecordEncoding.toReadableString(): String = when (this) {
-    AudioRecordEncoding.ENCODING_PCM_8BIT -> "PCM_8BIT"
-    AudioRecordEncoding.ENCODING_PCM_16BIT -> "PCM_16BIT"
-    AudioRecordEncoding.ENCODING_PCM_FLOAT -> "PCM_FLOAT"
+private fun PcmEncoding.toReadableString(): String = when (this) {
+    PcmEncoding.PCM_8BIT -> "PCM_8BIT"
+    PcmEncoding.PCM_16BIT -> "PCM_16BIT"
+    PcmEncoding.PCM_FLOAT -> "PCM_FLOAT"
 }

@@ -1,3 +1,4 @@
+include ':mp3encoding'
 include ':repository'
 include ':ui'
 include ':app'

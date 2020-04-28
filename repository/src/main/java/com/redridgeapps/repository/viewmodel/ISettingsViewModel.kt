@@ -1,8 +1,8 @@
 package com.redridgeapps.repository.viewmodel
 
-import com.redridgeapps.repository.callutils.AudioRecordChannels
-import com.redridgeapps.repository.callutils.AudioRecordEncoding
-import com.redridgeapps.repository.callutils.AudioRecordSampleRate
+import com.redridgeapps.repository.callutils.PcmChannels
+import com.redridgeapps.repository.callutils.PcmEncoding
+import com.redridgeapps.repository.callutils.PcmSampleRate
 
 interface ISettingsViewModel : ViewModelMarker {
 
@@ -12,9 +12,9 @@ interface ISettingsViewModel : ViewModelMarker {
 
     fun flipRecording()
 
-    fun setAudioRecordSampleRate(audioRecordSampleRate: AudioRecordSampleRate)
+    fun setAudioRecordSampleRate(audioRecordSampleRate: PcmSampleRate)
 
-    fun setAudioRecordChannels(audioRecordChannels: AudioRecordChannels)
+    fun setAudioRecordChannels(audioRecordChannels: PcmChannels)
 
-    fun setAudioRecordEncoding(audioRecordEncoding: AudioRecordEncoding)
+    fun setAudioRecordEncoding(audioRecordEncoding: PcmEncoding)
 }

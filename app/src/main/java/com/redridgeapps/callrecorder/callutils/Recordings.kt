@@ -3,16 +3,18 @@ package com.redridgeapps.callrecorder.callutils
 import android.content.Context
 import android.os.Environment
 import androidx.core.content.ContextCompat
-import com.redridgeapps.androidwavtomp3.Mp3Encoder
 import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.RecordingQueries
-import com.redridgeapps.callrecorder.callutils.WavFileUtils.WavData
 import com.redridgeapps.callrecorder.utils.extension
 import com.redridgeapps.callrecorder.utils.nameWithoutExtension
-import com.redridgeapps.repository.callutils.AudioRecordEncoding.ENCODING_PCM_16BIT
-import com.redridgeapps.repository.callutils.AudioRecordEncoding.ENCODING_PCM_8BIT
-import com.redridgeapps.repository.callutils.AudioRecordEncoding.ENCODING_PCM_FLOAT
+import com.redridgeapps.mp3encoding.EncodingJob
+import com.redridgeapps.mp3encoding.Mp3Encoder
 import com.redridgeapps.repository.callutils.CallDirection
+import com.redridgeapps.repository.callutils.PcmEncoding
+import com.redridgeapps.repository.callutils.PcmEncoding.PCM_16BIT
+import com.redridgeapps.repository.callutils.PcmEncoding.PCM_8BIT
+import com.redridgeapps.repository.callutils.PcmEncoding.PCM_FLOAT
+import com.redridgeapps.repository.callutils.WavData
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import com.squareup.sqldelight.runtime.coroutines.mapToOne
@@ -71,51 +73,29 @@ class Recordings @Inject constructor(
         val recording = recordingQueries.getWithId(recordingId).asFlow().mapToOne().first()
         val recordingPath = Paths.get(recording.save_path)
         val wavData = getWavData(recordingId)
-        val outputPathStr =
-            "${recordingPath.toAbsolutePath().toString().substringBeforeLast(".")}.mp3"
+        val outputPath =
+            recordingPath.parent.resolve("${recordingPath.fileName.nameWithoutExtension}.mp3")
 
         val mp3Encoder = Mp3Encoder()
 
-        when (wavData.encoding) {
-            ENCODING_PCM_8BIT -> {
+        val encodingJob = EncodingJob(
+            wavData = wavData,
+            wavPath = recordingPath,
+            mp3Path = outputPath
+        )
 
-                val newInputPath = getTempPath().resolve(
-                    "${recordingPath.nameWithoutExtension}.8bit.${recordingPath.extension}"
+        when (PcmEncoding.valueOf(wavData.bitsPerSample)) {
+            PCM_8BIT -> {
+                val newWavData = wavData.copy(
+                    fileSize = (wavData.fileSize * 2) - 44,
+                    byteRate = (wavData.channels * wavData.bitsPerSample * wavData.sampleRate) / 8,
+                    blockAlign = (wavData.channels * wavData.bitsPerSample) / 8,
+                    bitsPerSample = 16
                 )
-
-                WavFileUtils.convertWav8BitTo16Bit(recordingPath, newInputPath)
-
-                val fileChannel = FileChannel.open(newInputPath, StandardOpenOption.READ)
-                val newWavData = WavFileUtils.readWavData(fileChannel)
-                fileChannel.close()
-
-                mp3Encoder.convertWavPcm16ToMP3(
-                    channelCount = newWavData.channels.channelCount,
-                    sampleRate = newWavData.sampleRate.sampleRate,
-                    bitrate = newWavData.bitRate,
-                    quality = Mp3Encoder.Quality.HIGH_SLOW,
-                    wavPath = newInputPath.toAbsolutePath().toString(),
-                    mp3Path = outputPathStr
-                )
-
-                Files.delete(newInputPath)
+                mp3Encoder.convertWavPcm8ToMP3(encodingJob.copy(wavData = newWavData))
             }
-            ENCODING_PCM_16BIT -> mp3Encoder.convertWavPcm16ToMP3(
-                channelCount = wavData.channels.channelCount,
-                sampleRate = wavData.sampleRate.sampleRate,
-                bitrate = wavData.bitRate,
-                quality = Mp3Encoder.Quality.HIGH_SLOW,
-                wavPath = recordingPath.toAbsolutePath().toString(),
-                mp3Path = outputPathStr
-            )
-            ENCODING_PCM_FLOAT -> mp3Encoder.convertWavPcmFloatToMP3(
-                channelCount = wavData.channels.channelCount,
-                sampleRate = wavData.sampleRate.sampleRate,
-                bitrate = wavData.bitRate,
-                quality = Mp3Encoder.Quality.HIGH_SLOW,
-                wavPath = recordingPath.toAbsolutePath().toString(),
-                mp3Path = outputPathStr
-            )
+            PCM_16BIT -> mp3Encoder.convertWavPcm16ToMP3(encodingJob)
+            PCM_FLOAT -> mp3Encoder.convertWavPcmFloatToMP3(encodingJob)
         }
 
         return@withContext
@@ -140,15 +120,6 @@ class Recordings @Inject constructor(
             Files.createDirectory(savePath)
 
         return savePath
-    }
-
-    private fun getTempPath(): Path {
-        val tempPath = getRecordingStoragePath().resolve("Tmp")
-
-        if (!Files.exists(tempPath))
-            Files.createDirectory(tempPath)
-
-        return tempPath
     }
 
     private suspend fun getWavData(recordingId: Int): WavData = withContext(Dispatchers.IO) {

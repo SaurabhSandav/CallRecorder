@@ -2,9 +2,9 @@ package com.redridgeapps.callrecorder.utils.prefs
 
 import com.redridgeapps.callrecorder.utils.prefs.TypedPref.PrefBoolean
 import com.redridgeapps.callrecorder.utils.prefs.TypedPref.PrefEnum
-import com.redridgeapps.repository.callutils.AudioRecordChannels
-import com.redridgeapps.repository.callutils.AudioRecordEncoding
-import com.redridgeapps.repository.callutils.AudioRecordSampleRate
+import com.redridgeapps.repository.callutils.PcmChannels
+import com.redridgeapps.repository.callutils.PcmEncoding
+import com.redridgeapps.repository.callutils.PcmSampleRate
 
 var prefList: List<TypedPref<*>> = emptyList()
     private set
@@ -26,18 +26,18 @@ val PREF_IS_RECORDING_ON = PrefBoolean(
 
 val PREF_AUDIO_RECORD_SAMPLE_RATE = PrefEnum(
     key = "AUDIO_RECORD_SAMPLE_RATE",
-    defaultValue = AudioRecordSampleRate.S44_100,
+    defaultValue = PcmSampleRate.S44_100,
     valueOf = ::enumValueOf
 ).addToPrefList()
 
 val PREF_AUDIO_RECORD_CHANNELS = PrefEnum(
     key = "AUDIO_RECORD_CHANNELS",
-    defaultValue = AudioRecordChannels.MONO,
+    defaultValue = PcmChannels.MONO,
     valueOf = ::enumValueOf
 ).addToPrefList()
 
 val PREF_AUDIO_RECORD_ENCODING = PrefEnum(
     key = "AUDIO_RECORD_ENCODING",
-    defaultValue = AudioRecordEncoding.ENCODING_PCM_16BIT,
+    defaultValue = PcmEncoding.PCM_16BIT,
     valueOf = ::enumValueOf
 ).addToPrefList()

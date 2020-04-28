@@ -8,8 +8,8 @@ import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_CHANNELS
 import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_ENCODING
 import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_SAMPLE_RATE
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
-import com.redridgeapps.repository.callutils.AudioRecordEncoding
 import com.redridgeapps.repository.callutils.CallDirection
+import com.redridgeapps.repository.callutils.PcmEncoding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
@@ -53,8 +53,8 @@ class CallRecorder @Inject constructor(
         recordingStartInstant = Instant.now()
 
         val sampleRate = async { prefs.get(PREF_AUDIO_RECORD_SAMPLE_RATE).sampleRate }
-        val audioChannel = async { prefs.get(PREF_AUDIO_RECORD_CHANNELS).channelFlag }
-        val audioEncoding = async { prefs.get(PREF_AUDIO_RECORD_ENCODING).encodingFlag }
+        val audioChannel = async { prefs.get(PREF_AUDIO_RECORD_CHANNELS).toAudioRecordChannels() }
+        val audioEncoding = async { prefs.get(PREF_AUDIO_RECORD_ENCODING).toAudioRecordEncoding() }
 
         val bufferSize = AudioRecord.getMinBufferSize(
             sampleRate.await(),
@@ -114,7 +114,7 @@ class CallRecorder @Inject constructor(
         FileChannel.open(savePath, CREATE_NEW, WRITE).use { channel ->
 
             val encoding =
-                AudioRecordEncoding.values().first { it.encodingFlag == recorder!!.audioFormat }
+                PcmEncoding.values().first { it.toAudioRecordEncoding() == recorder!!.audioFormat }
             val bitsPerSample = encoding.bitsPerSample
 
             WavFileUtils.writeHeader(

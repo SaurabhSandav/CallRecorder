@@ -10,9 +10,9 @@ import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_SAMPLE_RATE
 import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_RECORDING_ON
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import com.redridgeapps.callrecorder.utils.prefs.TypedPref
-import com.redridgeapps.repository.callutils.AudioRecordChannels
-import com.redridgeapps.repository.callutils.AudioRecordEncoding
-import com.redridgeapps.repository.callutils.AudioRecordSampleRate
+import com.redridgeapps.repository.callutils.PcmChannels
+import com.redridgeapps.repository.callutils.PcmEncoding
+import com.redridgeapps.repository.callutils.PcmSampleRate
 import com.redridgeapps.repository.viewmodel.ISettingsViewModel
 import com.redridgeapps.ui.SettingsState
 import kotlinx.coroutines.flow.first
@@ -58,7 +58,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     override fun setAudioRecordSampleRate(
-        audioRecordSampleRate: AudioRecordSampleRate
+        audioRecordSampleRate: PcmSampleRate
     ) = viewModelScope.launchNoJob {
 
         uiState.audioRecordSampleRate = null
@@ -67,7 +67,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     override fun setAudioRecordChannels(
-        audioRecordChannels: AudioRecordChannels
+        audioRecordChannels: PcmChannels
     ) = viewModelScope.launchNoJob {
 
         uiState.audioRecordChannels = null
@@ -76,7 +76,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     override fun setAudioRecordEncoding(
-        audioRecordEncoding: AudioRecordEncoding
+        audioRecordEncoding: PcmEncoding
     ) = viewModelScope.launchNoJob {
 
         uiState.audioRecordEncoding = null
