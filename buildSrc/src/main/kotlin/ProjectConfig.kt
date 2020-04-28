@@ -1,7 +1,7 @@
 @file:Suppress("unused")
 
 object AndroidTools {
-    private const val GRADLE_PLUGIN_VERSION = "4.1.0-alpha05"
+    private const val GRADLE_PLUGIN_VERSION = "4.1.0-alpha07"
     private const val DESUGAR_JDK_LIBS_VERSION = "1.0.5"
 
     const val GRADLE_PLUGIN = "com.android.tools.build:gradle:$GRADLE_PLUGIN_VERSION"
@@ -21,8 +21,8 @@ object Kotlin {
 object Jetpack {
     private const val ACTIVITY_KTX_VERSION = "1.2.0-alpha03"
     private const val APPCOMPAT_VERSION = "1.2.0-beta01"
-    private const val CORE_KTX_VERSION = "1.3.0-beta01"
-    private const val PREFERENCE_KTX_VERSION = "1.1.0"
+    private const val CORE_KTX_VERSION = "1.3.0-rc01"
+    private const val PREFERENCE_KTX_VERSION = "1.1.1"
 
     const val ACTIVITY_KTX = "androidx.activity:activity-ktx:$ACTIVITY_KTX_VERSION"
     const val APPCOMPAT = "androidx.appcompat:appcompat:$APPCOMPAT_VERSION"
@@ -46,7 +46,7 @@ object Compose {
 }
 
 object ComposeNavigation {
-    private const val VERSION = "0.1.0-SNAPSHOT"
+    private const val VERSION = "0.1.10"
 
     const val CORE = "com.github.mvarnagiris.compose-navigation:core:$VERSION"
     const val NAVIGATION = "com.github.mvarnagiris.compose-navigation:navigation:$VERSION"
