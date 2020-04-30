@@ -50,7 +50,7 @@ class PermissionsManager(
         val permissionRequest = activityResultRegistry.register(
             key,
             { lifecycleOwner.lifecycle }, // FIXME Type Inference bug
-            ActivityResultContracts.RequestPermissions()
+            ActivityResultContracts.RequestMultiplePermissions()
         ) { permissionResult ->
 
             val permissionResultSplit = permissionResult.asIterable()

@@ -19,7 +19,7 @@ object Kotlin {
 }
 
 object Jetpack {
-    private const val ACTIVITY_KTX_VERSION = "1.2.0-alpha03"
+    private const val ACTIVITY_KTX_VERSION = "1.2.0-alpha04"
     private const val APPCOMPAT_VERSION = "1.2.0-beta01"
     private const val CORE_KTX_VERSION = "1.3.0-rc01"
     private const val PREFERENCE_KTX_VERSION = "1.1.1"
@@ -46,14 +46,14 @@ object Compose {
 }
 
 object ComposeNavigation {
-    private const val VERSION = "0.1.10"
+    private const val VERSION = "0.1.0-SNAPSHOT"
 
     const val CORE = "com.github.mvarnagiris.compose-navigation:core:$VERSION"
     const val NAVIGATION = "com.github.mvarnagiris.compose-navigation:navigation:$VERSION"
 }
 
 object Lifecycle {
-    private const val VERSION = "2.3.0-alpha01"
+    private const val VERSION = "2.3.0-alpha02"
 
     const val SERVICE = "androidx.lifecycle:lifecycle-service:$VERSION"
     const val LIVEDATA_KTX = "androidx.lifecycle:lifecycle-livedata-ktx:$VERSION"
