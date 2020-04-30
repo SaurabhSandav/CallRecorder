@@ -35,12 +35,12 @@ import androidx.ui.material.icons.outlined.Ballot
 import androidx.ui.text.style.TextOverflow
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
+import com.redridgeapps.callrecorder.ui.compose_viewmodel.fetchViewModel
 import com.redridgeapps.callrecorder.ui.main.Playback.PLAYING
 import com.redridgeapps.callrecorder.ui.main.Playback.STOPPED
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.settings.SettingsDestination
 import com.redridgeapps.callrecorder.ui.utils.Highlight
-import com.redridgeapps.callrecorder.ui.utils.fetchViewModel
 
 @Model
 class MainState(

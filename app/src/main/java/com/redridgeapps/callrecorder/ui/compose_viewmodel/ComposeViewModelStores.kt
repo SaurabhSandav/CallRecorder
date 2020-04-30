@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.viewmodel
+package com.redridgeapps.callrecorder.ui.compose_viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelStore

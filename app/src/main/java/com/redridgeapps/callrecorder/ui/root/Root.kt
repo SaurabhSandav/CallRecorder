@@ -7,15 +7,15 @@ import androidx.compose.Providers
 import androidx.ui.core.setContent
 import androidx.ui.material.MaterialTheme
 import com.koduok.compose.navigation.Router
+import com.redridgeapps.callrecorder.ui.compose_viewmodel.ComposeViewModelFetcher
+import com.redridgeapps.callrecorder.ui.compose_viewmodel.ComposeViewModelStores
+import com.redridgeapps.callrecorder.ui.compose_viewmodel.WithViewModelStores
 import com.redridgeapps.callrecorder.ui.firstrun.FirstRunDestination
 import com.redridgeapps.callrecorder.ui.main.MainDestination
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.utils.ActivityResultRegistryAmbient
 import com.redridgeapps.callrecorder.ui.utils.ComposeViewModelStoresAmbient
 import com.redridgeapps.callrecorder.ui.utils.ViewModelFetcherAmbient
-import com.redridgeapps.callrecorder.ui.utils.WithViewModelStores
-import com.redridgeapps.callrecorder.viewmodel.ComposeViewModelStores
-import com.redridgeapps.callrecorder.viewmodel.utils.ComposeViewModelFetcher
 
 fun ComponentActivity.showUI(
     isFirstRun: Boolean,

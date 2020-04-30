@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.ui.utils
+package com.redridgeapps.callrecorder.ui.compose_viewmodel
 
 import androidx.compose.Composable
 import androidx.compose.onDispose
@@ -8,7 +8,8 @@ import com.koduok.compose.navigation.core.BackStackController
 import com.koduok.compose.navigation.core.GlobalRoute
 import com.koduok.compose.navigation.core.Route
 import com.koduok.compose.navigation.core.backStackController
-import com.redridgeapps.callrecorder.viewmodel.ComposeViewModelStores
+import com.redridgeapps.callrecorder.ui.utils.ComposeViewModelStoresAmbient
+import com.redridgeapps.callrecorder.ui.utils.ViewModelFetcherAmbient
 import timber.log.Timber
 
 @Composable

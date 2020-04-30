@@ -1,8 +1,8 @@
-package com.redridgeapps.callrecorder.viewmodel.utils
+package com.redridgeapps.callrecorder.ui.compose_viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.redridgeapps.callrecorder.viewmodel.ComposeViewModelStores
+import com.redridgeapps.callrecorder.di.factories.DaggerViewModelFactory
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
