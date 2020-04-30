@@ -1,10 +1,10 @@
 package com.redridgeapps.callrecorder.utils.prefs
 
+import com.redridgeapps.callrecorder.callutils.PcmChannels
+import com.redridgeapps.callrecorder.callutils.PcmEncoding
+import com.redridgeapps.callrecorder.callutils.PcmSampleRate
 import com.redridgeapps.callrecorder.utils.prefs.TypedPref.PrefBoolean
 import com.redridgeapps.callrecorder.utils.prefs.TypedPref.PrefEnum
-import com.redridgeapps.repository.callutils.PcmChannels
-import com.redridgeapps.repository.callutils.PcmEncoding
-import com.redridgeapps.repository.callutils.PcmSampleRate
 
 var prefList: List<TypedPref<*>> = emptyList()
     private set

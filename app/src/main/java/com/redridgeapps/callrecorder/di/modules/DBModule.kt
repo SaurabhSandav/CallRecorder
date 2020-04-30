@@ -4,9 +4,9 @@ import android.content.Context
 import com.redridgeapps.callrecorder.CallRecordingDB
 import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.RecordingQueries
+import com.redridgeapps.callrecorder.callutils.CallDirection
 import com.redridgeapps.callrecorder.db.EnumTextColumnAdapter
 import com.redridgeapps.callrecorder.db.InstantIntegerColumnAdapter
-import com.redridgeapps.repository.callutils.CallDirection
 import com.squareup.sqldelight.ColumnAdapter
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import dagger.Module

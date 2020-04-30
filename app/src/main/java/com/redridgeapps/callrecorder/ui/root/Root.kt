@@ -14,14 +14,14 @@ import com.redridgeapps.callrecorder.ui.utils.ActivityResultRegistryAmbient
 import com.redridgeapps.callrecorder.ui.utils.ComposeViewModelStoresAmbient
 import com.redridgeapps.callrecorder.ui.utils.ViewModelFetcherAmbient
 import com.redridgeapps.callrecorder.ui.utils.WithViewModelStores
-import com.redridgeapps.repository.viewmodel.utils.IComposeViewModelStores
-import com.redridgeapps.repository.viewmodel.utils.IViewModelFetcher
+import com.redridgeapps.callrecorder.viewmodel.ComposeViewModelStores
+import com.redridgeapps.callrecorder.viewmodel.utils.ComposeViewModelFetcher
 
 fun ComponentActivity.showUI(
     isFirstRun: Boolean,
     activityResultRegistry: ActivityResultRegistry,
-    composeViewModelStores: IComposeViewModelStores,
-    composeViewModelFetcher: IViewModelFetcher
+    composeViewModelStores: ComposeViewModelStores,
+    composeViewModelFetcher: ComposeViewModelFetcher
 ) {
 
     setContent {

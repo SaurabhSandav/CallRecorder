@@ -1,4 +1,4 @@
-package com.redridgeapps.repository.callutils
+package com.redridgeapps.callrecorder.callutils
 
 enum class CallDirection {
     INCOMING,

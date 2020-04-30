@@ -1,6 +1,5 @@
 include ':wav_utils'
 include ':mp3_encoder'
-include ':repository'
 include ':app'
 
 rootProject.name = "Call Recorder"

@@ -7,7 +7,6 @@ import com.redridgeapps.callrecorder.utils.launchNoJob
 import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_FIRST_RUN
 import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_RECORDING_ON
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
-import com.redridgeapps.repository.viewmodel.IFirstRunViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -15,7 +14,7 @@ import javax.inject.Inject
 class FirstRunViewModel @Inject constructor(
     private val systemizer: Systemizer,
     private val prefs: Prefs
-) : ViewModel(), IFirstRunViewModel {
+) : ViewModel() {
 
     init {
 
@@ -24,14 +23,14 @@ class FirstRunViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    override val uiState = FirstRunState()
+    val uiState = FirstRunState()
 
-    override fun systemize() = viewModelScope.launchNoJob {
+    fun systemize() = viewModelScope.launchNoJob {
         uiState.isAppSystemized = null
         systemizer.systemize()
     }
 
-    override fun configurationFinished() = viewModelScope.launchNoJob {
+    fun configurationFinished() = viewModelScope.launchNoJob {
         prefs.set(PREF_IS_FIRST_RUN, false)
         prefs.set(PREF_IS_RECORDING_ON, true)
     }

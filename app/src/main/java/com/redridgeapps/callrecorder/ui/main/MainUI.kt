@@ -41,7 +41,6 @@ import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.settings.SettingsDestination
 import com.redridgeapps.callrecorder.ui.utils.Highlight
 import com.redridgeapps.callrecorder.ui.utils.fetchViewModel
-import com.redridgeapps.repository.viewmodel.IMainViewModel
 
 @Model
 class MainState(
@@ -76,17 +75,14 @@ object MainDestination : Destination {
     @Composable
     override fun initializeUI() {
 
-        val viewModel = fetchViewModel<IMainViewModel>()
+        val viewModel = fetchViewModel<MainViewModel>()
 
         MainUI(viewModel)
     }
 }
 
-private val IMainViewModel.mainState: MainState
-    get() = uiState as MainState
-
 @Composable
-private fun MainUI(viewModel: IMainViewModel) {
+private fun MainUI(viewModel: MainViewModel) {
 
     Scaffold(
         topAppBar = { MainTopAppBar(viewModel) }
@@ -96,13 +92,13 @@ private fun MainUI(viewModel: IMainViewModel) {
 }
 
 @Composable
-private fun MainTopAppBar(viewModel: IMainViewModel) {
+private fun MainTopAppBar(viewModel: MainViewModel) {
 
     TopAppBar(
         title = { Text(text = "Call Recorder", modifier = Modifier.padding(bottom = 16.dp)) },
         actions = {
 
-            if (viewModel.mainState.selectionMode && viewModel.mainState.selection.isNotEmpty())
+            if (viewModel.uiState.selectionMode && viewModel.uiState.selection.isNotEmpty())
                 IconDelete(viewModel)
 
             IconSelectionMode(viewModel)
@@ -112,7 +108,7 @@ private fun MainTopAppBar(viewModel: IMainViewModel) {
 }
 
 @Composable
-private fun IconDelete(viewModel: IMainViewModel) {
+private fun IconDelete(viewModel: MainViewModel) {
 
     IconButton(onClick = { viewModel.deleteRecordings() }) {
         Icon(Icons.Default.Delete)
@@ -120,17 +116,17 @@ private fun IconDelete(viewModel: IMainViewModel) {
 }
 
 @Composable
-private fun IconSelectionMode(viewModel: IMainViewModel) {
+private fun IconSelectionMode(viewModel: MainViewModel) {
 
     val onClick = {
-        val selectionMode = viewModel.mainState.selectionMode
-        if (selectionMode) viewModel.mainState.selection.clear()
-        viewModel.mainState.selectionMode = !selectionMode
+        val selectionMode = viewModel.uiState.selectionMode
+        if (selectionMode) viewModel.uiState.selection.clear()
+        viewModel.uiState.selectionMode = !selectionMode
     }
 
     IconButton(onClick) {
 
-        if (viewModel.mainState.selectionMode)
+        if (viewModel.uiState.selectionMode)
             Icon(Icons.Filled.Ballot)
         else
             Icon(Icons.Outlined.Ballot)
@@ -149,13 +145,13 @@ private fun IconSettings() {
 
 @Composable
 private fun ContentMain(
-    viewModel: IMainViewModel,
+    viewModel: MainViewModel,
     modifier: Modifier
 ) {
 
     Box(modifier + Modifier.fillMaxSize(), gravity = ContentGravity.Center) {
 
-        Crossfade(current = viewModel.mainState.isRefreshing) { isRefreshing ->
+        Crossfade(current = viewModel.uiState.isRefreshing) { isRefreshing ->
             when {
                 isRefreshing -> CircularProgressIndicator()
                 else -> RecordingList(viewModel)
@@ -167,10 +163,10 @@ private fun ContentMain(
 }
 
 @Composable
-private fun RecordingList(viewModel: IMainViewModel) {
+private fun RecordingList(viewModel: MainViewModel) {
 
     AdapterList(
-        data = viewModel.mainState.recordingList,
+        data = viewModel.uiState.recordingList,
         modifier = Modifier.fillMaxSize()
     ) { recordingListItem ->
 
@@ -203,15 +199,15 @@ private fun RecordingListDateDivider(dateText: String) {
 }
 
 @Composable
-private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel: IMainViewModel) {
+private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel: MainViewModel) {
 
-    Highlight(enabled = recordingEntry.id in viewModel.mainState.selection) {
+    Highlight(enabled = recordingEntry.id in viewModel.uiState.selection) {
 
         val onClick = {
-            if (viewModel.mainState.selectionMode)
-                viewModel.mainState.selection.addOrRemove(recordingEntry.id)
+            if (viewModel.uiState.selectionMode)
+                viewModel.uiState.selection.addOrRemove(recordingEntry.id)
             else
-                viewModel.mainState.selection.clearAndAdd(recordingEntry.id)
+                viewModel.uiState.selection.clearAndAdd(recordingEntry.id)
         }
 
         ListItem(
@@ -236,11 +232,11 @@ private fun SingleLineText(text: String) {
 
 @Composable
 private fun PlayPauseIcon(
-    viewModel: IMainViewModel,
+    viewModel: MainViewModel,
     recordingId: Int
 ) {
 
-    val playback = viewModel.mainState.playback
+    val playback = viewModel.uiState.playback
     val recordingIdIsPlaying = playback is PLAYING && playback.recordingId == recordingId
 
     val onClick = {
@@ -268,11 +264,11 @@ private fun PlayPauseIcon(
 }
 
 @Composable
-private fun OptionsDialog(viewModel: IMainViewModel) {
+private fun OptionsDialog(viewModel: MainViewModel) {
 
-    val selection = viewModel.mainState.selection
+    val selection = viewModel.uiState.selection
 
-    if (viewModel.mainState.selectionMode || selection.size != 1) return
+    if (viewModel.uiState.selectionMode || selection.size != 1) return
 
     val onCloseRequest = { selection.clear() }
 

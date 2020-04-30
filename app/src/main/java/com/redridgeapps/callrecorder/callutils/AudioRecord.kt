@@ -1,8 +1,6 @@
 package com.redridgeapps.callrecorder.callutils
 
 import android.media.AudioFormat
-import com.redridgeapps.repository.callutils.PcmChannels
-import com.redridgeapps.repository.callutils.PcmEncoding
 
 fun PcmChannels.toAudioRecordChannels(): Int = when (this) {
     PcmChannels.MONO -> AudioFormat.CHANNEL_IN_MONO

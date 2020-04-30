@@ -2,13 +2,13 @@ package com.redridgeapps.callrecorder.ui.utils
 
 import androidx.compose.Composable
 import androidx.compose.onDispose
+import androidx.lifecycle.ViewModel
 import com.koduok.compose.navigation.BackStackAmbient
 import com.koduok.compose.navigation.core.BackStackController
 import com.koduok.compose.navigation.core.GlobalRoute
 import com.koduok.compose.navigation.core.Route
 import com.koduok.compose.navigation.core.backStackController
-import com.redridgeapps.repository.viewmodel.ViewModelMarker
-import com.redridgeapps.repository.viewmodel.utils.IComposeViewModelStores
+import com.redridgeapps.callrecorder.viewmodel.ComposeViewModelStores
 import timber.log.Timber
 
 @Composable
@@ -24,7 +24,7 @@ fun WithViewModelStores(block: @Composable() () -> Unit) {
 }
 
 @Composable
-inline fun <reified T : ViewModelMarker> fetchViewModel(): T {
+inline fun <reified T : ViewModel> fetchViewModel(): T {
     val viewModelFetcher = ViewModelFetcherAmbient.current
     val key = getViewModelKey()
     return viewModelFetcher.fetch(key, T::class)
@@ -42,7 +42,7 @@ private fun createViewModelStoreKey(route: Route<*>): String {
 }
 
 private class ViewModelStoreBackStackListener(
-    private val composeViewModelStores: IComposeViewModelStores
+    private val composeViewModelStores: ComposeViewModelStores
 ) : BackStackController.Listener {
 
     var oldSnapshot = listOf<Route<*>>()

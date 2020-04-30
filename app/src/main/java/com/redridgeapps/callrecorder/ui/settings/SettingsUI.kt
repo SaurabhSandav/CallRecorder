@@ -14,15 +14,14 @@ import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.ArrowBack
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
+import com.redridgeapps.callrecorder.callutils.PcmChannels
+import com.redridgeapps.callrecorder.callutils.PcmEncoding
+import com.redridgeapps.callrecorder.callutils.PcmSampleRate
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.utils.SingleSelectListPreference
 import com.redridgeapps.callrecorder.ui.utils.SwitchPreference
 import com.redridgeapps.callrecorder.ui.utils.TitlePreference
 import com.redridgeapps.callrecorder.ui.utils.fetchViewModel
-import com.redridgeapps.repository.callutils.PcmChannels
-import com.redridgeapps.repository.callutils.PcmEncoding
-import com.redridgeapps.repository.callutils.PcmSampleRate
-import com.redridgeapps.repository.viewmodel.ISettingsViewModel
 
 @Model
 class SettingsState(
@@ -38,17 +37,14 @@ object SettingsDestination : Destination {
     @Composable
     override fun initializeUI() {
 
-        val viewModel = fetchViewModel<ISettingsViewModel>()
+        val viewModel = fetchViewModel<SettingsViewModel>()
 
         SettingsUI(viewModel)
     }
 }
 
-private val ISettingsViewModel.settingsState: SettingsState
-    get() = uiState as SettingsState
-
 @Composable
-private fun SettingsUI(viewModel: ISettingsViewModel) {
+private fun SettingsUI(viewModel: SettingsViewModel) {
 
     val navigationIcon = @Composable {
 
@@ -72,15 +68,15 @@ private fun SettingsUI(viewModel: ISettingsViewModel) {
 }
 
 @Composable
-private fun ContentMain(viewModel: ISettingsViewModel, modifier: Modifier) {
+private fun ContentMain(viewModel: SettingsViewModel, modifier: Modifier) {
 
     Column(modifier) {
 
-        SwitchPreference("Recording", viewModel.settingsState.isRecordingOn) {
+        SwitchPreference("Recording", viewModel.uiState.isRecordingOn) {
             viewModel.flipRecording()
         }
 
-        SwitchPreference("Systemize", viewModel.settingsState.isSystemized) {
+        SwitchPreference("Systemize", viewModel.uiState.isSystemized) {
             viewModel.flipSystemization()
         }
 
@@ -89,7 +85,7 @@ private fun ContentMain(viewModel: ISettingsViewModel, modifier: Modifier) {
 }
 
 @Composable
-private fun AudioRecordAPIPreference(viewModel: ISettingsViewModel) {
+private fun AudioRecordAPIPreference(viewModel: SettingsViewModel) {
 
     Column {
 
@@ -99,7 +95,7 @@ private fun AudioRecordAPIPreference(viewModel: ISettingsViewModel) {
             title = "Sample Rate",
             keys = PcmSampleRate.values().asList(),
             keyToTextMapper = { it.sampleRate.toString() },
-            selectedItem = viewModel.settingsState.audioRecordSampleRate,
+            selectedItem = viewModel.uiState.audioRecordSampleRate,
             onSelectedChange = { viewModel.setAudioRecordSampleRate(it) }
         )
 
@@ -107,7 +103,7 @@ private fun AudioRecordAPIPreference(viewModel: ISettingsViewModel) {
             title = "Channels",
             keys = PcmChannels.values().asList(),
             keyToTextMapper = { it.toReadableString() },
-            selectedItem = viewModel.settingsState.audioRecordChannels,
+            selectedItem = viewModel.uiState.audioRecordChannels,
             onSelectedChange = { viewModel.setAudioRecordChannels(it) }
         )
 
@@ -115,7 +111,7 @@ private fun AudioRecordAPIPreference(viewModel: ISettingsViewModel) {
             title = "Encoding",
             keys = PcmEncoding.values().asList(),
             keyToTextMapper = { it.toReadableString() },
-            selectedItem = viewModel.settingsState.audioRecordEncoding,
+            selectedItem = viewModel.uiState.audioRecordEncoding,
             onSelectedChange = { viewModel.setAudioRecordEncoding(it) }
         )
     }

@@ -27,7 +27,6 @@ import com.redridgeapps.callrecorder.ui.main.MainDestination
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.utils.PermissionsManager
 import com.redridgeapps.callrecorder.ui.utils.fetchViewModel
-import com.redridgeapps.repository.viewmodel.IFirstRunViewModel
 
 @Model
 class FirstRunState(
@@ -36,24 +35,21 @@ class FirstRunState(
     var captureAudioOutputPermissionGranted: Boolean? = null
 )
 
-private val IFirstRunViewModel.firstRunState: FirstRunState
-    get() = uiState as FirstRunState
-
 object FirstRunDestination : Destination {
 
     @Composable
     override fun initializeUI() {
 
-        val viewModel = fetchViewModel<IFirstRunViewModel>()
+        val viewModel = fetchViewModel<FirstRunViewModel>()
 
         FirstRunUI(viewModel)
     }
 }
 
 @Composable
-private fun FirstRunUI(viewModel: IFirstRunViewModel) {
+private fun FirstRunUI(viewModel: FirstRunViewModel) {
 
-    with(viewModel.firstRunState) {
+    with(viewModel.uiState) {
         if (isAppSystemized == true && permissionsGranted == true && captureAudioOutputPermissionGranted == true)
             configurationFinished(viewModel, BackStackAmbient.current)
     }
@@ -80,13 +76,13 @@ private fun FirstRunUI(viewModel: IFirstRunViewModel) {
     }
 }
 
-private fun configurationFinished(viewModel: IFirstRunViewModel, backStack: BackStack<Any>) {
+private fun configurationFinished(viewModel: FirstRunViewModel, backStack: BackStack<Any>) {
     viewModel.configurationFinished()
     backStack.push(MainDestination)
 }
 
 @Composable
-private fun SystemizationConfig(viewModel: IFirstRunViewModel) {
+private fun SystemizationConfig(viewModel: FirstRunViewModel) {
     Column {
 
         Text(text = "Systemization", style = MaterialTheme.typography.h6)
@@ -100,7 +96,7 @@ private fun SystemizationConfig(viewModel: IFirstRunViewModel) {
 
         Spacer(modifier = Modifier.preferredHeight(10.dp))
 
-        Crossfade(current = viewModel.firstRunState.isAppSystemized) { isAppSystemized ->
+        Crossfade(current = viewModel.uiState.isAppSystemized) { isAppSystemized ->
             when (isAppSystemized) {
                 null -> CircularProgressIndicator()
                 true -> Text(text = "✔ App is systemized")
@@ -111,7 +107,7 @@ private fun SystemizationConfig(viewModel: IFirstRunViewModel) {
 }
 
 @Composable
-private fun PermissionsConfig(viewModel: IFirstRunViewModel) {
+private fun PermissionsConfig(viewModel: FirstRunViewModel) {
     Column {
 
         Text(text = "Permissions", style = MaterialTheme.typography.h6)
@@ -134,12 +130,12 @@ private fun PermissionsConfig(viewModel: IFirstRunViewModel) {
         val permissionsManager = PermissionsManager()
 
         onActive {
-            viewModel.firstRunState.permissionsGranted =
+            viewModel.uiState.permissionsGranted =
                 permissionsManager.getUnGrantedPermissions().isEmpty()
         }
 
         Crossfade(
-            current = viewModel.firstRunState.permissionsGranted
+            current = viewModel.uiState.permissionsGranted
         ) { permissionsGranted ->
 
             permissionsGranted ?: return@Crossfade
@@ -150,7 +146,7 @@ private fun PermissionsConfig(viewModel: IFirstRunViewModel) {
 
                 val onClick = {
                     permissionsManager.requestPermissions { result ->
-                        viewModel.firstRunState.permissionsGranted = result.denied.isEmpty()
+                        viewModel.uiState.permissionsGranted = result.denied.isEmpty()
                     }
                 }
 
@@ -163,7 +159,7 @@ private fun PermissionsConfig(viewModel: IFirstRunViewModel) {
 }
 
 @Composable
-private fun CaptureAudioConfig(viewModel: IFirstRunViewModel) {
+private fun CaptureAudioConfig(viewModel: FirstRunViewModel) {
     Column {
 
         Text(text = "Permission CAPTURE_AUDIO_OUTPUT", style = MaterialTheme.typography.h6)
@@ -182,12 +178,12 @@ private fun CaptureAudioConfig(viewModel: IFirstRunViewModel) {
         val permissionsManager = PermissionsManager()
 
         onActive {
-            viewModel.firstRunState.captureAudioOutputPermissionGranted =
+            viewModel.uiState.captureAudioOutputPermissionGranted =
                 permissionsManager.checkPermissionGranted(Manifest.permission.CAPTURE_AUDIO_OUTPUT)
         }
 
         Crossfade(
-            current = viewModel.firstRunState.captureAudioOutputPermissionGranted
+            current = viewModel.uiState.captureAudioOutputPermissionGranted
         ) { permissionGranted ->
 
             permissionGranted ?: return@Crossfade

@@ -9,9 +9,8 @@ import com.redridgeapps.callrecorder.ui.main.Playback.PAUSED
 import com.redridgeapps.callrecorder.ui.main.Playback.PLAYING
 import com.redridgeapps.callrecorder.ui.main.Playback.STOPPED
 import com.redridgeapps.callrecorder.utils.launchNoJob
-import com.redridgeapps.repository.toLocalDate
-import com.redridgeapps.repository.toLocalDateTime
-import com.redridgeapps.repository.viewmodel.IMainViewModel
+import com.redridgeapps.callrecorder.utils.toLocalDate
+import com.redridgeapps.callrecorder.utils.toLocalDateTime
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.time.Duration
@@ -22,7 +21,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val recordings: Recordings,
     private val callPlayback: CallPlayback
-) : ViewModel(), IMainViewModel {
+) : ViewModel() {
 
     init {
 
@@ -34,9 +33,9 @@ class MainViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    override val uiState = MainState()
+    val uiState = MainState()
 
-    override fun startPlayback(recordingId: Int) = viewModelScope.launchNoJob {
+    fun startPlayback(recordingId: Int) = viewModelScope.launchNoJob {
 
         val playbackStatus = uiState.playback
 
@@ -54,22 +53,22 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    override fun pausePlayback(recordingId: Int) {
+    fun pausePlayback(recordingId: Int) {
         uiState.playback = PAUSED(recordingId)
         callPlayback.pausePlayback()
     }
 
-    override fun stopPlayback() {
+    fun stopPlayback() {
         uiState.playback = STOPPED
         callPlayback.stopPlayback()
     }
 
-    override fun convertToMp3() = viewModelScope.launchNoJob {
+    fun convertToMp3() = viewModelScope.launchNoJob {
         recordings.convertToMp3(uiState.selection.single())
         uiState.selection.clear()
     }
 
-    override fun deleteRecordings() = viewModelScope.launchNoJob {
+    fun deleteRecordings() = viewModelScope.launchNoJob {
         uiState.selection.forEach {
             recordings.deleteRecording(it)
         }

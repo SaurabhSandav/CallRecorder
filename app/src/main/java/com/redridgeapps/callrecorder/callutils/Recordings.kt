@@ -5,17 +5,15 @@ import android.os.Environment
 import androidx.core.content.ContextCompat
 import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.RecordingQueries
+import com.redridgeapps.callrecorder.callutils.PcmEncoding.PCM_16BIT
+import com.redridgeapps.callrecorder.callutils.PcmEncoding.PCM_8BIT
+import com.redridgeapps.callrecorder.callutils.PcmEncoding.PCM_FLOAT
 import com.redridgeapps.callrecorder.utils.extension
 import com.redridgeapps.callrecorder.utils.nameWithoutExtension
 import com.redridgeapps.mp3encoder.EncodingJob
 import com.redridgeapps.mp3encoder.Mp3Encoder
-import com.redridgeapps.repository.callutils.CallDirection
-import com.redridgeapps.repository.callutils.PcmEncoding
-import com.redridgeapps.repository.callutils.PcmEncoding.PCM_16BIT
-import com.redridgeapps.repository.callutils.PcmEncoding.PCM_8BIT
-import com.redridgeapps.repository.callutils.PcmEncoding.PCM_FLOAT
 import com.redridgeapps.wavutils.WavData
-import com.redridgeapps.wavutils.WavFileUtils.readWavData
+import com.redridgeapps.wavutils.WavFileUtils
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import com.squareup.sqldelight.runtime.coroutines.mapToOne
@@ -124,11 +122,10 @@ class Recordings @Inject constructor(
     }
 
     private suspend fun getWavData(recordingId: Int): WavData = withContext(Dispatchers.IO) {
-
         val recording = recordingQueries.getWithId(recordingId).asFlow().mapToOne().first()
         val recordingPath = Paths.get(recording.save_path)
         val fileChannel = FileChannel.open(recordingPath, StandardOpenOption.READ)
 
-        return@withContext fileChannel.use { readWavData(fileChannel) }
+        return@withContext fileChannel.use { WavFileUtils.readWavData(fileChannel) }
     }
 }

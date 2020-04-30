@@ -2,15 +2,14 @@ package com.redridgeapps.callrecorder.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelStore
-import com.redridgeapps.repository.viewmodel.utils.IComposeViewModelStores
 import timber.log.Timber
 import java.util.*
 
-class ComposeViewModelStores : ViewModel(), IComposeViewModelStores {
+class ComposeViewModelStores : ViewModel() {
 
     private val viewModelStores = HashMap<String, ViewModelStore>()
 
-    override fun addViewModelStore(key: String) {
+    fun addViewModelStore(key: String) {
 
         val viewModelStore = viewModelStores[key]
 
@@ -22,7 +21,7 @@ class ComposeViewModelStores : ViewModel(), IComposeViewModelStores {
         }
     }
 
-    override fun removeViewModelStore(key: String) {
+    fun removeViewModelStore(key: String) {
         val viewModelStore = viewModelStores[key]
 
         if (viewModelStore != null) {

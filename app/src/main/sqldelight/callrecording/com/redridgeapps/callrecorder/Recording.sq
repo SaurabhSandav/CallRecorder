@@ -1,4 +1,4 @@
-import com.redridgeapps.repository.callutils.CallDirection;
+import com.redridgeapps.callrecorder.callutils.CallDirection;
 import java.time.Instant;
 
 CREATE TABLE IF NOT EXISTS Recording (
