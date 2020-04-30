@@ -4,12 +4,12 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.redridgeapps.callrecorder.ui.root.showUI
+import com.redridgeapps.callrecorder.ui.routing.composeHandleBackPressed
 import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_FIRST_RUN
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import com.redridgeapps.callrecorder.viewmodel.ComposeViewModelStores
 import com.redridgeapps.callrecorder.viewmodel.utils.ComposeViewModelFetcherFactory
-import com.redridgeapps.ui.routing.composeHandleBackPressed
-import com.redridgeapps.ui.showUI
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.launch
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-package com.redridgeapps.ui.utils
+package com.redridgeapps.callrecorder.ui.utils
 
 import androidx.compose.Composable
 import androidx.compose.MutableState

@@ -1,19 +1,17 @@
-package com.redridgeapps.callrecorder.viewmodel
+package com.redridgeapps.callrecorder.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.callutils.CallPlayback
 import com.redridgeapps.callrecorder.callutils.Recordings
+import com.redridgeapps.callrecorder.ui.main.Playback.PAUSED
+import com.redridgeapps.callrecorder.ui.main.Playback.PLAYING
+import com.redridgeapps.callrecorder.ui.main.Playback.STOPPED
 import com.redridgeapps.callrecorder.utils.launchNoJob
 import com.redridgeapps.repository.toLocalDate
 import com.redridgeapps.repository.toLocalDateTime
 import com.redridgeapps.repository.viewmodel.IMainViewModel
-import com.redridgeapps.ui.MainState
-import com.redridgeapps.ui.Playback.PAUSED
-import com.redridgeapps.ui.Playback.PLAYING
-import com.redridgeapps.ui.Playback.STOPPED
-import com.redridgeapps.ui.RecordingListItem
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.time.Duration

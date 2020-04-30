@@ -1,4 +1,4 @@
-package com.redridgeapps.ui
+package com.redridgeapps.callrecorder.ui.settings
 
 import androidx.compose.Composable
 import androidx.compose.Model
@@ -14,15 +14,15 @@ import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.ArrowBack
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
+import com.redridgeapps.callrecorder.ui.routing.Destination
+import com.redridgeapps.callrecorder.ui.utils.SingleSelectListPreference
+import com.redridgeapps.callrecorder.ui.utils.SwitchPreference
+import com.redridgeapps.callrecorder.ui.utils.TitlePreference
+import com.redridgeapps.callrecorder.ui.utils.fetchViewModel
 import com.redridgeapps.repository.callutils.PcmChannels
 import com.redridgeapps.repository.callutils.PcmEncoding
 import com.redridgeapps.repository.callutils.PcmSampleRate
 import com.redridgeapps.repository.viewmodel.ISettingsViewModel
-import com.redridgeapps.ui.routing.Destination
-import com.redridgeapps.ui.utils.SingleSelectListPreference
-import com.redridgeapps.ui.utils.SwitchPreference
-import com.redridgeapps.ui.utils.TitlePreference
-import com.redridgeapps.ui.utils.fetchViewModel
 
 @Model
 class SettingsState(

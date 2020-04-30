@@ -1,4 +1,4 @@
-package com.redridgeapps.ui
+package com.redridgeapps.callrecorder.ui.firstrun
 
 import android.Manifest
 import androidx.compose.Composable
@@ -23,10 +23,11 @@ import androidx.ui.material.TopAppBar
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
 import com.koduok.compose.navigation.core.BackStack
+import com.redridgeapps.callrecorder.ui.main.MainDestination
+import com.redridgeapps.callrecorder.ui.routing.Destination
+import com.redridgeapps.callrecorder.ui.utils.PermissionsManager
+import com.redridgeapps.callrecorder.ui.utils.fetchViewModel
 import com.redridgeapps.repository.viewmodel.IFirstRunViewModel
-import com.redridgeapps.ui.routing.Destination
-import com.redridgeapps.ui.utils.PermissionsManager
-import com.redridgeapps.ui.utils.fetchViewModel
 
 @Model
 class FirstRunState(

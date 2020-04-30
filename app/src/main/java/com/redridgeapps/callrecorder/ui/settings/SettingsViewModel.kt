@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.viewmodel
+package com.redridgeapps.callrecorder.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,7 +14,6 @@ import com.redridgeapps.repository.callutils.PcmChannels
 import com.redridgeapps.repository.callutils.PcmEncoding
 import com.redridgeapps.repository.callutils.PcmSampleRate
 import com.redridgeapps.repository.viewmodel.ISettingsViewModel
-import com.redridgeapps.ui.SettingsState
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
