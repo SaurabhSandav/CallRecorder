@@ -8,24 +8,11 @@ import java.nio.ByteOrder
 import java.nio.channels.FileChannel
 import java.nio.file.StandardOpenOption
 
-class Mp3Encoder {
+object Mp3Encoder {
 
-    fun convertWavPcm8ToMP3(encodingJob: EncodingJob) {
-        convertCommon(encodingJob = encodingJob, encoder = Pcm8Mp3Encoder)
-    }
+    fun <T : Buffer> encode(encoder: TypedMP3Encoder<T>) {
 
-    fun convertWavPcm16ToMP3(encodingJob: EncodingJob) {
-        convertCommon(encodingJob = encodingJob, encoder = Pcm16Mp3Encoder)
-    }
-
-    fun convertWavPcmFloatToMP3(encodingJob: EncodingJob) {
-        convertCommon(encodingJob = encodingJob, encoder = PcmFloatMp3Encoder)
-    }
-
-    private fun <T : Buffer> convertCommon(
-        encodingJob: EncodingJob,
-        encoder: TypedMP3Encoder<T>
-    ) {
+        val encodingJob = encoder.encodingJob
 
         // Open files
         FileChannel.open(encodingJob.wavPath, StandardOpenOption.READ).use { inputChannel ->

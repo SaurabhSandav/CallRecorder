@@ -12,6 +12,9 @@ import com.redridgeapps.callrecorder.utils.extension
 import com.redridgeapps.callrecorder.utils.nameWithoutExtension
 import com.redridgeapps.mp3encoder.EncodingJob
 import com.redridgeapps.mp3encoder.Mp3Encoder
+import com.redridgeapps.mp3encoder.Pcm16Mp3Encoder
+import com.redridgeapps.mp3encoder.Pcm8Mp3Encoder
+import com.redridgeapps.mp3encoder.PcmFloatMp3Encoder
 import com.redridgeapps.wavutils.WavData
 import com.redridgeapps.wavutils.WavFileUtils
 import com.squareup.sqldelight.runtime.coroutines.asFlow
@@ -75,27 +78,19 @@ class Recordings @Inject constructor(
         val outputPath =
             recordingPath.parent.resolve("${recordingPath.fileName.nameWithoutExtension}.mp3")
 
-        val mp3Encoder = Mp3Encoder()
-
         val encodingJob = EncodingJob(
             wavData = wavData,
             wavPath = recordingPath,
             mp3Path = outputPath
         )
 
-        when (PcmEncoding.valueOf(wavData.bitsPerSample)) {
-            PCM_8BIT -> {
-                val newWavData = wavData.copy(
-                    fileSize = (wavData.fileSize * 2) - 44,
-                    byteRate = (wavData.channels * wavData.bitsPerSample * wavData.sampleRate) / 8,
-                    blockAlign = (wavData.channels * wavData.bitsPerSample) / 8,
-                    bitsPerSample = 16
-                )
-                mp3Encoder.convertWavPcm8ToMP3(encodingJob.copy(wavData = newWavData))
-            }
-            PCM_16BIT -> mp3Encoder.convertWavPcm16ToMP3(encodingJob)
-            PCM_FLOAT -> mp3Encoder.convertWavPcmFloatToMP3(encodingJob)
+        val encoder = when (PcmEncoding.valueOf(wavData.bitsPerSample)) {
+            PCM_8BIT -> Pcm8Mp3Encoder(encodingJob)
+            PCM_16BIT -> Pcm16Mp3Encoder(encodingJob)
+            PCM_FLOAT -> PcmFloatMp3Encoder(encodingJob)
         }
+
+        Mp3Encoder.encode(encoder)
 
         return@withContext
     }
