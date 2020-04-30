@@ -1,4 +1,4 @@
-package com.redridgeapps.mp3encoding
+package com.redridgeapps.mp3encoder
 
 // Used in rust through JNI
 @Suppress("unused")

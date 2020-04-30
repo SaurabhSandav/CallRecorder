@@ -7,8 +7,8 @@ import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.RecordingQueries
 import com.redridgeapps.callrecorder.utils.extension
 import com.redridgeapps.callrecorder.utils.nameWithoutExtension
-import com.redridgeapps.mp3encoding.EncodingJob
-import com.redridgeapps.mp3encoding.Mp3Encoder
+import com.redridgeapps.mp3encoder.EncodingJob
+import com.redridgeapps.mp3encoder.Mp3Encoder
 import com.redridgeapps.repository.callutils.CallDirection
 import com.redridgeapps.repository.callutils.PcmEncoding
 import com.redridgeapps.repository.callutils.PcmEncoding.PCM_16BIT

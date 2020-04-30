@@ -62,7 +62,7 @@ dependencies {
     coreLibraryDesugaring AndroidTools.DESUGAR_JDK_LIBS
 
     implementation project(":repository")
-    implementation project(":mp3encoding")
+    implementation project(":mp3_encoder")
     implementation project(":wav_utils")
 
     // Kotlin
