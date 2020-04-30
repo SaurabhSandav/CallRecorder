@@ -1,3 +1,4 @@
+include ':wav_utils'
 include ':mp3encoding'
 include ':repository'
 include ':app'

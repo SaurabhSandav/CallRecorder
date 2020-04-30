@@ -1,16 +1,10 @@
-package com.redridgeapps.callrecorder.callutils
+package com.redridgeapps.wavutils
 
-import com.redridgeapps.repository.callutils.PcmEncoding
-import com.redridgeapps.repository.callutils.WavData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.channels.FileChannel
-import java.nio.file.Path
-import java.nio.file.StandardOpenOption.CREATE_NEW
-import java.nio.file.StandardOpenOption.READ
-import java.nio.file.StandardOpenOption.WRITE
 
 object WavFileUtils {
 
@@ -66,55 +60,6 @@ object WavFileUtils {
 
         byteBuffer.limit(byteBuffer.capacity())
         fileChannel.write(byteBuffer, 40)
-
-        return@withContext
-    }
-
-    suspend fun convertWav8BitTo16Bit(
-        inputFilePath: Path,
-        outputFilePath: Path
-    ) = withContext(Dispatchers.IO) {
-
-        FileChannel.open(outputFilePath, CREATE_NEW, WRITE).use { outputChannel ->
-
-            val inputChannel = FileChannel.open(inputFilePath, READ)
-            val input8BitWavData = readWavData(inputChannel)
-
-            if (input8BitWavData.bitsPerSample != PcmEncoding.PCM_8BIT.bitsPerSample) return@withContext
-
-            writeHeader(
-                fileChannel = outputChannel,
-                sampleRate = input8BitWavData.sampleRate,
-                channelCount = input8BitWavData.channels,
-                bitsPerSample = 16
-            )
-
-            inputChannel.position(44)
-
-            val bufferSize = 1024
-            val input = ByteBuffer.allocateDirect(bufferSize).order(ByteOrder.LITTLE_ENDIAN)
-            val output = ByteBuffer.allocateDirect(bufferSize * 2).order(ByteOrder.LITTLE_ENDIAN)
-
-            var read = inputChannel.read(input)
-
-            while (read != -1) {
-
-                input.flip()
-                while (input.hasRemaining()) {
-                    val short = ((input.get() - 0x80) shl 8).toShort()
-                    output.putShort(short)
-                }
-                input.clear()
-
-                output.flip()
-                outputChannel.write(output)
-                output.clear()
-
-                read = inputChannel.read(input)
-            }
-
-            updateHeaderWithSize(outputChannel)
-        }
 
         return@withContext
     }

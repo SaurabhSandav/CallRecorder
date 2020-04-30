@@ -1,6 +1,6 @@
 package com.redridgeapps.mp3encoding
 
-import com.redridgeapps.repository.callutils.WavData
+import com.redridgeapps.wavutils.WavData
 import java.nio.file.Path
 
 data class EncodingJob(

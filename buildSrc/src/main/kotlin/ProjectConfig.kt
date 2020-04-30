@@ -14,6 +14,7 @@ object Kotlin {
 
     const val GRADLE_PLUGIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:$VERSION"
     const val STDLIB = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$VERSION"
+    const val COROUTINES_CORE = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$COROUTINES_VERSION"
     const val COROUTINES_ANDROID =
         "org.jetbrains.kotlinx:kotlinx-coroutines-android:$COROUTINES_VERSION"
 }

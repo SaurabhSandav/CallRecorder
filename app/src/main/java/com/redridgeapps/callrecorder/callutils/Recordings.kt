@@ -14,7 +14,8 @@ import com.redridgeapps.repository.callutils.PcmEncoding
 import com.redridgeapps.repository.callutils.PcmEncoding.PCM_16BIT
 import com.redridgeapps.repository.callutils.PcmEncoding.PCM_8BIT
 import com.redridgeapps.repository.callutils.PcmEncoding.PCM_FLOAT
-import com.redridgeapps.repository.callutils.WavData
+import com.redridgeapps.wavutils.WavData
+import com.redridgeapps.wavutils.WavFileUtils.readWavData
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import com.squareup.sqldelight.runtime.coroutines.mapToOne
@@ -123,12 +124,11 @@ class Recordings @Inject constructor(
     }
 
     private suspend fun getWavData(recordingId: Int): WavData = withContext(Dispatchers.IO) {
+
         val recording = recordingQueries.getWithId(recordingId).asFlow().mapToOne().first()
         val recordingPath = Paths.get(recording.save_path)
         val fileChannel = FileChannel.open(recordingPath, StandardOpenOption.READ)
 
-        fileChannel.use {
-            return@withContext WavFileUtils.readWavData(fileChannel)
-        }
+        return@withContext fileChannel.use { readWavData(fileChannel) }
     }
 }

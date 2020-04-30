@@ -63,6 +63,7 @@ dependencies {
 
     implementation project(":repository")
     implementation project(":mp3encoding")
+    implementation project(":wav_utils")
 
     // Kotlin
     implementation Kotlin.STDLIB

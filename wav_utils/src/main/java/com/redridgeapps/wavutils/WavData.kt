@@ -1,4 +1,4 @@
-package com.redridgeapps.repository.callutils
+package com.redridgeapps.wavutils
 
 data class WavData(
     val fileSize: Int,
