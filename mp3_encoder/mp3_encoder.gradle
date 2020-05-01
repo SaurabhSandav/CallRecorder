@@ -36,7 +36,7 @@ dependencies {
 }
 
 cargo {
-    module  = "../../lame_wrapper/"
+    module  = "../lame_wrapper/"
     libname = "lame_wrapper"
     targets = ["arm", "x86", "x86_64", "arm64"]
 }
