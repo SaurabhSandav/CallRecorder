@@ -73,6 +73,7 @@ class MainViewModel @Inject constructor(
             recordings.deleteRecording(it)
         }
         uiState.selection.clear()
+        uiState.selectionMode = true
     }
 
     override fun onCleared() {
