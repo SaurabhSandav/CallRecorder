@@ -6,6 +6,7 @@ import androidx.compose.frames.modelListOf
 import androidx.compose.key
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.Modifier
+import androidx.ui.core.gesture.longPressGestureFilter
 import androidx.ui.foundation.AdapterList
 import androidx.ui.foundation.Box
 import androidx.ui.foundation.ContentGravity
@@ -26,12 +27,11 @@ import androidx.ui.material.MaterialTheme
 import androidx.ui.material.Scaffold
 import androidx.ui.material.TopAppBar
 import androidx.ui.material.icons.Icons
-import androidx.ui.material.icons.filled.Ballot
+import androidx.ui.material.icons.filled.Close
 import androidx.ui.material.icons.filled.Delete
 import androidx.ui.material.icons.filled.PauseCircleOutline
 import androidx.ui.material.icons.filled.PlayCircleOutline
 import androidx.ui.material.icons.filled.Settings
-import androidx.ui.material.icons.outlined.Ballot
 import androidx.ui.text.style.TextOverflow
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
@@ -98,11 +98,13 @@ private fun MainTopAppBar(viewModel: MainViewModel) {
         title = { Text(text = "Call Recorder", modifier = Modifier.padding(bottom = 16.dp)) },
         actions = {
 
-            if (viewModel.uiState.selectionMode && viewModel.uiState.selection.isNotEmpty())
-                IconDelete(viewModel)
-
-            IconSelectionMode(viewModel)
-            IconSettings()
+            when {
+                viewModel.uiState.selectionMode -> {
+                    IconDelete(viewModel)
+                    IconCloseSelectionMode(viewModel)
+                }
+                else -> IconSettings()
+            }
         }
     )
 }
@@ -116,20 +118,15 @@ private fun IconDelete(viewModel: MainViewModel) {
 }
 
 @Composable
-private fun IconSelectionMode(viewModel: MainViewModel) {
+private fun IconCloseSelectionMode(viewModel: MainViewModel) {
 
     val onClick = {
-        val selectionMode = viewModel.uiState.selectionMode
-        if (selectionMode) viewModel.uiState.selection.clear()
-        viewModel.uiState.selectionMode = !selectionMode
+        viewModel.uiState.selection.clear()
+        viewModel.uiState.selectionMode = false
     }
 
     IconButton(onClick) {
-
-        if (viewModel.uiState.selectionMode)
-            Icon(Icons.Filled.Ballot)
-        else
-            Icon(Icons.Outlined.Ballot)
+        Icon(Icons.Default.Close)
     }
 }
 
@@ -205,12 +202,18 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
 
         val onClick = {
             if (viewModel.uiState.selectionMode)
-                viewModel.uiState.selection.addOrRemove(recordingEntry.id)
+                viewModel.uiState.addOrRemoveSelection(recordingEntry.id)
             else
-                viewModel.uiState.selection.clearAndAdd(recordingEntry.id)
+                viewModel.uiState.clearAndAddSelection(recordingEntry.id)
+        }
+
+        val modifier = Modifier.longPressGestureFilter {
+            viewModel.uiState.selectionMode = true
+            viewModel.uiState.selection.add(recordingEntry.id)
         }
 
         ListItem(
+            modifier = modifier,
             onClick = onClick,
             icon = { PlayPauseIcon(viewModel, recordingEntry.id) },
             secondaryText = { SingleLineText(recordingEntry.number) },
@@ -282,11 +285,18 @@ private fun OptionsDialog(viewModel: MainViewModel) {
     }
 }
 
-private fun <T> MutableList<T>.addOrRemove(item: T) {
-    if (item in this) remove(item) else add(item)
+private fun MainState.addOrRemoveSelection(item: Int) {
+
+    when (item) {
+        in selection -> selection.remove(item)
+        else -> selection.add(item)
+    }
+
+    if (selection.isEmpty())
+        selectionMode = false
 }
 
-private fun <T> MutableList<T>.clearAndAdd(item: T) {
-    clear()
-    add(item)
+private fun MainState.clearAndAddSelection(item: Int) {
+    selection.clear()
+    selection.add(item)
 }
