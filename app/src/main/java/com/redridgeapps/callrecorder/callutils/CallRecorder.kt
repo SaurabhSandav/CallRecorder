@@ -112,16 +112,12 @@ class CallRecorder @Inject constructor(
 
         FileChannel.open(savePath, CREATE_NEW, WRITE).use { channel ->
 
+            // Skip header for now
+            channel.position(44)
+
             val encoding =
                 PcmEncoding.values().first { it.toAudioRecordEncoding() == recorder!!.audioFormat }
             val bitsPerSample = encoding.bitsPerSample
-
-            WavFileUtils.writeHeader(
-                fileChannel = channel,
-                sampleRate = recorder!!.sampleRate,
-                channelCount = recorder!!.channelCount,
-                bitsPerSample = bitsPerSample
-            )
 
             val byteBuffer = ByteBuffer.allocateDirect(bufferSize)
 
@@ -142,7 +138,12 @@ class CallRecorder @Inject constructor(
                 channel.write(byteBuffer)
             }
 
-            WavFileUtils.updateHeaderWithSize(channel)
+            WavFileUtils.writeHeader(
+                fileChannel = channel,
+                sampleRate = recorder!!.sampleRate,
+                channelCount = recorder!!.channelCount,
+                bitsPerSample = bitsPerSample
+            )
         }
 
         return@withContext
