@@ -23,6 +23,7 @@ import com.redridgeapps.callrecorder.callutils.CallStatus.MissedCall
 import com.redridgeapps.callrecorder.callutils.CallStatus.OutgoingCallEnded
 import com.redridgeapps.callrecorder.callutils.CallStatus.OutgoingCallStarted
 import com.redridgeapps.callrecorder.callutils.CallStatusListener
+import com.redridgeapps.callrecorder.callutils.RecordingJob
 import com.redridgeapps.callrecorder.utils.NOTIFICATION_CALL_SERVICE_ID
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import dagger.android.AndroidInjection
@@ -78,18 +79,18 @@ class CallingService : LifecycleService() {
         super.onDestroy()
 
         telephonyManager.listen(callStatusListener, PhoneStateListener.LISTEN_NONE)
-        callRecorder.releaseRecorder()
+        callRecorder.stopRecording()
     }
 
     private fun createCallStatusListener() =
         CallStatusListener { status, phoneNumber, callDirection ->
             when (status) {
                 MissedCall, IncomingCallReceived -> Unit
-                IncomingCallAnswered, OutgoingCallStarted -> lifecycleScope.launch { callRecorder.startRecording() }
-                IncomingCallEnded, OutgoingCallEnded -> callRecorder.stopRecording(
-                    phoneNumber,
-                    callDirection
-                )
+                IncomingCallAnswered, OutgoingCallStarted -> lifecycleScope.launch {
+                    val job = RecordingJob(applicationContext, prefs, phoneNumber, callDirection)
+                    callRecorder.startRecording(job)
+                }
+                IncomingCallEnded, OutgoingCallEnded -> callRecorder.stopRecording()
             }
         }
 

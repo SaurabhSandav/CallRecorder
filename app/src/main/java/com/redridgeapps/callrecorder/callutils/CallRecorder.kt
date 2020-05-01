@@ -1,16 +1,11 @@
 package com.redridgeapps.callrecorder.callutils
 
 import android.media.AudioRecord
-import android.media.MediaRecorder
+import android.media.MediaRecorder.AudioSource
 import android.os.PowerManager
 import com.redridgeapps.callrecorder.utils.ToastMaker
-import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_CHANNELS
-import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_ENCODING
-import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_SAMPLE_RATE
-import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import com.redridgeapps.wavutils.WavFileUtils
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.nio.ByteBuffer
@@ -19,57 +14,41 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption.CREATE_NEW
 import java.nio.file.StandardOpenOption.WRITE
-import java.time.Instant
 import javax.inject.Inject
 
 class CallRecorder @Inject constructor(
     powerManager: PowerManager,
-    private val prefs: Prefs,
     private val toastMaker: ToastMaker,
     private val recordings: Recordings
 ) {
 
-    private val saveFileExt = "wav"
     private val wakeLock = powerManager.newWakeLock(
         PowerManager.PARTIAL_WAKE_LOCK,
         javaClass.simpleName
     )
 
     private var recorder: AudioRecord? = null
+    private var recordingJob: RecordingJob? = null
     private var isRecording = false
-    private var savePath: Path? = null
-    private var recordingStartInstant: Instant = Instant.MIN
-    private var recordingEndInstant: Instant = Instant.MIN
 
-    suspend fun startRecording() = withContext(Dispatchers.IO) {
+    suspend fun startRecording(recordingJob: RecordingJob) = withContext(Dispatchers.IO) {
+
+        this@CallRecorder.recordingJob = recordingJob
 
         withContext(Dispatchers.Main) {
             toastMaker.newToast("Started recording").show()
             acquireWakeLock()
         }
 
-        savePath = recordings.generateFilePath(saveFileExt)
-        recordingStartInstant = Instant.now()
+        val sampleRate = recordingJob.pcmSampleRate.sampleRate
+        val channel = recordingJob.pcmChannels.toAudioRecordChannel()
+        val encoding = recordingJob.pcmEncoding.toAudioRecordEncoding()
 
-        val sampleRate = async { prefs.get(PREF_AUDIO_RECORD_SAMPLE_RATE).sampleRate }
-        val audioChannel = async { prefs.get(PREF_AUDIO_RECORD_CHANNELS).toAudioRecordChannels() }
-        val audioEncoding = async { prefs.get(PREF_AUDIO_RECORD_ENCODING).toAudioRecordEncoding() }
+        val bufferSize = AudioRecord.getMinBufferSize(sampleRate, channel, encoding) + BUFFER_ADDER
 
-        val bufferSize = AudioRecord.getMinBufferSize(
-            sampleRate.await(),
-            audioChannel.await(),
-            audioEncoding.await()
-        )
-
-        recorder = AudioRecord(
-            MediaRecorder.AudioSource.VOICE_CALL,
-            sampleRate.await(),
-            audioChannel.await(),
-            audioEncoding.await(),
-            bufferSize
-        )
-
+        recorder = AudioRecord(AudioSource.VOICE_CALL, sampleRate, channel, encoding, bufferSize)
         recorder!!.startRecording()
+
         isRecording = true
 
         writeAudioDataToWavFile(bufferSize)
@@ -77,47 +56,34 @@ class CallRecorder @Inject constructor(
         return@withContext
     }
 
-    fun stopRecording(phoneNumber: String, callDirection: CallDirection) {
+    fun stopRecording() {
+
+        recorder ?: return
+
+        recorder!!.stop()
+        recorder!!.release()
 
         isRecording = false
 
-        recorder?.apply {
-            stop()
-            release()
-        }
-
         recorder = null
-        recordingEndInstant = Instant.now()
+        recordingJob = null
 
         releaseWakeLock()
         toastMaker.newToast("Stopped recording").show()
 
         recordings.saveRecording(
-            phoneNumber,
-            callDirection,
-            recordingStartInstant,
-            recordingEndInstant,
-            savePath!!
+            recordingJob!!.phoneNumber,
+            recordingJob!!.callDirection,
+            recordingJob!!.savePath
         )
-    }
-
-    fun releaseRecorder() {
-        recorder?.release()
-        recorder = null
-
-        releaseWakeLock()
     }
 
     private suspend fun writeAudioDataToWavFile(bufferSize: Int) = withContext(Dispatchers.IO) {
 
-        FileChannel.open(savePath, CREATE_NEW, WRITE).use { channel ->
+        FileChannel.open(recordingJob!!.savePath, CREATE_NEW, WRITE).use { channel ->
 
             // Skip header for now
             channel.position(44)
-
-            val encoding =
-                PcmEncoding.values().first { it.toAudioRecordEncoding() == recorder!!.audioFormat }
-            val bitsPerSample = encoding.bitsPerSample
 
             val byteBuffer = ByteBuffer.allocateDirect(bufferSize)
 
@@ -130,7 +96,7 @@ class CallRecorder @Inject constructor(
                     AudioRecord.READ_BLOCKING
                 )
 
-                crashIfError(bytesRead)
+                crashIfError(bytesRead, recordingJob!!.savePath)
 
                 byteBuffer.position(bytesRead)
                 byteBuffer.flip()
@@ -140,37 +106,32 @@ class CallRecorder @Inject constructor(
 
             WavFileUtils.writeHeader(
                 fileChannel = channel,
-                sampleRate = recorder!!.sampleRate,
-                channelCount = recorder!!.channelCount,
-                bitsPerSample = bitsPerSample
+                sampleRate = recordingJob!!.pcmSampleRate.sampleRate,
+                channelCount = recordingJob!!.pcmChannels.channelCount,
+                bitsPerSample = recordingJob!!.pcmEncoding.bitsPerSample
             )
         }
 
         return@withContext
     }
 
-    private suspend fun crashIfError(bytesRead: Int) = withContext(Dispatchers.IO) {
+    private suspend fun crashIfError(bytesRead: Int, savePath: Path) = withContext(Dispatchers.IO) {
 
-        val errorStr: String? = when (bytesRead) {
+        val errorStr = when (bytesRead) {
             AudioRecord.ERROR_INVALID_OPERATION -> "AudioRecord: ERROR_INVALID_OPERATION"
             AudioRecord.ERROR_BAD_VALUE -> "AudioRecord: ERROR_BAD_VALUE"
             AudioRecord.ERROR_DEAD_OBJECT -> "AudioRecord: ERROR_DEAD_OBJECT"
-            else -> null
+            else -> return@withContext
         }
 
-        errorStr?.let {
-
-            withContext(Dispatchers.Main) {
-                toastMaker.newToast("Call recording stopped with error")
-                Timber.d(it)
-            }
-
-            Files.delete(savePath)
-
-            error(it)
+        withContext(Dispatchers.Main) {
+            toastMaker.newToast("Call recording stopped with error")
+            Timber.d(errorStr)
         }
 
-        return@withContext
+        Files.delete(savePath)
+
+        error(errorStr)
     }
 
     private fun acquireWakeLock() {
@@ -183,3 +144,5 @@ class CallRecorder @Inject constructor(
             wakeLock.release()
     }
 }
+
+private const val BUFFER_ADDER = 4096

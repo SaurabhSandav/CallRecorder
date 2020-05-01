@@ -109,4 +109,4 @@ object Mp3Encoder {
     }
 }
 
-const val BUFFER_MULTIPLIER = 4096
+private const val BUFFER_MULTIPLIER = 4096

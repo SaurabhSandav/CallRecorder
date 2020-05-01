@@ -35,21 +35,13 @@ import javax.inject.Singleton
 
 @Singleton
 class Recordings @Inject constructor(
-    private val context: Context,
     private val recordingQueries: RecordingQueries,
     private val contactNameFetcher: ContactNameFetcher
 ) {
 
-    fun generateFilePath(saveFileExt: String): Path {
-        val fileName = "${Instant.now().epochSecond}.$saveFileExt"
-        return getRecordingStoragePath().resolve(fileName)
-    }
-
     fun saveRecording(
         phoneNumber: String,
         callDirection: CallDirection,
-        recordingStartInstant: Instant,
-        recordingEndInstant: Instant,
         savePath: Path
     ) {
 
@@ -58,8 +50,8 @@ class Recordings @Inject constructor(
         recordingQueries.insert(
             name = name,
             number = phoneNumber,
-            start_instant = recordingStartInstant,
-            end_instant = recordingEndInstant,
+            start_instant = Instant.now(), // FIXME
+            end_instant = Instant.now(), // FIXME
             call_direction = callDirection,
             save_path = savePath.toAbsolutePath().toString(),
             save_format = savePath.extension
@@ -101,26 +93,35 @@ class Recordings @Inject constructor(
         recordingQueries.deleteWithId(recordingId)
     }
 
-    private fun getRecordingStoragePath(): Path {
-
-        if (Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED)
-            error("External storage is not writable")
-
-        val externalStorageVolumes = ContextCompat.getExternalFilesDirs(context, null)
-        val primaryExternalStorage = externalStorageVolumes[0]
-        val savePath = Paths.get(primaryExternalStorage.path, "CallRecordings")
-
-        if (!Files.exists(savePath))
-            Files.createDirectory(savePath)
-
-        return savePath
-    }
-
     private suspend fun getWavData(recordingId: Int): WavData = withContext(Dispatchers.IO) {
+
         val recording = recordingQueries.getWithId(recordingId).asFlow().mapToOne().first()
         val recordingPath = Paths.get(recording.save_path)
         val fileChannel = FileChannel.open(recordingPath, StandardOpenOption.READ)
 
         return@withContext fileChannel.use { WavFileUtils.readWavData(fileChannel) }
+    }
+
+    companion object {
+
+        fun generateFilePath(context: Context, fileName: String): Path {
+            val fileNameWithExt = "$fileName.wav"
+            return getRecordingStoragePath(context).resolve(fileNameWithExt)
+        }
+
+        private fun getRecordingStoragePath(context: Context): Path {
+
+            if (Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED)
+                error("External storage is not writable")
+
+            val externalStorageVolumes = ContextCompat.getExternalFilesDirs(context, null)
+            val primaryExternalStorage = externalStorageVolumes[0]
+            val savePath = Paths.get(primaryExternalStorage.path, "CallRecordings")
+
+            if (!Files.exists(savePath))
+                Files.createDirectory(savePath)
+
+            return savePath
+        }
     }
 }
