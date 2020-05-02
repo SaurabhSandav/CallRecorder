@@ -25,41 +25,31 @@ import dagger.android.AndroidInjectionModule
         DBModule::class
     ]
 )
-abstract class AppModule {
+interface AppModule {
 
     @Binds
-    abstract fun provideContext(app: App): Context
+    fun App.bindContext(): Context
 
     companion object {
 
         @Provides
-        fun provideSharedPreferences(context: Context): SharedPreferences {
-            return PreferenceManager.getDefaultSharedPreferences(context)
+        fun Context.provideSharedPreferences(): SharedPreferences {
+            return PreferenceManager.getDefaultSharedPreferences(this)
         }
 
         @Provides
-        fun provideAudioManager(context: Context): AudioManager {
-            return context.getSystemService()!!
-        }
+        fun Context.provideAudioManager(): AudioManager = getSystemService()!!
 
         @Provides
-        fun provideTelephonyManager(context: Context): TelephonyManager {
-            return context.getSystemService()!!
-        }
+        fun Context.provideTelephonyManager(): TelephonyManager = getSystemService()!!
 
         @Provides
-        fun provideNotificationManager(context: Context): NotificationManager {
-            return context.getSystemService()!!
-        }
+        fun Context.provideNotificationManager(): NotificationManager = getSystemService()!!
 
         @Provides
-        fun providePowerManager(context: Context): PowerManager {
-            return context.getSystemService()!!
-        }
+        fun Context.providePowerManager(): PowerManager = getSystemService()!!
 
         @Provides
-        fun provideContentResolver(context: Context): ContentResolver {
-            return context.contentResolver
-        }
+        fun Context.provideContentResolver(): ContentResolver = contentResolver
     }
 }

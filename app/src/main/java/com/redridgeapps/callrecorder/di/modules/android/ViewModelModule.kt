@@ -21,20 +21,20 @@ import kotlin.reflect.KClass
 annotation class ViewModelKey(val value: KClass<out ViewModel>)
 
 @Module
-abstract class ViewModelModule {
+interface ViewModelModule {
 
     @Binds
     @IntoMap
     @ViewModelKey(MainViewModel::class)
-    abstract fun bindMainViewModel(viewModel: MainViewModel): ViewModel
+    fun MainViewModel.bindMainViewModel(): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(SettingsViewModel::class)
-    abstract fun bindSettingsViewModel(viewModel: SettingsViewModel): ViewModel
+    fun SettingsViewModel.bindSettingsViewModel(): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(FirstRunViewModel::class)
-    abstract fun bindFirstRunViewModel(viewModel: FirstRunViewModel): ViewModel
+    fun FirstRunViewModel.bindFirstRunViewModel(): ViewModel
 }

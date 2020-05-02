@@ -19,10 +19,10 @@ object DBModule {
     @Suppress("UNCHECKED_CAST")
     @Provides
     @Singleton
-    fun provideCallRecordingDB(context: Context): CallRecordingDB {
+    fun Context.provideCallRecordingDB(): CallRecordingDB {
 
         val schema = CallRecordingDB.Schema
-        val driver = AndroidSqliteDriver(schema, context, "AppDB.db")
+        val driver = AndroidSqliteDriver(schema, this, "AppDB.db")
 
         return CallRecordingDB(
             driver,
@@ -35,7 +35,5 @@ object DBModule {
     }
 
     @Provides
-    fun provideRecordingQueries(callRecordingDB: CallRecordingDB): RecordingQueries {
-        return callRecordingDB.recordingQueries
-    }
+    fun CallRecordingDB.provideRecordingQueries(): RecordingQueries = recordingQueries
 }

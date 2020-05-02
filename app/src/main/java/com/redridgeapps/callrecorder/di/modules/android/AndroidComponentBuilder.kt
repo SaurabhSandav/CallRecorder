@@ -8,13 +8,13 @@ import dagger.android.ContributesAndroidInjector
 import javax.inject.Scope
 
 @Module
-abstract class AndroidComponentBuilder {
+interface AndroidComponentBuilder {
 
     // region Activities
 
     @ContributesAndroidInjector
     @PerActivity
-    abstract fun bindMainActivity(): MainActivity
+    fun bindMainActivity(): MainActivity
 
     // endregion Activities
 
@@ -22,11 +22,11 @@ abstract class AndroidComponentBuilder {
 
     @ContributesAndroidInjector
     @PerService
-    abstract fun bindCallingService(): CallingService
+    fun bindCallingService(): CallingService
 
     @ContributesAndroidInjector
     @PerService
-    abstract fun bindRecordingSwitchTileService(): RecordingSwitchTileService
+    fun bindRecordingSwitchTileService(): RecordingSwitchTileService
 
     // endregion Services
 
