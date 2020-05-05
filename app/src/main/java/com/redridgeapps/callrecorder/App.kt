@@ -4,6 +4,7 @@ import android.app.Application
 import com.redridgeapps.callrecorder.di.AppComponent
 import com.redridgeapps.callrecorder.di.DaggerAppComponent
 import com.redridgeapps.callrecorder.services.CallingService
+import com.redridgeapps.callrecorder.utils.HyperlinkedDebugTree
 import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_RECORDING_ON
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import com.topjohnwu.superuser.Shell
@@ -46,7 +47,7 @@ class App : Application(), HasAndroidInjector {
 
     private fun setupTimber() {
         if (BuildConfig.DEBUG)
-            Timber.plant(Timber.DebugTree())
+            Timber.plant(HyperlinkedDebugTree)
         else TODO()
     }
 
