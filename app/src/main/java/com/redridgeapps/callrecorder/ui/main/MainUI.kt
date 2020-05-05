@@ -2,7 +2,6 @@ package com.redridgeapps.callrecorder.ui.main
 
 import androidx.compose.Composable
 import androidx.compose.Model
-import androidx.compose.frames.modelListOf
 import androidx.compose.key
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.Modifier
@@ -41,13 +40,13 @@ import com.redridgeapps.callrecorder.ui.main.Playback.STOPPED
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.settings.SettingsDestination
 import com.redridgeapps.callrecorder.ui.utils.Highlight
+import com.redridgeapps.callrecorder.ui.utils.ListSelection
 
 @Model
 class MainState(
     var isRefreshing: Boolean = true,
     var recordingList: List<RecordingListItem> = listOf(),
-    var selectionMode: Boolean = false,
-    var selection: MutableList<Int> = modelListOf(),
+    val selection: ListSelection<Int> = ListSelection(),
     var playback: Playback = STOPPED
 )
 
@@ -99,7 +98,7 @@ private fun MainTopAppBar(viewModel: MainViewModel) {
         actions = {
 
             when {
-                viewModel.uiState.selectionMode -> {
+                viewModel.uiState.selection.inMultiSelectMode -> {
                     IconDelete(viewModel)
                     IconCloseSelectionMode(viewModel)
                 }
@@ -120,10 +119,7 @@ private fun IconDelete(viewModel: MainViewModel) {
 @Composable
 private fun IconCloseSelectionMode(viewModel: MainViewModel) {
 
-    val onClick = {
-        viewModel.uiState.selection.clear()
-        viewModel.uiState.selectionMode = false
-    }
+    val onClick = { viewModel.uiState.selection.clear() }
 
     IconButton(onClick) {
         Icon(Icons.Default.Close)
@@ -198,19 +194,12 @@ private fun RecordingListDateDivider(dateText: String) {
 @Composable
 private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel: MainViewModel) {
 
-    Highlight(enabled = recordingEntry.id in viewModel.uiState.selection) {
+    val selection = viewModel.uiState.selection
 
-        val onClick = {
-            if (viewModel.uiState.selectionMode)
-                viewModel.uiState.addOrRemoveSelection(recordingEntry.id)
-            else
-                viewModel.uiState.clearAndAddSelection(recordingEntry.id)
-        }
+    Highlight(enabled = recordingEntry.id in selection) {
 
-        val modifier = Modifier.longPressGestureFilter {
-            viewModel.uiState.selectionMode = true
-            viewModel.uiState.selection.add(recordingEntry.id)
-        }
+        val onClick = { selection.select(recordingEntry.id) }
+        val modifier = Modifier.longPressGestureFilter { selection.multiSelect(recordingEntry.id) }
 
         ListItem(
             modifier = modifier,
@@ -271,7 +260,7 @@ private fun OptionsDialog(viewModel: MainViewModel) {
 
     val selection = viewModel.uiState.selection
 
-    if (viewModel.uiState.selectionMode || selection.size != 1) return
+    if (selection.inMultiSelectMode || selection.isEmpty()) return
 
     val onCloseRequest = { selection.clear() }
 
@@ -283,20 +272,4 @@ private fun OptionsDialog(viewModel: MainViewModel) {
             ListItem("Delete", onClick = { viewModel.deleteRecordings() })
         }
     }
-}
-
-private fun MainState.addOrRemoveSelection(item: Int) {
-
-    when (item) {
-        in selection -> selection.remove(item)
-        else -> selection.add(item)
-    }
-
-    if (selection.isEmpty())
-        selectionMode = false
-}
-
-private fun MainState.clearAndAddSelection(item: Int) {
-    selection.clear()
-    selection.add(item)
 }

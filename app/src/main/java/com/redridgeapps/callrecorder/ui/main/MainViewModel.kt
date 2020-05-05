@@ -69,11 +69,8 @@ class MainViewModel @Inject constructor(
     }
 
     fun deleteRecordings() = viewModelScope.launchNoJob {
-        uiState.selection.forEach {
-            recordings.deleteRecording(it)
-        }
+        uiState.selection.forEach { recordings.deleteRecording(it) }
         uiState.selection.clear()
-        uiState.selectionMode = true
     }
 
     override fun onCleared() {
