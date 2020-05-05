@@ -146,9 +146,9 @@ private fun ContentMain(
     modifier: Modifier
 ) {
 
-    Box(modifier + Modifier.fillMaxSize(), gravity = ContentGravity.Center) {
+    Crossfade(current = viewModel.uiState.isRefreshing) { isRefreshing ->
 
-        Crossfade(current = viewModel.uiState.isRefreshing) { isRefreshing ->
+        Box(modifier + Modifier.fillMaxSize(), gravity = ContentGravity.Center) {
             when {
                 isRefreshing -> CircularProgressIndicator()
                 else -> RecordingList(viewModel)

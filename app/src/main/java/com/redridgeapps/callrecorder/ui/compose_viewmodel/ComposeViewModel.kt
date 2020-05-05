@@ -27,20 +27,14 @@ fun WithViewModelStores(block: @Composable() () -> Unit) {
 @Composable
 inline fun <reified T : ViewModel> fetchViewModel(): T {
     val viewModelFetcher = ViewModelFetcherAmbient.current
-    val key = getViewModelKey()
+    val backStack = BackStackAmbient.current
+    val currentRoute = backStack.current
+    val key = currentRoute.viewModelStoreKey
     return viewModelFetcher.fetch(key, T::class)
 }
 
-@Composable
-fun getViewModelKey(): String {
-    val backStack = BackStackAmbient.current
-    val currentRoute = backStack.current
-    return createViewModelStoreKey(currentRoute)
-}
-
-private fun createViewModelStoreKey(route: Route<*>): String {
-    return route.key.toString() + "_" + route.index
-}
+val Route<*>.viewModelStoreKey: String
+    get() = key.toString() + "_" + index
 
 private class ViewModelStoreBackStackListener(
     private val composeViewModelStores: ComposeViewModelStores
@@ -57,12 +51,12 @@ private class ViewModelStoreBackStackListener(
         val removed = oldSnapshot.minus(newSnapshot)
         val added = newSnapshot.minus(oldSnapshot)
 
-        removed.forEach {
-            composeViewModelStores.removeViewModelStore(createViewModelStoreKey(it))
+        removed.forEach { route ->
+            composeViewModelStores.removeViewModelStore(route.viewModelStoreKey)
         }
 
-        added.forEach {
-            composeViewModelStores.addViewModelStore(createViewModelStoreKey(it))
+        added.forEach { route ->
+            composeViewModelStores.addViewModelStore(route.viewModelStoreKey)
         }
 
         oldSnapshot = newSnapshot
