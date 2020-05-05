@@ -60,13 +60,7 @@ class CallRecorder @Inject constructor(
 
         recorder ?: return
 
-        recorder!!.stop()
-        recorder!!.release()
-
         isRecording = false
-
-        recorder = null
-        recordingJob = null
 
         releaseWakeLock()
         toastMaker.newToast("Stopped recording").show()
@@ -76,6 +70,8 @@ class CallRecorder @Inject constructor(
             recordingJob!!.callDirection,
             recordingJob!!.savePath
         )
+
+        recordingJob = null
     }
 
     private suspend fun writeAudioDataToWavFile(bufferSize: Int) = withContext(Dispatchers.IO) {
@@ -111,6 +107,10 @@ class CallRecorder @Inject constructor(
                 bitsPerSample = recordingJob!!.pcmEncoding.bitsPerSample
             )
         }
+
+        recorder!!.stop()
+        recorder!!.release()
+        recorder = null
 
         return@withContext
     }
