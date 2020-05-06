@@ -16,7 +16,8 @@ data class RecordingJob(
     val pcmEncoding: PcmEncoding,
     val savePath: Path,
     val phoneNumber: String,
-    val callDirection: CallDirection
+    val callDirection: CallDirection,
+    val recordingStartInstant: Instant
 )
 
 @Suppress("FunctionName")
@@ -42,6 +43,7 @@ suspend fun RecordingJob(
             fileName = recordingStartInstant.epochSecond.toString()
         ),
         phoneNumber = phoneNumber,
-        callDirection = callDirection
+        callDirection = callDirection,
+        recordingStartInstant = recordingStartInstant
     )
 }

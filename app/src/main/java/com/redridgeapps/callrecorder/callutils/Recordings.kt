@@ -39,22 +39,19 @@ class Recordings @Inject constructor(
     private val contactNameFetcher: ContactNameFetcher
 ) {
 
-    fun saveRecording(
-        phoneNumber: String,
-        callDirection: CallDirection,
-        savePath: Path
-    ) {
+    fun saveRecording(recordingJob: RecordingJob) {
 
+        val phoneNumber = recordingJob.phoneNumber
         val name = contactNameFetcher.getContactName(phoneNumber) ?: "Unknown ($phoneNumber)"
 
         recordingQueries.insert(
             name = name,
             number = phoneNumber,
-            start_instant = Instant.now(), // FIXME
-            end_instant = Instant.now(), // FIXME
-            call_direction = callDirection,
-            save_path = savePath.toAbsolutePath().toString(),
-            save_format = savePath.extension
+            start_instant = recordingJob.recordingStartInstant,
+            end_instant = Instant.now(),
+            call_direction = recordingJob.callDirection,
+            save_path = recordingJob.savePath.toAbsolutePath().toString(),
+            save_format = recordingJob.savePath.extension
         )
     }
 

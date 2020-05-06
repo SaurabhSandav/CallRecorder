@@ -65,11 +65,7 @@ class CallRecorder @Inject constructor(
         releaseWakeLock()
         toastMaker.newToast("Stopped recording").show()
 
-        recordings.saveRecording(
-            recordingJob!!.phoneNumber,
-            recordingJob!!.callDirection,
-            recordingJob!!.savePath
-        )
+        recordings.saveRecording(recordingJob!!)
 
         recordingJob = null
     }
