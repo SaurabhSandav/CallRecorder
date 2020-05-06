@@ -33,6 +33,9 @@ class CallRecorder @Inject constructor(
 
     suspend fun startRecording(recordingJob: RecordingJob) = withContext(Dispatchers.IO) {
 
+        if (this@CallRecorder.recordingJob != null)
+            error("Previous recording resources not cleaned up")
+
         this@CallRecorder.recordingJob = recordingJob
 
         withContext(Dispatchers.Main) {
