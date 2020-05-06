@@ -31,7 +31,6 @@ import androidx.ui.material.icons.filled.Delete
 import androidx.ui.material.icons.filled.PauseCircleOutline
 import androidx.ui.material.icons.filled.PlayCircleOutline
 import androidx.ui.material.icons.filled.Settings
-import androidx.ui.text.style.TextOverflow
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.callrecorder.ui.compose_viewmodel.fetchViewModel
@@ -205,21 +204,12 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
             modifier = modifier,
             onClick = onClick,
             icon = { PlayPauseIcon(viewModel, recordingEntry.id) },
-            secondaryText = { SingleLineText(recordingEntry.number) },
-            overlineText = { SingleLineText(recordingEntry.overlineText) },
-            trailing = { SingleLineText(recordingEntry.metaText) },
-            text = { SingleLineText(recordingEntry.name) }
+            secondaryText = { Text(recordingEntry.number) },
+            overlineText = { Text(recordingEntry.overlineText) },
+            trailing = { Text(recordingEntry.metaText) },
+            text = { Text(recordingEntry.name) }
         )
     }
-}
-
-@Composable
-private fun SingleLineText(text: String) {
-    Text(
-        text = text,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis
-    )
 }
 
 @Composable
