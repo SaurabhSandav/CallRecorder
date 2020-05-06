@@ -4,13 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.callutils.CallPlayback
+import com.redridgeapps.callrecorder.callutils.PlaybackState
 import com.redridgeapps.callrecorder.callutils.Recordings
-import com.redridgeapps.callrecorder.ui.main.Playback.PAUSED
-import com.redridgeapps.callrecorder.ui.main.Playback.PLAYING
-import com.redridgeapps.callrecorder.ui.main.Playback.STOPPED
 import com.redridgeapps.callrecorder.utils.launchNoJob
 import com.redridgeapps.callrecorder.utils.toLocalDate
 import com.redridgeapps.callrecorder.utils.toLocalDateTime
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.time.Duration
@@ -33,33 +32,24 @@ class MainViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    val uiState = MainState()
+    val uiState = MainState(playbackState = callPlayback.playbackState)
 
     fun startPlayback(recordingId: Int) = viewModelScope.launchNoJob {
 
-        val playbackStatus = uiState.playback
+        val playbackStatus = callPlayback.playbackState.first()
 
-        if (playbackStatus is PAUSED && playbackStatus.recordingId == recordingId) {
-            uiState.playback = PLAYING(recordingId)
+        if (playbackStatus is PlaybackState.Paused && playbackStatus.recordingId == recordingId) {
             callPlayback.resumePlayback()
-            return@launchNoJob
         } else {
-
-            if (playbackStatus is PLAYING)
-                stopPlayback()
-
-            uiState.playback = PLAYING(recordingId)
-            callPlayback.startPlayback(recordingId) { uiState.playback = STOPPED }
+            callPlayback.startPlayback(recordingId)
         }
     }
 
-    fun pausePlayback(recordingId: Int) {
-        uiState.playback = PAUSED(recordingId)
+    fun pausePlayback() {
         callPlayback.pausePlayback()
     }
 
     fun stopPlayback() {
-        uiState.playback = STOPPED
         callPlayback.stopPlayback()
     }
 

@@ -2,6 +2,7 @@ package com.redridgeapps.callrecorder.ui.main
 
 import androidx.compose.Composable
 import androidx.compose.Model
+import androidx.compose.collectAsState
 import androidx.compose.key
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.Modifier
@@ -33,20 +34,21 @@ import androidx.ui.material.icons.filled.PlayCircleOutline
 import androidx.ui.material.icons.filled.Settings
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
+import com.redridgeapps.callrecorder.callutils.PlaybackState
 import com.redridgeapps.callrecorder.ui.compose_viewmodel.fetchViewModel
-import com.redridgeapps.callrecorder.ui.main.Playback.PLAYING
-import com.redridgeapps.callrecorder.ui.main.Playback.STOPPED
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.settings.SettingsDestination
 import com.redridgeapps.callrecorder.ui.utils.Highlight
 import com.redridgeapps.callrecorder.ui.utils.ListSelection
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
 @Model
 class MainState(
     var isRefreshing: Boolean = true,
     var recordingList: List<RecordingListItem> = listOf(),
     val selection: ListSelection<Int> = ListSelection(),
-    var playback: Playback = STOPPED
+    val playbackState: Flow<PlaybackState> = emptyFlow()
 )
 
 sealed class RecordingListItem {
@@ -60,12 +62,6 @@ sealed class RecordingListItem {
         val overlineText: String,
         val metaText: String
     ) : RecordingListItem()
-}
-
-sealed class Playback {
-    class PLAYING(val recordingId: Int) : Playback()
-    class PAUSED(val recordingId: Int) : Playback()
-    object STOPPED : Playback()
 }
 
 object MainDestination : Destination {
@@ -218,21 +214,21 @@ private fun PlayPauseIcon(
     recordingId: Int
 ) {
 
-    val playback = viewModel.uiState.playback
-    val recordingIdIsPlaying = playback is PLAYING && playback.recordingId == recordingId
+    val playbackState = viewModel.uiState.playbackState.collectAsState().value
+    val recordingIsPlaying =
+        playbackState is PlaybackState.Playing && playbackState.recordingId == recordingId
 
     val onClick = {
-
-        if (recordingIdIsPlaying)
-            viewModel.pausePlayback(recordingId)
-        else
-            viewModel.startPlayback(recordingId)
+        when {
+            recordingIsPlaying -> viewModel.pausePlayback()
+            else -> viewModel.startPlayback(recordingId)
+        }
     }
 
     IconButton(onClick) {
 
         val icon = when {
-            recordingIdIsPlaying -> Icons.Default.PauseCircleOutline
+            recordingIsPlaying -> Icons.Default.PauseCircleOutline
             else -> Icons.Default.PlayCircleOutline
         }
 
