@@ -83,7 +83,7 @@ class MainViewModel @Inject constructor(
             val overlineText = "$startTime • ${it.call_direction}"
 
             // Calculate and format call duration
-            val duration = Duration.between(it.start_instant, it.end_instant)
+            val duration = Duration.ofSeconds(it.duration)
             val metaText = durationFormat
                 .format(duration.toHours(), duration.toMinutes(), duration.seconds)
 

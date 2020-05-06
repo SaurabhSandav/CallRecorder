@@ -29,9 +29,9 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardOpenOption
-import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.roundToLong
 
 @Singleton
 class Recordings @Inject constructor(
@@ -39,16 +39,21 @@ class Recordings @Inject constructor(
     private val contactNameFetcher: ContactNameFetcher
 ) {
 
-    fun saveRecording(recordingJob: RecordingJob) {
+    suspend fun saveRecording(recordingJob: RecordingJob) = withContext(Dispatchers.IO) {
 
         val phoneNumber = recordingJob.phoneNumber
         val name = contactNameFetcher.getContactName(phoneNumber) ?: "Unknown ($phoneNumber)"
+
+        val duration =
+            FileChannel.open(recordingJob.savePath.toAbsolutePath(), StandardOpenOption.READ).use {
+                WavFileUtils.calculateDuration(it).roundToLong()
+            }
 
         recordingQueries.insert(
             name = name,
             number = phoneNumber,
             start_instant = recordingJob.recordingStartInstant,
-            end_instant = Instant.now(),
+            duration = duration,
             call_direction = recordingJob.callDirection,
             save_path = recordingJob.savePath.toAbsolutePath().toString(),
             save_format = recordingJob.savePath.extension

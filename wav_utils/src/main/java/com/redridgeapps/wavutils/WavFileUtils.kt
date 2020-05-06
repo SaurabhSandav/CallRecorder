@@ -63,4 +63,10 @@ object WavFileUtils {
             bitsPerSample = byteBuffer.getShort(34).toInt()
         )
     }
+
+    suspend fun calculateDuration(fileChannel: FileChannel) = withContext(Dispatchers.IO) {
+        val wavData = readWavData(fileChannel)
+        val fileSize = fileChannel.size() - 44
+        return@withContext fileSize / wavData.byteRate.toFloat()
+    }
 }

@@ -1,5 +1,4 @@
 import com.redridgeapps.callrecorder.callutils.CallDirection;
-import java.lang.Long;
 import java.time.Instant;
 
 CREATE TABLE IF NOT EXISTS Recording (
@@ -7,7 +6,7 @@ id INTEGER AS Long NOT NULL PRIMARY KEY AUTOINCREMENT,
 name TEXT NOT NULL,
 number TEXT NOT NULL,
 start_instant INTEGER AS Instant NOT NULL,
-end_instant INTEGER AS Instant NOT NULL,
+duration INTEGER AS Long NOT NULL,
 call_direction TEXT AS CallDirection NOT NULL,
 save_path TEXT NOT NULL,
 save_format TEXT NOT NULL
@@ -15,7 +14,7 @@ save_format TEXT NOT NULL
 
 insert:
 INSERT OR REPLACE
-INTO Recording (name, number, start_instant, end_instant, call_direction, save_path, save_format)
+INTO Recording (name, number, start_instant, duration, call_direction, save_path, save_format)
 VALUES (?, ?, ?, ?, ?, ?, ?);
 
 getAll:

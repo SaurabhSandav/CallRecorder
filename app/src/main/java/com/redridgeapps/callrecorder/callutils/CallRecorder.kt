@@ -59,7 +59,7 @@ class CallRecorder @Inject constructor(
         return@withContext
     }
 
-    fun stopRecording() {
+    suspend fun stopRecording() {
 
         recorder ?: return
 

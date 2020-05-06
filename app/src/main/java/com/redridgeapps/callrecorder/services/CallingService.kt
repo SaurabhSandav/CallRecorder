@@ -79,18 +79,22 @@ class CallingService : LifecycleService() {
         super.onDestroy()
 
         telephonyManager.listen(callStatusListener, PhoneStateListener.LISTEN_NONE)
-        callRecorder.stopRecording()
+
+        lifecycleScope.launch { callRecorder.stopRecording() }
     }
 
     private fun createCallStatusListener() =
         CallStatusListener { status, phoneNumber, callDirection ->
-            when (status) {
-                MissedCall, IncomingCallReceived -> Unit
-                IncomingCallAnswered, OutgoingCallStarted -> lifecycleScope.launch {
-                    val job = RecordingJob(applicationContext, prefs, phoneNumber, callDirection)
-                    callRecorder.startRecording(job)
+            lifecycleScope.launch {
+                when (status) {
+                    MissedCall, IncomingCallReceived -> Unit
+                    IncomingCallAnswered, OutgoingCallStarted -> {
+                        val job =
+                            RecordingJob(applicationContext, prefs, phoneNumber, callDirection)
+                        callRecorder.startRecording(job)
+                    }
+                    IncomingCallEnded, OutgoingCallEnded -> callRecorder.stopRecording()
                 }
-                IncomingCallEnded, OutgoingCallEnded -> callRecorder.stopRecording()
             }
         }
 
