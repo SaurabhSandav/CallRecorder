@@ -42,8 +42,9 @@ allprojects {
             freeCompilerArgs += [
                     '-progressive',
                     '-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi',
-                    '-Xopt-in=kotlinx.coroutines.FlowPreview'/*,
-                    '-Xnew-inference'*/
+                    '-Xopt-in=kotlinx.coroutines.FlowPreview',
+                    '-Xinline-classes',
+                    /*'-Xnew-inference'*/
             ]
         }
     }
