@@ -5,6 +5,7 @@ import kotlinx.coroutines.withContext
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.channels.FileChannel
+import java.time.Duration
 
 object WavFileUtils {
 
@@ -64,9 +65,12 @@ object WavFileUtils {
         )
     }
 
-    suspend fun calculateDuration(fileChannel: FileChannel) = withContext(Dispatchers.IO) {
+    suspend fun calculateDuration(
+        fileChannel: FileChannel
+    ): Duration = withContext(Dispatchers.IO) {
         val wavData = readWavData(fileChannel)
         val fileSize = fileChannel.size() - 44
-        return@withContext fileSize / wavData.byteRate.toFloat()
+        val durationMillis = (fileSize * 1000) / wavData.byteRate
+        return@withContext Duration.ofMillis(durationMillis)
     }
 }

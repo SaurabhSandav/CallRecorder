@@ -13,7 +13,6 @@ import com.redridgeapps.callrecorder.utils.toLocalDateTime
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import java.time.Duration
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -82,10 +81,8 @@ class MainViewModel @Inject constructor(
             val startTime = it.start_instant.toLocalDateTime().format(overlineFormatter)
             val overlineText = "$startTime • ${it.call_direction}"
 
-            // Calculate and format call duration
-            val duration = Duration.ofSeconds(it.duration)
             val metaText = durationFormat
-                .format(duration.toHours(), duration.toMinutes(), duration.seconds)
+                .format(it.duration.toHours(), it.duration.toMinutes(), it.duration.seconds)
 
             // Date of current recording
             val recordingDate = it.start_instant.toLocalDate()
