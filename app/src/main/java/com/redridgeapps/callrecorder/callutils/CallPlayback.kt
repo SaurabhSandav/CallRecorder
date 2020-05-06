@@ -23,7 +23,10 @@ class CallPlayback @Inject constructor(
         val recording = recordingQueries.getWithId(recordingId).asFlow().mapToOne().first()
         val recordingPath = recording.save_path
 
-        player = MediaPlayer().apply {
+        player = player ?: MediaPlayer()
+
+        player!!.apply {
+            reset()
             setDataSource(recordingPath)
             prepare()
             start()
@@ -43,11 +46,11 @@ class CallPlayback @Inject constructor(
 
     fun stopPlayback() {
         player!!.stop()
-        player!!.release()
-        player = null
+        releasePlayer()
     }
 
     fun releasePlayer() {
+        player?.reset()
         player?.release()
         player = null
     }
