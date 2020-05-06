@@ -35,6 +35,7 @@ import androidx.ui.material.icons.filled.Settings
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.callrecorder.callutils.PlaybackState
+import com.redridgeapps.callrecorder.callutils.RecordingId
 import com.redridgeapps.callrecorder.ui.compose_viewmodel.fetchViewModel
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.settings.SettingsDestination
@@ -47,7 +48,7 @@ import kotlinx.coroutines.flow.emptyFlow
 class MainState(
     var isRefreshing: Boolean = true,
     var recordingList: List<RecordingListItem> = listOf(),
-    val selection: ListSelection<Int> = ListSelection(),
+    val selection: ListSelection<RecordingId> = ListSelection(),
     val playbackState: Flow<PlaybackState> = emptyFlow()
 )
 
@@ -56,7 +57,7 @@ sealed class RecordingListItem {
     class Divider(val title: String) : RecordingListItem()
 
     class Entry(
-        val id: Int,
+        val id: RecordingId,
         val name: String,
         val number: String,
         val overlineText: String,
@@ -211,7 +212,7 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
 @Composable
 private fun PlayPauseIcon(
     viewModel: MainViewModel,
-    recordingId: Int
+    recordingId: RecordingId
 ) {
 
     val playbackState = viewModel.uiState.playbackState.collectAsState().value

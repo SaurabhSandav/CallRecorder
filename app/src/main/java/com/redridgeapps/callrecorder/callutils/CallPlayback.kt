@@ -18,16 +18,16 @@ class CallPlayback @Inject constructor(
 ) {
 
     private var player: MediaPlayer? = null
-    private var recordingId: Int? = null
+    private var recordingId: RecordingId? = null
     private val playbackStateChannel = BroadcastChannel<PlaybackState>(CONFLATED).apply {
         offer(PlaybackState.Stopped)
     }
 
     val playbackState: Flow<PlaybackState> = playbackStateChannel.asFlow()
 
-    suspend fun startPlayback(recordingId: Int) = withContext(Dispatchers.IO) {
+    suspend fun startPlayback(recordingId: RecordingId) = withContext(Dispatchers.IO) {
 
-        val recording = recordingQueries.getWithId(recordingId).asFlow().mapToOne().first()
+        val recording = recordingQueries.getWithId(recordingId.value).asFlow().mapToOne().first()
         val recordingPath = recording.save_path
 
         this@CallPlayback.recordingId = recordingId
@@ -79,8 +79,8 @@ class CallPlayback @Inject constructor(
 }
 
 sealed class PlaybackState {
-    class Playing(val recordingId: Int) : PlaybackState()
-    class Paused(val recordingId: Int) : PlaybackState()
+    class Playing(val recordingId: RecordingId) : PlaybackState()
+    class Paused(val recordingId: RecordingId) : PlaybackState()
     object Stopped : PlaybackState()
 }
 

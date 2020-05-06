@@ -59,9 +59,9 @@ class Recordings @Inject constructor(
         return recordingQueries.getAll().asFlow().mapToList(Dispatchers.IO)
     }
 
-    suspend fun convertToMp3(recordingId: Int) = withContext(Dispatchers.IO) {
+    suspend fun convertToMp3(recordingId: RecordingId) = withContext(Dispatchers.IO) {
 
-        val recording = recordingQueries.getWithId(recordingId).asFlow().mapToOne().first()
+        val recording = recordingQueries.getWithId(recordingId.value).asFlow().mapToOne().first()
         val recordingPath = Paths.get(recording.save_path)
         val wavData = getWavData(recordingId)
         val outputPath =
@@ -84,15 +84,17 @@ class Recordings @Inject constructor(
         return@withContext
     }
 
-    suspend fun deleteRecording(recordingId: Int) = withContext(Dispatchers.IO) {
-        val recording = recordingQueries.getWithId(recordingId).asFlow().mapToOne().first()
+    suspend fun deleteRecording(recordingId: RecordingId) = withContext(Dispatchers.IO) {
+        val recording = recordingQueries.getWithId(recordingId.value).asFlow().mapToOne().first()
         Files.delete(Paths.get(recording.save_path))
-        recordingQueries.deleteWithId(recordingId)
+        recordingQueries.deleteWithId(recordingId.value)
     }
 
-    private suspend fun getWavData(recordingId: Int): WavData = withContext(Dispatchers.IO) {
+    private suspend fun getWavData(
+        recordingId: RecordingId
+    ): WavData = withContext(Dispatchers.IO) {
 
-        val recording = recordingQueries.getWithId(recordingId).asFlow().mapToOne().first()
+        val recording = recordingQueries.getWithId(recordingId.value).asFlow().mapToOne().first()
         val recordingPath = Paths.get(recording.save_path)
         val fileChannel = FileChannel.open(recordingPath, StandardOpenOption.READ)
 

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.callutils.CallPlayback
 import com.redridgeapps.callrecorder.callutils.PlaybackState
+import com.redridgeapps.callrecorder.callutils.RecordingId
 import com.redridgeapps.callrecorder.callutils.Recordings
 import com.redridgeapps.callrecorder.utils.launchNoJob
 import com.redridgeapps.callrecorder.utils.toLocalDate
@@ -34,7 +35,7 @@ class MainViewModel @Inject constructor(
 
     val uiState = MainState(playbackState = callPlayback.playbackState)
 
-    fun startPlayback(recordingId: Int) = viewModelScope.launchNoJob {
+    fun startPlayback(recordingId: RecordingId) = viewModelScope.launchNoJob {
 
         val playbackStatus = callPlayback.playbackState.first()
 
@@ -98,7 +99,7 @@ class MainViewModel @Inject constructor(
             // Add recording entry
             resultList.add(
                 RecordingListItem.Entry(
-                    id = it.id,
+                    id = RecordingId(it.id),
                     name = it.name,
                     number = it.number,
                     overlineText = overlineText,
