@@ -63,6 +63,11 @@ class MainViewModel @Inject constructor(
         uiState.selection.clear()
     }
 
+    fun updateContactName() = viewModelScope.launchNoJob {
+        recordings.updateContactName(uiState.selection.single())
+        uiState.selection.clear()
+    }
+
     override fun onCleared() {
         super.onCleared()
         callPlayback.releasePlayer()

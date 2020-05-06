@@ -25,5 +25,10 @@ ORDER BY id DESC;
 getWithId:
 SELECT * FROM Recording WHERE id = ?;
 
+updateContactName:
+UPDATE Recording
+SET name = ?
+WHERE id = ?;
+
 deleteWithId:
 DELETE FROM Recording WHERE id = ?;
