@@ -19,10 +19,8 @@ import com.redridgeapps.wavutils.WavData
 import com.redridgeapps.wavutils.WavFileUtils
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
-import com.squareup.sqldelight.runtime.coroutines.mapToOne
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import java.nio.channels.FileChannel
 import java.nio.file.Files
@@ -65,7 +63,7 @@ class Recordings @Inject constructor(
 
     suspend fun convertToMp3(recordingId: RecordingId) = withContext(Dispatchers.IO) {
 
-        val recording = recordingQueries.getWithId(recordingId.value).asFlow().mapToOne().first()
+        val recording = recordingQueries.getWithId(recordingId.value).executeAsOne()
         val recordingPath = Paths.get(recording.save_path)
         val wavData = getWavData(recordingId)
         val outputPath =
@@ -89,7 +87,7 @@ class Recordings @Inject constructor(
     }
 
     suspend fun deleteRecording(recordingId: RecordingId) = withContext(Dispatchers.IO) {
-        val recording = recordingQueries.getWithId(recordingId.value).asFlow().mapToOne().first()
+        val recording = recordingQueries.getWithId(recordingId.value).executeAsOne()
         Files.delete(Paths.get(recording.save_path))
         recordingQueries.deleteWithId(recordingId.value)
     }
@@ -104,7 +102,7 @@ class Recordings @Inject constructor(
         recordingId: RecordingId
     ): WavData = withContext(Dispatchers.IO) {
 
-        val recording = recordingQueries.getWithId(recordingId.value).asFlow().mapToOne().first()
+        val recording = recordingQueries.getWithId(recordingId.value).executeAsOne()
         val recordingPath = Paths.get(recording.save_path)
         val fileChannel = FileChannel.open(recordingPath, StandardOpenOption.READ)
 

@@ -2,14 +2,11 @@ package com.redridgeapps.callrecorder.callutils
 
 import android.media.MediaPlayer
 import com.redridgeapps.callrecorder.RecordingQueries
-import com.squareup.sqldelight.runtime.coroutines.asFlow
-import com.squareup.sqldelight.runtime.coroutines.mapToOne
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -27,7 +24,7 @@ class CallPlayback @Inject constructor(
 
     suspend fun startPlayback(recordingId: RecordingId) = withContext(Dispatchers.IO) {
 
-        val recording = recordingQueries.getWithId(recordingId.value).asFlow().mapToOne().first()
+        val recording = recordingQueries.getWithId(recordingId.value).executeAsOne()
         val recordingPath = recording.save_path
 
         this@CallPlayback.recordingId = recordingId
