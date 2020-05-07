@@ -48,7 +48,7 @@ import kotlinx.coroutines.flow.emptyFlow
 class MainState(
     var isRefreshing: Boolean = true,
     var recordingList: List<RecordingListItem> = listOf(),
-    val selection: ListSelection<RecordingId> = ListSelection(),
+    val selection: ListSelection<RecordingListItem.Entry> = ListSelection(),
     val playbackState: Flow<PlaybackState> = emptyFlow()
 )
 
@@ -192,10 +192,10 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
 
     val selection = viewModel.uiState.selection
 
-    Highlight(enabled = recordingEntry.id in selection) {
+    Highlight(enabled = recordingEntry in selection) {
 
-        val onClick = { selection.select(recordingEntry.id) }
-        val modifier = Modifier.longPressGestureFilter { selection.multiSelect(recordingEntry.id) }
+        val onClick = { selection.select(recordingEntry) }
+        val modifier = Modifier.longPressGestureFilter { selection.multiSelect(recordingEntry) }
 
         ListItem(
             modifier = modifier,
