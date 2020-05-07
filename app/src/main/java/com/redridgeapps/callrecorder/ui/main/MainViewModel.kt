@@ -53,6 +53,11 @@ class MainViewModel @Inject constructor(
         callPlayback.stopPlayback()
     }
 
+    fun toggleStar() = viewModelScope.launchNoJob {
+        uiState.selection.forEach { recordings.toggleStar(it.id) }
+        uiState.selection.clear()
+    }
+
     fun updateContactName() = viewModelScope.launchNoJob {
         uiState.selection.forEach { recordings.updateContactName(it.id) }
         uiState.selection.clear()
@@ -105,7 +110,8 @@ class MainViewModel @Inject constructor(
                     name = it.name,
                     number = it.number,
                     overlineText = overlineText,
-                    metaText = metaText
+                    metaText = metaText,
+                    isStarred = it.is_starred
                 )
             )
         }

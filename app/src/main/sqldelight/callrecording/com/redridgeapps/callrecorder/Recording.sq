@@ -10,7 +10,8 @@ start_instant INTEGER AS Instant NOT NULL,
 duration INTEGER AS Duration NOT NULL,
 call_direction TEXT AS CallDirection NOT NULL,
 save_path TEXT NOT NULL,
-save_format TEXT NOT NULL
+save_format TEXT NOT NULL,
+is_starred INTEGER AS Boolean NOT NULL DEFAULT 0 CHECK(is_starred IN (0, 1))
 );
 
 insert:
@@ -24,6 +25,11 @@ ORDER BY id DESC;
 
 getWithId:
 SELECT * FROM Recording WHERE id = ?;
+
+toggleStar:
+UPDATE Recording
+SET is_starred = ((is_starred | 1) - (is_starred & 1))
+WHERE id = ?;
 
 updateContactName:
 UPDATE Recording

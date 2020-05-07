@@ -61,7 +61,8 @@ sealed class RecordingListItem {
         val name: String,
         val number: String,
         val overlineText: String,
-        val metaText: String
+        val metaText: String,
+        val isStarred: Boolean
     ) : RecordingListItem()
 }
 
@@ -255,6 +256,12 @@ private fun OptionsDialog(viewModel: MainViewModel) {
         Column(Modifier.drawBackground(Color.White)) {
 
             ListItem("Info")
+
+            ListItem(
+                text = if (selection.single().isStarred) "Unstar" else "Star",
+                onClick = { viewModel.toggleStar() }
+            )
+
             ListItem("Update contact name", onClick = { viewModel.updateContactName() })
             ListItem("Convert to Mp3", onClick = { viewModel.convertToMp3() })
             ListItem("Delete", onClick = { viewModel.deleteRecordings() })

@@ -92,6 +92,10 @@ class Recordings @Inject constructor(
         recordingQueries.deleteWithId(recordingId.value)
     }
 
+    suspend fun toggleStar(recordingId: RecordingId) = withContext(Dispatchers.IO) {
+        recordingQueries.toggleStar(recordingId.value)
+    }
+
     suspend fun updateContactName(recordingId: RecordingId) = withContext(Dispatchers.IO) {
         val recording = recordingQueries.getWithId(recordingId.value).executeAsOne()
         val name = contactNameFetcher.getContactName(recording.number) ?: recording.name
