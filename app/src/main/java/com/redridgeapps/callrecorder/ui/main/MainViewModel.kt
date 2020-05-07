@@ -3,6 +3,7 @@ package com.redridgeapps.callrecorder.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.Recording
+import com.redridgeapps.callrecorder.callutils.CallDirection
 import com.redridgeapps.callrecorder.callutils.CallPlayback
 import com.redridgeapps.callrecorder.callutils.PlaybackState
 import com.redridgeapps.callrecorder.callutils.RecordingId
@@ -22,11 +23,14 @@ class MainViewModel @Inject constructor(
     private val callPlayback: CallPlayback
 ) : ViewModel() {
 
+    var recordingList: List<Recording> = emptyList()
+
     init {
 
         recordings.getRecordingList()
             .onEach {
-                uiState.recordingList = prepareRecordingList(it)
+                recordingList = it
+                uiState.recordingList = prepareRecordingList(filterRecordingList())
                 uiState.isRefreshing = false
             }
             .launchIn(viewModelScope)
@@ -73,9 +77,48 @@ class MainViewModel @Inject constructor(
         uiState.selection.clear()
     }
 
+    fun updateRecordingListFilter(filter: RecordingListFilter, enabled: Boolean) {
+
+        uiState.isRefreshing = true
+
+        val filterSet = uiState.recordingListFilterSet
+
+        when {
+            filter == RecordingListFilter.All && enabled -> {
+                filterSet.clear()
+                filterSet.addAll(enumValues())
+            }
+            filter == RecordingListFilter.All && !enabled -> filterSet.clear()
+            enabled -> filterSet.add(filter)
+            else -> filterSet.remove(filter)
+        }
+
+        when {
+            filterSet.containsAll(RecordingListFilter.EXCEPT_ALL) -> filterSet.add(
+                RecordingListFilter.All
+            )
+            else -> filterSet.remove(RecordingListFilter.All)
+        }
+
+        uiState.recordingList = prepareRecordingList(filterRecordingList())
+        uiState.isRefreshing = false
+    }
+
     override fun onCleared() {
         super.onCleared()
         callPlayback.releasePlayer()
+    }
+
+    private fun filterRecordingList(): List<Recording> {
+
+        val filterSet = uiState.recordingListFilterSet
+
+        return recordingList.filter {
+            RecordingListFilter.All in filterSet ||
+                    (RecordingListFilter.Incoming in filterSet && it.call_direction == CallDirection.INCOMING) ||
+                    (RecordingListFilter.Outgoing in filterSet && it.call_direction == CallDirection.OUTGOING) ||
+                    (RecordingListFilter.Starred in filterSet && it.is_starred)
+        }
     }
 
     private fun prepareRecordingList(recordingList: List<Recording>): List<RecordingListItem> {

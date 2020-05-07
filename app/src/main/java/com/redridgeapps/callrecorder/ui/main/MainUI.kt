@@ -2,12 +2,19 @@ package com.redridgeapps.callrecorder.ui.main
 
 import androidx.compose.Composable
 import androidx.compose.Model
+import androidx.compose.Recompose
 import androidx.compose.collectAsState
+import androidx.compose.getValue
 import androidx.compose.key
+import androidx.compose.setValue
+import androidx.compose.state
 import androidx.ui.animation.Crossfade
+import androidx.ui.core.DropdownPopup
 import androidx.ui.core.Modifier
+import androidx.ui.core.PopupProperties
 import androidx.ui.core.gesture.longPressGestureFilter
 import androidx.ui.foundation.AdapterList
+import androidx.ui.foundation.Border
 import androidx.ui.foundation.Box
 import androidx.ui.foundation.ContentGravity
 import androidx.ui.foundation.Dialog
@@ -16,19 +23,23 @@ import androidx.ui.foundation.Text
 import androidx.ui.foundation.drawBackground
 import androidx.ui.graphics.Color
 import androidx.ui.layout.Column
+import androidx.ui.layout.Row
 import androidx.ui.layout.fillMaxSize
 import androidx.ui.layout.fillMaxWidth
 import androidx.ui.layout.padding
+import androidx.ui.material.Checkbox
 import androidx.ui.material.CircularProgressIndicator
 import androidx.ui.material.Divider
 import androidx.ui.material.IconButton
 import androidx.ui.material.ListItem
 import androidx.ui.material.MaterialTheme
 import androidx.ui.material.Scaffold
+import androidx.ui.material.Surface
 import androidx.ui.material.TopAppBar
 import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.Close
 import androidx.ui.material.icons.filled.Delete
+import androidx.ui.material.icons.filled.FilterList
 import androidx.ui.material.icons.filled.PauseCircleOutline
 import androidx.ui.material.icons.filled.PlayCircleOutline
 import androidx.ui.material.icons.filled.Settings
@@ -43,13 +54,15 @@ import com.redridgeapps.callrecorder.ui.utils.Highlight
 import com.redridgeapps.callrecorder.ui.utils.ListSelection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import java.util.*
 
 @Model
 class MainState(
     var isRefreshing: Boolean = true,
     var recordingList: List<RecordingListItem> = listOf(),
     val selection: ListSelection<RecordingListItem.Entry> = ListSelection(),
-    val playbackState: Flow<PlaybackState> = emptyFlow()
+    val playbackState: Flow<PlaybackState> = emptyFlow(),
+    val recordingListFilterSet: EnumSet<RecordingListFilter> = EnumSet.allOf(RecordingListFilter::class.java)
 )
 
 sealed class RecordingListItem {
@@ -64,6 +77,19 @@ sealed class RecordingListItem {
         val metaText: String,
         val isStarred: Boolean
     ) : RecordingListItem()
+}
+
+enum class RecordingListFilter {
+    All,
+    Incoming,
+    Outgoing,
+    Starred;
+
+    fun toReadableString(): String = name
+
+    companion object {
+        val EXCEPT_ALL: EnumSet<RecordingListFilter> = EnumSet.complementOf(EnumSet.of(All))
+    }
 }
 
 object MainDestination : Destination {
@@ -99,7 +125,10 @@ private fun MainTopAppBar(viewModel: MainViewModel) {
                     IconDelete(viewModel)
                     IconCloseSelectionMode(viewModel)
                 }
-                else -> IconSettings()
+                else -> {
+                    IconFilter(viewModel)
+                    IconSettings()
+                }
             }
         }
     )
@@ -120,6 +149,57 @@ private fun IconCloseSelectionMode(viewModel: MainViewModel) {
 
     IconButton(onClick) {
         Icon(Icons.Default.Close)
+    }
+}
+
+@Composable
+private fun IconFilter(viewModel: MainViewModel) {
+
+    var showFilterPopup by state { false }
+
+    IconButton(onClick = { showFilterPopup = !showFilterPopup }) {
+        Icon(Icons.Default.FilterList)
+    }
+
+    if (!showFilterPopup) return
+
+    val popupProperties = PopupProperties(
+        isFocusable = true,
+        onDismissRequest = { showFilterPopup = false }
+    )
+
+    DropdownPopup(popupProperties = popupProperties) {
+        Surface(border = Border(2.dp, Color.LightGray)) {
+            Column {
+                // Cannot observe EnumSet. Manually recompose on onCheckedChange
+                Recompose { recompose ->
+
+                    for ((index, option) in RecordingListFilter.values().withIndex()) {
+
+                        val padding = Modifier.padding(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = if (index == 0) 16.dp else 0.dp,
+                            bottom = 16.dp
+                        )
+
+                        Row(padding) {
+
+                            Checkbox(
+                                checked = option in viewModel.uiState.recordingListFilterSet,
+                                modifier = Modifier.padding(end = 16.dp),
+                                onCheckedChange = {
+                                    viewModel.updateRecordingListFilter(option, it)
+                                    recompose()
+                                }
+                            )
+
+                            Text(text = option.toReadableString())
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
