@@ -7,10 +7,13 @@ import com.redridgeapps.callrecorder.callutils.*
 import com.redridgeapps.callrecorder.utils.launchNoJob
 import com.redridgeapps.callrecorder.utils.toLocalDate
 import com.redridgeapps.callrecorder.utils.toLocalDateTime
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.*
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
@@ -18,17 +21,10 @@ class MainViewModel @Inject constructor(
     private val callPlayback: CallPlayback
 ) : ViewModel() {
 
-    var recordingList: List<Recording> = emptyList()
+    private val recordingListFilter = MutableStateFlow(EnumSet.of(RecordingListFilter.All))
 
     init {
-
-        recordings.getRecordingList()
-            .onEach {
-                recordingList = it
-                uiState.recordingList = prepareRecordingList(filterRecordingList())
-                uiState.isRefreshing = false
-            }
-            .launchIn(viewModelScope)
+        observeRecordingList()
     }
 
     val uiState = MainState(playbackState = callPlayback.playbackState)
@@ -74,9 +70,7 @@ class MainViewModel @Inject constructor(
 
     fun updateRecordingListFilter(filter: RecordingListFilter, enabled: Boolean) {
 
-        uiState.isRefreshing = true
-
-        val filterSet = uiState.recordingListFilterSet
+        val filterSet = EnumSet.copyOf(uiState.recordingListFilterSet)
 
         when {
             filter == RecordingListFilter.All && enabled -> {
@@ -95,8 +89,8 @@ class MainViewModel @Inject constructor(
             else -> filterSet.remove(RecordingListFilter.All)
         }
 
-        uiState.recordingList = prepareRecordingList(filterRecordingList())
-        uiState.isRefreshing = false
+        uiState.recordingListFilterSet = filterSet
+        recordingListFilter.value = filterSet
     }
 
     override fun onCleared() {
@@ -104,16 +98,28 @@ class MainViewModel @Inject constructor(
         callPlayback.releasePlayer()
     }
 
-    private fun filterRecordingList(): List<Recording> {
+    private fun observeRecordingList() {
 
-        val filterSet = uiState.recordingListFilterSet
+        recordings.getRecordingList()
+            .combine(recordingListFilter) { list: List<Recording>, filterSet: EnumSet<RecordingListFilter> ->
+                uiState.isRefreshing = true
+                filterRecordingList(list, filterSet)
+            }
+            .onEach {
+                uiState.recordingList = prepareRecordingList(it)
+                uiState.isRefreshing = false
+            }
+            .launchIn(viewModelScope)
+    }
 
-        return recordingList.filter {
-            RecordingListFilter.All in filterSet ||
-                    (RecordingListFilter.Incoming in filterSet && it.call_direction == CallDirection.INCOMING) ||
-                    (RecordingListFilter.Outgoing in filterSet && it.call_direction == CallDirection.OUTGOING) ||
-                    (RecordingListFilter.Starred in filterSet && it.is_starred)
-        }
+    private fun filterRecordingList(
+        list: List<Recording>,
+        filterSet: EnumSet<RecordingListFilter>
+    ): List<Recording> = list.filter {
+        RecordingListFilter.All in filterSet ||
+                (RecordingListFilter.Incoming in filterSet && it.call_direction == CallDirection.INCOMING) ||
+                (RecordingListFilter.Outgoing in filterSet && it.call_direction == CallDirection.OUTGOING) ||
+                (RecordingListFilter.Starred in filterSet && it.is_starred)
     }
 
     private fun prepareRecordingList(recordingList: List<Recording>): List<RecordingListItem> {
