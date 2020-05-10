@@ -36,7 +36,10 @@ class CallPlayback @Inject constructor(
             prepare()
             start()
 
-            setOnCompletionListener { _playbackState.value = PlaybackState.Stopped }
+            setOnCompletionListener {
+                seekTo(0)
+                _playbackState.value = PlaybackState.Paused(recordingId)
+            }
         }
 
         _playbackState.value = PlaybackState.Playing(recordingId)
@@ -72,7 +75,12 @@ class CallPlayback @Inject constructor(
 }
 
 sealed class PlaybackState {
-    class Playing(val recordingId: RecordingId) : PlaybackState()
-    class Paused(val recordingId: RecordingId) : PlaybackState()
+
+    interface NotStopped {
+        val recordingId: RecordingId
+    }
+
+    class Playing(override val recordingId: RecordingId) : PlaybackState(), NotStopped
+    class Paused(override val recordingId: RecordingId) : PlaybackState(), NotStopped
     object Stopped : PlaybackState()
 }

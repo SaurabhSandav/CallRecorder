@@ -6,12 +6,14 @@ import androidx.ui.core.DropdownPopup
 import androidx.ui.core.Modifier
 import androidx.ui.core.PopupProperties
 import androidx.ui.core.gesture.longPressGestureFilter
+import androidx.ui.core.tag
 import androidx.ui.foundation.*
 import androidx.ui.graphics.Color
 import androidx.ui.layout.*
 import androidx.ui.material.*
 import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.*
+import androidx.ui.unit.Dp
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.callrecorder.callutils.PlaybackState
@@ -78,7 +80,13 @@ private fun MainUI(viewModel: MainViewModel) {
     Scaffold(
         topAppBar = { MainTopAppBar(viewModel) }
     ) { modifier ->
-        ContentMain(viewModel, modifier)
+
+        Column(modifier) {
+            Box(Modifier.weight(1F)) {
+                ContentMain(viewModel)
+            }
+            PlaybackBar(viewModel)
+        }
     }
 }
 
@@ -177,14 +185,11 @@ private fun IconSettings() {
 }
 
 @Composable
-private fun ContentMain(
-    viewModel: MainViewModel,
-    modifier: Modifier
-) {
+private fun ContentMain(viewModel: MainViewModel) {
 
     Crossfade(current = viewModel.uiState.isRefreshing) { isRefreshing ->
 
-        Box(modifier + Modifier.fillMaxSize(), gravity = ContentGravity.Center) {
+        Box(Modifier.fillMaxSize(), gravity = ContentGravity.Center) {
             when {
                 isRefreshing -> CircularProgressIndicator()
                 else -> RecordingList(viewModel)
@@ -244,7 +249,7 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
         ListItem(
             modifier = modifier,
             onClick = onClick,
-            icon = { PlayPauseIcon(viewModel, recordingEntry.id) },
+            icon = { PlayPauseIcon(viewModel, recordingEntry.id, 45.dp) },
             secondaryText = { Text(recordingEntry.number) },
             overlineText = { Text(recordingEntry.overlineText) },
             trailing = { Text(recordingEntry.metaText) },
@@ -256,7 +261,9 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
 @Composable
 private fun PlayPauseIcon(
     viewModel: MainViewModel,
-    recordingId: RecordingId
+    recordingId: RecordingId,
+    iconSideSize: Dp,
+    modifier: Modifier = Modifier
 ) {
 
     val playbackState = viewModel.uiState.playbackState.collectAsState().value
@@ -270,7 +277,7 @@ private fun PlayPauseIcon(
         }
     }
 
-    IconButton(onClick) {
+    IconButton(onClick, modifier = modifier) {
 
         val icon = when {
             recordingIsPlaying -> Icons.Default.PauseCircleOutline
@@ -279,8 +286,62 @@ private fun PlayPauseIcon(
 
         key(icon) {
             Icon(
-                asset = icon.copy(defaultWidth = 40.dp, defaultHeight = 40.dp),
+                asset = icon.copy(defaultWidth = iconSideSize, defaultHeight = iconSideSize),
                 tint = MaterialTheme.colors.secondary
+            )
+        }
+    }
+}
+
+@Composable
+private fun PlaybackBar(viewModel: MainViewModel) {
+
+    val playbackState = viewModel.uiState.playbackState.collectAsState().value
+
+    if (playbackState !is PlaybackState.NotStopped) return
+
+    Surface(
+        modifier = Modifier.fillMaxWidth().height(65.dp),
+        color = Color.DarkGray,
+        elevation = 10.dp
+    ) {
+
+        val constraintSet = ConstraintSet {
+            val textTag = tag("text")
+            val sliderTag = tag("slider")
+            val playTag = tag("play")
+
+            textTag.top.constrainTo(parent.top)
+            textTag.bottom.constrainTo(sliderTag.top)
+            textTag.left.constrainTo(parent.left)
+            textTag.right.constrainTo(playTag.left)
+
+            sliderTag.top.constrainTo(textTag.bottom)
+            sliderTag.bottom.constrainTo(parent.bottom)
+            sliderTag.left.constrainTo(parent.left)
+            sliderTag.right.constrainTo(playTag.left)
+            sliderTag.width = wrap
+
+            playTag.constrainVerticallyTo(parent)
+            playTag.right.constrainTo(parent.right)
+        }
+
+        ConstraintLayout(constraintSet, Modifier.fillMaxSize()) {
+
+            Text(text = "Test", modifier = Modifier.tag("text").padding(5.dp))
+
+            Slider(
+                value = 1F,
+                onValueChange = {},
+                modifier = Modifier.tag("slider").height(20.dp).padding(5.dp),
+                color = MaterialTheme.colors.secondary
+            )
+
+            PlayPauseIcon(
+                viewModel = viewModel,
+                recordingId = playbackState.recordingId,
+                iconSideSize = 40.dp,
+                modifier = Modifier.tag("play").padding(10.dp)
             )
         }
     }
