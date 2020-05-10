@@ -29,7 +29,7 @@ class App : Application(), HasAndroidInjector {
 
     init {
         Shell.Config.setFlags(Shell.FLAG_REDIRECT_STDERR)
-        Shell.Config.verboseLogging(BuildConfig.DEBUG)
+        Shell.Config.verboseLogging(false)
         Shell.Config.setTimeout(10)
     }
 
