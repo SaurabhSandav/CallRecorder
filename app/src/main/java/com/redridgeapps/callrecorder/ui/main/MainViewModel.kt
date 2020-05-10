@@ -3,15 +3,10 @@ package com.redridgeapps.callrecorder.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.Recording
-import com.redridgeapps.callrecorder.callutils.CallDirection
-import com.redridgeapps.callrecorder.callutils.CallPlayback
-import com.redridgeapps.callrecorder.callutils.PlaybackState
-import com.redridgeapps.callrecorder.callutils.RecordingId
-import com.redridgeapps.callrecorder.callutils.Recordings
+import com.redridgeapps.callrecorder.callutils.*
 import com.redridgeapps.callrecorder.utils.launchNoJob
 import com.redridgeapps.callrecorder.utils.toLocalDate
 import com.redridgeapps.callrecorder.utils.toLocalDateTime
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.time.LocalDate
@@ -40,7 +35,7 @@ class MainViewModel @Inject constructor(
 
     fun startPlayback(recordingId: RecordingId) = viewModelScope.launchNoJob {
 
-        val playbackStatus = callPlayback.playbackState.first()
+        val playbackStatus = callPlayback.playbackState.value
 
         if (playbackStatus is PlaybackState.Paused && playbackStatus.recordingId == recordingId) {
             callPlayback.resumePlayback()

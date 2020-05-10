@@ -3,10 +3,8 @@ package com.redridgeapps.callrecorder.callutils
 import android.media.MediaPlayer
 import com.redridgeapps.callrecorder.RecordingQueries
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -16,11 +14,9 @@ class CallPlayback @Inject constructor(
 
     private var player: MediaPlayer? = null
     private var recordingId: RecordingId? = null
-    private val playbackStateChannel = BroadcastChannel<PlaybackState>(CONFLATED).apply {
-        offer(PlaybackState.Stopped)
-    }
+    private val _playbackState = MutableStateFlow<PlaybackState>(PlaybackState.Stopped)
 
-    val playbackState: Flow<PlaybackState> = playbackStateChannel.asFlow()
+    val playbackState: StateFlow<PlaybackState> = _playbackState
 
     suspend fun startPlayback(recordingId: RecordingId) = withContext(Dispatchers.IO) {
 
@@ -34,16 +30,16 @@ class CallPlayback @Inject constructor(
             reset()
 
             // Player is Idle after reset
-            PlaybackState.Stopped.offerTo(playbackStateChannel)
+            _playbackState.value = PlaybackState.Stopped
 
             setDataSource(recordingPath)
             prepare()
             start()
 
-            setOnCompletionListener { PlaybackState.Stopped.offerTo(playbackStateChannel) }
+            setOnCompletionListener { _playbackState.value = PlaybackState.Stopped }
         }
 
-        PlaybackState.Playing(recordingId).offerTo(playbackStateChannel)
+        _playbackState.value = PlaybackState.Playing(recordingId)
 
         return@withContext
     }
@@ -51,13 +47,13 @@ class CallPlayback @Inject constructor(
     fun resumePlayback() {
         player!!.start()
 
-        PlaybackState.Playing(recordingId!!).offerTo(playbackStateChannel)
+        _playbackState.value = PlaybackState.Playing(recordingId!!)
     }
 
     fun pausePlayback() {
         player!!.pause()
 
-        PlaybackState.Paused(recordingId!!).offerTo(playbackStateChannel)
+        _playbackState.value = PlaybackState.Paused(recordingId!!)
     }
 
     fun stopPlayback() {
@@ -71,7 +67,7 @@ class CallPlayback @Inject constructor(
         player = null
         recordingId = null
 
-        PlaybackState.Stopped.offerTo(playbackStateChannel)
+        _playbackState.value = PlaybackState.Stopped
     }
 }
 
@@ -79,8 +75,4 @@ sealed class PlaybackState {
     class Playing(val recordingId: RecordingId) : PlaybackState()
     class Paused(val recordingId: RecordingId) : PlaybackState()
     object Stopped : PlaybackState()
-}
-
-fun PlaybackState.offerTo(channel: BroadcastChannel<PlaybackState>) {
-    channel.offer(this)
 }
