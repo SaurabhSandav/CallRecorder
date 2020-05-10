@@ -3,14 +3,14 @@ package com.redridgeapps.callrecorder.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.Recording
+import com.redridgeapps.callrecorder.RecordingQueries
 import com.redridgeapps.callrecorder.callutils.*
 import com.redridgeapps.callrecorder.utils.launchNoJob
 import com.redridgeapps.callrecorder.utils.toLocalDate
 import com.redridgeapps.callrecorder.utils.toLocalDateTime
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import com.squareup.sqldelight.runtime.coroutines.asFlow
+import com.squareup.sqldelight.runtime.coroutines.mapToOne
+import kotlinx.coroutines.flow.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -18,6 +18,7 @@ import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
     private val recordings: Recordings,
+    private val recordingQueries: RecordingQueries,
     private val callPlayback: CallPlayback
 ) : ViewModel() {
 
@@ -31,21 +32,24 @@ class MainViewModel @Inject constructor(
 
     fun startPlayback(recordingId: RecordingId) = viewModelScope.launchNoJob {
 
+        val recording = recordingQueries.getWithId(recordingId.value).asFlow().mapToOne().first()
         val playbackStatus = callPlayback.playbackState.value
 
-        if (playbackStatus is PlaybackState.Paused && playbackStatus.recordingId == recordingId) {
-            callPlayback.resumePlayback()
-        } else {
-            callPlayback.startPlayback(recordingId)
+        when {
+            playbackStatus is PlaybackState.Stopped -> playbackStatus.startPlayback(recording)
+            playbackStatus is PlaybackState.Paused && playbackStatus.recording.id == recording.id -> {
+                playbackStatus.resumePlayback()
+            }
+            playbackStatus is PlaybackState.NotStopped && playbackStatus.recording.id != recording.id -> {
+                playbackStatus.startNewPlayback(recording)
+            }
         }
     }
 
     fun pausePlayback() {
-        callPlayback.pausePlayback()
-    }
+        val playbackStatus = callPlayback.playbackState.value
 
-    fun stopPlayback() {
-        callPlayback.stopPlayback()
+        (playbackStatus as? PlaybackState.Playing)?.pausePlayback()
     }
 
     fun toggleStar() = viewModelScope.launchNoJob {
@@ -95,7 +99,7 @@ class MainViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        callPlayback.releasePlayer()
+        stopPlayback()
     }
 
     private fun observeRecordingList() {
@@ -161,6 +165,12 @@ class MainViewModel @Inject constructor(
         }
 
         return resultList
+    }
+
+    private fun stopPlayback() {
+        val playbackStatus = callPlayback.playbackState.value
+
+        (playbackStatus as? PlaybackState.NotStopped)?.stopPlayback()
     }
 }
 

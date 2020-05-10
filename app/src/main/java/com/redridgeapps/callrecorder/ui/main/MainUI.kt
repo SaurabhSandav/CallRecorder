@@ -268,7 +268,7 @@ private fun PlayPauseIcon(
 
     val playbackState = viewModel.uiState.playbackState.collectAsState().value
     val recordingIsPlaying =
-        playbackState is PlaybackState.Playing && playbackState.recordingId == recordingId
+        playbackState is PlaybackState.Playing && playbackState.recording.id == recordingId.value
 
     val onClick = {
         when {
@@ -329,7 +329,7 @@ private fun PlaybackBar(viewModel: MainViewModel) {
         ConstraintLayout(constraintSet, Modifier.fillMaxSize()) {
 
             Text(
-                text = playbackState.name,
+                text = playbackState.recording.name,
                 modifier = Modifier.tag("text").padding(5.dp),
                 color = MaterialTheme.colors.onPrimary
             )
@@ -343,7 +343,7 @@ private fun PlaybackBar(viewModel: MainViewModel) {
 
             PlayPauseIcon(
                 viewModel = viewModel,
-                recordingId = playbackState.recordingId,
+                recordingId = RecordingId(playbackState.recording.id),
                 iconSideSize = 40.dp,
                 modifier = Modifier.tag("play").padding(10.dp)
             )
