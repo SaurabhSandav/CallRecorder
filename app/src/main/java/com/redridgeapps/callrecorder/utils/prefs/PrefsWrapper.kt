@@ -2,22 +2,11 @@ package com.redridgeapps.callrecorder.utils.prefs
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
-import com.redridgeapps.callrecorder.utils.prefs.TypedPref.PrefBoolean
-import com.redridgeapps.callrecorder.utils.prefs.TypedPref.PrefEnum
-import com.redridgeapps.callrecorder.utils.prefs.TypedPref.PrefFloat
-import com.redridgeapps.callrecorder.utils.prefs.TypedPref.PrefInt
-import com.redridgeapps.callrecorder.utils.prefs.TypedPref.PrefLong
-import com.redridgeapps.callrecorder.utils.prefs.TypedPref.PrefString
-import com.redridgeapps.callrecorder.utils.prefs.TypedPref.PrefStringNullable
+import com.redridgeapps.callrecorder.utils.prefs.TypedPref.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -43,6 +32,7 @@ class Prefs @Inject constructor(
             .filter { it == pref }
             .onStart { emit(pref) }
             .map { getInternal(pref) }
+            .conflate()
     }
 
     suspend fun <T : Any?> set(pref: TypedPref<T>, newValue: T) {
