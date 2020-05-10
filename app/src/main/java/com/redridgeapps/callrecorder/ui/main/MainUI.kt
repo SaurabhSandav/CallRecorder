@@ -328,10 +328,14 @@ private fun PlaybackBar(viewModel: MainViewModel) {
 
         ConstraintLayout(constraintSet, Modifier.fillMaxSize()) {
 
-            Text(text = "Test", modifier = Modifier.tag("text").padding(5.dp))
+            Text(
+                text = playbackState.name,
+                modifier = Modifier.tag("text").padding(5.dp),
+                color = MaterialTheme.colors.onPrimary
+            )
 
             Slider(
-                value = 1F,
+                value = playbackState.progress.collectAsState().value ?: 0F,
                 onValueChange = {},
                 modifier = Modifier.tag("slider").height(20.dp).padding(5.dp),
                 color = MaterialTheme.colors.secondary
