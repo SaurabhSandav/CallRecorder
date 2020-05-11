@@ -1,10 +1,6 @@
 package com.redridgeapps.callrecorder.callutils
 
-import android.content.Context
-import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_CHANNELS
-import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_ENCODING
-import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_SAMPLE_RATE
-import com.redridgeapps.callrecorder.utils.prefs.Prefs
+import com.redridgeapps.callrecorder.utils.prefs.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import java.nio.file.Path
@@ -22,7 +18,6 @@ data class RecordingJob(
 
 @Suppress("FunctionName")
 suspend fun RecordingJob(
-    context: Context,
     prefs: Prefs,
     phoneNumber: String,
     callDirection: CallDirection
@@ -39,7 +34,7 @@ suspend fun RecordingJob(
         pcmChannels = audioChannel.await(),
         pcmEncoding = audioEncoding.await(),
         savePath = Recordings.generateFilePath(
-            context = context,
+            saveDir = prefs.get(PREF_RECORDING_PATH).ifEmpty { error("Recording path is empty") },
             fileName = recordingStartInstant.epochSecond.toString()
         ),
         phoneNumber = phoneNumber,

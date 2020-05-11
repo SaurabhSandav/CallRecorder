@@ -24,6 +24,11 @@ val PREF_IS_RECORDING_ON = PrefBoolean(
     defaultValue = false
 ).addToPrefList()
 
+val PREF_RECORDING_PATH = TypedPref.PrefString(
+    key = "PREF_RECORDING_PATH",
+    defaultValue = ""
+).addToPrefList()
+
 val PREF_AUDIO_RECORD_SAMPLE_RATE = PrefEnum(
     key = "AUDIO_RECORD_SAMPLE_RATE",
     defaultValue = PcmSampleRate.S44_100,

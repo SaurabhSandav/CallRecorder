@@ -5,16 +5,10 @@ import android.os.Environment
 import androidx.core.content.ContextCompat
 import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.RecordingQueries
-import com.redridgeapps.callrecorder.callutils.PcmEncoding.PCM_16BIT
-import com.redridgeapps.callrecorder.callutils.PcmEncoding.PCM_8BIT
-import com.redridgeapps.callrecorder.callutils.PcmEncoding.PCM_FLOAT
+import com.redridgeapps.callrecorder.callutils.PcmEncoding.*
 import com.redridgeapps.callrecorder.utils.extension
 import com.redridgeapps.callrecorder.utils.nameWithoutExtension
-import com.redridgeapps.mp3encoder.EncodingJob
-import com.redridgeapps.mp3encoder.Mp3Encoder
-import com.redridgeapps.mp3encoder.Pcm16Mp3Encoder
-import com.redridgeapps.mp3encoder.Pcm8Mp3Encoder
-import com.redridgeapps.mp3encoder.PcmFloatMp3Encoder
+import com.redridgeapps.mp3encoder.*
 import com.redridgeapps.wavutils.WavData
 import com.redridgeapps.wavutils.WavFileUtils
 import com.squareup.sqldelight.runtime.coroutines.asFlow
@@ -115,12 +109,12 @@ class Recordings @Inject constructor(
 
     companion object {
 
-        fun generateFilePath(context: Context, fileName: String): Path {
+        fun generateFilePath(saveDir: String, fileName: String): Path {
             val fileNameWithExt = "$fileName.wav"
-            return getRecordingStoragePath(context).resolve(fileNameWithExt)
+            return Paths.get(saveDir).resolve(fileNameWithExt)
         }
 
-        private fun getRecordingStoragePath(context: Context): Path {
+        fun getRecordingStoragePath(context: Context): Path {
 
             if (Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED)
                 error("External storage is not writable")
