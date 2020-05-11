@@ -19,6 +19,7 @@ import com.redridgeapps.callrecorder.callutils.*
 import com.redridgeapps.callrecorder.utils.NOTIFICATION_CALL_SERVICE_ID
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import dagger.android.AndroidInjection
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -76,7 +77,9 @@ class CallingService : LifecycleService() {
 
         telephonyManager.listen(callStatusListener, PhoneStateListener.LISTEN_NONE)
 
-        lifecycleScope.launch { callRecorder.stopRecording() }
+        lifecycleScope.launch {
+            (callRecorder.recordingState.first() as? RecordingState.IsRecording)?.stopRecording()
+        }
     }
 
     private fun createNotification() {
@@ -110,19 +113,23 @@ class CallingService : LifecycleService() {
     }
 
     private fun observeCallStatusForRecording() {
-
         callStatusListener.callEventStatus
-            .onEach {
-                when (it.callStatus()) {
-                    CallStatus.STARTED -> callRecorder.startRecording(
-                        RecordingJob(prefs, it),
-                        audioWriter
-                    )
-                    CallStatus.ENDED -> callRecorder.stopRecording()
-                    else -> Unit
-                }
-            }
+            .onEach { it.handleCallStatusChange() }
             .launchIn(lifecycleScope)
+    }
+
+    private suspend fun NewCallEvent.handleCallStatusChange() {
+        when (callStatus()) {
+            CallStatus.STARTED -> {
+                val recorder = callRecorder.recordingState.first() as? RecordingState.NotRecording
+                recorder?.startRecording(RecordingJob(prefs, this), audioWriter)
+            }
+            CallStatus.ENDED -> {
+                val recorder = callRecorder.recordingState.first() as? RecordingState.IsRecording
+                recorder?.stopRecording()
+            }
+            else -> Unit
+        }
     }
 
     companion object {
