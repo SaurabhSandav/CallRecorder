@@ -268,7 +268,7 @@ private fun PlayPauseIcon(
 
     val playbackState = viewModel.uiState.playbackState.collectAsState().value
     val recordingIsPlaying =
-        playbackState is PlaybackState.Playing && playbackState.recording.id == recordingId.value
+        playbackState is PlaybackState.NotStopped.Playing && playbackState.recording.id == recordingId.value
 
     val onClick = {
         when {

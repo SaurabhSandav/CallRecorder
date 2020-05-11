@@ -20,17 +20,32 @@ class CallPlayback @Inject constructor() {
 
 sealed class PlaybackState {
 
-    interface NotStopped {
+    abstract suspend fun startNewPlayback(recording: Recording)
 
-        val recording: Recording
+    object UnInitialized : PlaybackState() {
+        override suspend fun startNewPlayback(recording: Recording): Unit =
+            error("PlaybackState is Uninitialized")
+    }
 
-        val player: MediaPlayer
+    class Stopped(
+        private val playbackState: MutableStateFlow<PlaybackState>
+    ) : PlaybackState() {
 
-        val playbackState: MutableStateFlow<PlaybackState>
+        override suspend fun startNewPlayback(recording: Recording) {
+            MediaPlayer().startNewPlayback(recording, playbackState)
+        }
+    }
 
-        val progress: Flow<Float>
+    sealed class NotStopped(
+        protected val player: MediaPlayer,
+        protected val playbackState: MutableStateFlow<PlaybackState>
+    ) : PlaybackState() {
 
-        suspend fun startNewPlayback(recording: Recording) {
+        abstract val recording: Recording
+
+        abstract val progress: Flow<Float>
+
+        override suspend fun startNewPlayback(recording: Recording) {
             player.startNewPlayback(recording, playbackState)
         }
 
@@ -41,53 +56,43 @@ sealed class PlaybackState {
 
             playbackState.value = Stopped(playbackState)
         }
-    }
 
-    class Playing(
-        override val recording: Recording,
-        override val player: MediaPlayer,
-        override val playbackState: MutableStateFlow<PlaybackState>
-    ) : PlaybackState(), NotStopped {
+        class Playing(
+            override val recording: Recording,
+            player: MediaPlayer,
+            playbackState: MutableStateFlow<PlaybackState>
+        ) : NotStopped(player, playbackState) {
 
-        override val progress: Flow<Float> = flow {
-            while (true) {
-                emit(player.progress)
-                delay(1000)
+            override val progress: Flow<Float> = flow {
+                while (true) {
+                    emit(player.progress)
+                    delay(1000)
+                }
+            }
+
+            fun pausePlayback() {
+                player.pause()
+                playbackState.value = Paused(recording, player, playbackState)
             }
         }
 
-        fun pausePlayback() {
-            player.pause()
-            playbackState.value = Paused(recording, player, playbackState)
+        class Paused(
+            override val recording: Recording,
+            player: MediaPlayer,
+            playbackState: MutableStateFlow<PlaybackState>
+        ) : NotStopped(player, playbackState) {
+
+            override val progress: Flow<Float> = flowOf(player.progress)
+
+            fun resumePlayback() {
+                player.start()
+                playbackState.value = Playing(recording, player, playbackState)
+            }
         }
     }
-
-    class Paused(
-        override val recording: Recording,
-        override val player: MediaPlayer,
-        override val playbackState: MutableStateFlow<PlaybackState>
-    ) : PlaybackState(), NotStopped {
-
-        override val progress: Flow<Float> = flowOf(player.progress)
-
-        fun resumePlayback() {
-            player.start()
-            playbackState.value = Playing(recording, player, playbackState)
-        }
-    }
-
-    class Stopped(
-        private val playbackState: MutableStateFlow<PlaybackState>
-    ) : PlaybackState() {
-
-        suspend fun startPlayback(recording: Recording) =
-            MediaPlayer().startNewPlayback(recording, playbackState)
-    }
-
-    object UnInitialized : PlaybackState()
 }
 
-suspend fun MediaPlayer.startNewPlayback(
+private suspend fun MediaPlayer.startNewPlayback(
     recording: Recording,
     playbackState: MutableStateFlow<PlaybackState>
 ) = withContext(Dispatchers.IO) {
@@ -99,10 +104,12 @@ suspend fun MediaPlayer.startNewPlayback(
 
     setOnCompletionListener {
         seekTo(0)
-        playbackState.value = PlaybackState.Paused(recording, this@startNewPlayback, playbackState)
+        playbackState.value =
+            PlaybackState.NotStopped.Paused(recording, this@startNewPlayback, playbackState)
     }
 
-    playbackState.value = PlaybackState.Playing(recording, this@startNewPlayback, playbackState)
+    playbackState.value =
+        PlaybackState.NotStopped.Playing(recording, this@startNewPlayback, playbackState)
 }
 
 private val MediaPlayer.progress: Float

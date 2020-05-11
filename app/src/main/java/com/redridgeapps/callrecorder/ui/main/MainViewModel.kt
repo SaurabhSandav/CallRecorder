@@ -36,20 +36,17 @@ class MainViewModel @Inject constructor(
         val playbackStatus = callPlayback.playbackState.value
 
         when {
-            playbackStatus is PlaybackState.Stopped -> playbackStatus.startPlayback(recording)
-            playbackStatus is PlaybackState.Paused && playbackStatus.recording.id == recording.id -> {
+            playbackStatus is PlaybackState.NotStopped.Paused && playbackStatus.recording.id == recording.id -> {
                 playbackStatus.resumePlayback()
             }
-            playbackStatus is PlaybackState.NotStopped && playbackStatus.recording.id != recording.id -> {
-                playbackStatus.startNewPlayback(recording)
-            }
+            else -> playbackStatus.startNewPlayback(recording)
         }
     }
 
     fun pausePlayback() {
         val playbackStatus = callPlayback.playbackState.value
 
-        (playbackStatus as? PlaybackState.Playing)?.pausePlayback()
+        (playbackStatus as? PlaybackState.NotStopped.Playing)?.pausePlayback()
     }
 
     fun toggleStar() = viewModelScope.launchNoJob {
