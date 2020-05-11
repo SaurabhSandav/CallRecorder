@@ -11,16 +11,14 @@ data class RecordingJob(
     val pcmChannels: PcmChannels,
     val pcmEncoding: PcmEncoding,
     val savePath: Path,
-    val phoneNumber: String,
-    val callDirection: CallDirection,
+    val callEvent: NewCallEvent,
     val recordingStartInstant: Instant
 )
 
 @Suppress("FunctionName")
 suspend fun RecordingJob(
     prefs: Prefs,
-    phoneNumber: String,
-    callDirection: CallDirection
+    callEvent: NewCallEvent
 ): RecordingJob = coroutineScope {
 
     val sampleRate = async { prefs.get(PREF_AUDIO_RECORD_SAMPLE_RATE) }
@@ -37,8 +35,7 @@ suspend fun RecordingJob(
             saveDir = prefs.get(PREF_RECORDING_PATH).ifEmpty { error("Recording path is empty") },
             fileName = recordingStartInstant.epochSecond.toString()
         ),
-        phoneNumber = phoneNumber,
-        callDirection = callDirection,
+        callEvent = callEvent,
         recordingStartInstant = recordingStartInstant
     )
 }

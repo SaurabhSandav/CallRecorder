@@ -32,7 +32,7 @@ class Recordings @Inject constructor(
 
     suspend fun saveRecording(recordingJob: RecordingJob) = withContext(Dispatchers.IO) {
 
-        val phoneNumber = recordingJob.phoneNumber
+        val phoneNumber = recordingJob.callEvent.phoneNumber
         val name = contactNameFetcher.getContactName(phoneNumber) ?: "Unknown ($phoneNumber)"
 
         val duration = FileChannel.open(
@@ -45,7 +45,7 @@ class Recordings @Inject constructor(
             number = phoneNumber,
             start_instant = recordingJob.recordingStartInstant,
             duration = duration,
-            call_direction = recordingJob.callDirection,
+            call_direction = recordingJob.callEvent.callDirection(),
             save_path = recordingJob.savePath.toAbsolutePath().toString(),
             save_format = recordingJob.savePath.extension
         )

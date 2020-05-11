@@ -15,14 +15,12 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.redridgeapps.callrecorder.MainActivity
 import com.redridgeapps.callrecorder.R
-import com.redridgeapps.callrecorder.callutils.AudioWriter
-import com.redridgeapps.callrecorder.callutils.CallRecorder
-import com.redridgeapps.callrecorder.callutils.CallStatus.*
-import com.redridgeapps.callrecorder.callutils.CallStatusListener
-import com.redridgeapps.callrecorder.callutils.RecordingJob
+import com.redridgeapps.callrecorder.callutils.*
 import com.redridgeapps.callrecorder.utils.NOTIFICATION_CALL_SERVICE_ID
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import dagger.android.AndroidInjection
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -40,7 +38,8 @@ class CallingService : LifecycleService() {
     @Inject
     lateinit var callRecorder: CallRecorder
 
-    private val callStatusListener = createCallStatusListener()
+    private val callStatusListener = CallStatusListener()
+    private val audioWriter = AudioWriter(lifecycleScope)
 
     override fun onCreate() {
         AndroidInjection.inject(this)
@@ -62,6 +61,7 @@ class CallingService : LifecycleService() {
         createNotification()
 
         telephonyManager.listen(callStatusListener, PhoneStateListener.LISTEN_CALL_STATE)
+        observeCallStatusForRecording()
 
         return START_STICKY
     }
@@ -78,20 +78,6 @@ class CallingService : LifecycleService() {
 
         lifecycleScope.launch { callRecorder.stopRecording() }
     }
-
-    private fun createCallStatusListener() =
-        CallStatusListener { status, phoneNumber, callDirection ->
-            lifecycleScope.launch {
-                when (status) {
-                    MissedCall, IncomingCallReceived -> Unit
-                    IncomingCallAnswered, OutgoingCallStarted -> {
-                        val job = RecordingJob(prefs, phoneNumber, callDirection)
-                        callRecorder.startRecording(job, AudioWriter(lifecycleScope))
-                    }
-                    IncomingCallEnded, OutgoingCallEnded -> callRecorder.stopRecording()
-                }
-            }
-        }
 
     private fun createNotification() {
 
@@ -121,6 +107,22 @@ class CallingService : LifecycleService() {
         notificationManager.createNotificationChannel(channel)
 
         return channel.id
+    }
+
+    private fun observeCallStatusForRecording() {
+
+        callStatusListener.callEventStatus
+            .onEach {
+                when (it.callStatus()) {
+                    CallStatus.STARTED -> callRecorder.startRecording(
+                        RecordingJob(prefs, it),
+                        audioWriter
+                    )
+                    CallStatus.ENDED -> callRecorder.stopRecording()
+                    else -> Unit
+                }
+            }
+            .launchIn(lifecycleScope)
     }
 
     companion object {
