@@ -5,8 +5,10 @@ import android.media.MediaRecorder.AudioSource
 import android.os.PowerManager
 import com.redridgeapps.callrecorder.utils.ToastMaker
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -17,13 +19,13 @@ class CallRecorder @Inject constructor(
     private val toastMaker: ToastMaker
 ) {
 
-    private val _recordingState =
-        MutableStateFlow<RecordingState>(RecordingState.UnInitialized(recordings))
+    private val _recordingState = BroadcastChannel<RecordingState>(CONFLATED)
 
-    val recordingState: Flow<RecordingState> = _recordingState.onEach { recordingStateChanged(it) }
+    val recordingState: Flow<RecordingState> =
+        _recordingState.asFlow().onEach { recordingStateChanged(it) }
 
     init {
-        _recordingState.value = RecordingState.NotRecording(recordings, _recordingState)
+        _recordingState.offer(RecordingState.NotRecording(recordings, _recordingState))
     }
 
     private val wakeLock = powerManager.newWakeLock(
@@ -45,7 +47,6 @@ class CallRecorder @Inject constructor(
 
                 toastMaker.newToast("Stopped recording").show()
             }
-            else -> Unit
         }
     }
 }
@@ -53,11 +54,9 @@ class CallRecorder @Inject constructor(
 
 sealed class RecordingState(protected val recordings: Recordings) {
 
-    class UnInitialized(recordings: Recordings) : RecordingState(recordings)
-
     class NotRecording(
         recordings: Recordings,
-        private val recordingState: MutableStateFlow<RecordingState>
+        private val recordingState: BroadcastChannel<RecordingState>
     ) : RecordingState(recordings) {
 
         suspend fun startRecording(
@@ -78,8 +77,9 @@ sealed class RecordingState(protected val recordings: Recordings) {
 
             audioWriter.startWriting(recorder, recordingJob, bufferSize)
 
-            recordingState.value =
+            val isRecording =
                 IsRecording(recordings, recorder, recordingJob, audioWriter, recordingState)
+            recordingState.offer(isRecording)
         }
     }
 
@@ -88,7 +88,7 @@ sealed class RecordingState(protected val recordings: Recordings) {
         private val recorder: AudioRecord,
         private val recordingJob: RecordingJob,
         private val audioWriter: AudioWriter,
-        private val recordingState: MutableStateFlow<RecordingState>
+        private val recordingState: BroadcastChannel<RecordingState>
     ) : RecordingState(recordings) {
 
         suspend fun stopRecording() {
@@ -101,7 +101,7 @@ sealed class RecordingState(protected val recordings: Recordings) {
 
             recordings.saveRecording(recordingJob)
 
-            recordingState.value = NotRecording(recordings, recordingState)
+            recordingState.offer(NotRecording(recordings, recordingState))
         }
     }
 }

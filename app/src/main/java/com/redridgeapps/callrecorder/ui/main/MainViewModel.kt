@@ -33,7 +33,7 @@ class MainViewModel @Inject constructor(
     fun startPlayback(recordingId: RecordingId) = viewModelScope.launchNoJob {
 
         val recording = recordingQueries.getWithId(recordingId.value).asFlow().mapToOne().first()
-        val playbackStatus = callPlayback.playbackState.value
+        val playbackStatus = callPlayback.playbackState.first()
 
         when {
             playbackStatus is PlaybackState.NotStopped.Paused && playbackStatus.recording.id == recording.id -> {
@@ -43,8 +43,8 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun pausePlayback() {
-        val playbackStatus = callPlayback.playbackState.value
+    fun pausePlayback() = viewModelScope.launchNoJob {
+        val playbackStatus = callPlayback.playbackState.first()
 
         (playbackStatus as? PlaybackState.NotStopped.Playing)?.pausePlayback()
     }
@@ -164,8 +164,8 @@ class MainViewModel @Inject constructor(
         return resultList
     }
 
-    private fun stopPlayback() {
-        val playbackStatus = callPlayback.playbackState.value
+    private fun stopPlayback() = viewModelScope.launchNoJob {
+        val playbackStatus = callPlayback.playbackState.first()
 
         (playbackStatus as? PlaybackState.NotStopped)?.stopPlayback()
     }

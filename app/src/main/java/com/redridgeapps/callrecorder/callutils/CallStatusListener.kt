@@ -5,16 +5,18 @@ import android.telephony.TelephonyManager
 import com.redridgeapps.callrecorder.callutils.CallDirection.INCOMING
 import com.redridgeapps.callrecorder.callutils.CallDirection.OUTGOING
 import com.redridgeapps.callrecorder.callutils.CallEventDetailed.*
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asFlow
 
 class CallStatusListener : PhoneStateListener() {
 
     private var lastState = TelephonyManager.CALL_STATE_IDLE
     private var isIncoming: Boolean = false
-    private val _callEventStatus = MutableStateFlow(NewCallEvent(MISSED_CALL, ""))
+    private val _callEventStatus = BroadcastChannel<NewCallEvent>(CONFLATED)
 
-    val callEventStatus: Flow<NewCallEvent> = _callEventStatus
+    val callEventStatus: Flow<NewCallEvent> = _callEventStatus.asFlow()
 
     override fun onCallStateChanged(state: Int, phoneNumber: String) {
         super.onCallStateChanged(state, phoneNumber)
@@ -22,7 +24,7 @@ class CallStatusListener : PhoneStateListener() {
         if (lastState == state) return
 
         lastState = state
-        _callEventStatus.value = NewCallEvent(inferCallStatus(state), phoneNumber)
+        _callEventStatus.offer(NewCallEvent(inferCallStatus(state), phoneNumber))
     }
 
     private fun inferCallStatus(state: Int): CallEventDetailed {

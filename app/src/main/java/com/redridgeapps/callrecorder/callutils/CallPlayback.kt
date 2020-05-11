@@ -3,18 +3,23 @@ package com.redridgeapps.callrecorder.callutils
 import android.media.MediaPlayer
 import com.redridgeapps.callrecorder.Recording
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CallPlayback @Inject constructor() {
 
-    private val _playbackState = MutableStateFlow<PlaybackState>(PlaybackState.UnInitialized)
-    val playbackState: StateFlow<PlaybackState> = _playbackState
+    private val _playbackState = BroadcastChannel<PlaybackState>(CONFLATED)
+    val playbackState: Flow<PlaybackState> = _playbackState.asFlow()
 
     init {
-        _playbackState.value = PlaybackState.Stopped(_playbackState)
+        _playbackState.offer(PlaybackState.Stopped(_playbackState))
     }
 }
 
@@ -22,13 +27,8 @@ sealed class PlaybackState {
 
     abstract suspend fun startNewPlayback(recording: Recording)
 
-    object UnInitialized : PlaybackState() {
-        override suspend fun startNewPlayback(recording: Recording): Unit =
-            error("PlaybackState is Uninitialized")
-    }
-
     class Stopped(
-        private val playbackState: MutableStateFlow<PlaybackState>
+        private val playbackState: BroadcastChannel<PlaybackState>
     ) : PlaybackState() {
 
         override suspend fun startNewPlayback(recording: Recording) {
@@ -38,7 +38,7 @@ sealed class PlaybackState {
 
     sealed class NotStopped(
         protected val player: MediaPlayer,
-        protected val playbackState: MutableStateFlow<PlaybackState>
+        protected val playbackState: BroadcastChannel<PlaybackState>
     ) : PlaybackState() {
 
         abstract val recording: Recording
@@ -54,13 +54,13 @@ sealed class PlaybackState {
             player.reset()
             player.release()
 
-            playbackState.value = Stopped(playbackState)
+            playbackState.offer(Stopped(playbackState))
         }
 
         class Playing(
             override val recording: Recording,
             player: MediaPlayer,
-            playbackState: MutableStateFlow<PlaybackState>
+            playbackState: BroadcastChannel<PlaybackState>
         ) : NotStopped(player, playbackState) {
 
             override val progress: Flow<Float> = flow {
@@ -72,21 +72,21 @@ sealed class PlaybackState {
 
             fun pausePlayback() {
                 player.pause()
-                playbackState.value = Paused(recording, player, playbackState)
+                playbackState.offer(Paused(recording, player, playbackState))
             }
         }
 
         class Paused(
             override val recording: Recording,
             player: MediaPlayer,
-            playbackState: MutableStateFlow<PlaybackState>
+            playbackState: BroadcastChannel<PlaybackState>
         ) : NotStopped(player, playbackState) {
 
             override val progress: Flow<Float> = flowOf(player.progress)
 
             fun resumePlayback() {
                 player.start()
-                playbackState.value = Playing(recording, player, playbackState)
+                playbackState.offer(Playing(recording, player, playbackState))
             }
         }
     }
@@ -94,7 +94,7 @@ sealed class PlaybackState {
 
 private suspend fun MediaPlayer.startNewPlayback(
     recording: Recording,
-    playbackState: MutableStateFlow<PlaybackState>
+    playbackState: BroadcastChannel<PlaybackState>
 ) = withContext(Dispatchers.IO) {
 
     reset()
@@ -104,12 +104,13 @@ private suspend fun MediaPlayer.startNewPlayback(
 
     setOnCompletionListener {
         seekTo(0)
-        playbackState.value =
+        val paused =
             PlaybackState.NotStopped.Paused(recording, this@startNewPlayback, playbackState)
+        playbackState.offer(paused)
     }
 
-    playbackState.value =
-        PlaybackState.NotStopped.Playing(recording, this@startNewPlayback, playbackState)
+    val playing = PlaybackState.NotStopped.Playing(recording, this@startNewPlayback, playbackState)
+    playbackState.offer(playing)
 }
 
 private val MediaPlayer.progress: Float
