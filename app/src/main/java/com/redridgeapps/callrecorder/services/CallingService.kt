@@ -15,6 +15,7 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.redridgeapps.callrecorder.MainActivity
 import com.redridgeapps.callrecorder.R
+import com.redridgeapps.callrecorder.callutils.AudioWriter
 import com.redridgeapps.callrecorder.callutils.CallRecorder
 import com.redridgeapps.callrecorder.callutils.CallStatus.*
 import com.redridgeapps.callrecorder.callutils.CallStatusListener
@@ -85,7 +86,7 @@ class CallingService : LifecycleService() {
                     MissedCall, IncomingCallReceived -> Unit
                     IncomingCallAnswered, OutgoingCallStarted -> {
                         val job = RecordingJob(prefs, phoneNumber, callDirection)
-                        callRecorder.startRecording(job)
+                        callRecorder.startRecording(job, AudioWriter(lifecycleScope))
                     }
                     IncomingCallEnded, OutgoingCallEnded -> callRecorder.stopRecording()
                 }
