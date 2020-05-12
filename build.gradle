@@ -32,7 +32,8 @@ allprojects {
         google()
         mavenCentral()
         maven { url "https://jitpack.io" } // For compose-navigation
-        maven { url "https://androidx.dev/snapshots/builds/${Compose.REPO_VERSION}/artifacts/ui/repository" }
+//        maven { url "https://androidx.dev/snapshots/builds/${Compose.REPO_VERSION}/artifacts/ui/repository" }
+        maven { url "/run/media/saurabh/Extra/Projects/Support/out/ui/build/support_repo/" }
         jcenter()
     }
 
