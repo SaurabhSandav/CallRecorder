@@ -77,8 +77,15 @@ object MainDestination : Destination {
 @Composable
 private fun MainUI(viewModel: MainViewModel) {
 
+    val topAppBar = @Composable {
+        when {
+            viewModel.uiState.selection.inMultiSelectMode -> SelectionTopAppBar(viewModel)
+            else -> MainTopAppBar(viewModel)
+        }
+    }
+
     Scaffold(
-        topAppBar = { MainTopAppBar(viewModel) }
+        topAppBar = topAppBar
     ) { modifier ->
 
         Column(modifier) {
@@ -96,17 +103,27 @@ private fun MainTopAppBar(viewModel: MainViewModel) {
     TopAppBar(
         title = { Text(text = "Call Recorder", modifier = Modifier.padding(bottom = 16.dp)) },
         actions = {
+            IconFilter(viewModel)
+            IconSettings()
+        }
+    )
+}
 
-            when {
-                viewModel.uiState.selection.inMultiSelectMode -> {
-                    IconDelete(viewModel)
-                    IconCloseSelectionMode(viewModel)
-                }
-                else -> {
-                    IconFilter(viewModel)
-                    IconSettings()
-                }
-            }
+@Composable
+private fun SelectionTopAppBar(viewModel: MainViewModel) {
+
+    val selectionSize = viewModel.uiState.selection.size
+
+    TopAppBar(
+        title = {
+            Text(
+                text = "$selectionSize selected",
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+        },
+        actions = {
+            IconDelete(viewModel)
+            IconCloseSelectionMode(viewModel)
         }
     )
 }
