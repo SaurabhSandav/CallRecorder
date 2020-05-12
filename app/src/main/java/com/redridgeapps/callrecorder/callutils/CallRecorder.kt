@@ -25,7 +25,7 @@ class CallRecorder @Inject constructor(
         _recordingState.asFlow().onEach { recordingStateChanged(it) }
 
     init {
-        _recordingState.offer(RecordingState.NotRecording(recordings, _recordingState))
+        _recordingState.offer(RecordingState.Idle(recordings, _recordingState))
     }
 
     private val wakeLock = powerManager.newWakeLock(
@@ -35,7 +35,7 @@ class CallRecorder @Inject constructor(
 
     private fun recordingStateChanged(recordingState: RecordingState) {
         when (recordingState) {
-            is RecordingState.NotRecording -> {
+            is RecordingState.Idle -> {
                 //noinspection WakelockTimeout
                 wakeLock.acquire()
                 toastMaker.newToast("Started recording").show()
@@ -54,7 +54,7 @@ class CallRecorder @Inject constructor(
 
 sealed class RecordingState(protected val recordings: Recordings) {
 
-    class NotRecording(
+    class Idle(
         recordings: Recordings,
         private val recordingState: BroadcastChannel<RecordingState>
     ) : RecordingState(recordings) {
@@ -101,7 +101,7 @@ sealed class RecordingState(protected val recordings: Recordings) {
 
             recordings.saveRecording(recordingJob)
 
-            recordingState.offer(NotRecording(recordings, recordingState))
+            recordingState.offer(Idle(recordings, recordingState))
         }
     }
 }

@@ -121,7 +121,7 @@ class CallingService : LifecycleService() {
     private suspend fun NewCallEvent.handleCallStatusChange() {
         when (callStatus()) {
             CallStatus.STARTED -> {
-                val recorder = callRecorder.recordingState.first() as? RecordingState.NotRecording
+                val recorder = callRecorder.recordingState.first() as? RecordingState.Idle
                 recorder?.startRecording(RecordingJob(prefs, this), audioWriter)
             }
             CallStatus.ENDED -> {
