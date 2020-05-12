@@ -38,14 +38,14 @@ class CallRecorder @Inject constructor(
             is RecordingState.Idle -> {
                 //noinspection WakelockTimeout
                 wakeLock.acquire()
-                toastMaker.newToast("Started recording").show()
+                toastMaker.showToast("Started recording")
             }
             is RecordingState.IsRecording -> {
 
                 if (wakeLock.isHeld)
                     wakeLock.release()
 
-                toastMaker.newToast("Stopped recording").show()
+                toastMaker.showToast("Stopped recording")
             }
         }
     }
