@@ -57,7 +57,7 @@ class Recordings @Inject constructor(
 
     suspend fun convertToMp3(recordingId: RecordingId) = withContext(Dispatchers.IO) {
 
-        val recording = recordingQueries.getWithId(recordingId.value).executeAsOne()
+        val recording = recordingQueries.get(listOf(recordingId.value)).executeAsOne()
         val recordingPath = Paths.get(recording.save_path)
         val wavData = getWavData(recordingId)
         val outputPath =
@@ -80,18 +80,22 @@ class Recordings @Inject constructor(
         return@withContext
     }
 
-    suspend fun deleteRecording(recordingId: RecordingId) = withContext(Dispatchers.IO) {
-        val recording = recordingQueries.getWithId(recordingId.value).executeAsOne()
-        Files.delete(Paths.get(recording.save_path))
-        recordingQueries.deleteWithId(recordingId.value)
+    suspend fun deleteRecording(recordingId: List<RecordingId>) = withContext(Dispatchers.IO) {
+        val recordings = recordingQueries.get(recordingId.map { it.value }).executeAsList()
+
+        recordings.forEach {
+            Files.delete(Paths.get(it.save_path))
+        }
+
+        recordingQueries.delete(recordingId.map { it.value })
     }
 
-    suspend fun toggleStar(recordingId: RecordingId) = withContext(Dispatchers.IO) {
-        recordingQueries.toggleStar(recordingId.value)
+    suspend fun toggleStar(recordingId: List<RecordingId>) = withContext(Dispatchers.IO) {
+        recordingQueries.toggleStar(recordingId.map { it.value })
     }
 
     suspend fun updateContactName(recordingId: RecordingId) = withContext(Dispatchers.IO) {
-        val recording = recordingQueries.getWithId(recordingId.value).executeAsOne()
+        val recording = recordingQueries.get(listOf(recordingId.value)).executeAsOne()
         val name = contactNameFetcher.getContactName(recording.number) ?: recording.name
         recordingQueries.updateContactName(name, recordingId.value)
     }
@@ -100,7 +104,7 @@ class Recordings @Inject constructor(
         recordingId: RecordingId
     ): WavData = withContext(Dispatchers.IO) {
 
-        val recording = recordingQueries.getWithId(recordingId.value).executeAsOne()
+        val recording = recordingQueries.get(listOf(recordingId.value)).executeAsOne()
         val recordingPath = Paths.get(recording.save_path)
         val fileChannel = FileChannel.open(recordingPath, StandardOpenOption.READ)
 

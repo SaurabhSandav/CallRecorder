@@ -32,7 +32,7 @@ class MainViewModel @Inject constructor(
 
     fun startPlayback(recordingId: RecordingId) = viewModelScope.launchNoJob {
 
-        val recording = recordingQueries.getWithId(recordingId.value).asFlow().mapToOne().first()
+        val recording = recordingQueries.get(listOf(recordingId.value)).asFlow().mapToOne().first()
         val playbackStatus = callPlayback.playbackState.first()
 
         when {
@@ -50,7 +50,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun toggleStar() = viewModelScope.launchNoJob {
-        uiState.selection.forEach { recordings.toggleStar(it.id) }
+        recordings.toggleStar(uiState.selection.map { it.id })
         uiState.selection.clear()
     }
 
@@ -65,7 +65,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun deleteRecordings() = viewModelScope.launchNoJob {
-        uiState.selection.forEach { recordings.deleteRecording(it.id) }
+        recordings.deleteRecording(uiState.selection.map { it.id })
         uiState.selection.clear()
     }
 

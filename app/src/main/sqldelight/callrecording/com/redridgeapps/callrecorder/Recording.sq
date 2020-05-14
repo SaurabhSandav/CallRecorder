@@ -19,22 +19,22 @@ INSERT OR REPLACE
 INTO Recording (name, number, start_instant, duration, call_direction, save_path, save_format)
 VALUES (?, ?, ?, ?, ?, ?, ?);
 
+get:
+SELECT * FROM Recording WHERE id IN ?;
+
 getAll:
 SELECT * FROM Recording
 ORDER BY id DESC;
 
-getWithId:
-SELECT * FROM Recording WHERE id = ?;
-
 toggleStar:
 UPDATE Recording
 SET is_starred = ((is_starred | 1) - (is_starred & 1))
-WHERE id = ?;
+WHERE id IN ?;
 
 updateContactName:
 UPDATE Recording
 SET name = ?
 WHERE id = ?;
 
-deleteWithId:
-DELETE FROM Recording WHERE id = ?;
+delete:
+DELETE FROM Recording WHERE id IN ?;
