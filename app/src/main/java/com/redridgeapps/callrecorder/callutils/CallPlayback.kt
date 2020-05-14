@@ -7,9 +7,9 @@ import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -57,6 +57,10 @@ sealed class PlaybackState {
             playbackState.offer(Stopped(playbackState))
         }
 
+        open fun setPosition(progress: Float) {
+            player.seekTo((player.duration * progress).toInt())
+        }
+
         class Playing(
             override val recording: Recording,
             player: MediaPlayer,
@@ -66,7 +70,7 @@ sealed class PlaybackState {
             override val progress: Flow<Float> = flow {
                 while (true) {
                     emit(player.progress)
-                    delay(1000)
+                    delay(500)
                 }
             }
 
@@ -82,11 +86,18 @@ sealed class PlaybackState {
             playbackState: BroadcastChannel<PlaybackState>
         ) : NotStopped(player, playbackState) {
 
-            override val progress: Flow<Float> = flowOf(player.progress)
+            private val _progress = MutableStateFlow(player.progress)
+
+            override val progress: Flow<Float> = _progress
 
             fun resumePlayback() {
                 player.start()
                 playbackState.offer(Playing(recording, player, playbackState))
+            }
+
+            override fun setPosition(progress: Float) {
+                super.setPosition(progress)
+                _progress.value = progress
             }
         }
     }

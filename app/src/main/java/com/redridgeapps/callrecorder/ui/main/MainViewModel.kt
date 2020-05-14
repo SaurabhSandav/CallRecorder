@@ -49,6 +49,12 @@ class MainViewModel @Inject constructor(
         (playbackStatus as? PlaybackState.NotStopped.Playing)?.pausePlayback()
     }
 
+    fun setPlaybackPosition(position: Float) = viewModelScope.launchNoJob {
+        val playbackStatus = callPlayback.playbackState.first()
+
+        (playbackStatus as? PlaybackState.NotStopped)?.setPosition(position)
+    }
+
     fun toggleStar() = viewModelScope.launchNoJob {
         recordings.toggleStar(uiState.selection.map { it.id })
         uiState.selection.clear()

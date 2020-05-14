@@ -351,9 +351,12 @@ private fun PlaybackBar(viewModel: MainViewModel) {
                 color = MaterialTheme.colors.onPrimary
             )
 
+            var sliderPosition = 0F
+
             Slider(
-                value = playbackState.progress.collectAsState().value ?: 0F,
-                onValueChange = {},
+                value = playbackState.progress.collectAsState(0F).value,
+                onValueChange = { sliderPosition = it },
+                onValueChangeEnd = { viewModel.setPlaybackPosition(sliderPosition) },
                 modifier = Modifier.tag("slider").height(20.dp).padding(5.dp),
                 color = MaterialTheme.colors.secondary
             )
