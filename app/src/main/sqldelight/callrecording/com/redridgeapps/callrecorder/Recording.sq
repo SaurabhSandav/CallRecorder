@@ -34,7 +34,7 @@ WHERE id IN ?;
 updateContactName:
 UPDATE Recording
 SET name = ?
-WHERE id = ?;
+WHERE number = ?;
 
 delete:
 DELETE FROM Recording WHERE id IN ?;

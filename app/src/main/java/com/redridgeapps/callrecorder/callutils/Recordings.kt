@@ -94,10 +94,14 @@ class Recordings @Inject constructor(
         recordingQueries.toggleStar(recordingId.map { it.value })
     }
 
-    suspend fun updateContactName(recordingId: RecordingId) = withContext(Dispatchers.IO) {
-        val recording = recordingQueries.get(listOf(recordingId.value)).executeAsOne()
-        val name = contactNameFetcher.getContactName(recording.number) ?: recording.name
-        recordingQueries.updateContactName(name, recordingId.value)
+    suspend fun updateContactNames() = withContext(Dispatchers.IO) {
+
+        val recordings = recordingQueries.getAll().executeAsList()
+
+        recordings.distinctBy { it.number }.forEach { recording ->
+            val name = contactNameFetcher.getContactName(recording.number) ?: recording.name
+            recordingQueries.updateContactName(name, recording.number)
+        }
     }
 
     private suspend fun getWavData(

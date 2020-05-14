@@ -5,14 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.callutils.PcmChannels
 import com.redridgeapps.callrecorder.callutils.PcmEncoding
 import com.redridgeapps.callrecorder.callutils.PcmSampleRate
+import com.redridgeapps.callrecorder.callutils.Recordings
 import com.redridgeapps.callrecorder.utils.Systemizer
 import com.redridgeapps.callrecorder.utils.launchNoJob
-import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_CHANNELS
-import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_ENCODING
-import com.redridgeapps.callrecorder.utils.prefs.PREF_AUDIO_RECORD_SAMPLE_RATE
-import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_RECORDING_ON
-import com.redridgeapps.callrecorder.utils.prefs.Prefs
-import com.redridgeapps.callrecorder.utils.prefs.TypedPref
+import com.redridgeapps.callrecorder.utils.prefs.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -20,7 +16,8 @@ import javax.inject.Inject
 
 class SettingsViewModel @Inject constructor(
     private val prefs: Prefs,
-    private val systemizer: Systemizer
+    private val systemizer: Systemizer,
+    private val recordings: Recordings
 ) : ViewModel() {
 
     val uiState: SettingsState = SettingsState()
@@ -53,6 +50,10 @@ class SettingsViewModel @Inject constructor(
 
         val flippedIsRecording = !prefs.get(PREF_IS_RECORDING_ON)
         prefs.set(PREF_IS_RECORDING_ON, flippedIsRecording)
+    }
+
+    fun updateContactNames() = viewModelScope.launchNoJob {
+        recordings.updateContactNames()
     }
 
     fun setAudioRecordSampleRate(

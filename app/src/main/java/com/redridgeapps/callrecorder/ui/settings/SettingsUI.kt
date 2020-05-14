@@ -8,6 +8,7 @@ import androidx.ui.foundation.Text
 import androidx.ui.layout.Column
 import androidx.ui.layout.padding
 import androidx.ui.material.IconButton
+import androidx.ui.material.ListItem
 import androidx.ui.material.Scaffold
 import androidx.ui.material.TopAppBar
 import androidx.ui.material.icons.Icons
@@ -79,6 +80,11 @@ private fun ContentMain(viewModel: SettingsViewModel, modifier: Modifier) {
         SwitchPreference("Systemize", viewModel.uiState.isSystemized) {
             viewModel.flipSystemization()
         }
+
+        ListItem(
+            text = { Text("Update contact names") },
+            onClick = { viewModel.updateContactNames() }
+        )
 
         AudioRecordAPIPreference(viewModel)
     }

@@ -387,7 +387,6 @@ private fun OptionsDialog(viewModel: MainViewModel) {
                 onClick = { viewModel.toggleStar() }
             )
 
-            ListItem("Update contact name", onClick = { viewModel.updateContactName() })
             ListItem("Convert to Mp3", onClick = { viewModel.convertToMp3() })
             ListItem("Delete", onClick = { viewModel.deleteRecordings() })
         }

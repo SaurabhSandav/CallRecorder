@@ -54,11 +54,6 @@ class MainViewModel @Inject constructor(
         uiState.selection.clear()
     }
 
-    fun updateContactName() = viewModelScope.launchNoJob {
-        uiState.selection.forEach { recordings.updateContactName(it.id) }
-        uiState.selection.clear()
-    }
-
     fun convertToMp3() = viewModelScope.launchNoJob {
         uiState.selection.forEach { recordings.convertToMp3(it.id) }
         uiState.selection.clear()
