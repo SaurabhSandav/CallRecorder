@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.IBinder
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import androidx.core.app.NotificationCompat
@@ -65,11 +64,6 @@ class CallingService : LifecycleService() {
         observeCallStatusForRecording()
 
         return START_STICKY
-    }
-
-    override fun onBind(intent: Intent): IBinder? {
-        super.onBind(intent)
-        return null
     }
 
     override fun onDestroy() {
