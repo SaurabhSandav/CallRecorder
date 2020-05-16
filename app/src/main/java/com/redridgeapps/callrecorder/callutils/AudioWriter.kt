@@ -1,6 +1,7 @@
 package com.redridgeapps.callrecorder.callutils
 
 import android.media.AudioRecord
+import com.redridgeapps.wavutils.WAV_HEADER_SIZE
 import com.redridgeapps.wavutils.WavFileUtils
 import kotlinx.coroutines.*
 import java.nio.ByteBuffer
@@ -25,7 +26,7 @@ class AudioWriter(private val coroutineScope: CoroutineScope) {
         FileChannel.open(recordingJob.savePath, CREATE_NEW, WRITE).use { channel ->
 
             // Skip header for now
-            channel.position(44)
+            channel.position(WAV_HEADER_SIZE.toLong())
 
             val byteBuffer = ByteBuffer.allocateDirect(bufferSize)
 

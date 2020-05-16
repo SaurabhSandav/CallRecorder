@@ -1,5 +1,6 @@
 package com.redridgeapps.mp3encoder
 
+import com.redridgeapps.wavutils.WAV_HEADER_SIZE
 import com.redridgeapps.wavutils.WavData
 import timber.log.Timber
 import java.nio.Buffer
@@ -24,7 +25,7 @@ object Mp3Encoder {
             ).use { outputChannel ->
 
                 // Skip header
-                inputChannel.position(44)
+                inputChannel.position(WAV_HEADER_SIZE.toLong())
 
                 // Setup buffers
                 val bufferSize = BUFFER_MULTIPLIER * encodingJob.wavData.blockAlign

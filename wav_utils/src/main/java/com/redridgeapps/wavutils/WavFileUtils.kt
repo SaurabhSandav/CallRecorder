@@ -14,11 +14,11 @@ object WavFileUtils {
         bitsPerSample: WavBitsPerSample
     ) {
 
-        val pcmSize = fileChannel.size().toInt() - 44
+        val pcmSize = fileChannel.size().toInt() - WAV_HEADER_SIZE
 
         fileChannel.position(0)
 
-        val byteBuffer = ByteBuffer.allocateDirect(44).order(ByteOrder.LITTLE_ENDIAN)
+        val byteBuffer = ByteBuffer.allocateDirect(WAV_HEADER_SIZE).order(ByteOrder.LITTLE_ENDIAN)
 
         "RIFF".forEach { byteBuffer.put(it.toByte()) }
         byteBuffer.putInt(pcmSize + 36)
@@ -48,7 +48,7 @@ object WavFileUtils {
 
         fileChannel.position(0)
 
-        val byteBuffer = ByteBuffer.allocateDirect(44).order(ByteOrder.LITTLE_ENDIAN)
+        val byteBuffer = ByteBuffer.allocateDirect(WAV_HEADER_SIZE).order(ByteOrder.LITTLE_ENDIAN)
         fileChannel.read(byteBuffer)
 
         return WavData(
@@ -65,8 +65,10 @@ object WavFileUtils {
         fileChannel: FileChannel
     ): Duration {
         val wavData = readWavData(fileChannel)
-        val fileSize = fileChannel.size() - 44
+        val fileSize = fileChannel.size() - WAV_HEADER_SIZE
         val durationMillis = (fileSize * 1000) / wavData.byteRate
         return Duration.ofMillis(durationMillis)
     }
 }
+
+const val WAV_HEADER_SIZE = 44

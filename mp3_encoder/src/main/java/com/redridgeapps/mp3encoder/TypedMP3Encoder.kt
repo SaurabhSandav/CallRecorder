@@ -1,5 +1,6 @@
 package com.redridgeapps.mp3encoder
 
+import com.redridgeapps.wavutils.WAV_HEADER_SIZE
 import com.redridgeapps.wavutils.WavBitsPerSample
 import java.nio.*
 
@@ -31,7 +32,7 @@ class Pcm8Mp3Encoder(override val encodingJob: EncodingJob) : TypedMP3Encoder<By
         val wavData = encodingJob.wavData
 
         val newWavData = wavData.copy(
-            fileSize = (wavData.fileSize * 2) - 44,
+            fileSize = (wavData.fileSize * 2) - WAV_HEADER_SIZE,
             byteRate = (wavData.channels.value * wavData.bitsPerSample.value * wavData.sampleRate.value) / 8,
             blockAlign = (wavData.channels.value * wavData.bitsPerSample.value) / 8,
             bitsPerSample = WavBitsPerSample(16)
