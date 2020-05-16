@@ -12,5 +12,4 @@ dependencies {
 
     // Kotlin
     implementation Kotlin.STDLIB
-    implementation Kotlin.COROUTINES_CORE
 }

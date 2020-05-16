@@ -1,7 +1,5 @@
 package com.redridgeapps.wavutils
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.channels.FileChannel
@@ -9,12 +7,12 @@ import java.time.Duration
 
 object WavFileUtils {
 
-    suspend fun writeHeader(
+    fun writeHeader(
         fileChannel: FileChannel,
         sampleRate: Int,
         channelCount: Int,
         bitsPerSample: Int
-    ) = withContext(Dispatchers.IO) {
+    ) {
 
         val pcmSize = fileChannel.size().toInt() - 44
 
@@ -44,18 +42,16 @@ object WavFileUtils {
         byteBuffer.flip()
 
         fileChannel.write(byteBuffer)
-
-        return@withContext
     }
 
-    suspend fun readWavData(fileChannel: FileChannel): WavData = withContext(Dispatchers.IO) {
+    fun readWavData(fileChannel: FileChannel): WavData {
 
         fileChannel.position(0)
 
         val byteBuffer = ByteBuffer.allocateDirect(44).order(ByteOrder.LITTLE_ENDIAN)
         fileChannel.read(byteBuffer)
 
-        return@withContext WavData(
+        return WavData(
             fileSize = byteBuffer.getInt(4),
             channels = byteBuffer.getShort(22).toInt(),
             sampleRate = byteBuffer.getInt(24),
@@ -65,12 +61,12 @@ object WavFileUtils {
         )
     }
 
-    suspend fun calculateDuration(
+    fun calculateDuration(
         fileChannel: FileChannel
-    ): Duration = withContext(Dispatchers.IO) {
+    ): Duration {
         val wavData = readWavData(fileChannel)
         val fileSize = fileChannel.size() - 44
         val durationMillis = (fileSize * 1000) / wavData.byteRate
-        return@withContext Duration.ofMillis(durationMillis)
+        return Duration.ofMillis(durationMillis)
     }
 }
