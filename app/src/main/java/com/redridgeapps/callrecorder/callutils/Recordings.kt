@@ -69,7 +69,7 @@ class Recordings @Inject constructor(
             mp3Path = outputPath
         )
 
-        val encoder = when (PcmEncoding.valueOf(wavData.bitsPerSample)) {
+        val encoder = when (wavData.bitsPerSample.asPcmEncoding()) {
             PCM_8BIT -> Pcm8Mp3Encoder(encodingJob)
             PCM_16BIT -> Pcm16Mp3Encoder(encodingJob)
             PCM_FLOAT -> PcmFloatMp3Encoder(encodingJob)

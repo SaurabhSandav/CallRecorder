@@ -1,10 +1,7 @@
 package com.redridgeapps.mp3encoder
 
-import java.nio.Buffer
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
-import java.nio.FloatBuffer
-import java.nio.ShortBuffer
+import com.redridgeapps.wavutils.WavBitsPerSample
+import java.nio.*
 
 interface TypedMP3Encoder<T : Buffer> {
 
@@ -35,9 +32,9 @@ class Pcm8Mp3Encoder(override val encodingJob: EncodingJob) : TypedMP3Encoder<By
 
         val newWavData = wavData.copy(
             fileSize = (wavData.fileSize * 2) - 44,
-            byteRate = (wavData.channels * wavData.bitsPerSample * wavData.sampleRate) / 8,
-            blockAlign = (wavData.channels * wavData.bitsPerSample) / 8,
-            bitsPerSample = 16
+            byteRate = (wavData.channels.value * wavData.bitsPerSample.value * wavData.sampleRate.value) / 8,
+            blockAlign = (wavData.channels.value * wavData.bitsPerSample.value) / 8,
+            bitsPerSample = WavBitsPerSample(16)
         )
 
         Pcm16Mp3Encoder(encodingJob.copy(wavData = newWavData))

@@ -48,9 +48,9 @@ class AudioWriter(private val coroutineScope: CoroutineScope) {
 
             WavFileUtils.writeHeader(
                 fileChannel = channel,
-                sampleRate = recordingJob.pcmSampleRate.sampleRate,
-                channelCount = recordingJob.pcmChannels.channelCount,
-                bitsPerSample = recordingJob.pcmEncoding.bitsPerSample
+                sampleRate = recordingJob.pcmSampleRate.asWavSampleRate(),
+                channels = recordingJob.pcmChannels.asWavChannels(),
+                bitsPerSample = recordingJob.pcmEncoding.asWavBitsPerSample()
             )
         }
 

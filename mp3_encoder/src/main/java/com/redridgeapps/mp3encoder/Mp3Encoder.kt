@@ -50,7 +50,7 @@ object Mp3Encoder {
 
                     write = when {
                         read < 1 -> Lame.lameEncodeFlush(lame, mp3Buffer, bufferSize)
-                        encodingJob.wavData.channels == 1 -> encoder.lameEncodeBuffer(
+                        encodingJob.wavData.channels.value == 1 -> encoder.lameEncodeBuffer(
                             lameT = lame,
                             pcmLeft = pcmBuffer,
                             pcmRight = emptyBuffer,
@@ -58,7 +58,7 @@ object Mp3Encoder {
                             mp3Buffer = mp3Buffer,
                             mp3BufferSize = bufferSize
                         )
-                        encodingJob.wavData.channels == 2 -> encoder.lameEncodeBufferInterleaved(
+                        encodingJob.wavData.channels.value == 2 -> encoder.lameEncodeBufferInterleaved(
                             lameT = lame,
                             pcmBuffer = pcmBuffer,
                             numSamples = numSamples,
@@ -87,8 +87,8 @@ object Mp3Encoder {
     private fun initLame(wavData: WavData, quality: Int): Long {
 
         val lame = Lame.lameInit()
-        Lame.lameSetNumChannels(lame, wavData.channels)
-        Lame.lameSetInSampleRate(lame, wavData.sampleRate)
+        Lame.lameSetNumChannels(lame, wavData.channels.value)
+        Lame.lameSetInSampleRate(lame, wavData.sampleRate.value)
         Lame.lameSetBitRate(lame, wavData.bitRate.toInt())
         Lame.lameSetQuality(lame, quality)
         Lame.lameSetVbr(lame, 0)

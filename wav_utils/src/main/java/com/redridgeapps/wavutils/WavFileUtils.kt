@@ -9,9 +9,9 @@ object WavFileUtils {
 
     fun writeHeader(
         fileChannel: FileChannel,
-        sampleRate: Int,
-        channelCount: Int,
-        bitsPerSample: Int
+        sampleRate: WavSampleRate,
+        channels: WavChannels,
+        bitsPerSample: WavBitsPerSample
     ) {
 
         val pcmSize = fileChannel.size().toInt() - 44
@@ -26,16 +26,16 @@ object WavFileUtils {
         "fmt ".forEach { byteBuffer.put(it.toByte()) }
         byteBuffer.putInt(16)
 
-        if (bitsPerSample == 32)
+        if (bitsPerSample.value == 32)
             byteBuffer.putShort(3) // WAVE_FORMAT_IEEE_FLOAT
         else
             byteBuffer.putShort(1) // WAVE_FORMAT_PCM
 
-        byteBuffer.putShort(channelCount.toShort())
-        byteBuffer.putInt(sampleRate)
-        byteBuffer.putInt(sampleRate * channelCount * bitsPerSample / 8)
-        byteBuffer.putShort((channelCount * bitsPerSample / 8).toShort())
-        byteBuffer.putShort(bitsPerSample.toShort())
+        byteBuffer.putShort(channels.value.toShort())
+        byteBuffer.putInt(sampleRate.value)
+        byteBuffer.putInt(sampleRate.value * channels.value * bitsPerSample.value / 8)
+        byteBuffer.putShort((channels.value * bitsPerSample.value / 8).toShort())
+        byteBuffer.putShort(bitsPerSample.value.toShort())
         "data".forEach { byteBuffer.put(it.toByte()) }
         byteBuffer.putInt(pcmSize)
 
@@ -53,11 +53,11 @@ object WavFileUtils {
 
         return WavData(
             fileSize = byteBuffer.getInt(4),
-            channels = byteBuffer.getShort(22).toInt(),
-            sampleRate = byteBuffer.getInt(24),
+            channels = WavChannels(byteBuffer.getShort(22).toInt()),
+            sampleRate = WavSampleRate(byteBuffer.getInt(24)),
             byteRate = byteBuffer.getInt(28),
             blockAlign = byteBuffer.getShort(32).toInt(),
-            bitsPerSample = byteBuffer.getShort(34).toInt()
+            bitsPerSample = WavBitsPerSample(byteBuffer.getShort(34).toInt())
         )
     }
 
