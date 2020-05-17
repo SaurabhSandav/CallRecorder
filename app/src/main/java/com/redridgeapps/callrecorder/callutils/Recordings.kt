@@ -7,7 +7,7 @@ import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.RecordingQueries
 import com.redridgeapps.callrecorder.callutils.PcmEncoding.*
 import com.redridgeapps.callrecorder.utils.extension
-import com.redridgeapps.callrecorder.utils.nameWithoutExtension
+import com.redridgeapps.callrecorder.utils.replaceExtension
 import com.redridgeapps.mp3encoder.*
 import com.redridgeapps.wavutils.WavData
 import com.redridgeapps.wavutils.WavFileUtils
@@ -57,8 +57,7 @@ class Recordings @Inject constructor(
 
         val recording = recordingQueries.get(listOf(recordingId.value)).executeAsOne()
         val recordingPath = Paths.get(recording.save_path)
-        val outputPath = recordingPath.parent
-            .resolve("${recordingPath.fileName.nameWithoutExtension}.trimmed.wav")
+        val outputPath = recordingPath.replaceExtension("trimmed.wav")
 
         WavFileUtils.trimSilenceEnds(recordingPath, outputPath)
 
@@ -77,8 +76,7 @@ class Recordings @Inject constructor(
         val recording = recordingQueries.get(listOf(recordingId.value)).executeAsOne()
         val recordingPath = Paths.get(recording.save_path)
         val wavData = getWavData(recordingId)
-        val outputPath =
-            recordingPath.parent.resolve("${recordingPath.fileName.nameWithoutExtension}.mp3")
+        val outputPath = recordingPath.replaceExtension("mp3")
 
         val encodingJob = EncodingJob(
             wavData = wavData,
