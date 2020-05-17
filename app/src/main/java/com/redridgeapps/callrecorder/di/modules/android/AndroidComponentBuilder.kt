@@ -1,7 +1,9 @@
 package com.redridgeapps.callrecorder.di.modules.android
 
 import com.redridgeapps.callrecorder.MainActivity
+import com.redridgeapps.callrecorder.services.AudioEndsTrimmingService
 import com.redridgeapps.callrecorder.services.CallingService
+import com.redridgeapps.callrecorder.services.Mp3ConversionService
 import com.redridgeapps.callrecorder.services.RecordingSwitchTileService
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -23,6 +25,14 @@ interface AndroidComponentBuilder {
     @ContributesAndroidInjector
     @PerService
     fun bindCallingService(): CallingService
+
+    @ContributesAndroidInjector
+    @PerService
+    fun bindMp3ConversionService(): Mp3ConversionService
+
+    @ContributesAndroidInjector
+    @PerService
+    fun bindAudioEndsTrimmingService(): AudioEndsTrimmingService
 
     @ContributesAndroidInjector
     @PerService

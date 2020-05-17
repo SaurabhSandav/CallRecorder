@@ -50,6 +50,14 @@
             android:permission="android.permission.FOREGROUND_SERVICE" />
 
         <service
+            android:name=".services.Mp3ConversionService"
+            android:permission="android.permission.FOREGROUND_SERVICE" />
+
+        <service
+            android:name=".services.AudioEndsTrimmingService"
+            android:permission="android.permission.FOREGROUND_SERVICE" />
+
+        <service
             android:name=".services.RecordingSwitchTileService"
             android:icon="@drawable/ic_stat_name"
             android:label="Call Recording"

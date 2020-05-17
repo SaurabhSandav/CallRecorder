@@ -15,7 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.redridgeapps.callrecorder.MainActivity
 import com.redridgeapps.callrecorder.R
 import com.redridgeapps.callrecorder.callutils.*
-import com.redridgeapps.callrecorder.utils.NOTIFICATION_CALL_SERVICE_ID
+import com.redridgeapps.callrecorder.utils.NOTIFICATION_RECORDING_SERVICE_ID
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.flow.first
@@ -51,7 +51,7 @@ class CallingService : LifecycleService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
 
-        if (intent?.action == ACTION_STOP) {
+        if (intent!!.action == ACTION_STOP) {
             stopForeground(true)
             stopSelf()
 
@@ -78,32 +78,25 @@ class CallingService : LifecycleService() {
 
     private fun createNotification() {
 
+        val channel = NotificationChannel(
+            CallingService::class.simpleName,
+            "Call Recorder",
+            NotificationManager.IMPORTANCE_LOW
+        ).apply { lockscreenVisibility = Notification.VISIBILITY_SECRET }
+
+        notificationManager.createNotificationChannel(channel)
+
         val notificationIntent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 
-        val notification = NotificationCompat.Builder(this, createNotificationChannel())
+        val notification = NotificationCompat.Builder(this, channel.id)
             .setContentText("Standing by to record...")
             .setContentIntent(pendingIntent)
             .setSmallIcon(R.drawable.ic_stat_name)
             .setShowWhen(false)
             .build()
 
-        startForeground(NOTIFICATION_CALL_SERVICE_ID, notification)
-    }
-
-    private fun createNotificationChannel(): String {
-
-        val channel = NotificationChannel(
-            javaClass.simpleName,
-            "Call Recorder",
-            NotificationManager.IMPORTANCE_LOW
-        )
-
-        channel.lockscreenVisibility = Notification.VISIBILITY_SECRET
-
-        notificationManager.createNotificationChannel(channel)
-
-        return channel.id
+        startForeground(NOTIFICATION_RECORDING_SERVICE_ID, notification)
     }
 
     private fun observeCallStatusForRecording() {

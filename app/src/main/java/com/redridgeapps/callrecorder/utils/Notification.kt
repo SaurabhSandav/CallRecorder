@@ -1,3 +1,5 @@
 package com.redridgeapps.callrecorder.utils
 
-const val NOTIFICATION_CALL_SERVICE_ID = 1
+const val NOTIFICATION_RECORDING_SERVICE_ID = 1
+const val NOTIFICATION_MP3_CONVERSION_SERVICE_ID = 2
+const val NOTIFICATION_WAV_TRIMMING_SERVICE_ID = 3

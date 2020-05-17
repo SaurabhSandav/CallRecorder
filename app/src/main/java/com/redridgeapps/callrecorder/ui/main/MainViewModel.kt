@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.RecordingQueries
 import com.redridgeapps.callrecorder.callutils.*
+import com.redridgeapps.callrecorder.services.AudioEndsTrimmingServiceLauncher
+import com.redridgeapps.callrecorder.services.Mp3ConversionServiceLauncher
 import com.redridgeapps.callrecorder.utils.launchNoJob
 import com.redridgeapps.callrecorder.utils.toLocalDate
 import com.redridgeapps.callrecorder.utils.toLocalDateTime
@@ -19,7 +21,9 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val recordings: Recordings,
     private val recordingQueries: RecordingQueries,
-    private val callPlayback: CallPlayback
+    private val callPlayback: CallPlayback,
+    private val mp3ConversionServiceLauncher: Mp3ConversionServiceLauncher,
+    private val audioEndsTrimmingServiceLauncher: AudioEndsTrimmingServiceLauncher
 ) : ViewModel() {
 
     private val recordingListFilter = MutableStateFlow(EnumSet.of(RecordingListFilter.All))
@@ -61,12 +65,12 @@ class MainViewModel @Inject constructor(
     }
 
     fun trimSilenceEnds() = viewModelScope.launchNoJob {
-        uiState.selection.forEach { recordings.trimSilenceEnds(it.id) }
+        audioEndsTrimmingServiceLauncher.launch(uiState.selection.map { it.id })
         uiState.selection.clear()
     }
 
     fun convertToMp3() = viewModelScope.launchNoJob {
-        uiState.selection.forEach { recordings.convertToMp3(it.id) }
+        mp3ConversionServiceLauncher.launch(uiState.selection.map { it.id })
         uiState.selection.clear()
     }
 
