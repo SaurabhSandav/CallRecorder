@@ -390,6 +390,7 @@ private fun OptionsDialog(viewModel: MainViewModel) {
                 onClick = { viewModel.toggleStar() }
             )
 
+            ListItem("Trim silence at start/end", onClick = { viewModel.trimSilenceEnds() })
             ListItem("Convert to Mp3", onClick = { viewModel.convertToMp3() })
             ListItem("Delete", onClick = { viewModel.deleteRecordings() })
         }

@@ -3,6 +3,7 @@ package com.redridgeapps.wavutils
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.channels.FileChannel
+import java.nio.file.Path
 import java.time.Duration
 
 object WavFileUtils {
@@ -68,6 +69,10 @@ object WavFileUtils {
         val fileSize = fileChannel.size() - WAV_HEADER_SIZE
         val durationMillis = (fileSize * 1000) / wavData.byteRate
         return Duration.ofMillis(durationMillis)
+    }
+
+    fun trimSilenceEnds(recordingPath: Path, outputPath: Path) {
+        WavTrimmer.trimSilenceEnds(recordingPath, outputPath)
     }
 }
 

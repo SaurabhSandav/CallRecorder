@@ -36,5 +36,10 @@ UPDATE Recording
 SET name = ?
 WHERE number = ?;
 
+updateDuration:
+UPDATE Recording
+SET duration = ?
+WHERE id = ?;
+
 delete:
 DELETE FROM Recording WHERE id IN ?;

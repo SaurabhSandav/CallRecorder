@@ -20,7 +20,7 @@ import java.nio.channels.FileChannel
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.nio.file.StandardOpenOption
+import java.nio.file.StandardOpenOption.READ
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -35,10 +35,8 @@ class Recordings @Inject constructor(
         val phoneNumber = recordingJob.callEvent.phoneNumber
         val name = contactNameFetcher.getContactName(phoneNumber) ?: "Unknown ($phoneNumber)"
 
-        val duration = FileChannel.open(
-            recordingJob.savePath.toAbsolutePath(),
-            StandardOpenOption.READ
-        ).use { WavFileUtils.calculateDuration(it) }
+        val duration = FileChannel.open(recordingJob.savePath.toAbsolutePath(), READ)
+            .use { WavFileUtils.calculateDuration(it) }
 
         recordingQueries.insert(
             name = name,
@@ -53,6 +51,25 @@ class Recordings @Inject constructor(
 
     fun getRecordingList(): Flow<List<Recording>> {
         return recordingQueries.getAll().asFlow().mapToList(Dispatchers.IO)
+    }
+
+    suspend fun trimSilenceEnds(recordingId: RecordingId) = withContext(Dispatchers.IO) {
+
+        val recording = recordingQueries.get(listOf(recordingId.value)).executeAsOne()
+        val recordingPath = Paths.get(recording.save_path)
+        val outputPath = recordingPath.parent
+            .resolve("${recordingPath.fileName.nameWithoutExtension}.trimmed.wav")
+
+        WavFileUtils.trimSilenceEnds(recordingPath, outputPath)
+
+        // Replace original file with trimmed file
+        Files.delete(recordingPath)
+        Files.move(outputPath, recordingPath)
+
+        // Update duration
+        val duration =
+            FileChannel.open(recordingPath, READ).use { WavFileUtils.calculateDuration(it) }
+        recordingQueries.updateDuration(duration, recordingId.value)
     }
 
     suspend fun convertToMp3(recordingId: RecordingId) = withContext(Dispatchers.IO) {
@@ -110,7 +127,7 @@ class Recordings @Inject constructor(
 
         val recording = recordingQueries.get(listOf(recordingId.value)).executeAsOne()
         val recordingPath = Paths.get(recording.save_path)
-        val fileChannel = FileChannel.open(recordingPath, StandardOpenOption.READ)
+        val fileChannel = FileChannel.open(recordingPath, READ)
 
         return@withContext fileChannel.use { WavFileUtils.readWavData(fileChannel) }
     }
