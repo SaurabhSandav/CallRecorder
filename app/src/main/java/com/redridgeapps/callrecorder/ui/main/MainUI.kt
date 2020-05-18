@@ -23,6 +23,8 @@ import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.settings.SettingsDestination
 import com.redridgeapps.callrecorder.ui.utils.Highlight
 import com.redridgeapps.callrecorder.ui.utils.ListSelection
+import com.redridgeapps.callrecorder.utils.enumSetComplementOf
+import com.redridgeapps.callrecorder.utils.enumSetOfAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import java.util.*
@@ -33,7 +35,7 @@ class MainState(
     var recordingList: List<RecordingListItem> = listOf(),
     val selection: ListSelection<RecordingListItem.Entry> = ListSelection(),
     val playbackState: Flow<PlaybackState> = emptyFlow(),
-    var recordingListFilterSet: EnumSet<RecordingListFilter> = EnumSet.allOf(RecordingListFilter::class.java)
+    var recordingListFilterSet: EnumSet<RecordingListFilter> = enumSetOfAll()
 )
 
 sealed class RecordingListItem {
@@ -59,7 +61,7 @@ enum class RecordingListFilter {
     fun toReadableString(): String = name
 
     companion object {
-        val EXCEPT_ALL: EnumSet<RecordingListFilter> = EnumSet.complementOf(EnumSet.of(All))
+        val EXCEPT_ALL: EnumSet<RecordingListFilter> = enumSetComplementOf(All)
     }
 }
 

@@ -7,6 +7,7 @@ import com.redridgeapps.callrecorder.RecordingQueries
 import com.redridgeapps.callrecorder.callutils.*
 import com.redridgeapps.callrecorder.services.AudioEndsTrimmingServiceLauncher
 import com.redridgeapps.callrecorder.services.Mp3ConversionServiceLauncher
+import com.redridgeapps.callrecorder.utils.enumSetOf
 import com.redridgeapps.callrecorder.utils.launchNoJob
 import com.redridgeapps.callrecorder.utils.toLocalDate
 import com.redridgeapps.callrecorder.utils.toLocalDateTime
@@ -26,7 +27,7 @@ class MainViewModel @Inject constructor(
     private val audioEndsTrimmingServiceLauncher: AudioEndsTrimmingServiceLauncher
 ) : ViewModel() {
 
-    private val recordingListFilter = MutableStateFlow(EnumSet.of(RecordingListFilter.All))
+    private val recordingListFilter = MutableStateFlow(enumSetOf(RecordingListFilter.All))
 
     init {
         observeRecordingList()
