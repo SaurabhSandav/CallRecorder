@@ -1,25 +1,14 @@
 package com.redridgeapps.callrecorder.ui.firstrun
 
 import android.Manifest
-import androidx.compose.Composable
-import androidx.compose.Model
-import androidx.compose.onActive
+import androidx.compose.*
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.Alignment
 import androidx.ui.core.Modifier
 import androidx.ui.foundation.Text
 import androidx.ui.graphics.Color
-import androidx.ui.layout.Column
-import androidx.ui.layout.Spacer
-import androidx.ui.layout.fillMaxSize
-import androidx.ui.layout.padding
-import androidx.ui.layout.preferredHeight
-import androidx.ui.layout.wrapContentSize
-import androidx.ui.material.Button
-import androidx.ui.material.CircularProgressIndicator
-import androidx.ui.material.MaterialTheme
-import androidx.ui.material.Scaffold
-import androidx.ui.material.TopAppBar
+import androidx.ui.layout.*
+import androidx.ui.material.*
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
 import com.koduok.compose.navigation.core.BackStack
@@ -28,12 +17,17 @@ import com.redridgeapps.callrecorder.ui.main.MainDestination
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.utils.PermissionsManager
 
-@Model
-class FirstRunState(
-    var isAppSystemized: Boolean? = null,
-    var permissionsGranted: Boolean? = null,
-    var captureAudioOutputPermissionGranted: Boolean? = null
-)
+class FirstRunState {
+
+    // var isAppSystemized: Boolean? by mutableStateOf(null)
+    // Above syntax is clearer but does not work currently.
+    // TODO Try above syntax again after new inference is enabled in compose
+    var isAppSystemized by mutableStateOf<Boolean?>(null)
+
+    var permissionsGranted by mutableStateOf<Boolean?>(null)
+
+    var captureAudioOutputPermissionGranted by mutableStateOf<Boolean?>(null)
+}
 
 object FirstRunDestination : Destination {
 

@@ -26,17 +26,20 @@ import com.redridgeapps.callrecorder.ui.utils.ListSelection
 import com.redridgeapps.callrecorder.utils.enumSetComplementOf
 import com.redridgeapps.callrecorder.utils.enumSetOfAll
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 import java.util.*
 
-@Model
 class MainState(
-    var isRefreshing: Boolean = true,
-    var recordingList: List<RecordingListItem> = listOf(),
-    val selection: ListSelection<RecordingListItem.Entry> = ListSelection(),
-    val playbackState: Flow<PlaybackState> = emptyFlow(),
-    var recordingListFilterSet: EnumSet<RecordingListFilter> = enumSetOfAll()
-)
+    val playbackState: Flow<PlaybackState>
+) {
+
+    var isRefreshing: Boolean by mutableStateOf(true)
+
+    var recordingList: List<RecordingListItem> by mutableStateOf(emptyList())
+
+    var recordingListFilterSet: EnumSet<RecordingListFilter> by mutableStateOf(enumSetOfAll())
+
+    val selection: ListSelection<RecordingListItem.Entry> = ListSelection()
+}
 
 sealed class RecordingListItem {
 

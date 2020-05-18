@@ -1,7 +1,9 @@
 package com.redridgeapps.callrecorder.ui.settings
 
 import androidx.compose.Composable
-import androidx.compose.Model
+import androidx.compose.getValue
+import androidx.compose.mutableStateOf
+import androidx.compose.setValue
 import androidx.ui.core.Modifier
 import androidx.ui.foundation.Icon
 import androidx.ui.foundation.Text
@@ -24,14 +26,18 @@ import com.redridgeapps.callrecorder.ui.utils.SingleSelectListPreference
 import com.redridgeapps.callrecorder.ui.utils.SwitchPreference
 import com.redridgeapps.callrecorder.ui.utils.TitlePreference
 
-@Model
-class SettingsState(
-    var isSystemized: Boolean? = null,
-    var isRecordingOn: Boolean? = null,
-    var audioRecordSampleRate: PcmSampleRate? = null,
-    var audioRecordChannels: PcmChannels? = null,
-    var audioRecordEncoding: PcmEncoding? = null
-)
+class SettingsState {
+
+    var isSystemized by mutableStateOf<Boolean?>(null)
+
+    var isRecordingOn by mutableStateOf<Boolean?>(null)
+
+    var audioRecordSampleRate by mutableStateOf<PcmSampleRate?>(null)
+
+    var audioRecordChannels by mutableStateOf<PcmChannels?>(null)
+
+    var audioRecordEncoding by mutableStateOf<PcmEncoding?>(null)
+}
 
 object SettingsDestination : Destination {
 

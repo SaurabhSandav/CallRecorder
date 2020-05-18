@@ -33,7 +33,7 @@ class MainViewModel @Inject constructor(
         observeRecordingList()
     }
 
-    val uiState = MainState(playbackState = callPlayback.playbackState)
+    val uiState = MainState(callPlayback.playbackState)
 
     fun startPlayback(recordingId: RecordingId) = viewModelScope.launchNoJob {
 
