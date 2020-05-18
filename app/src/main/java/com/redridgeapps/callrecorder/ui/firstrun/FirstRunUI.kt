@@ -1,7 +1,8 @@
 package com.redridgeapps.callrecorder.ui.firstrun
 
 import android.Manifest
-import androidx.compose.*
+import androidx.compose.Composable
+import androidx.compose.onActive
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.Alignment
 import androidx.ui.core.Modifier
@@ -16,18 +17,6 @@ import com.redridgeapps.callrecorder.ui.compose_viewmodel.fetchViewModel
 import com.redridgeapps.callrecorder.ui.main.MainDestination
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.utils.PermissionsManager
-
-class FirstRunState {
-
-    // var isAppSystemized: Boolean? by mutableStateOf(null)
-    // Above syntax is clearer but does not work currently.
-    // TODO Try above syntax again after new inference is enabled in compose
-    var isAppSystemized by mutableStateOf<Boolean?>(null)
-
-    var permissionsGranted by mutableStateOf<Boolean?>(null)
-
-    var captureAudioOutputPermissionGranted by mutableStateOf<Boolean?>(null)
-}
 
 object FirstRunDestination : Destination {
 
