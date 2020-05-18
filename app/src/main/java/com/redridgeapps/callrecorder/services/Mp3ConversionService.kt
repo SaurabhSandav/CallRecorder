@@ -12,7 +12,8 @@ import androidx.lifecycle.lifecycleScope
 import com.redridgeapps.callrecorder.R
 import com.redridgeapps.callrecorder.callutils.RecordingId
 import com.redridgeapps.callrecorder.callutils.Recordings
-import com.redridgeapps.callrecorder.utils.NOTIFICATION_MP3_CONVERSION_SERVICE_ID
+import com.redridgeapps.callrecorder.utils.NOTIFICATION_MP3_CONVERSION_FINISHED_ID
+import com.redridgeapps.callrecorder.utils.NOTIFICATION_MP3_CONVERSION_ONGOING_ID
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.channels.actor
@@ -27,22 +28,30 @@ class Mp3ConversionService : LifecycleService() {
     @Inject
     lateinit var recordings: Recordings
 
+    private var totalJobCount = 0
+    private var ongoingJobCount = 0
+
     private val conversionActor = lifecycleScope.actor<RecordingId>(start = CoroutineStart.LAZY) {
 
         channel.invokeOnClose { stopService(applicationContext) }
 
         for (recordingId in channel) {
+
+            ongoingJobCount++
+            showOngoingNotification()
+
             recordings.convertToMp3(recordingId)
 
-            if (isEmpty) channel.close()
+            if (isEmpty) {
+                channel.close()
+                showFinishedNotification()
+            }
         }
     }
 
     override fun onCreate() {
         AndroidInjection.inject(this)
         super.onCreate()
-
-        createNotification()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -55,10 +64,11 @@ class Mp3ConversionService : LifecycleService() {
             return START_NOT_STICKY
         }
 
-        createNotification()
-
         val recordingIdList =
             intent.extras!!.getLongArray(EXTRA_RECORDING_ID)!!.map { RecordingId(it) }
+
+        totalJobCount += recordingIdList.size
+        showOngoingNotification()
 
         lifecycleScope.launch {
             recordingIdList.forEach { conversionActor.send(it) }
@@ -67,7 +77,7 @@ class Mp3ConversionService : LifecycleService() {
         return START_STICKY
     }
 
-    private fun createNotification() {
+    private fun showOngoingNotification() {
 
         val channel = NotificationChannel(
             Mp3ConversionService::class.simpleName,
@@ -78,12 +88,30 @@ class Mp3ConversionService : LifecycleService() {
         notificationManager.createNotificationChannel(channel)
 
         val notification = NotificationCompat.Builder(this, channel.id)
-            .setContentText("Converting to mp3")
+            .setContentText("Converting to Mp3 ($ongoingJobCount/$totalJobCount)")
             .setSmallIcon(R.drawable.ic_stat_name)
             .setShowWhen(false)
             .build()
 
-        startForeground(NOTIFICATION_MP3_CONVERSION_SERVICE_ID, notification)
+        startForeground(NOTIFICATION_MP3_CONVERSION_ONGOING_ID, notification)
+    }
+
+    private fun showFinishedNotification() {
+
+        val channel = NotificationChannel(
+            Mp3ConversionService::class.simpleName,
+            "Mp3 Conversion",
+            NotificationManager.IMPORTANCE_LOW
+        ).apply { lockscreenVisibility = Notification.VISIBILITY_SECRET }
+
+        notificationManager.createNotificationChannel(channel)
+
+        val notification = NotificationCompat.Builder(this, channel.id)
+            .setContentText("Conversion to Mp3 finished")
+            .setSmallIcon(R.drawable.ic_stat_name)
+            .build()
+
+        notificationManager.notify(NOTIFICATION_MP3_CONVERSION_FINISHED_ID, notification)
     }
 
     companion object {

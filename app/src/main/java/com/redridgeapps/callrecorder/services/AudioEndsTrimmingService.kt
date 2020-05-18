@@ -12,7 +12,8 @@ import androidx.lifecycle.lifecycleScope
 import com.redridgeapps.callrecorder.R
 import com.redridgeapps.callrecorder.callutils.RecordingId
 import com.redridgeapps.callrecorder.callutils.Recordings
-import com.redridgeapps.callrecorder.utils.NOTIFICATION_WAV_TRIMMING_SERVICE_ID
+import com.redridgeapps.callrecorder.utils.NOTIFICATION_WAV_TRIMMING_FINISHED_ID
+import com.redridgeapps.callrecorder.utils.NOTIFICATION_WAV_TRIMMING_ONGOING_ID
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.channels.actor
@@ -27,14 +28,24 @@ class AudioEndsTrimmingService : LifecycleService() {
     @Inject
     lateinit var recordings: Recordings
 
+    private var totalJobCount = 0
+    private var ongoingJobCount = 0
+
     private val trimmingActor = lifecycleScope.actor<RecordingId>(start = CoroutineStart.LAZY) {
 
         channel.invokeOnClose { stopService(applicationContext) }
 
         for (recordingId in channel) {
+
+            ongoingJobCount++
+            showOngoingNotification()
+
             recordings.trimSilenceEnds(recordingId)
 
-            if (isEmpty) channel.close()
+            if (isEmpty) {
+                channel.close()
+                showFinishedNotification()
+            }
         }
     }
 
@@ -42,7 +53,7 @@ class AudioEndsTrimmingService : LifecycleService() {
         AndroidInjection.inject(this)
         super.onCreate()
 
-        createNotification()
+        showOngoingNotification()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -55,10 +66,11 @@ class AudioEndsTrimmingService : LifecycleService() {
             return START_NOT_STICKY
         }
 
-        createNotification()
-
         val recordingIdList =
             intent.extras!!.getLongArray(EXTRA_RECORDING_ID)!!.map { RecordingId(it) }
+
+        totalJobCount += recordingIdList.size
+        showOngoingNotification()
 
         lifecycleScope.launch {
             recordingIdList.forEach { trimmingActor.send(it) }
@@ -67,7 +79,7 @@ class AudioEndsTrimmingService : LifecycleService() {
         return START_STICKY
     }
 
-    private fun createNotification() {
+    private fun showOngoingNotification() {
 
         val channel = NotificationChannel(
             AudioEndsTrimmingService::class.simpleName,
@@ -78,12 +90,30 @@ class AudioEndsTrimmingService : LifecycleService() {
         notificationManager.createNotificationChannel(channel)
 
         val notification = NotificationCompat.Builder(this, channel.id)
-            .setContentText("Trimming audio")
+            .setContentText("Trimming audio ($ongoingJobCount/$totalJobCount)")
             .setSmallIcon(R.drawable.ic_stat_name)
             .setShowWhen(false)
             .build()
 
-        startForeground(NOTIFICATION_WAV_TRIMMING_SERVICE_ID, notification)
+        startForeground(NOTIFICATION_WAV_TRIMMING_ONGOING_ID, notification)
+    }
+
+    private fun showFinishedNotification() {
+
+        val channel = NotificationChannel(
+            AudioEndsTrimmingService::class.simpleName,
+            "Audio Trimming",
+            NotificationManager.IMPORTANCE_DEFAULT
+        ).apply { lockscreenVisibility = Notification.VISIBILITY_SECRET }
+
+        notificationManager.createNotificationChannel(channel)
+
+        val notification = NotificationCompat.Builder(this, channel.id)
+            .setContentText("Trimming audio finished")
+            .setSmallIcon(R.drawable.ic_stat_name)
+            .build()
+
+        notificationManager.notify(NOTIFICATION_WAV_TRIMMING_FINISHED_ID, notification)
     }
 
     companion object {
