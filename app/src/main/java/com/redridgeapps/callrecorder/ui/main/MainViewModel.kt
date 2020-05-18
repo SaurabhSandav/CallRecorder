@@ -163,7 +163,7 @@ class MainViewModel @Inject constructor(
             resultList.add(
                 RecordingListItem.Entry(
                     id = RecordingId(it.id),
-                    name = it.name,
+                    name = "${it.id} - ${it.name}",
                     number = it.number,
                     overlineText = overlineText,
                     metaText = metaText,

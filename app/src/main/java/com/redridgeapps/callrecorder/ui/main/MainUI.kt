@@ -21,8 +21,8 @@ import com.redridgeapps.callrecorder.callutils.RecordingId
 import com.redridgeapps.callrecorder.ui.compose_viewmodel.fetchViewModel
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.settings.SettingsDestination
-import com.redridgeapps.callrecorder.ui.utils.Highlight
 import com.redridgeapps.callrecorder.ui.utils.ListSelection
+import com.redridgeapps.callrecorder.ui.utils.drawScrim
 import com.redridgeapps.callrecorder.utils.enumSetComplementOf
 import com.redridgeapps.callrecorder.utils.enumSetOfAll
 import kotlinx.coroutines.flow.Flow
@@ -263,21 +263,28 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
 
     val selection = viewModel.uiState.selection
 
-    Highlight(enabled = recordingEntry in selection) {
+    val onClick = { selection.select(recordingEntry) }
+    var modifier = Modifier.longPressGestureFilter { selection.multiSelect(recordingEntry) }
 
-        val onClick = { selection.select(recordingEntry) }
-        val modifier = Modifier.longPressGestureFilter { selection.multiSelect(recordingEntry) }
-
-        ListItem(
-            modifier = modifier,
-            onClick = onClick,
-            icon = { PlayPauseIcon(viewModel, recordingEntry.id, 45.dp) },
-            secondaryText = { Text(recordingEntry.number) },
-            overlineText = { Text(recordingEntry.overlineText) },
-            trailing = { Text(recordingEntry.metaText) },
-            text = { Text(recordingEntry.name) }
-        )
+    if (recordingEntry in selection) {
+        modifier = modifier.drawScrim()
     }
+
+    val playbackState = viewModel.uiState.playbackState.collectAsState().value
+
+    if (playbackState is PlaybackState.NotStopped && playbackState.recording.id == recordingEntry.id.value) {
+        modifier = modifier.drawScrim(MaterialTheme.colors.secondary)
+    }
+
+    ListItem(
+        modifier = modifier,
+        onClick = onClick,
+        icon = { PlayPauseIcon(viewModel, recordingEntry.id, 45.dp) },
+        secondaryText = { Text(recordingEntry.number) },
+        overlineText = { Text(recordingEntry.overlineText) },
+        trailing = { Text(recordingEntry.metaText) },
+        text = { Text(recordingEntry.name) }
+    )
 }
 
 @Composable
@@ -351,7 +358,7 @@ private fun PlaybackBar(viewModel: MainViewModel) {
         ConstraintLayout(constraintSet, Modifier.fillMaxSize()) {
 
             Text(
-                text = playbackState.recording.name,
+                text = "${playbackState.recording.id} - ${playbackState.recording.name}",
                 modifier = Modifier.tag("text").padding(5.dp),
                 color = MaterialTheme.colors.onPrimary
             )
