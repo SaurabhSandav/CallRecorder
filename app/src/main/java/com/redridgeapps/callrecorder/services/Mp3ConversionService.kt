@@ -14,12 +14,14 @@ import com.redridgeapps.callrecorder.callutils.RecordingId
 import com.redridgeapps.callrecorder.callutils.Recordings
 import com.redridgeapps.callrecorder.utils.NOTIFICATION_MP3_CONVERSION_FINISHED_ID
 import com.redridgeapps.callrecorder.utils.NOTIFICATION_MP3_CONVERSION_ONGOING_ID
-import dagger.android.AndroidInjection
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.channels.actor
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class Mp3ConversionService : LifecycleService() {
 
     @Inject
@@ -47,11 +49,6 @@ class Mp3ConversionService : LifecycleService() {
                 showFinishedNotification()
             }
         }
-    }
-
-    override fun onCreate() {
-        AndroidInjection.inject(this)
-        super.onCreate()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -143,7 +140,9 @@ class Mp3ConversionService : LifecycleService() {
     }
 }
 
-class Mp3ConversionServiceLauncher @Inject constructor(private val context: Context) {
+class Mp3ConversionServiceLauncher @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
 
     fun launch(recordingIdList: List<RecordingId>) {
         Mp3ConversionService.start(context, recordingIdList)

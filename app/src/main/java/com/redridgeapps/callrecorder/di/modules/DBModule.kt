@@ -10,14 +10,18 @@ import com.squareup.sqldelight.EnumColumnAdapter
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Singleton
 
 @Module
+@InstallIn(ApplicationComponent::class)
 object DBModule {
 
     @Provides
     @Singleton
-    fun Context.provideCallRecordingDB(): CallRecordingDB {
+    fun @receiver:ApplicationContext Context.provideCallRecordingDB(): CallRecordingDB {
 
         val schema = CallRecordingDB.Schema
         val driver = AndroidSqliteDriver(schema, this, "AppDB.db")

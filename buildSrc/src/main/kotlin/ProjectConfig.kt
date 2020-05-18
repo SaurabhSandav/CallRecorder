@@ -3,7 +3,7 @@
 object GoogleMaven {
     const val SNAPSHOT_BUILD_ID = "6522342"
 
-    const val SUPPORT_REPO_ENABLED = false
+    const val SUPPORT_REPO_ENABLED = true
     const val SUPPORT_REPO_URL =
         "https://androidx.dev/snapshots/builds/$SNAPSHOT_BUILD_ID/artifacts/repository"
 
@@ -72,12 +72,16 @@ object Lifecycle {
 }
 
 object Dagger {
-    private const val VERSION = "2.27"
+    private const val VERSION = "2.28"
+    private const val HILT_VERSION = "2.28-alpha"
 
     const val DAGGER = "com.google.dagger:dagger:$VERSION"
-    const val ANDROID_SUPPORT = "com.google.dagger:dagger-android-support:$VERSION"
     const val COMPILER = "com.google.dagger:dagger-compiler:$VERSION"
-    const val ANDROID_PROCESSOR = "com.google.dagger:dagger-android-processor:$VERSION"
+
+    const val HILT_ANDROID = "com.google.dagger:hilt-android:$HILT_VERSION"
+    const val HILT_ANDROID_COMPILER = "com.google.dagger:hilt-android-compiler:$HILT_VERSION"
+    const val HILT_ANDROID_GRADLE_PLUGIN =
+        "com.google.dagger:hilt-android-gradle-plugin:$HILT_VERSION"
 }
 
 object Timber {

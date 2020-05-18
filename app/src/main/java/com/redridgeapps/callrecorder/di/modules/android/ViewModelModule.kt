@@ -7,6 +7,8 @@ import com.redridgeapps.callrecorder.ui.settings.SettingsViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 import dagger.multibindings.IntoMap
 import kotlin.reflect.KClass
 
@@ -21,6 +23,7 @@ import kotlin.reflect.KClass
 annotation class ViewModelKey(val value: KClass<out ViewModel>)
 
 @Module
+@InstallIn(ApplicationComponent::class)
 interface ViewModelModule {
 
     @Binds

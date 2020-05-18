@@ -9,47 +9,41 @@ import android.os.PowerManager
 import android.telephony.TelephonyManager
 import androidx.core.content.getSystemService
 import androidx.preference.PreferenceManager
-import com.redridgeapps.callrecorder.App
-import com.redridgeapps.callrecorder.di.modules.android.AndroidComponentBuilder
 import com.redridgeapps.callrecorder.di.modules.android.ViewModelModule
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.android.AndroidInjectionModule
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Module(
-    includes = [
-        AndroidInjectionModule::class,
-        AndroidComponentBuilder::class,
-        ViewModelModule::class,
-        DBModule::class
-    ]
+    includes = [ViewModelModule::class]
 )
-interface AppModule {
+@InstallIn(ApplicationComponent::class)
+object AppModule {
 
-    @Binds
-    fun App.bindContext(): Context
-
-    companion object {
-
-        @Provides
-        fun Context.provideSharedPreferences(): SharedPreferences {
-            return PreferenceManager.getDefaultSharedPreferences(this)
-        }
-
-        @Provides
-        fun Context.provideAudioManager(): AudioManager = getSystemService()!!
-
-        @Provides
-        fun Context.provideTelephonyManager(): TelephonyManager = getSystemService()!!
-
-        @Provides
-        fun Context.provideNotificationManager(): NotificationManager = getSystemService()!!
-
-        @Provides
-        fun Context.providePowerManager(): PowerManager = getSystemService()!!
-
-        @Provides
-        fun Context.provideContentResolver(): ContentResolver = contentResolver
+    @Provides
+    fun @receiver:ApplicationContext Context.provideSharedPreferences(): SharedPreferences {
+        return PreferenceManager.getDefaultSharedPreferences(this)
     }
+
+    @Provides
+    fun @receiver:ApplicationContext Context.provideAudioManager(): AudioManager =
+        getSystemService()!!
+
+    @Provides
+    fun @receiver:ApplicationContext Context.provideTelephonyManager(): TelephonyManager =
+        getSystemService()!!
+
+    @Provides
+    fun @receiver:ApplicationContext Context.provideNotificationManager(): NotificationManager =
+        getSystemService()!!
+
+    @Provides
+    fun @receiver:ApplicationContext Context.providePowerManager(): PowerManager =
+        getSystemService()!!
+
+    @Provides
+    fun @receiver:ApplicationContext Context.provideContentResolver(): ContentResolver =
+        contentResolver
 }

@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'com.squareup.sqldelight'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -95,9 +96,9 @@ dependencies {
 
     // Dagger
     implementation Dagger.DAGGER
-    implementation Dagger.ANDROID_SUPPORT
+    implementation Dagger.HILT_ANDROID
     kapt Dagger.COMPILER
-    kapt Dagger.ANDROID_PROCESSOR
+    kapt Dagger.HILT_ANDROID_COMPILER
 
     // Timber
     implementation Timber.TIMBER

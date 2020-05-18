@@ -11,10 +11,11 @@ import com.redridgeapps.callrecorder.ui.root.showUI
 import com.redridgeapps.callrecorder.ui.routing.composeHandleBackPressed
 import com.redridgeapps.callrecorder.utils.prefs.MyPrefs
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
-import dagger.android.AndroidInjection
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     @Inject
@@ -24,7 +25,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var composeViewModelFetcherFactory: ComposeViewModelFetcherFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
 
         setRecordingPath()

@@ -4,24 +4,20 @@ import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import com.redridgeapps.callrecorder.utils.prefs.MyPrefs
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
-import dagger.android.AndroidInjection
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class RecordingSwitchTileService : TileService() {
 
     @Inject
     lateinit var prefs: Prefs
 
     private val coroutineScope = CoroutineScope(SupervisorJob())
-
-    override fun onCreate() {
-        AndroidInjection.inject(this)
-        super.onCreate()
-    }
 
     override fun onDestroy() {
         super.onDestroy()

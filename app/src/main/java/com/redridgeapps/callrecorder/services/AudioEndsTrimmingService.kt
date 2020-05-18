@@ -14,12 +14,14 @@ import com.redridgeapps.callrecorder.callutils.RecordingId
 import com.redridgeapps.callrecorder.callutils.Recordings
 import com.redridgeapps.callrecorder.utils.NOTIFICATION_WAV_TRIMMING_FINISHED_ID
 import com.redridgeapps.callrecorder.utils.NOTIFICATION_WAV_TRIMMING_ONGOING_ID
-import dagger.android.AndroidInjection
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.channels.actor
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class AudioEndsTrimmingService : LifecycleService() {
 
     @Inject
@@ -50,7 +52,6 @@ class AudioEndsTrimmingService : LifecycleService() {
     }
 
     override fun onCreate() {
-        AndroidInjection.inject(this)
         super.onCreate()
 
         showOngoingNotification()
@@ -145,7 +146,9 @@ class AudioEndsTrimmingService : LifecycleService() {
     }
 }
 
-class AudioEndsTrimmingServiceLauncher @Inject constructor(private val context: Context) {
+class AudioEndsTrimmingServiceLauncher @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
 
     fun launch(recordingIdList: List<RecordingId>) {
         AudioEndsTrimmingService.start(context, recordingIdList)

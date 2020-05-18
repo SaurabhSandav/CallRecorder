@@ -17,13 +17,14 @@ import com.redridgeapps.callrecorder.R
 import com.redridgeapps.callrecorder.callutils.*
 import com.redridgeapps.callrecorder.utils.NOTIFICATION_RECORDING_SERVICE_ID
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
-import dagger.android.AndroidInjection
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class CallingService : LifecycleService() {
 
     @Inject
@@ -42,7 +43,6 @@ class CallingService : LifecycleService() {
     private val audioWriter = AudioWriter(lifecycleScope)
 
     override fun onCreate() {
-        AndroidInjection.inject(this)
         super.onCreate()
 
         createNotification()

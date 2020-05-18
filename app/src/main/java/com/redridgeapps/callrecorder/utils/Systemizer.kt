@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import com.topjohnwu.superuser.Shell
 import com.topjohnwu.superuser.io.SuFile
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
@@ -18,7 +19,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class Systemizer @Inject constructor(
-    context: Context
+    @ApplicationContext context: Context
 ) {
 
     private val packageName = context.packageName

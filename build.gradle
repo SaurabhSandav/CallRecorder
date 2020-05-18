@@ -15,6 +15,7 @@ buildscript {
         classpath Kotlin.GRADLE_PLUGIN
         classpath SQLDelight.GRADLE_PLUGIN
         classpath RustAndroidGradle.GRADLE_PLUGIN
+        classpath Dagger.HILT_ANDROID_GRADLE_PLUGIN
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
