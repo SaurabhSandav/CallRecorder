@@ -14,6 +14,8 @@ import com.redridgeapps.callrecorder.callutils.RecordingId
 import com.redridgeapps.callrecorder.callutils.Recordings
 import com.redridgeapps.callrecorder.utils.NOTIFICATION_MP3_CONVERSION_SERVICE_ID
 import dagger.android.AndroidInjection
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.channels.actor
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,6 +26,17 @@ class Mp3ConversionService : LifecycleService() {
 
     @Inject
     lateinit var recordings: Recordings
+
+    private val conversionActor = lifecycleScope.actor<RecordingId>(start = CoroutineStart.LAZY) {
+
+        channel.invokeOnClose { stopService(applicationContext) }
+
+        for (recordingId in channel) {
+            recordings.convertToMp3(recordingId)
+
+            if (isEmpty) channel.close()
+        }
+    }
 
     override fun onCreate() {
         AndroidInjection.inject(this)
@@ -47,14 +60,11 @@ class Mp3ConversionService : LifecycleService() {
         val recordingIdList =
             intent.extras!!.getLongArray(EXTRA_RECORDING_ID)!!.map { RecordingId(it) }
 
-        convertToMp3(recordingIdList)
+        lifecycleScope.launch {
+            recordingIdList.forEach { conversionActor.send(it) }
+        }
 
         return START_STICKY
-    }
-
-    private fun convertToMp3(recordingIdList: List<RecordingId>) = lifecycleScope.launch {
-        recordingIdList.forEach { recordings.convertToMp3(it) }
-        stop(applicationContext)
     }
 
     private fun createNotification() {
@@ -95,7 +105,7 @@ class Mp3ConversionService : LifecycleService() {
             )
         }
 
-        private fun stop(context: Context) {
+        private fun stopService(context: Context) {
 
             val intent = Intent(context, Mp3ConversionService::class.java)
             intent.action = ACTION_STOP
