@@ -1,6 +1,7 @@
 package com.redridgeapps.callrecorder.callutils
 
-import com.redridgeapps.callrecorder.utils.prefs.*
+import com.redridgeapps.callrecorder.utils.prefs.MyPrefs
+import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import java.nio.file.Path
@@ -21,9 +22,9 @@ suspend fun RecordingJob(
     callEvent: NewCallEvent
 ): RecordingJob = coroutineScope {
 
-    val sampleRate = async { prefs.get(PREF_AUDIO_RECORD_SAMPLE_RATE) }
-    val audioChannel = async { prefs.get(PREF_AUDIO_RECORD_CHANNELS) }
-    val audioEncoding = async { prefs.get(PREF_AUDIO_RECORD_ENCODING) }
+    val sampleRate = async { prefs.get(MyPrefs.AUDIO_RECORD_SAMPLE_RATE) { PcmSampleRate.S44_100 } }
+    val audioChannel = async { prefs.get(MyPrefs.AUDIO_RECORD_CHANNELS) { PcmChannels.MONO } }
+    val audioEncoding = async { prefs.get(MyPrefs.AUDIO_RECORD_ENCODING) { PcmEncoding.PCM_16BIT } }
 
     val recordingStartInstant = Instant.now()
 
@@ -32,7 +33,7 @@ suspend fun RecordingJob(
         pcmChannels = audioChannel.await(),
         pcmEncoding = audioEncoding.await(),
         savePath = Recordings.generateFilePath(
-            saveDir = prefs.get(PREF_RECORDING_PATH).ifEmpty { error("Recording path is empty") },
+            saveDir = prefs.get<String>(MyPrefs.RECORDING_PATH) { error("Recording path is empty") },
             fileName = recordingStartInstant.epochSecond.toString()
         ),
         callEvent = callEvent,

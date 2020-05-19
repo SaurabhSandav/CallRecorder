@@ -9,8 +9,7 @@ import com.redridgeapps.callrecorder.ui.compose_viewmodel.ComposeViewModelFetche
 import com.redridgeapps.callrecorder.ui.compose_viewmodel.ComposeViewModelStores
 import com.redridgeapps.callrecorder.ui.root.showUI
 import com.redridgeapps.callrecorder.ui.routing.composeHandleBackPressed
-import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_FIRST_RUN
-import com.redridgeapps.callrecorder.utils.prefs.PREF_RECORDING_PATH
+import com.redridgeapps.callrecorder.utils.prefs.MyPrefs
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.launch
@@ -43,10 +42,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setRecordingPath() = lifecycleScope.launch {
 
-        if (prefs.get(PREF_RECORDING_PATH).isNotEmpty()) return@launch
+        if (prefs.get(MyPrefs.RECORDING_PATH) { "" }.isNotEmpty()) return@launch
 
         prefs.set(
-            pref = PREF_RECORDING_PATH,
+            pref = MyPrefs.RECORDING_PATH,
             newValue = Recordings.getRecordingStoragePath(applicationContext).toString()
         )
     }
@@ -55,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         val composeViewModelStores by viewModels<ComposeViewModelStores>()
         val composeViewModelFetcher = composeViewModelFetcherFactory.create(composeViewModelStores)
-        val isFirstRun = prefs.get(PREF_IS_FIRST_RUN)
+        val isFirstRun = prefs.get(MyPrefs.IS_FIRST_RUN) { true }
 
         showUI(
             isFirstRun,

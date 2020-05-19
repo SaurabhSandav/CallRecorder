@@ -5,7 +5,7 @@ import com.redridgeapps.callrecorder.di.AppComponent
 import com.redridgeapps.callrecorder.di.DaggerAppComponent
 import com.redridgeapps.callrecorder.services.CallingService
 import com.redridgeapps.callrecorder.utils.HyperlinkedDebugTree
-import com.redridgeapps.callrecorder.utils.prefs.PREF_IS_RECORDING_ON
+import com.redridgeapps.callrecorder.utils.prefs.MyPrefs
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import com.topjohnwu.superuser.Shell
 import dagger.android.AndroidInjector
@@ -53,7 +53,7 @@ class App : Application(), HasAndroidInjector {
 
     private fun setupCallingService() {
 
-        prefs.getFlow(PREF_IS_RECORDING_ON)
+        prefs.getFlow(MyPrefs.IS_RECORDING_ON) { false }
             .onEach { recordingOn ->
                 if (recordingOn)
                     CallingService.start(this@App)

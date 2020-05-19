@@ -2,7 +2,7 @@ package com.redridgeapps.callrecorder.utils.prefs
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
-import com.redridgeapps.callrecorder.utils.prefs.TypedPref.*
+import com.redridgeapps.callrecorder.utils.prefs.PrefType.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
@@ -14,28 +14,33 @@ class Prefs @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) {
 
-    private val prefsChannel = BroadcastChannel<TypedPref<*>>(Channel.BUFFERED)
+    private val prefsChannel = BroadcastChannel<MyPrefs>(Channel.BUFFERED)
+
+    // Do not inline. SharedPreferences keeps only a WeakReference.
     private val preferenceListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-        prefList.firstOrNull { key == it.key }?.let { prefsChannel.offer(it) }
+        enumValues<MyPrefs>().firstOrNull { key == it.name }?.let { prefsChannel.offer(it) }
     }
 
     init {
         sharedPreferences.registerOnSharedPreferenceChangeListener(preferenceListener)
     }
 
-    suspend fun <T : Any?> get(pref: TypedPref<T>): T {
-        return getFlow(pref).first()
+    suspend fun <T : Any?> get(pref: MyPrefs, defaultGenerator: () -> T): T {
+        return getFlow(pref, defaultGenerator).first()
     }
 
-    fun <T : Any?> getFlow(pref: TypedPref<T>): Flow<T> {
+    fun <T : Any?> getFlow(
+        pref: MyPrefs,
+        defaultGenerator: () -> T
+    ): Flow<T> {
         return prefsChannel.asFlow()
             .filter { it == pref }
             .onStart { emit(pref) }
-            .map { getInternal(pref) }
+            .map { getOrDefault(pref, defaultGenerator) }
             .conflate()
     }
 
-    suspend fun <T : Any?> set(pref: TypedPref<T>, newValue: T) {
+    suspend fun <T : Any?> set(pref: MyPrefs, newValue: T) {
         edit { put(pref, newValue) }
     }
 
@@ -51,31 +56,39 @@ class Prefs @Inject constructor(
         return@withContext
     }
 
-    private fun <T : Any?> getInternal(pref: TypedPref<T>): T = with(sharedPreferences) {
-        @Suppress("UNCHECKED_CAST")
-        return when (pref) {
-            is PrefString -> getString(pref.key, pref.defaultValue) as T
-            is PrefStringNullable -> getString(pref.key, pref.defaultValue) as T
-            is PrefBoolean -> getBoolean(pref.key, pref.defaultValue) as T
-            is PrefInt -> getInt(pref.key, pref.defaultValue) as T
-            is PrefLong -> getLong(pref.key, pref.defaultValue) as T
-            is PrefFloat -> getFloat(pref.key, pref.defaultValue) as T
-            is PrefEnum -> pref.valueOf(getString(pref.key, (pref.defaultValue as Enum<*>).name)!!)
-        }
+    @Suppress("UNCHECKED_CAST")
+    private fun <T : Any?> getOrDefault(
+        pref: MyPrefs,
+        defaultGenerator: () -> T
+    ): T = with(sharedPreferences) {
+
+        if (!contains(pref.name)) return@with defaultGenerator()
+
+        // When the key doesn't exist, method will return a defaultValue from above if-check
+        // Use garbage default values below. They'll never be returned.
+        return when (pref.type) {
+            is PrefString -> getString(pref.name, null)
+            is PrefStringNullable -> getString(pref.name, null)
+            is PrefBoolean -> getBoolean(pref.name, false)
+            is PrefInt -> getInt(pref.name, Int.MAX_VALUE)
+            is PrefLong -> getLong(pref.name, Long.MAX_VALUE)
+            is PrefFloat -> getFloat(pref.name, Float.MAX_VALUE)
+            is PrefEnum -> pref.type.valueOf(getString(pref.name, null)!!)
+        } as T
     }
 
     class Editor(private val editor: SharedPreferences.Editor) {
 
-        fun <T : Any?> put(pref: TypedPref<T>, newValue: T) {
+        fun <T : Any?> put(pref: MyPrefs, newValue: T) {
 
-            when (pref) {
-                is PrefString -> editor.putString(pref.key, newValue as String)
-                is PrefStringNullable -> editor.putString(pref.key, newValue as String?)
-                is PrefBoolean -> editor.putBoolean(pref.key, newValue as Boolean)
-                is PrefInt -> editor.putInt(pref.key, newValue as Int)
-                is PrefLong -> editor.putLong(pref.key, newValue as Long)
-                is PrefFloat -> editor.putFloat(pref.key, newValue as Float)
-                is PrefEnum -> editor.putString(pref.key, (newValue as Enum<*>).name)
+            when (pref.type) {
+                is PrefString -> editor.putString(pref.name, newValue as String)
+                is PrefStringNullable -> editor.putString(pref.name, newValue as String?)
+                is PrefBoolean -> editor.putBoolean(pref.name, newValue as Boolean)
+                is PrefInt -> editor.putInt(pref.name, newValue as Int)
+                is PrefLong -> editor.putLong(pref.name, newValue as Long)
+                is PrefFloat -> editor.putFloat(pref.name, newValue as Float)
+                is PrefEnum -> editor.putString(pref.name, (newValue as Enum<*>).name)
             }
         }
     }

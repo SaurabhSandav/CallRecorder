@@ -8,7 +8,8 @@ import com.redridgeapps.callrecorder.callutils.PcmSampleRate
 import com.redridgeapps.callrecorder.callutils.Recordings
 import com.redridgeapps.callrecorder.utils.Systemizer
 import com.redridgeapps.callrecorder.utils.launchNoJob
-import com.redridgeapps.callrecorder.utils.prefs.*
+import com.redridgeapps.callrecorder.utils.prefs.MyPrefs
+import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
@@ -20,10 +21,10 @@ class SettingsViewModel @Inject constructor(
 
     val uiState: SettingsState = SettingsState(
         isSystemized = systemizer.isAppSystemizedFlow,
-        isRecordingOn = prefs.getFlow(PREF_IS_RECORDING_ON),
-        audioRecordSampleRate = prefs.getFlow(PREF_AUDIO_RECORD_SAMPLE_RATE),
-        audioRecordChannels = prefs.getFlow(PREF_AUDIO_RECORD_CHANNELS),
-        audioRecordEncoding = prefs.getFlow(PREF_AUDIO_RECORD_ENCODING)
+        isRecordingOn = prefs.getFlow(MyPrefs.IS_RECORDING_ON) { false },
+        audioRecordSampleRate = prefs.getFlow(MyPrefs.AUDIO_RECORD_SAMPLE_RATE) { PcmSampleRate.S44_100 },
+        audioRecordChannels = prefs.getFlow(MyPrefs.AUDIO_RECORD_CHANNELS) { PcmChannels.MONO },
+        audioRecordEncoding = prefs.getFlow(MyPrefs.AUDIO_RECORD_ENCODING) { PcmEncoding.PCM_16BIT }
     )
 
     fun flipSystemization() = viewModelScope.launchNoJob {
@@ -35,8 +36,8 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun flipRecording() = viewModelScope.launchNoJob {
-        val flippedIsRecording = !prefs.get(PREF_IS_RECORDING_ON)
-        prefs.set(PREF_IS_RECORDING_ON, flippedIsRecording)
+        val flippedIsRecording = !prefs.get(MyPrefs.IS_RECORDING_ON) { false }
+        prefs.set(MyPrefs.IS_RECORDING_ON, flippedIsRecording)
     }
 
     fun updateContactNames() = viewModelScope.launchNoJob {
@@ -46,18 +47,18 @@ class SettingsViewModel @Inject constructor(
     fun setAudioRecordSampleRate(
         audioRecordSampleRate: PcmSampleRate
     ) = viewModelScope.launchNoJob {
-        prefs.set(PREF_AUDIO_RECORD_SAMPLE_RATE, audioRecordSampleRate)
+        prefs.set(MyPrefs.AUDIO_RECORD_SAMPLE_RATE, audioRecordSampleRate)
     }
 
     fun setAudioRecordChannels(
         audioRecordChannels: PcmChannels
     ) = viewModelScope.launchNoJob {
-        prefs.set(PREF_AUDIO_RECORD_CHANNELS, audioRecordChannels)
+        prefs.set(MyPrefs.AUDIO_RECORD_CHANNELS, audioRecordChannels)
     }
 
     fun setAudioRecordEncoding(
         audioRecordEncoding: PcmEncoding
     ) = viewModelScope.launchNoJob {
-        prefs.set(PREF_AUDIO_RECORD_ENCODING, audioRecordEncoding)
+        prefs.set(MyPrefs.AUDIO_RECORD_ENCODING, audioRecordEncoding)
     }
 }
