@@ -2,6 +2,8 @@ package com.redridgeapps.callrecorder.ui.firstrun
 
 import android.Manifest
 import androidx.compose.Composable
+import androidx.compose.collectAsState
+import androidx.compose.getValue
 import androidx.compose.onActive
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.Alignment
@@ -33,7 +35,9 @@ object FirstRunDestination : Destination {
 private fun FirstRunUI(viewModel: FirstRunViewModel) {
 
     with(viewModel.uiState) {
-        if (isAppSystemized == true && permissionsGranted == true && captureAudioOutputPermissionGranted == true)
+        val isAppSystemized by isAppSystemized.collectAsState(false)
+
+        if (isAppSystemized && permissionsGranted == true && captureAudioOutputPermissionGranted == true)
             configurationFinished(viewModel, BackStackAmbient.current)
     }
 
@@ -79,7 +83,7 @@ private fun SystemizationConfig(viewModel: FirstRunViewModel) {
 
         Spacer(modifier = Modifier.preferredHeight(10.dp))
 
-        Crossfade(current = viewModel.uiState.isAppSystemized) { isAppSystemized ->
+        Crossfade(current = viewModel.uiState.isAppSystemized.collectAsState().value) { isAppSystemized ->
             when (isAppSystemized) {
                 null -> CircularProgressIndicator()
                 true -> Text(text = "✔ App is systemized")
