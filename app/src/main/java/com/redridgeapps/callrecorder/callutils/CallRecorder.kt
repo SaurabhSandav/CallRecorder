@@ -2,52 +2,22 @@ package com.redridgeapps.callrecorder.callutils
 
 import android.media.AudioRecord
 import android.media.MediaRecorder.AudioSource
-import android.os.PowerManager
-import com.redridgeapps.callrecorder.utils.ToastMaker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class CallRecorder @Inject constructor(
-    powerManager: PowerManager,
-    recordings: Recordings,
-    private val toastMaker: ToastMaker
-) {
+class CallRecorder @Inject constructor(recordings: Recordings) {
 
     private val _recordingState = BroadcastChannel<RecordingState>(CONFLATED)
 
-    val recordingState: Flow<RecordingState> =
-        _recordingState.asFlow().onEach { recordingStateChanged(it) }
+    val recordingState: Flow<RecordingState> = _recordingState.asFlow()
 
     init {
         _recordingState.offer(RecordingState.Idle(recordings, _recordingState))
-    }
-
-    private val wakeLock = powerManager.newWakeLock(
-        PowerManager.PARTIAL_WAKE_LOCK,
-        javaClass.simpleName
-    )
-
-    private fun recordingStateChanged(recordingState: RecordingState) {
-        when (recordingState) {
-            is RecordingState.Idle -> {
-                //noinspection WakelockTimeout
-                wakeLock.acquire()
-                toastMaker.showToast("Started recording")
-            }
-            is RecordingState.IsRecording -> {
-
-                if (wakeLock.isHeld)
-                    wakeLock.release()
-
-                toastMaker.showToast("Stopped recording")
-            }
-        }
     }
 }
 
