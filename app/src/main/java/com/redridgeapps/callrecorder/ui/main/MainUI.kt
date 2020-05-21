@@ -123,7 +123,8 @@ private fun IconFilter(viewModel: MainViewModel) {
 
         for (option in RecordingListFilter.values()) {
 
-            val isFilterEnabled = option in viewModel.uiState.recordingListFilterSet
+            val isFilterEnabled =
+                option in viewModel.uiState.recordingListFilter.collectAsState().value
             val onClick = { viewModel.updateRecordingListFilter(option, !isFilterEnabled) }
 
             DropdownMenuItem(onClick = { }) {

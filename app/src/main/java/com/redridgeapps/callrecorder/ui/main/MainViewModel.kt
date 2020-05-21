@@ -7,7 +7,7 @@ import com.redridgeapps.callrecorder.RecordingQueries
 import com.redridgeapps.callrecorder.callutils.*
 import com.redridgeapps.callrecorder.services.AudioEndsTrimmingServiceLauncher
 import com.redridgeapps.callrecorder.services.Mp3ConversionServiceLauncher
-import com.redridgeapps.callrecorder.utils.enumSetOf
+import com.redridgeapps.callrecorder.utils.enumSetOfAll
 import com.redridgeapps.callrecorder.utils.launchNoJob
 import com.redridgeapps.callrecorder.utils.toLocalDate
 import com.redridgeapps.callrecorder.utils.toLocalDateTime
@@ -27,13 +27,16 @@ class MainViewModel @Inject constructor(
     private val audioEndsTrimmingServiceLauncher: AudioEndsTrimmingServiceLauncher
 ) : ViewModel() {
 
-    private val recordingListFilter = MutableStateFlow(enumSetOf(RecordingListFilter.All))
+    private val recordingListFilter = MutableStateFlow(enumSetOfAll<RecordingListFilter>())
 
     init {
         observeRecordingList()
     }
 
-    val uiState = MainState(callPlayback.playbackState)
+    val uiState = MainState(
+        playbackState = callPlayback.playbackState,
+        recordingListFilter = recordingListFilter
+    )
 
     fun startPlayback(recordingId: RecordingId) = viewModelScope.launchNoJob {
 
@@ -82,7 +85,7 @@ class MainViewModel @Inject constructor(
 
     fun updateRecordingListFilter(filter: RecordingListFilter, enabled: Boolean) {
 
-        val filterSet = EnumSet.copyOf(uiState.recordingListFilterSet)
+        val filterSet = EnumSet.copyOf(recordingListFilter.value)
 
         when {
             filter == RecordingListFilter.All && enabled -> {
@@ -101,7 +104,6 @@ class MainViewModel @Inject constructor(
             else -> filterSet.remove(RecordingListFilter.All)
         }
 
-        uiState.recordingListFilterSet = filterSet
         recordingListFilter.value = filterSet
     }
 
