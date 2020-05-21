@@ -4,7 +4,6 @@ import androidx.compose.*
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.DropdownPopup
 import androidx.ui.core.Modifier
-import androidx.ui.core.PopupProperties
 import androidx.ui.core.gesture.longPressGestureFilter
 import androidx.ui.core.tag
 import androidx.ui.foundation.*
@@ -117,12 +116,10 @@ private fun IconFilter(viewModel: MainViewModel) {
 
     if (!showFilterPopup) return
 
-    val popupProperties = PopupProperties(
+    DropdownPopup(
         isFocusable = true,
         onDismissRequest = { showFilterPopup = false }
-    )
-
-    DropdownPopup(popupProperties = popupProperties) {
+    ) {
         Surface(border = Border(2.dp, Color.LightGray)) {
             Column {
 

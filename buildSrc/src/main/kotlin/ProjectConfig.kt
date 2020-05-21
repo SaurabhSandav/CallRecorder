@@ -10,7 +10,7 @@ object AndroidTools {
 
 object Kotlin {
     private const val VERSION = "1.3.72"
-    private const val COROUTINES_VERSION = "1.3.6"
+    private const val COROUTINES_VERSION = "1.3.7"
 
     const val GRADLE_PLUGIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:$VERSION"
     const val STDLIB = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$VERSION"
@@ -20,9 +20,9 @@ object Kotlin {
 }
 
 object Jetpack {
-    private const val ACTIVITY_KTX_VERSION = "1.2.0-alpha04"
-    private const val APPCOMPAT_VERSION = "1.2.0-beta01"
-    private const val CORE_KTX_VERSION = "1.3.0-rc01"
+    private const val ACTIVITY_KTX_VERSION = "1.2.0-alpha05"
+    private const val APPCOMPAT_VERSION = "1.3.0-alpha01"
+    private const val CORE_KTX_VERSION = "1.4.0-alpha01"
     private const val PREFERENCE_KTX_VERSION = "1.1.1"
 
     const val ACTIVITY_KTX = "androidx.activity:activity-ktx:$ACTIVITY_KTX_VERSION"
@@ -32,9 +32,8 @@ object Jetpack {
 }
 
 object Compose {
-    //    private const val VERSION = "0.1.0-SNAPSHOT"
-    private const val VERSION = "0.1.0-dev12"
-//    const val REPO_VERSION = "6448724"
+    private const val VERSION = "0.1.0-SNAPSHOT"
+    const val REPO_VERSION = "6516492"
 
     const val COMPOSE_RUNTIME = "androidx.compose:compose-runtime:$VERSION"
     const val UI_FOUNDATION = "androidx.ui:ui-foundation:$VERSION"
@@ -48,14 +47,14 @@ object Compose {
 }
 
 object ComposeNavigation {
-    private const val VERSION = "0.1.0-SNAPSHOT"
+    private const val VERSION = Compose.REPO_VERSION
 
     const val CORE = "com.github.mvarnagiris.compose-navigation:core:$VERSION"
     const val NAVIGATION = "com.github.mvarnagiris.compose-navigation:navigation:$VERSION"
 }
 
 object Lifecycle {
-    private const val VERSION = "2.3.0-alpha02"
+    private const val VERSION = "2.3.0-alpha03"
 
     const val SERVICE = "androidx.lifecycle:lifecycle-service:$VERSION"
     const val LIVEDATA_KTX = "androidx.lifecycle:lifecycle-livedata-ktx:$VERSION"
