@@ -4,6 +4,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultRegistry
 import androidx.compose.Composable
 import androidx.compose.Providers
+import androidx.compose.key
 import androidx.ui.core.setContent
 import androidx.ui.material.MaterialTheme
 import com.koduok.compose.navigation.Router
@@ -47,7 +48,9 @@ fun Root(isFirstRun: Boolean) {
     MaterialTheme {
         WithViewModelStores {
             Router(start = destination) { currentRoute ->
-                currentRoute.data.initializeUI()
+                key(currentRoute) {
+                    currentRoute.data.initializeUI()
+                }
             }
         }
     }
