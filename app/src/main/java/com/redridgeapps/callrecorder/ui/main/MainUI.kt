@@ -2,7 +2,6 @@ package com.redridgeapps.callrecorder.ui.main
 
 import androidx.compose.*
 import androidx.ui.animation.Crossfade
-import androidx.ui.core.DropdownPopup
 import androidx.ui.core.Modifier
 import androidx.ui.core.gesture.longPressGestureFilter
 import androidx.ui.core.tag
@@ -108,40 +107,37 @@ private fun IconCloseSelectionMode(viewModel: MainViewModel) {
 @Composable
 private fun IconFilter(viewModel: MainViewModel) {
 
-    var showFilterPopup by state { false }
+    var expanded by state { false }
 
-    IconButton(onClick = { showFilterPopup = !showFilterPopup }) {
-        Icon(Icons.Default.FilterList)
+    val iconButton = @Composable {
+        IconButton(onClick = { expanded = true }) {
+            Icon(Icons.Default.FilterList)
+        }
     }
 
-    if (!showFilterPopup) return
-
-    DropdownPopup(
-        isFocusable = true,
-        onDismissRequest = { showFilterPopup = false }
+    DropdownMenu(
+        toggle = iconButton,
+        expanded = expanded,
+        onDismissRequest = { expanded = false }
     ) {
-        Surface(border = Border(2.dp, Color.LightGray)) {
-            Column {
 
-                for ((index, option) in RecordingListFilter.values().withIndex()) {
+        for (option in RecordingListFilter.values()) {
 
-                    val padding = Modifier.padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        top = if (index == 0) 16.dp else 0.dp,
-                        bottom = 16.dp
+            val isFilterEnabled = option in viewModel.uiState.recordingListFilterSet
+            val onClick = { viewModel.updateRecordingListFilter(option, !isFilterEnabled) }
+
+            DropdownMenuItem(onClick = { }) {
+                // FIXME Using Modifier.clickable on Row while DropdownMenuItem clicking is broken.
+                Row(Modifier.clickable(onClick = onClick)) {
+
+                    Checkbox(
+                        checked = isFilterEnabled,
+                        modifier = Modifier.padding(end = 16.dp),
+                        // TODO Remove this if DropdownMenuItem can consume clicks
+                        onCheckedChange = { onClick() }
                     )
 
-                    Row(padding) {
-
-                        Checkbox(
-                            checked = option in viewModel.uiState.recordingListFilterSet,
-                            modifier = Modifier.padding(end = 16.dp),
-                            onCheckedChange = { viewModel.updateRecordingListFilter(option, it) }
-                        )
-
-                        Text(text = option.toReadableString())
-                    }
+                    Text(text = option.toReadableString())
                 }
             }
         }
