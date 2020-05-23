@@ -33,7 +33,7 @@ object Jetpack {
 
 object Compose {
     private const val VERSION = "0.1.0-SNAPSHOT"
-    const val REPO_VERSION = "6516492"
+    const val REPO_VERSION = "6522342"
 
     const val COMPOSE_RUNTIME = "androidx.compose:compose-runtime:$VERSION"
     const val UI_FOUNDATION = "androidx.ui:ui-foundation:$VERSION"
