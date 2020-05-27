@@ -32,7 +32,15 @@ allprojects {
         google()
         mavenCentral()
         maven { url "https://jitpack.io" } // For compose-navigation
-        maven { url "https://androidx.dev/snapshots/builds/${Compose.REPO_VERSION}/artifacts/ui/repository" }
+
+        if (GoogleMaven.SUPPORT_REPO_ENABLED) {
+            maven { url GoogleMaven.SUPPORT_REPO_URL }
+        }
+
+        if (GoogleMaven.UI_REPO_ENABLED) {
+            maven { url GoogleMaven.UI_REPO_URL }
+        }
+
         jcenter()
     }
 

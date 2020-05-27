@@ -1,5 +1,17 @@
 @file:Suppress("unused")
 
+object GoogleMaven {
+    const val SNAPSHOT_BUILD_ID = "6522342"
+
+    const val SUPPORT_REPO_ENABLED = false
+    const val SUPPORT_REPO_URL =
+        "https://androidx.dev/snapshots/builds/$SNAPSHOT_BUILD_ID/artifacts/repository"
+
+    const val UI_REPO_ENABLED = true
+    const val UI_REPO_URL =
+        "https://androidx.dev/snapshots/builds/$SNAPSHOT_BUILD_ID/artifacts/ui/repository"
+}
+
 object AndroidTools {
     private const val GRADLE_PLUGIN_VERSION = "4.1.0-alpha09"
     private const val DESUGAR_JDK_LIBS_VERSION = "1.0.5"
@@ -33,7 +45,6 @@ object Jetpack {
 
 object Compose {
     private const val VERSION = "0.1.0-SNAPSHOT"
-    const val REPO_VERSION = "6522342"
 
     const val COMPOSE_RUNTIME = "androidx.compose:compose-runtime:$VERSION"
     const val UI_FOUNDATION = "androidx.ui:ui-foundation:$VERSION"
@@ -42,12 +53,10 @@ object Compose {
     const val UI_MATERIAL_ICONS_EXTENDED = "androidx.ui:ui-material-icons-extended:$VERSION"
     const val UI_UTIL = "androidx.ui:ui-util:$VERSION"
     const val UI_TOOLING = "androidx.ui:ui-tooling:$VERSION"
-
-    const val fromAOSP = false
 }
 
 object ComposeNavigation {
-    private const val VERSION = Compose.REPO_VERSION
+    private const val VERSION = GoogleMaven.SNAPSHOT_BUILD_ID
 
     const val CORE = "com.github.mvarnagiris.compose-navigation:core:$VERSION"
     const val NAVIGATION = "com.github.mvarnagiris.compose-navigation:navigation:$VERSION"
