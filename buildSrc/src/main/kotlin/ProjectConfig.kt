@@ -1,7 +1,7 @@
 @file:Suppress("unused")
 
 object GoogleMaven {
-    const val SNAPSHOT_BUILD_ID = "6522342"
+    const val SNAPSHOT_BUILD_ID = "6538113"
 
     const val SUPPORT_REPO_ENABLED = true
     const val SUPPORT_REPO_URL =
@@ -13,7 +13,7 @@ object GoogleMaven {
 }
 
 object AndroidTools {
-    private const val GRADLE_PLUGIN_VERSION = "4.1.0-alpha09"
+    private const val GRADLE_PLUGIN_VERSION = "4.1.0-alpha10"
     private const val DESUGAR_JDK_LIBS_VERSION = "1.0.5"
 
     const val GRADLE_PLUGIN = "com.android.tools.build:gradle:$GRADLE_PLUGIN_VERSION"
