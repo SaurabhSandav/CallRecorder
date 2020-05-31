@@ -84,6 +84,15 @@ object Dagger {
         "com.google.dagger:hilt-android-gradle-plugin:$HILT_VERSION"
 }
 
+object Hilt {
+    private const val VERSION = "1.0.0-SNAPSHOT"
+
+    const val COMMON = "androidx.hilt:hilt-common:$VERSION"
+    const val COMPILER = "androidx.hilt:hilt-compiler:$VERSION"
+    const val WORK = "androidx.hilt:hilt-work:$VERSION"
+    const val LIFECYCLE_VIEWMODEL = "androidx.hilt:hilt-lifecycle-viewmodel:$VERSION"
+}
+
 object Timber {
     private const val VERSION = "4.7.1"
 

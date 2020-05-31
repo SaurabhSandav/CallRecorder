@@ -98,6 +98,12 @@ dependencies {
     kapt Dagger.COMPILER
     kapt Dagger.HILT_ANDROID_COMPILER
 
+    // Hilt
+    implementation Hilt.COMMON
+    implementation Hilt.WORK
+    implementation Hilt.LIFECYCLE_VIEWMODEL
+    kapt Hilt.COMPILER
+
     // Timber
     implementation Timber.TIMBER
 
