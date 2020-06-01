@@ -219,10 +219,10 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
         modifier = modifier.drawScrim()
     }
 
-    val playbackState = viewModel.uiState.playbackState.collectAsState().value
-
-    if (playbackState is PlaybackState.NotStopped && playbackState.recording.id == recordingEntry.id.value) {
-        modifier = modifier.drawScrim(MaterialTheme.colors.secondary)
+    viewModel.uiState.playbackState.collectAsState().value.let {
+        if (it is PlaybackState.NotStopped && it.recording.id == recordingEntry.id.value) {
+            modifier = modifier.drawScrim(MaterialTheme.colors.secondary)
+        }
     }
 
     ListItem(
@@ -244,9 +244,9 @@ private fun PlayPauseIcon(
     modifier: Modifier = Modifier
 ) {
 
-    val playbackState = viewModel.uiState.playbackState.collectAsState().value
-    val recordingIsPlaying =
-        playbackState is PlaybackState.NotStopped.Playing && playbackState.recording.id == recordingId.value
+    val recordingIsPlaying = viewModel.uiState.playbackState.collectAsState().value.let {
+        it is PlaybackState.NotStopped.Playing && it.recording.id == recordingId.value
+    }
 
     val onClick = {
         when {
