@@ -4,7 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.RecordingQueries
-import com.redridgeapps.callrecorder.callutils.*
+import com.redridgeapps.callrecorder.callutils.CallDirection
+import com.redridgeapps.callrecorder.callutils.CallPlayback
+import com.redridgeapps.callrecorder.callutils.PlaybackState.NotStopped
+import com.redridgeapps.callrecorder.callutils.PlaybackState.NotStopped.Paused
+import com.redridgeapps.callrecorder.callutils.PlaybackState.NotStopped.Playing
+import com.redridgeapps.callrecorder.callutils.RecordingId
+import com.redridgeapps.callrecorder.callutils.Recordings
 import com.redridgeapps.callrecorder.services.AudioEndsTrimmingServiceLauncher
 import com.redridgeapps.callrecorder.services.Mp3ConversionServiceLauncher
 import com.redridgeapps.callrecorder.utils.enumSetOfAll
@@ -44,7 +50,7 @@ class MainViewModel @Inject constructor(
         val playbackStatus = callPlayback.playbackState.first()
 
         when {
-            playbackStatus is PlaybackState.NotStopped.Paused && playbackStatus.recording.id == recording.id -> {
+            playbackStatus is Paused && playbackStatus.recording.id == recording.id -> {
                 playbackStatus.resumePlayback()
             }
             else -> playbackStatus.startNewPlayback(recording)
@@ -54,13 +60,13 @@ class MainViewModel @Inject constructor(
     fun pausePlayback() = viewModelScope.launchNoJob {
         val playbackStatus = callPlayback.playbackState.first()
 
-        (playbackStatus as? PlaybackState.NotStopped.Playing)?.pausePlayback()
+        (playbackStatus as? Playing)?.pausePlayback()
     }
 
     fun setPlaybackPosition(position: Float) = viewModelScope.launchNoJob {
         val playbackStatus = callPlayback.playbackState.first()
 
-        (playbackStatus as? PlaybackState.NotStopped)?.setPosition(position)
+        (playbackStatus as? NotStopped)?.setPosition(position)
     }
 
     fun toggleStar() = viewModelScope.launchNoJob {
@@ -180,7 +186,7 @@ class MainViewModel @Inject constructor(
     private fun stopPlayback() = viewModelScope.launchNoJob {
         val playbackStatus = callPlayback.playbackState.first()
 
-        (playbackStatus as? PlaybackState.NotStopped)?.stopPlayback()
+        (playbackStatus as? NotStopped)?.stopPlayback()
     }
 }
 

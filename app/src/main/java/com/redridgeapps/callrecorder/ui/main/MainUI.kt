@@ -14,7 +14,8 @@ import androidx.ui.material.icons.filled.*
 import androidx.ui.unit.Dp
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
-import com.redridgeapps.callrecorder.callutils.PlaybackState
+import com.redridgeapps.callrecorder.callutils.PlaybackState.NotStopped
+import com.redridgeapps.callrecorder.callutils.PlaybackState.NotStopped.Playing
 import com.redridgeapps.callrecorder.callutils.RecordingId
 import com.redridgeapps.callrecorder.ui.compose_viewmodel.fetchViewModel
 import com.redridgeapps.callrecorder.ui.routing.Destination
@@ -220,7 +221,7 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
     }
 
     viewModel.uiState.playbackState.collectAsState().value.let {
-        if (it is PlaybackState.NotStopped && it.recording.id == recordingEntry.id.value) {
+        if (it is NotStopped && it.recording.id == recordingEntry.id.value) {
             modifier = modifier.drawScrim(MaterialTheme.colors.secondary)
         }
     }
@@ -245,7 +246,7 @@ private fun PlayPauseIcon(
 ) {
 
     val recordingIsPlaying = viewModel.uiState.playbackState.collectAsState().value.let {
-        it is PlaybackState.NotStopped.Playing && it.recording.id == recordingId.value
+        it is Playing && it.recording.id == recordingId.value
     }
 
     val onClick = {
@@ -276,7 +277,7 @@ private fun PlaybackBar(viewModel: MainViewModel) {
 
     val playbackState = viewModel.uiState.playbackState.collectAsState().value
 
-    if (playbackState !is PlaybackState.NotStopped) return
+    if (playbackState !is NotStopped) return
 
     Surface(
         modifier = Modifier.fillMaxWidth().height(65.dp),
