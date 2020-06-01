@@ -10,6 +10,11 @@ import androidx.ui.layout.*
 import androidx.ui.material.*
 import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.*
+import androidx.ui.text.AnnotatedString
+import androidx.ui.text.SpanStyle
+import androidx.ui.text.annotatedString
+import androidx.ui.text.font.FontWeight
+import androidx.ui.text.withStyle
 import androidx.ui.unit.Dp
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
@@ -341,18 +346,74 @@ private fun OptionsDialog(viewModel: MainViewModel) {
     val onCloseRequest = { selection.clear() }
 
     Dialog(onCloseRequest = onCloseRequest) {
+
         Column(Modifier.drawBackground(Color.White)) {
 
-            ListItem("Info")
+            var selectedIndex by state { 0 }
 
-            ListItem(
-                text = if (selection.single().isStarred) "Unstar" else "Star",
-                onClick = { viewModel.toggleStar() }
-            )
+            TabRow(
+                items = OptionsDialogTab.values().asList(),
+                selectedIndex = selectedIndex
+            ) { tabIndex: Int, tab: OptionsDialogTab ->
 
-            ListItem("Trim silence at start/end", onClick = { viewModel.trimSilenceEnds() })
-            ListItem("Convert to Mp3", onClick = { viewModel.convertToMp3() })
-            ListItem("Delete", onClick = { viewModel.deleteRecordings() })
+                Tab(
+                    text = { Text(tab.toReadableString()) },
+                    selected = selectedIndex == tabIndex,
+                    onSelected = { selectedIndex = tabIndex }
+                )
+            }
+
+            var recordingInfo by state<List<AnnotatedString>> { emptyList() }
+
+            launchInComposition(true) {
+                recordingInfo = annotateRecordingInfo(viewModel)
+            }
+
+            Crossfade(selectedIndex) { tabIndex ->
+                VerticalScroller {
+                    when (tabIndex) {
+                        0 -> OptionsDialogOptionsTab(viewModel)
+                        1 -> OptionsDialogInfoTab(recordingInfo)
+                    }
+                }
+            }
         }
+    }
+}
+
+private suspend fun annotateRecordingInfo(viewModel: MainViewModel): List<AnnotatedString> {
+
+    val infoPairs = viewModel.getSelectionInfo()
+
+    return infoPairs.map {
+        annotatedString {
+            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(it.first) }
+            append(it.second)
+        }
+    }
+}
+
+@Composable
+private fun OptionsDialogOptionsTab(viewModel: MainViewModel) {
+
+    val selection = viewModel.uiState.selection
+
+    Column {
+
+        ListItem(
+            text = if (selection.single().isStarred) "Unstar" else "Star",
+            onClick = { viewModel.toggleStar() }
+        )
+
+        ListItem("Trim silence at start/end", onClick = { viewModel.trimSilenceEnds() })
+        ListItem("Convert to Mp3", onClick = { viewModel.convertToMp3() })
+        ListItem("Delete", onClick = { viewModel.deleteRecordings() })
+    }
+}
+
+@Composable
+private fun OptionsDialogInfoTab(recordingInfo: List<AnnotatedString>) {
+    recordingInfo.forEach {
+        ListItem(text = { Text(it) })
     }
 }

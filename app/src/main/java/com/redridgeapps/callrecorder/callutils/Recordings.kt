@@ -13,8 +13,10 @@ import com.redridgeapps.wavutils.WavData
 import com.redridgeapps.wavutils.WavFileUtils
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
+import com.squareup.sqldelight.runtime.coroutines.mapToOne
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import java.nio.channels.FileChannel
 import java.nio.file.Files
@@ -49,13 +51,17 @@ class Recordings @Inject constructor(
         )
     }
 
+    fun getRecording(recordingId: RecordingId): Flow<Recording> {
+        return recordingQueries.get(listOf(recordingId.value)).asFlow().mapToOne(Dispatchers.IO)
+    }
+
     fun getRecordingList(): Flow<List<Recording>> {
         return recordingQueries.getAll().asFlow().mapToList(Dispatchers.IO)
     }
 
     suspend fun trimSilenceEnds(recordingId: RecordingId) = withContext(Dispatchers.IO) {
 
-        val recording = recordingQueries.get(listOf(recordingId.value)).executeAsOne()
+        val recording = getRecording(recordingId).first()
         val recordingPath = Paths.get(recording.save_path)
         val outputPath = recordingPath.replaceExtension("trimmed.wav")
 
@@ -73,7 +79,7 @@ class Recordings @Inject constructor(
 
     suspend fun convertToMp3(recordingId: RecordingId) = withContext(Dispatchers.IO) {
 
-        val recording = recordingQueries.get(listOf(recordingId.value)).executeAsOne()
+        val recording = getRecording(recordingId).first()
         val recordingPath = Paths.get(recording.save_path)
         val wavData = getWavData(recordingId)
         val outputPath = recordingPath.replaceExtension("mp3")
@@ -119,11 +125,11 @@ class Recordings @Inject constructor(
         }
     }
 
-    private suspend fun getWavData(
+    suspend fun getWavData(
         recordingId: RecordingId
     ): WavData = withContext(Dispatchers.IO) {
 
-        val recording = recordingQueries.get(listOf(recordingId.value)).executeAsOne()
+        val recording = getRecording(recordingId).first()
         val recordingPath = Paths.get(recording.save_path)
         val fileChannel = FileChannel.open(recordingPath, READ)
 

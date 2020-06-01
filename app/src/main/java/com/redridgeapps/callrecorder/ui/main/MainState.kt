@@ -49,3 +49,10 @@ enum class RecordingListFilter {
         val EXCEPT_ALL: EnumSet<RecordingListFilter> = enumSetComplementOf(All)
     }
 }
+
+enum class OptionsDialogTab {
+    OPTIONS,
+    INFO
+}
+
+fun OptionsDialogTab.toReadableString(): String = name
