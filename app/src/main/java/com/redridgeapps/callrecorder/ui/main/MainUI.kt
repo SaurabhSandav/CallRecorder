@@ -36,7 +36,7 @@ object MainDestination : Destination {
 @Composable
 private fun MainUI(viewModel: MainViewModel) {
 
-    val topAppBar = @Composable {
+    val topBar = @Composable {
         when {
             viewModel.uiState.selection.inMultiSelectMode -> SelectionTopAppBar(viewModel)
             else -> MainTopAppBar(viewModel)
@@ -44,10 +44,10 @@ private fun MainUI(viewModel: MainViewModel) {
     }
 
     Scaffold(
-        topAppBar = topAppBar
-    ) { modifier ->
+        topBar = topBar
+    ) { innerPadding ->
 
-        Column(modifier) {
+        Column(Modifier.padding(innerPadding)) {
             Box(Modifier.weight(1F)) {
                 ContentMain(viewModel)
             }

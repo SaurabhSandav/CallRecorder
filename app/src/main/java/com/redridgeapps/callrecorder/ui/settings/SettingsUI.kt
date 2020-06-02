@@ -55,8 +55,8 @@ private fun SettingsUI(viewModel: SettingsViewModel) {
         )
     }
 
-    Scaffold(topAppBar = topAppBar) { modifier ->
-        ContentMain(viewModel, modifier)
+    Scaffold(topBar = topAppBar) { innerPadding ->
+        ContentMain(viewModel, Modifier.padding(innerPadding))
     }
 }
 

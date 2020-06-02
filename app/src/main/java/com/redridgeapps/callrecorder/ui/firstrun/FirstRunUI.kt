@@ -41,15 +41,18 @@ private fun FirstRunUI(viewModel: FirstRunViewModel) {
             configurationFinished(viewModel, BackStackAmbient.current)
     }
 
-    val topAppBar = @Composable {
+    val topBar = @Composable {
         TopAppBar(
             title = { Text("Configure App", Modifier.padding(bottom = 16.dp)) }
         )
     }
 
-    Scaffold(topAppBar = topAppBar) { modifier ->
+    Scaffold(topBar = topBar) { innerPadding ->
 
-        Column(Modifier.fillMaxSize().padding(20.dp).wrapContentSize(Alignment.Center) + modifier) {
+        Column(
+            Modifier.fillMaxSize().padding(innerPadding).padding(20.dp)
+                .wrapContentSize(Alignment.Center)
+        ) {
             SystemizationConfig(viewModel)
 
             Spacer(modifier = Modifier.preferredHeight(20.dp))
