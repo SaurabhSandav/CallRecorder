@@ -3,7 +3,6 @@ package com.redridgeapps.callrecorder.ui.main
 import androidx.compose.*
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.Modifier
-import androidx.ui.core.gesture.longPressGestureFilter
 import androidx.ui.core.tag
 import androidx.ui.foundation.*
 import androidx.ui.graphics.Color
@@ -211,8 +210,10 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
 
     val selection = viewModel.uiState.selection
 
-    val onClick = { selection.select(recordingEntry) }
-    var modifier = Modifier.longPressGestureFilter { selection.multiSelect(recordingEntry) }
+    var modifier = Modifier.clickable(
+        onClick = { selection.select(recordingEntry) },
+        onLongClick = { selection.multiSelect(recordingEntry) }
+    )
 
     if (recordingEntry in selection) {
         modifier = modifier.drawScrim()
@@ -226,7 +227,6 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
 
     ListItem(
         modifier = modifier,
-        onClick = onClick,
         icon = { PlayPauseIcon(viewModel, recordingEntry.id, 45.dp) },
         secondaryText = { Text(recordingEntry.number) },
         overlineText = { Text(recordingEntry.overlineText) },
