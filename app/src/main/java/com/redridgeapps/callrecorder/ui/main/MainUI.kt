@@ -128,14 +128,12 @@ private fun IconFilter(viewModel: MainViewModel) {
                 option in viewModel.uiState.recordingListFilter.collectAsState().value
             val onClick = { viewModel.updateRecordingListFilter(option, !isFilterEnabled) }
 
-            DropdownMenuItem(onClick = { }) {
-                // FIXME Using Modifier.clickable on Row while DropdownMenuItem clicking is broken.
-                Row(Modifier.clickable(onClick = onClick)) {
-
+            DropdownMenuItem(onClick = onClick) {
+                Row {
                     Checkbox(
                         checked = isFilterEnabled,
                         modifier = Modifier.padding(end = 16.dp),
-                        // TODO Remove this if DropdownMenuItem can consume clicks
+                        // TODO Remove this if/when DropdownMenuItem can consume clicks
                         onCheckedChange = { onClick() }
                     )
 
