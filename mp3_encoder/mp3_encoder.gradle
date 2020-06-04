@@ -20,7 +20,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    ndkVersion "21.1.6352462"
+    ndkVersion "21.2.6472646"
 }
 
 dependencies {
@@ -36,9 +36,13 @@ dependencies {
 }
 
 cargo {
-    module  = "../lame_wrapper/"
+    module = "../lame_wrapper/"
     libname = "lame_wrapper"
     targets = ["arm", "x86", "x86_64", "arm64"]
 }
 
-preBuild.dependsOn "cargoBuild"
+tasks.whenTaskAdded { task ->
+    if ((task.name == 'javaPreCompileDebug' || task.name == 'javaPreCompileRelease')) {
+        task.dependsOn 'cargoBuild'
+    }
+}
