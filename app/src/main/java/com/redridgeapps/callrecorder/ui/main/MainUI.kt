@@ -24,6 +24,7 @@ import com.redridgeapps.callrecorder.callutils.RecordingId
 import com.redridgeapps.callrecorder.ui.compose_viewmodel.fetchViewModel
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.settings.SettingsDestination
+import com.redridgeapps.callrecorder.ui.utils.ListSelection
 import com.redridgeapps.callrecorder.ui.utils.drawScrim
 
 object MainDestination : Destination {
@@ -347,6 +348,12 @@ private fun OptionsDialog(viewModel: MainViewModel) {
 
     Dialog(onCloseRequest = onCloseRequest) {
 
+        // Occasionally calling `selection.single()` will crash.
+        // Possible reason for crash: Dialog having separate composition.
+        // Issue: https://issuetracker.google.com/154369470
+        // Rechecking selection status inside Dialog should avoid the crash.
+        if (selection.inMultiSelectMode || selection.isEmpty()) return@Dialog
+
         Column(Modifier.drawBackground(Color.White)) {
 
             var selectedIndex by state { 0 }
@@ -372,7 +379,7 @@ private fun OptionsDialog(viewModel: MainViewModel) {
             Crossfade(selectedIndex) { tabIndex ->
                 VerticalScroller {
                     when (tabIndex) {
-                        0 -> OptionsDialogOptionsTab(viewModel)
+                        0 -> OptionsDialogOptionsTab(viewModel, selection)
                         1 -> OptionsDialogInfoTab(recordingInfo)
                     }
                 }
@@ -394,9 +401,10 @@ private suspend fun annotateRecordingInfo(viewModel: MainViewModel): List<Annota
 }
 
 @Composable
-private fun OptionsDialogOptionsTab(viewModel: MainViewModel) {
-
-    val selection = viewModel.uiState.selection
+private fun OptionsDialogOptionsTab(
+    viewModel: MainViewModel,
+    selection: ListSelection<RecordingListItem.Entry>
+) {
 
     Column {
 
