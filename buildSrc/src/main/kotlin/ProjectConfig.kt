@@ -1,7 +1,7 @@
 @file:Suppress("unused")
 
 object GoogleMaven {
-    const val SNAPSHOT_BUILD_ID = "6549244"
+    const val SNAPSHOT_BUILD_ID = "6564799"
 
     const val SUPPORT_REPO_ENABLED = true
     const val SUPPORT_REPO_URL =
