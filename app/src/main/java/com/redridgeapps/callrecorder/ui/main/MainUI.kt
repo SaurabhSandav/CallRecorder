@@ -3,7 +3,6 @@ package com.redridgeapps.callrecorder.ui.main
 import androidx.compose.*
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.Modifier
-import androidx.ui.core.tag
 import androidx.ui.foundation.*
 import androidx.ui.graphics.Color
 import androidx.ui.layout.*
@@ -297,31 +296,18 @@ private fun PlaybackBar(viewModel: MainViewModel) {
         elevation = 10.dp
     ) {
 
-        val constraintSet = ConstraintSet {
-            val textTag = tag("text")
-            val sliderTag = tag("slider")
-            val playTag = tag("play")
+        ConstraintLayout(Modifier.fillMaxSize()) {
 
-            textTag.top.constrainTo(parent.top)
-            textTag.bottom.constrainTo(sliderTag.top)
-            textTag.left.constrainTo(parent.left)
-            textTag.right.constrainTo(playTag.left)
-
-            sliderTag.top.constrainTo(textTag.bottom)
-            sliderTag.bottom.constrainTo(parent.bottom)
-            sliderTag.left.constrainTo(parent.left)
-            sliderTag.right.constrainTo(playTag.left)
-            sliderTag.width = wrap
-
-            playTag.constrainVerticallyTo(parent)
-            playTag.right.constrainTo(parent.right)
-        }
-
-        ConstraintLayout(constraintSet, Modifier.fillMaxSize()) {
+            val (name, slider, playbackIcon) = createRefs()
 
             Text(
                 text = "${playbackState.recording.id} - ${playbackState.recording.name}",
-                modifier = Modifier.tag("text").padding(5.dp),
+                modifier = Modifier.constrainAs(name) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(slider.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(playbackIcon.start)
+                }.padding(5.dp),
                 color = MaterialTheme.colors.onPrimary
             )
 
@@ -331,7 +317,14 @@ private fun PlaybackBar(viewModel: MainViewModel) {
                 value = playbackState.progress.collectAsState(0F).value,
                 onValueChange = { sliderPosition = it },
                 onValueChangeEnd = { viewModel.setPlaybackPosition(sliderPosition) },
-                modifier = Modifier.tag("slider").height(20.dp).padding(5.dp),
+                modifier = Modifier.constrainAs(slider) {
+                    top.linkTo(name.bottom)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(playbackIcon.start)
+                    width = Dimension.fillToConstraints
+                    height = Dimension.value(20.dp)
+                }.padding(5.dp),
                 color = MaterialTheme.colors.secondary
             )
 
@@ -339,7 +332,10 @@ private fun PlaybackBar(viewModel: MainViewModel) {
                 viewModel = viewModel,
                 recordingId = RecordingId(playbackState.recording.id),
                 iconSideSize = 40.dp,
-                modifier = Modifier.tag("play").padding(10.dp)
+                modifier = Modifier.constrainAs(playbackIcon) {
+                    centerVerticallyTo(parent)
+                    end.linkTo(parent.end)
+                }.padding(10.dp)
             )
         }
     }
