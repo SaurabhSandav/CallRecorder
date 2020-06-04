@@ -10,6 +10,10 @@ inline fun <reified T : Enum<T>> enumSetOfAll(): EnumSet<T> {
     return EnumSet.allOf(T::class.java)
 }
 
+inline fun <reified T : Enum<T>> enumSetNoneOf(): EnumSet<T> {
+    return EnumSet.noneOf(T::class.java)
+}
+
 inline fun <reified T : Enum<T>> enumSetComplementOf(item: T): EnumSet<T> {
     return enumSetComplementOf(enumSetOf(item))
 }

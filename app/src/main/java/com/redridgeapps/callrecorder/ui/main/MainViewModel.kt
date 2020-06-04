@@ -198,6 +198,17 @@ class MainViewModel @Inject constructor(
                 currentDate = recordingDate
             }
 
+            // Collect applicable filters
+            val filterSet = enumSetNoneOf<RecordingListFilter>()
+
+            when (it.call_direction) {
+                CallDirection.INCOMING -> filterSet.add(RecordingListFilter.Incoming)
+                CallDirection.OUTGOING -> filterSet.add(RecordingListFilter.Outgoing)
+            }
+
+            if (it.is_starred)
+                filterSet.add(RecordingListFilter.Starred)
+
             // Add recording entry
             resultList.add(
                 RecordingListItem.Entry(
@@ -206,7 +217,7 @@ class MainViewModel @Inject constructor(
                     number = it.number,
                     overlineText = overlineText,
                     metaText = metaText,
-                    isStarred = it.is_starred
+                    applicableFilters = filterSet
                 )
             )
         }

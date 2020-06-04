@@ -408,8 +408,9 @@ private fun OptionsDialogOptionsTab(
 
     Column {
 
+        val isStarred = RecordingListFilter.Starred in selection.single().applicableFilters
         ListItem(
-            text = if (selection.single().isStarred) "Unstar" else "Star",
+            text = if (isStarred) "Unstar" else "Star",
             onClick = { viewModel.toggleStar() }
         )
 

@@ -33,7 +33,7 @@ sealed class RecordingListItem {
         val number: String,
         val overlineText: String,
         val metaText: String,
-        val isStarred: Boolean
+        val applicableFilters: Set<RecordingListFilter>
     ) : RecordingListItem()
 }
 
