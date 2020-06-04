@@ -118,6 +118,3 @@ sqldelight {
         schemaOutputDirectory = file("build/callrecording")
     }
 }
-
-task systemAssembleInstall(type: AppSystemizer, dependsOn: ":app:assembleDebug")
-task systemInstall(type: AppSystemizer)
