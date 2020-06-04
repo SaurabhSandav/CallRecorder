@@ -9,7 +9,10 @@ import com.redridgeapps.callrecorder.callutils.PlaybackState.NotStopped.Paused
 import com.redridgeapps.callrecorder.callutils.PlaybackState.NotStopped.Playing
 import com.redridgeapps.callrecorder.services.AudioEndsTrimmingServiceLauncher
 import com.redridgeapps.callrecorder.services.Mp3ConversionServiceLauncher
-import com.redridgeapps.callrecorder.utils.*
+import com.redridgeapps.callrecorder.utils.humanReadableByteCount
+import com.redridgeapps.callrecorder.utils.launchNoJob
+import com.redridgeapps.callrecorder.utils.toLocalDate
+import com.redridgeapps.callrecorder.utils.toLocalDateTime
 import kotlinx.coroutines.flow.*
 import java.nio.file.Paths
 import java.time.Duration
@@ -25,7 +28,7 @@ class MainViewModel @Inject constructor(
     private val audioEndsTrimmingServiceLauncher: AudioEndsTrimmingServiceLauncher
 ) : ViewModel() {
 
-    private val recordingListFilter = MutableStateFlow(enumSetOfAll<RecordingListFilter>())
+    private val recordingListFilter = MutableStateFlow(enumSetNoneOf<RecordingListFilter>())
 
     init {
         observeRecordingList()
@@ -81,28 +84,20 @@ class MainViewModel @Inject constructor(
         uiState.selection.clear()
     }
 
-    fun updateRecordingListFilter(filter: RecordingListFilter, enabled: Boolean) {
+    fun toggleRecordingListFilter(filter: RecordingListFilter) {
 
         val filterSet = EnumSet.copyOf(recordingListFilter.value)
 
-        when {
-            filter == RecordingListFilter.All && enabled -> {
-                filterSet.clear()
-                filterSet.addAll(enumValues())
-            }
-            filter == RecordingListFilter.All && !enabled -> filterSet.clear()
-            enabled -> filterSet.add(filter)
-            else -> filterSet.remove(filter)
-        }
-
-        when {
-            filterSet.containsAll(RecordingListFilter.EXCEPT_ALL) -> filterSet.add(
-                RecordingListFilter.All
-            )
-            else -> filterSet.remove(RecordingListFilter.All)
+        when (filter) {
+            in filterSet -> filterSet.remove(filter)
+            else -> filterSet.add(filter)
         }
 
         recordingListFilter.value = filterSet
+    }
+
+    fun clearRecordingListFilters() {
+        recordingListFilter.value = enumSetNoneOf()
     }
 
     suspend fun getSelectionInfo(): List<Pair<String, String>> {
@@ -155,7 +150,10 @@ class MainViewModel @Inject constructor(
         recordings.getRecordingList()
             .combine(recordingListFilter) { list: List<Recording>, filterSet: EnumSet<RecordingListFilter> ->
                 uiState.isRefreshing = true
-                filterRecordingList(list, filterSet)
+                when {
+                    filterSet.isEmpty() -> list
+                    else -> filterRecordingList(list, filterSet)
+                }
             }
             .onEach {
                 uiState.recordingList = prepareRecordingList(it)
@@ -168,7 +166,6 @@ class MainViewModel @Inject constructor(
         list: List<Recording>,
         filterSet: EnumSet<RecordingListFilter>
     ): List<Recording> = list.filter {
-        RecordingListFilter.All in filterSet ||
                 (RecordingListFilter.Incoming in filterSet && it.call_direction == CallDirection.INCOMING) ||
                 (RecordingListFilter.Outgoing in filterSet && it.call_direction == CallDirection.OUTGOING) ||
                 (RecordingListFilter.Starred in filterSet && it.is_starred)
@@ -238,3 +235,7 @@ private val fullDateFormatter = DateTimeFormatter.ofPattern("MMMM d, uuuu, HH:mm
 
 private fun Duration.getFormatted(): String =
     "%d:%02d:%02d".format(seconds / 3600, (seconds % 3600) / 60, (seconds % 60))
+
+private inline fun <reified T : Enum<T>> enumSetNoneOf(): EnumSet<T> {
+    return EnumSet.noneOf(T::class.java)
+}

@@ -14,6 +14,7 @@ import androidx.ui.text.AnnotatedString
 import androidx.ui.text.SpanStyle
 import androidx.ui.text.annotatedString
 import androidx.ui.text.font.FontWeight
+import androidx.ui.text.style.TextAlign
 import androidx.ui.text.withStyle
 import androidx.ui.unit.Dp
 import androidx.ui.unit.dp
@@ -127,24 +128,31 @@ private fun IconFilter(viewModel: MainViewModel) {
         onDismissRequest = { expanded = false }
     ) {
 
-        for (option in RecordingListFilter.values()) {
+        for (filter in RecordingListFilter.values()) {
 
-            val isFilterEnabled =
-                option in viewModel.uiState.recordingListFilter.collectAsState().value
-            val onClick = { viewModel.updateRecordingListFilter(option, !isFilterEnabled) }
+            val filterSet by viewModel.uiState.recordingListFilter.collectAsState()
+            val onClick = { viewModel.toggleRecordingListFilter(filter) }
 
             DropdownMenuItem(onClick = onClick) {
                 Row {
                     Checkbox(
-                        checked = isFilterEnabled,
+                        checked = filter in filterSet,
                         modifier = Modifier.padding(end = 16.dp),
                         // TODO Remove this if/when DropdownMenuItem can consume clicks
                         onCheckedChange = { onClick() }
                     )
 
-                    Text(text = option.toReadableString())
+                    Text(text = filter.toReadableString())
                 }
             }
+        }
+
+        DropdownMenuItem(onClick = { viewModel.clearRecordingListFilters() }) {
+            Text(
+                text = "Clear Filters",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
         }
     }
 }

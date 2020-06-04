@@ -6,7 +6,6 @@ import androidx.compose.setValue
 import com.redridgeapps.callrecorder.callutils.PlaybackState
 import com.redridgeapps.callrecorder.callutils.RecordingId
 import com.redridgeapps.callrecorder.ui.utils.ListSelection
-import com.redridgeapps.callrecorder.utils.enumSetComplementOf
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.*
@@ -38,17 +37,12 @@ sealed class RecordingListItem {
 }
 
 enum class RecordingListFilter {
-    All,
     Incoming,
     Outgoing,
     Starred;
-
-    fun toReadableString(): String = name
-
-    companion object {
-        val EXCEPT_ALL: EnumSet<RecordingListFilter> = enumSetComplementOf(All)
-    }
 }
+
+fun RecordingListFilter.toReadableString(): String = name
 
 enum class OptionsDialogTab {
     OPTIONS,
