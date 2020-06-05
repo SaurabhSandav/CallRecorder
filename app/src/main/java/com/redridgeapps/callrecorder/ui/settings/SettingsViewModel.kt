@@ -6,6 +6,7 @@ import com.redridgeapps.callrecorder.callutils.PcmChannels
 import com.redridgeapps.callrecorder.callutils.PcmEncoding
 import com.redridgeapps.callrecorder.callutils.PcmSampleRate
 import com.redridgeapps.callrecorder.callutils.Recordings
+import com.redridgeapps.callrecorder.utils.Defaults
 import com.redridgeapps.callrecorder.utils.Systemizer
 import com.redridgeapps.callrecorder.utils.launchNoJob
 import com.redridgeapps.callrecorder.utils.prefs.MyPrefs
@@ -21,10 +22,10 @@ class SettingsViewModel @Inject constructor(
 
     val uiState: SettingsState = SettingsState(
         isSystemized = systemizer.isAppSystemizedFlow,
-        isRecordingOn = prefs.getFlow(MyPrefs.IS_RECORDING_ON) { false },
-        audioRecordSampleRate = prefs.getFlow(MyPrefs.AUDIO_RECORD_SAMPLE_RATE) { PcmSampleRate.S44_100 },
-        audioRecordChannels = prefs.getFlow(MyPrefs.AUDIO_RECORD_CHANNELS) { PcmChannels.MONO },
-        audioRecordEncoding = prefs.getFlow(MyPrefs.AUDIO_RECORD_ENCODING) { PcmEncoding.PCM_16BIT }
+        isRecordingOn = prefs.getFlow(MyPrefs.IS_RECORDING_ON) { Defaults.IS_RECORDING_ON },
+        audioRecordSampleRate = prefs.getFlow(MyPrefs.AUDIO_RECORD_SAMPLE_RATE) { Defaults.AUDIO_RECORD_SAMPLE_RATE },
+        audioRecordChannels = prefs.getFlow(MyPrefs.AUDIO_RECORD_CHANNELS) { Defaults.AUDIO_RECORD_CHANNELS },
+        audioRecordEncoding = prefs.getFlow(MyPrefs.AUDIO_RECORD_ENCODING) { Defaults.AUDIO_RECORD_ENCODING }
     )
 
     fun flipSystemization() = viewModelScope.launchNoJob {
@@ -36,7 +37,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun flipRecording() = viewModelScope.launchNoJob {
-        val flippedIsRecording = !prefs.get(MyPrefs.IS_RECORDING_ON) { false }
+        val flippedIsRecording = !prefs.get(MyPrefs.IS_RECORDING_ON) { Defaults.IS_RECORDING_ON }
         prefs.set(MyPrefs.IS_RECORDING_ON, flippedIsRecording)
     }
 

@@ -1,5 +1,6 @@
 package com.redridgeapps.callrecorder.callutils
 
+import com.redridgeapps.callrecorder.utils.Defaults
 import com.redridgeapps.callrecorder.utils.prefs.MyPrefs
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import kotlinx.coroutines.async
@@ -22,9 +23,12 @@ suspend fun RecordingJob(
     callEvent: NewCallEvent
 ): RecordingJob = coroutineScope {
 
-    val sampleRate = async { prefs.get(MyPrefs.AUDIO_RECORD_SAMPLE_RATE) { PcmSampleRate.S44_100 } }
-    val audioChannel = async { prefs.get(MyPrefs.AUDIO_RECORD_CHANNELS) { PcmChannels.MONO } }
-    val audioEncoding = async { prefs.get(MyPrefs.AUDIO_RECORD_ENCODING) { PcmEncoding.PCM_16BIT } }
+    val sampleRate =
+        async { prefs.get(MyPrefs.AUDIO_RECORD_SAMPLE_RATE) { Defaults.AUDIO_RECORD_SAMPLE_RATE } }
+    val audioChannel =
+        async { prefs.get(MyPrefs.AUDIO_RECORD_CHANNELS) { Defaults.AUDIO_RECORD_CHANNELS } }
+    val audioEncoding =
+        async { prefs.get(MyPrefs.AUDIO_RECORD_ENCODING) { Defaults.AUDIO_RECORD_ENCODING } }
 
     val recordingStartInstant = Instant.now()
 
