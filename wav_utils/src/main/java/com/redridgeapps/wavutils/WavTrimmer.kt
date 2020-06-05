@@ -109,7 +109,7 @@ internal object WavTrimmer {
         trimmedEndPosition: Long
     ) {
 
-        FileChannel.open(outputPath, CREATE_NEW, WRITE).use { outputChannel ->
+        FileChannel.open(outputPath, CREATE, TRUNCATE_EXISTING, WRITE).use { outputChannel ->
 
             // Skip header space in output file for now
             outputChannel.position(44)

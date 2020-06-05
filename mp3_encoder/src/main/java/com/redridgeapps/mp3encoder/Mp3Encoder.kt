@@ -7,7 +7,7 @@ import java.nio.Buffer
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.channels.FileChannel
-import java.nio.file.StandardOpenOption
+import java.nio.file.StandardOpenOption.*
 
 object Mp3Encoder {
 
@@ -16,23 +16,19 @@ object Mp3Encoder {
         val encodingJob = encoder.encodingJob
 
         // Open files
-        FileChannel.open(encodingJob.wavPath, StandardOpenOption.READ).use { inputChannel ->
-            FileChannel.open(
-                encodingJob.mp3Path,
-                StandardOpenOption.CREATE,
-                StandardOpenOption.TRUNCATE_EXISTING,
-                StandardOpenOption.WRITE
-            ).use { outputChannel ->
+        FileChannel.open(encodingJob.wavPath, READ).use { inputChannel ->
+            FileChannel.open(encodingJob.mp3Path, CREATE, TRUNCATE_EXISTING, WRITE)
+                .use { outputChannel ->
 
-                // Skip header
-                inputChannel.position(WAV_HEADER_SIZE.toLong())
+                    // Skip header
+                    inputChannel.position(WAV_HEADER_SIZE.toLong())
 
-                // Setup buffers
-                val bufferSize = BUFFER_MULTIPLIER * encodingJob.wavData.blockAlign
-                val pcmBuffer =
-                    ByteBuffer.allocateDirect(bufferSize).order(ByteOrder.LITTLE_ENDIAN)
-                val mp3Buffer =
-                    ByteBuffer.allocateDirect(bufferSize).order(ByteOrder.LITTLE_ENDIAN)
+                    // Setup buffers
+                    val bufferSize = BUFFER_MULTIPLIER * encodingJob.wavData.blockAlign
+                    val pcmBuffer =
+                        ByteBuffer.allocateDirect(bufferSize).order(ByteOrder.LITTLE_ENDIAN)
+                    val mp3Buffer =
+                        ByteBuffer.allocateDirect(bufferSize).order(ByteOrder.LITTLE_ENDIAN)
 
                 // Init lame
                 val lame = initLame(encodingJob.wavData, encodingJob.quality)
