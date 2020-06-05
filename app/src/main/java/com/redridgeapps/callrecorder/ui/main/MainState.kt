@@ -6,12 +6,11 @@ import androidx.compose.setValue
 import com.redridgeapps.callrecorder.callutils.PlaybackState
 import com.redridgeapps.callrecorder.callutils.RecordingId
 import com.redridgeapps.callrecorder.ui.utils.ListSelection
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.*
 
 class MainState(
-    val playbackState: Flow<PlaybackState>,
+    val playbackState: StateFlow<PlaybackState>,
     val recordingListFilter: StateFlow<EnumSet<RecordingListFilter>>
 ) {
 
