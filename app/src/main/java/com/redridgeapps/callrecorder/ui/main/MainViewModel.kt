@@ -16,7 +16,6 @@ import com.redridgeapps.callrecorder.utils.toLocalDateTime
 import kotlinx.coroutines.flow.*
 import java.nio.file.Paths
 import java.time.Duration
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
@@ -148,78 +147,66 @@ class MainViewModel @Inject constructor(
     private fun observeRecordingList() {
 
         recordings.getRecordingList()
-            .combine(recordingListFilter) { list: List<Recording>, filterSet: EnumSet<RecordingListFilter> ->
+            .map {
                 uiState.isRefreshing = true
-                when {
-                    filterSet.isEmpty() -> list
-                    else -> filterRecordingList(list, filterSet)
-                }
+                it.asRecordingMapByDate()
             }
-            .onEach {
-                uiState.recordingList = prepareRecordingList(it)
+            .combine(recordingListFilter) { recordingMapByDate, filterSet ->
+
+                val filteredMap = filterRecordingMap(recordingMapByDate, filterSet)
+
+                uiState.recordingList = filteredMap.flatMap { listOf(it.key) + it.value }
                 uiState.isRefreshing = false
             }
             .launchIn(viewModelScope)
     }
 
-    private fun filterRecordingList(
-        list: List<Recording>,
+    private fun filterRecordingMap(
+        recordingMapByDate: Map<RecordingListItem.Divider, List<RecordingListItem.Entry>>,
         filterSet: EnumSet<RecordingListFilter>
-    ): List<Recording> = list.filter {
-                (RecordingListFilter.Incoming in filterSet && it.call_direction == CallDirection.INCOMING) ||
-                (RecordingListFilter.Outgoing in filterSet && it.call_direction == CallDirection.OUTGOING) ||
-                (RecordingListFilter.Starred in filterSet && it.is_starred)
+    ): Map<RecordingListItem.Divider, List<RecordingListItem.Entry>> = when {
+        filterSet.isEmpty() -> recordingMapByDate
+        else -> {
+            recordingMapByDate.mapValues { entry ->
+                entry.value.filter { recording -> recording.applicableFilters.any { it in filterSet } }
+            }.filter { entry -> entry.value.isNotEmpty() }
+        }
     }
 
-    private fun prepareRecordingList(recordingList: List<Recording>): List<RecordingListItem> {
+    private fun List<Recording>.asRecordingMapByDate(): Map<RecordingListItem.Divider, List<RecordingListItem.Entry>> {
+        return groupBy { it.start_instant.toLocalDate() }
+            .mapKeys { RecordingListItem.Divider(it.key.format(newDayFormatter)) }
+            .mapValues { entry ->
+                entry.value.map {
 
-        val resultList = mutableListOf<RecordingListItem>()
+                    // Format call Interval
+                    val startTime = it.start_instant.toLocalDateTime().format(overlineFormatter)
+                    val overlineText = "$startTime • ${it.call_direction}"
 
-        // Track recordings on a given day
-        var currentDate: LocalDate? = null
+                    val metaText = it.duration.getFormatted()
 
-        recordingList.forEach {
+                    // Collect applicable filters
+                    val filterSet = enumSetNoneOf<RecordingListFilter>()
 
-            // Format call Interval
-            val startTime = it.start_instant.toLocalDateTime().format(overlineFormatter)
-            val overlineText = "$startTime • ${it.call_direction}"
+                    when (it.call_direction) {
+                        CallDirection.INCOMING -> filterSet.add(RecordingListFilter.Incoming)
+                        CallDirection.OUTGOING -> filterSet.add(RecordingListFilter.Outgoing)
+                    }
 
-            val metaText = it.duration.getFormatted()
+                    if (it.is_starred)
+                        filterSet.add(RecordingListFilter.Starred)
 
-            // Date of current recording
-            val recordingDate = it.start_instant.toLocalDate()
-
-            // Add Divider if recording was made on a new day
-            if (currentDate != recordingDate) {
-                resultList.add(RecordingListItem.Divider(recordingDate.format(newDayFormatter)))
-                currentDate = recordingDate
+                    // Mapped recording entry
+                    RecordingListItem.Entry(
+                        id = RecordingId(it.id),
+                        name = "${it.id} - ${it.name}",
+                        number = it.number,
+                        overlineText = overlineText,
+                        metaText = metaText,
+                        applicableFilters = filterSet
+                    )
+                }
             }
-
-            // Collect applicable filters
-            val filterSet = enumSetNoneOf<RecordingListFilter>()
-
-            when (it.call_direction) {
-                CallDirection.INCOMING -> filterSet.add(RecordingListFilter.Incoming)
-                CallDirection.OUTGOING -> filterSet.add(RecordingListFilter.Outgoing)
-            }
-
-            if (it.is_starred)
-                filterSet.add(RecordingListFilter.Starred)
-
-            // Add recording entry
-            resultList.add(
-                RecordingListItem.Entry(
-                    id = RecordingId(it.id),
-                    name = "${it.id} - ${it.name}",
-                    number = it.number,
-                    overlineText = overlineText,
-                    metaText = metaText,
-                    applicableFilters = filterSet
-                )
-            )
-        }
-
-        return resultList
     }
 
     private fun stopPlayback() = viewModelScope.launchNoJob {
