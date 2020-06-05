@@ -1,29 +1,25 @@
 package com.redridgeapps.callrecorder.ui.compose_viewmodel
 
+import androidx.hilt.lifecycle.ViewModelAssistedFactory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.redridgeapps.callrecorder.di.factories.DaggerViewModelFactory
-import javax.inject.Inject
+import javax.inject.Provider
 import kotlin.reflect.KClass
 
 class ComposeViewModelFetcher(
-    private val composeViewModelStores: ComposeViewModelStores,
-    private val viewModelFactory: DaggerViewModelFactory
+    private val composeFramework: ComposeFramework,
+    private val viewModelAssistedFactories: Map<String, @JvmSuppressWildcards Provider<ViewModelAssistedFactory<out ViewModel>>>
 ) {
 
     fun <T : ViewModel> fetch(key: String, kClass: KClass<T>): T {
 
-        val viewModelStore = composeViewModelStores.getViewModelStore(key)
-        val viewModelProvider = ViewModelProvider(viewModelStore, viewModelFactory)
+        val viewModelAssistedFactory = viewModelAssistedFactories[kClass.qualifiedName]?.get()
+            ?: error("ViewModelAssistedFactory not found")
+
+        val owner = composeFramework.getComposeOwner(key)
+        val viewModelFactory = ComposeSavedStateViewModelFactory(owner, viewModelAssistedFactory)
+        val viewModelProvider = ViewModelProvider(owner.viewModelStore, viewModelFactory)
 
         return viewModelProvider.get(kClass.java)
-    }
-}
-
-class ComposeViewModelFetcherFactory @Inject constructor(
-    private val viewModelFactory: DaggerViewModelFactory
-) {
-    fun create(composeViewModelStores: ComposeViewModelStores): ComposeViewModelFetcher {
-        return ComposeViewModelFetcher(composeViewModelStores, viewModelFactory)
     }
 }

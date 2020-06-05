@@ -9,16 +9,13 @@ import android.os.PowerManager
 import android.telephony.TelephonyManager
 import androidx.core.content.getSystemService
 import androidx.preference.PreferenceManager
-import com.redridgeapps.callrecorder.di.modules.android.ViewModelModule
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 
-@Module(
-    includes = [ViewModelModule::class]
-)
+@Module
 @InstallIn(ApplicationComponent::class)
 object AppModule {
 

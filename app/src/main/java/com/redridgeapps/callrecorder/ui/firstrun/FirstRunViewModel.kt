@@ -1,14 +1,14 @@
 package com.redridgeapps.callrecorder.ui.firstrun
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.utils.Systemizer
 import com.redridgeapps.callrecorder.utils.launchNoJob
 import com.redridgeapps.callrecorder.utils.prefs.MyPrefs
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
-import javax.inject.Inject
 
-class FirstRunViewModel @Inject constructor(
+class FirstRunViewModel @ViewModelInject constructor(
     private val systemizer: Systemizer,
     private val prefs: Prefs
 ) : ViewModel() {

@@ -1,5 +1,6 @@
 package com.redridgeapps.callrecorder.ui.main
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.Recording
@@ -18,9 +19,8 @@ import java.nio.file.Paths
 import java.time.Duration
 import java.time.format.DateTimeFormatter
 import java.util.*
-import javax.inject.Inject
 
-class MainViewModel @Inject constructor(
+class MainViewModel @ViewModelInject constructor(
     private val recordings: Recordings,
     private val callPlayback: CallPlayback,
     private val mp3ConversionServiceLauncher: Mp3ConversionServiceLauncher,

@@ -9,19 +9,15 @@ import androidx.ui.core.setContent
 import androidx.ui.material.MaterialTheme
 import com.koduok.compose.navigation.Router
 import com.redridgeapps.callrecorder.ui.compose_viewmodel.ComposeViewModelFetcher
-import com.redridgeapps.callrecorder.ui.compose_viewmodel.ComposeViewModelStores
-import com.redridgeapps.callrecorder.ui.compose_viewmodel.WithViewModelStores
 import com.redridgeapps.callrecorder.ui.firstrun.FirstRunDestination
 import com.redridgeapps.callrecorder.ui.main.MainDestination
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.utils.ActivityResultRegistryAmbient
-import com.redridgeapps.callrecorder.ui.utils.ComposeViewModelStoresAmbient
 import com.redridgeapps.callrecorder.ui.utils.ViewModelFetcherAmbient
 
 fun ComponentActivity.showUI(
     isFirstRun: Boolean,
     activityResultRegistry: ActivityResultRegistry,
-    composeViewModelStores: ComposeViewModelStores,
     composeViewModelFetcher: ComposeViewModelFetcher
 ) {
 
@@ -30,7 +26,6 @@ fun ComponentActivity.showUI(
 
         Providers(
             ActivityResultRegistryAmbient provides activityResultRegistry,
-            ComposeViewModelStoresAmbient provides composeViewModelStores,
             ViewModelFetcherAmbient provides composeViewModelFetcher,
             children = content
         )
@@ -46,11 +41,9 @@ fun Root(isFirstRun: Boolean) {
     }
 
     MaterialTheme {
-        WithViewModelStores {
-            Router(start = destination) { currentRoute ->
-                key(currentRoute) {
-                    currentRoute.data.initializeUI()
-                }
+        Router(start = destination) { currentRoute ->
+            key(currentRoute) {
+                currentRoute.data.initializeUI()
             }
         }
     }

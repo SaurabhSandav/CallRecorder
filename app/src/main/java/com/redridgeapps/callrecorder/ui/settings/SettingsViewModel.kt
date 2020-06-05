@@ -1,5 +1,6 @@
 package com.redridgeapps.callrecorder.ui.settings
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.callutils.PcmChannels
@@ -12,9 +13,8 @@ import com.redridgeapps.callrecorder.utils.launchNoJob
 import com.redridgeapps.callrecorder.utils.prefs.MyPrefs
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import kotlinx.coroutines.flow.first
-import javax.inject.Inject
 
-class SettingsViewModel @Inject constructor(
+class SettingsViewModel @ViewModelInject constructor(
     private val prefs: Prefs,
     private val systemizer: Systemizer,
     private val recordings: Recordings

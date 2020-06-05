@@ -4,10 +4,12 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.koduok.compose.navigation.core.backStackController
 import com.redridgeapps.callrecorder.callutils.Recordings
-import com.redridgeapps.callrecorder.ui.compose_viewmodel.ComposeViewModelFetcherFactory
-import com.redridgeapps.callrecorder.ui.compose_viewmodel.ComposeViewModelStores
+import com.redridgeapps.callrecorder.ui.compose_viewmodel.ComposeFramework
+import com.redridgeapps.callrecorder.ui.compose_viewmodel.viewModelStoreKey
 import com.redridgeapps.callrecorder.ui.root.showUI
+import com.redridgeapps.callrecorder.ui.routing.RouterBackStackListener
 import com.redridgeapps.callrecorder.ui.routing.composeHandleBackPressed
 import com.redridgeapps.callrecorder.utils.prefs.MyPrefs
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
@@ -20,9 +22,6 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var prefs: Prefs
-
-    @Inject
-    lateinit var composeViewModelFetcherFactory: ComposeViewModelFetcherFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,15 +51,27 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupCompose() = lifecycleScope.launch {
 
-        val composeViewModelStores by viewModels<ComposeViewModelStores>()
-        val composeViewModelFetcher = composeViewModelFetcherFactory.create(composeViewModelStores)
+        val composeFramework by viewModels<ComposeFramework>()
+
+        val backStackListener = RouterBackStackListener(
+            onAdded = { composeFramework.destinationAdded(it.viewModelStoreKey) },
+            onRemoved = { composeFramework.destinationRemoved(it.viewModelStoreKey) }
+        )
+        backStackController.addListener(backStackListener)
+
+        // Handle saving/restoring State
+        with(savedStateRegistry) {
+            composeFramework.restoreSavedState(consumeRestoredStateForKey(COMPOSE_SAVED_STATE_KEY))
+            registerSavedStateProvider(COMPOSE_SAVED_STATE_KEY) {
+                Bundle().also { composeFramework.saveState(it) }
+            }
+        }
+
+        val composeViewModelFetcher = composeFramework.viewModelFetcher
         val isFirstRun = prefs.get(MyPrefs.IS_FIRST_RUN) { true }
 
-        showUI(
-            isFirstRun,
-            activityResultRegistry,
-            composeViewModelStores,
-            composeViewModelFetcher
-        )
+        showUI(isFirstRun, activityResultRegistry, composeViewModelFetcher)
     }
 }
+
+const val COMPOSE_SAVED_STATE_KEY = "COMPOSE_SAVED_STATE_KEY"
