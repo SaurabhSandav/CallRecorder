@@ -41,8 +41,8 @@ cargo {
     targets = ["arm", "x86", "x86_64", "arm64"]
 }
 
-tasks.whenTaskAdded { task ->
+/*tasks.whenTaskAdded { task ->
     if ((task.name == 'javaPreCompileDebug' || task.name == 'javaPreCompileRelease')) {
         task.dependsOn 'cargoBuild'
     }
-}
+}*/
