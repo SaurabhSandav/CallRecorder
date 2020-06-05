@@ -86,7 +86,9 @@ private fun SystemizationConfig(viewModel: FirstRunViewModel) {
 
         Spacer(modifier = Modifier.preferredHeight(10.dp))
 
-        Crossfade(current = viewModel.uiState.isAppSystemized.collectAsState().value) { isAppSystemized ->
+        val isAppSystemized by viewModel.uiState.isAppSystemized.collectAsState(initial = null)
+
+        Crossfade(current = isAppSystemized) {
             when (isAppSystemized) {
                 null -> CircularProgressIndicator()
                 true -> Text(text = "✔ App is systemized")

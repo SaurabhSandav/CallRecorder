@@ -65,13 +65,13 @@ private fun ContentMain(viewModel: SettingsViewModel, modifier: Modifier) {
 
     Column(modifier) {
 
-        val isRecordingOn by viewModel.uiState.isRecordingOn.collectAsState()
+        val isRecordingOn by viewModel.uiState.isRecordingOn.collectAsState(initial = null)
 
         SwitchPreference("Recording", isRecordingOn) {
             viewModel.flipRecording()
         }
 
-        val isSystemized by viewModel.uiState.isSystemized.collectAsState()
+        val isSystemized by viewModel.uiState.isSystemized.collectAsState(initial = null)
 
         SwitchPreference("Systemize", isSystemized) {
             viewModel.flipSystemization()
@@ -93,7 +93,7 @@ private fun AudioRecordAPIPreference(viewModel: SettingsViewModel) {
 
         TitlePreference(text = "AudioRecord API")
 
-        val audioRecordSampleRate by viewModel.uiState.audioRecordSampleRate.collectAsState()
+        val audioRecordSampleRate by viewModel.uiState.audioRecordSampleRate.collectAsState(initial = null)
 
         SingleSelectListPreference(
             title = "Sample Rate",
@@ -103,7 +103,7 @@ private fun AudioRecordAPIPreference(viewModel: SettingsViewModel) {
             onSelectedChange = { viewModel.setAudioRecordSampleRate(it) }
         )
 
-        val audioRecordChannels by viewModel.uiState.audioRecordChannels.collectAsState()
+        val audioRecordChannels by viewModel.uiState.audioRecordChannels.collectAsState(initial = null)
 
         SingleSelectListPreference(
             title = "Channels",
@@ -113,7 +113,7 @@ private fun AudioRecordAPIPreference(viewModel: SettingsViewModel) {
             onSelectedChange = { viewModel.setAudioRecordChannels(it) }
         )
 
-        val audioRecordEncoding by viewModel.uiState.audioRecordEncoding.collectAsState()
+        val audioRecordEncoding by viewModel.uiState.audioRecordEncoding.collectAsState(initial = null)
 
         SingleSelectListPreference(
             title = "Encoding",
