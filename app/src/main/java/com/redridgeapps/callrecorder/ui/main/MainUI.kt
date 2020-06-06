@@ -376,7 +376,7 @@ private fun OptionsDialog(viewModel: MainViewModel) {
 
             var recordingInfo by state<List<AnnotatedString>> { emptyList() }
 
-            launchInComposition(true) {
+            launchInComposition {
                 recordingInfo = annotateRecordingInfo(viewModel)
             }
 
