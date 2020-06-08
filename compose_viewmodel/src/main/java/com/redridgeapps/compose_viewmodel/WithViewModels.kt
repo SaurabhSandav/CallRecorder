@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.ui.compose_viewmodel
+package com.redridgeapps.compose_viewmodel
 
 import androidx.compose.Composable
 import androidx.compose.Providers

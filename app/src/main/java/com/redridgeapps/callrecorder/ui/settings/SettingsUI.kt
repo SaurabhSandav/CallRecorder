@@ -19,8 +19,8 @@ import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.callrecorder.callutils.PcmChannels
 import com.redridgeapps.callrecorder.callutils.PcmEncoding
 import com.redridgeapps.callrecorder.callutils.PcmSampleRate
-import com.redridgeapps.callrecorder.ui.compose_viewmodel.fetchViewModel
 import com.redridgeapps.callrecorder.ui.routing.Destination
+import com.redridgeapps.callrecorder.ui.routing.fetchViewModel
 import com.redridgeapps.callrecorder.ui.utils.SingleSelectListPreference
 import com.redridgeapps.callrecorder.ui.utils.SwitchPreference
 import com.redridgeapps.callrecorder.ui.utils.TitlePreference

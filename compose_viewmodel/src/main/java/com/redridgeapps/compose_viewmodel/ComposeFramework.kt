@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.ui.compose_viewmodel
+package com.redridgeapps.compose_viewmodel
 
 import android.os.Bundle
 import androidx.hilt.Assisted
@@ -19,7 +19,7 @@ class ComposeFramework @ViewModelInject constructor(
     private val composeOwnerMap = mutableMapOf<String, ComposeOwner?>()
     private val viewModelStoreMap = mutableMapOf<String, ViewModelStore>()
 
-    val viewModelFetcher = ComposeViewModelFetcher(this, viewModelAssistedFactories)
+    internal val viewModelFetcher = ComposeViewModelFetcher(this, viewModelAssistedFactories)
 
     init {
         setupSavedState()
@@ -45,7 +45,7 @@ class ComposeFramework @ViewModelInject constructor(
         viewModelStoreMap.remove(key)?.clear()
     }
 
-    fun getComposeOwner(key: String): ComposeOwner {
+    internal fun getComposeOwner(key: String): ComposeOwner {
         return composeOwnerMap[key] ?: error("ComposeOwner does not exist")
     }
 

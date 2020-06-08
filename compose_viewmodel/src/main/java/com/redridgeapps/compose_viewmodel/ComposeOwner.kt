@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.ui.compose_viewmodel
+package com.redridgeapps.compose_viewmodel
 
 import android.os.Bundle
 import androidx.lifecycle.*
@@ -6,7 +6,7 @@ import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 
-class ComposeOwner(
+internal class ComposeOwner(
     private val savedStateKey: String,
     private val _viewModelStore: ViewModelStore
 ) : LifecycleOwner, SavedStateRegistryOwner, ViewModelStoreOwner {

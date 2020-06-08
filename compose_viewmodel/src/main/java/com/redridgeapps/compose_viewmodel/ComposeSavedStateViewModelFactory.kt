@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.ui.compose_viewmodel
+package com.redridgeapps.compose_viewmodel
 
 import android.annotation.SuppressLint
 import androidx.hilt.lifecycle.ViewModelAssistedFactory
@@ -6,7 +6,7 @@ import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 
-class ComposeSavedStateViewModelFactory(
+internal class ComposeSavedStateViewModelFactory(
     owner: ComposeOwner,
     private val viewModelAssistedFactory: ViewModelAssistedFactory<out ViewModel>
 ) : AbstractSavedStateViewModelFactory(owner, null) {

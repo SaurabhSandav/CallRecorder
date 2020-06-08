@@ -1,11 +1,12 @@
-package com.redridgeapps.callrecorder.ui.compose_viewmodel
+package com.redridgeapps.callrecorder.ui.routing
 
 import androidx.compose.Composable
 import androidx.lifecycle.ViewModel
 import com.koduok.compose.navigation.BackStackAmbient
 import com.koduok.compose.navigation.core.Route
 import com.koduok.compose.navigation.core.backStackController
-import com.redridgeapps.callrecorder.ui.routing.RouterBackStackListener
+import com.redridgeapps.compose_viewmodel.ComposeFramework
+import com.redridgeapps.compose_viewmodel.ViewModelFetcherAmbient
 import kotlin.reflect.KClass
 
 @Composable

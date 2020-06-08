@@ -21,8 +21,8 @@ import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.callrecorder.callutils.PlaybackState.NotStopped
 import com.redridgeapps.callrecorder.callutils.PlaybackState.NotStopped.Playing
 import com.redridgeapps.callrecorder.callutils.RecordingId
-import com.redridgeapps.callrecorder.ui.compose_viewmodel.fetchViewModel
 import com.redridgeapps.callrecorder.ui.routing.Destination
+import com.redridgeapps.callrecorder.ui.routing.fetchViewModel
 import com.redridgeapps.callrecorder.ui.settings.SettingsDestination
 import com.redridgeapps.callrecorder.ui.utils.ListSelection
 import com.redridgeapps.callrecorder.ui.utils.drawScrim

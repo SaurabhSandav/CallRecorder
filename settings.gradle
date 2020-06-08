@@ -1,3 +1,4 @@
+include ':compose_viewmodel'
 include ':wav_utils'
 include ':mp3_encoder'
 include ':app'
