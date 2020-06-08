@@ -74,6 +74,7 @@ dependencies {
     implementation Jetpack.ACTIVITY_KTX
     implementation Jetpack.APPCOMPAT
     implementation Jetpack.CORE_KTX
+    implementation Jetpack.FRAGMENT_KTX
     implementation Jetpack.PREFERENCE_KTX
 
     // Compose

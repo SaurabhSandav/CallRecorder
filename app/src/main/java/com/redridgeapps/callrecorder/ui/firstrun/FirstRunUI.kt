@@ -4,7 +4,7 @@ import android.Manifest
 import androidx.compose.Composable
 import androidx.compose.collectAsState
 import androidx.compose.getValue
-import androidx.compose.onActive
+import androidx.compose.invalidate
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.Alignment
 import androidx.ui.core.Modifier
@@ -14,11 +14,11 @@ import androidx.ui.layout.*
 import androidx.ui.material.*
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
-import com.koduok.compose.navigation.core.BackStack
 import com.redridgeapps.callrecorder.ui.main.MainDestination
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.routing.fetchViewModel
-import com.redridgeapps.callrecorder.ui.utils.PermissionsManager
+import com.redridgeapps.callrecorder.ui.utils.isPermissionGranted
+import com.redridgeapps.callrecorder.ui.utils.requestPermissions
 
 object FirstRunDestination : Destination {
 
@@ -34,11 +34,15 @@ object FirstRunDestination : Destination {
 @Composable
 private fun FirstRunUI(viewModel: FirstRunViewModel) {
 
+    // If configuration finished, navigate to MainDestination
     with(viewModel.uiState) {
         val isAppSystemized by isAppSystemized.collectAsState(false)
+        val backStack = BackStackAmbient.current
 
-        if (isAppSystemized && permissionsGranted == true && captureAudioOutputPermissionGranted == true)
-            configurationFinished(viewModel, BackStackAmbient.current)
+        if (isAppSystemized && permissionsGranted && captureAudioOutputPermissionGranted) {
+            viewModel.configurationFinished()
+            backStack.push(MainDestination)
+        }
     }
 
     val topBar = @Composable {
@@ -64,11 +68,6 @@ private fun FirstRunUI(viewModel: FirstRunViewModel) {
             CaptureAudioConfig(viewModel)
         }
     }
-}
-
-private fun configurationFinished(viewModel: FirstRunViewModel, backStack: BackStack<Any>) {
-    viewModel.configurationFinished()
-    backStack.push(MainDestination)
 }
 
 @Composable
@@ -119,30 +118,28 @@ private fun PermissionsConfig(viewModel: FirstRunViewModel) {
 
         Spacer(modifier = Modifier.preferredHeight(10.dp))
 
-        val permissionsManager = PermissionsManager()
+        // Called to re-request permissions
+        val recompose = invalidate
 
-        onActive {
-            viewModel.uiState.permissionsGranted =
-                permissionsManager.getUnGrantedPermissions().isEmpty()
-        }
+        requestPermissions(
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.READ_CALL_LOG,
+            Manifest.permission.READ_CONTACTS,
+            key = "FIRST_RUN_CHECK_ALL_PERMISSIONS",
+            onResult = { permissionResult ->
+                viewModel.uiState.permissionsGranted = permissionResult.all { it.value }
+            }
+        )
 
         Crossfade(
             current = viewModel.uiState.permissionsGranted
         ) { permissionsGranted ->
 
-            permissionsGranted ?: return@Crossfade
-
             if (permissionsGranted) {
                 Text("✔ All permissions granted")
             } else {
-
-                val onClick = {
-                    permissionsManager.requestPermissions { result ->
-                        viewModel.uiState.permissionsGranted = result.denied.isEmpty()
-                    }
-                }
-
-                Button(onClick = onClick) {
+                Button(onClick = { recompose() }) {
                     Text(text = "Grant permissions")
                 }
             }
@@ -167,18 +164,12 @@ private fun CaptureAudioConfig(viewModel: FirstRunViewModel) {
 
         Spacer(modifier = Modifier.preferredHeight(10.dp))
 
-        val permissionsManager = PermissionsManager()
-
-        onActive {
-            viewModel.uiState.captureAudioOutputPermissionGranted =
-                permissionsManager.checkPermissionGranted(Manifest.permission.CAPTURE_AUDIO_OUTPUT)
-        }
+        viewModel.uiState.captureAudioOutputPermissionGranted =
+            isPermissionGranted(Manifest.permission.CAPTURE_AUDIO_OUTPUT)
 
         Crossfade(
             current = viewModel.uiState.captureAudioOutputPermissionGranted
         ) { permissionGranted ->
-
-            permissionGranted ?: return@Crossfade
 
             if (permissionGranted) {
                 Text(text = "✔ Permission granted", style = MaterialTheme.typography.subtitle1)
