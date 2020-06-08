@@ -4,7 +4,7 @@ import java.nio.ByteBuffer
 import java.nio.FloatBuffer
 import java.nio.ShortBuffer
 
-object Lame {
+internal object Lame {
 
     init {
         System.loadLibrary("lame_wrapper")
