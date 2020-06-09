@@ -1,6 +1,6 @@
 package com.redridgeapps.callrecorder.callutils
 
-import com.redridgeapps.callrecorder.utils.Defaults
+import com.redridgeapps.callrecorder.utils.constants.Defaults
 import com.redridgeapps.callrecorder.utils.prefs.MyPrefs
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import kotlinx.coroutines.async

@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.utils
+package com.redridgeapps.callrecorder.utils.constants
 
 import com.redridgeapps.callrecorder.callutils.PcmChannels
 import com.redridgeapps.callrecorder.callutils.PcmEncoding

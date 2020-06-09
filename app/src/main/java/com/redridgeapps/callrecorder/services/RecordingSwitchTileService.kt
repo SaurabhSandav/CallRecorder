@@ -2,7 +2,7 @@ package com.redridgeapps.callrecorder.services
 
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import com.redridgeapps.callrecorder.utils.Defaults
+import com.redridgeapps.callrecorder.utils.constants.Defaults
 import com.redridgeapps.callrecorder.utils.prefs.MyPrefs
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import dagger.hilt.android.AndroidEntryPoint
