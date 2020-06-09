@@ -4,8 +4,8 @@ import android.content.Context
 import com.redridgeapps.callrecorder.CallRecordingDB
 import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.RecordingQueries
-import com.redridgeapps.callrecorder.db.DurationLongColumnAdapter
-import com.redridgeapps.callrecorder.db.InstantIntegerColumnAdapter
+import com.redridgeapps.callrecorder.db.adapter.DurationLongColumnAdapter
+import com.redridgeapps.callrecorder.db.adapter.InstantIntegerColumnAdapter
 import com.squareup.sqldelight.EnumColumnAdapter
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import dagger.Module
@@ -27,7 +27,7 @@ object DBModule {
         val driver = AndroidSqliteDriver(schema, this, "AppDB.db")
 
         return CallRecordingDB(
-            driver,
+            driver = driver,
             RecordingAdapter = Recording.Adapter(
                 start_instantAdapter = InstantIntegerColumnAdapter,
                 durationAdapter = DurationLongColumnAdapter,
