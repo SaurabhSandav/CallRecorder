@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.utils.prefs
+package com.redridgeapps.callrecorder.prefs
 
 sealed class PrefType<T : Any?> {
 

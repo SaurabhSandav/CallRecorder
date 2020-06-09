@@ -2,9 +2,9 @@ package com.redridgeapps.callrecorder.services
 
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
+import com.redridgeapps.callrecorder.prefs.MyPrefs
+import com.redridgeapps.callrecorder.prefs.Prefs
 import com.redridgeapps.callrecorder.utils.constants.Defaults
-import com.redridgeapps.callrecorder.utils.prefs.MyPrefs
-import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob

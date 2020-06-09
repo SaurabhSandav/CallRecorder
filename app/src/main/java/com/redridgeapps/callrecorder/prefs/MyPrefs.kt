@@ -1,11 +1,11 @@
-package com.redridgeapps.callrecorder.utils.prefs
+package com.redridgeapps.callrecorder.prefs
 
 import com.redridgeapps.callrecorder.callutils.PcmChannels
 import com.redridgeapps.callrecorder.callutils.PcmEncoding
 import com.redridgeapps.callrecorder.callutils.PcmSampleRate
-import com.redridgeapps.callrecorder.utils.prefs.PrefType.Companion.PrefEnum
-import com.redridgeapps.callrecorder.utils.prefs.PrefType.PrefBoolean
-import com.redridgeapps.callrecorder.utils.prefs.PrefType.PrefString
+import com.redridgeapps.callrecorder.prefs.PrefType.Companion.PrefEnum
+import com.redridgeapps.callrecorder.prefs.PrefType.PrefBoolean
+import com.redridgeapps.callrecorder.prefs.PrefType.PrefString
 
 enum class MyPrefs(val type: PrefType<*>) {
 

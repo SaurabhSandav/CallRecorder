@@ -1,8 +1,8 @@
-package com.redridgeapps.callrecorder.utils.prefs
+package com.redridgeapps.callrecorder.prefs
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
-import com.redridgeapps.callrecorder.utils.prefs.PrefType.*
+import com.redridgeapps.callrecorder.prefs.PrefType.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel

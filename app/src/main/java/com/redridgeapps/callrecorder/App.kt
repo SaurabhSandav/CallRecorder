@@ -1,11 +1,11 @@
 package com.redridgeapps.callrecorder
 
 import android.app.Application
+import com.redridgeapps.callrecorder.prefs.MyPrefs
+import com.redridgeapps.callrecorder.prefs.Prefs
 import com.redridgeapps.callrecorder.services.CallingService
 import com.redridgeapps.callrecorder.utils.HyperlinkedDebugTree
 import com.redridgeapps.callrecorder.utils.constants.Defaults
-import com.redridgeapps.callrecorder.utils.prefs.MyPrefs
-import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import com.topjohnwu.superuser.Shell
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.GlobalScope
