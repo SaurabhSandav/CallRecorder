@@ -11,7 +11,7 @@ import com.redridgeapps.callrecorder.callutils.PlaybackState.NotStopped.Playing
 import com.redridgeapps.callrecorder.services.AudioEndsTrimmingServiceLauncher
 import com.redridgeapps.callrecorder.services.Mp3ConversionServiceLauncher
 import com.redridgeapps.callrecorder.utils.humanReadableByteCount
-import com.redridgeapps.callrecorder.utils.launchNoJob
+import com.redridgeapps.callrecorder.utils.launchUnit
 import com.redridgeapps.callrecorder.utils.toLocalDate
 import com.redridgeapps.callrecorder.utils.toLocalDateTime
 import kotlinx.coroutines.flow.*
@@ -38,7 +38,7 @@ class MainViewModel @ViewModelInject constructor(
         recordingListFilter = recordingListFilter
     )
 
-    fun startPlayback(recordingId: RecordingId) = viewModelScope.launchNoJob {
+    fun startPlayback(recordingId: RecordingId) = viewModelScope.launchUnit {
 
         val recording = recordings.getRecording(recordingId).first()
         val playbackStatus = callPlayback.playbackState.first()
@@ -53,7 +53,7 @@ class MainViewModel @ViewModelInject constructor(
         }
     }
 
-    fun pausePlayback() = viewModelScope.launchNoJob {
+    fun pausePlayback() = viewModelScope.launchUnit {
         val playbackStatus = callPlayback.playbackState.first()
 
         with(callPlayback) {
@@ -61,7 +61,7 @@ class MainViewModel @ViewModelInject constructor(
         }
     }
 
-    fun setPlaybackPosition(position: Float) = viewModelScope.launchNoJob {
+    fun setPlaybackPosition(position: Float) = viewModelScope.launchUnit {
         val playbackStatus = callPlayback.playbackState.first()
 
         with(callPlayback) {
@@ -69,22 +69,22 @@ class MainViewModel @ViewModelInject constructor(
         }
     }
 
-    fun toggleStar() = viewModelScope.launchNoJob {
+    fun toggleStar() = viewModelScope.launchUnit {
         recordings.toggleStar(uiState.selection.map { it.id })
         uiState.selection.clear()
     }
 
-    fun trimSilenceEnds() = viewModelScope.launchNoJob {
+    fun trimSilenceEnds() = viewModelScope.launchUnit {
         audioEndsTrimmingServiceLauncher.launch(uiState.selection.map { it.id })
         uiState.selection.clear()
     }
 
-    fun convertToMp3() = viewModelScope.launchNoJob {
+    fun convertToMp3() = viewModelScope.launchUnit {
         mp3ConversionServiceLauncher.launch(uiState.selection.map { it.id })
         uiState.selection.clear()
     }
 
-    fun deleteRecordings() = viewModelScope.launchNoJob {
+    fun deleteRecordings() = viewModelScope.launchUnit {
         recordings.deleteRecording(uiState.selection.map { it.id })
         uiState.selection.clear()
     }
@@ -215,7 +215,7 @@ class MainViewModel @ViewModelInject constructor(
             }
     }
 
-    private fun stopPlayback() = viewModelScope.launchNoJob {
+    private fun stopPlayback() = viewModelScope.launchUnit {
         val playbackStatus = callPlayback.playbackState.first()
 
         with(callPlayback) {

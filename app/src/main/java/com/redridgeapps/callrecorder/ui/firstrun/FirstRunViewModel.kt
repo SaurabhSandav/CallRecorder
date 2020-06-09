@@ -4,7 +4,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.utils.Systemizer
-import com.redridgeapps.callrecorder.utils.launchNoJob
+import com.redridgeapps.callrecorder.utils.launchUnit
 import com.redridgeapps.callrecorder.utils.prefs.MyPrefs
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 
@@ -15,11 +15,11 @@ class FirstRunViewModel @ViewModelInject constructor(
 
     val uiState = FirstRunState(systemizer.isAppSystemizedFlow)
 
-    fun systemize() = viewModelScope.launchNoJob {
+    fun systemize() = viewModelScope.launchUnit {
         systemizer.systemize()
     }
 
-    fun configurationFinished() = viewModelScope.launchNoJob {
+    fun configurationFinished() = viewModelScope.launchUnit {
         prefs.set(MyPrefs.IS_FIRST_RUN, false)
         prefs.set(MyPrefs.IS_RECORDING_ON, true)
     }

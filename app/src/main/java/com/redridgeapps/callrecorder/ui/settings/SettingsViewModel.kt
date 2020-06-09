@@ -9,7 +9,7 @@ import com.redridgeapps.callrecorder.callutils.PcmSampleRate
 import com.redridgeapps.callrecorder.callutils.Recordings
 import com.redridgeapps.callrecorder.utils.Defaults
 import com.redridgeapps.callrecorder.utils.Systemizer
-import com.redridgeapps.callrecorder.utils.launchNoJob
+import com.redridgeapps.callrecorder.utils.launchUnit
 import com.redridgeapps.callrecorder.utils.prefs.MyPrefs
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import kotlinx.coroutines.flow.first
@@ -28,7 +28,7 @@ class SettingsViewModel @ViewModelInject constructor(
         audioRecordEncoding = prefs.getFlow(MyPrefs.AUDIO_RECORD_ENCODING) { Defaults.AUDIO_RECORD_ENCODING }
     )
 
-    fun flipSystemization() = viewModelScope.launchNoJob {
+    fun flipSystemization() = viewModelScope.launchUnit {
 
         if (systemizer.isAppSystemizedFlow.first())
             systemizer.unSystemize()
@@ -36,30 +36,30 @@ class SettingsViewModel @ViewModelInject constructor(
             systemizer.systemize()
     }
 
-    fun flipRecording() = viewModelScope.launchNoJob {
+    fun flipRecording() = viewModelScope.launchUnit {
         val flippedIsRecording = !prefs.get(MyPrefs.IS_RECORDING_ON) { Defaults.IS_RECORDING_ON }
         prefs.set(MyPrefs.IS_RECORDING_ON, flippedIsRecording)
     }
 
-    fun updateContactNames() = viewModelScope.launchNoJob {
+    fun updateContactNames() = viewModelScope.launchUnit {
         recordings.updateContactNames()
     }
 
     fun setAudioRecordSampleRate(
         audioRecordSampleRate: PcmSampleRate
-    ) = viewModelScope.launchNoJob {
+    ) = viewModelScope.launchUnit {
         prefs.set(MyPrefs.AUDIO_RECORD_SAMPLE_RATE, audioRecordSampleRate)
     }
 
     fun setAudioRecordChannels(
         audioRecordChannels: PcmChannels
-    ) = viewModelScope.launchNoJob {
+    ) = viewModelScope.launchUnit {
         prefs.set(MyPrefs.AUDIO_RECORD_CHANNELS, audioRecordChannels)
     }
 
     fun setAudioRecordEncoding(
         audioRecordEncoding: PcmEncoding
-    ) = viewModelScope.launchNoJob {
+    ) = viewModelScope.launchUnit {
         prefs.set(MyPrefs.AUDIO_RECORD_ENCODING, audioRecordEncoding)
     }
 }

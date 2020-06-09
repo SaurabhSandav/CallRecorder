@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.redridgeapps.callrecorder.callutils.Recordings
 import com.redridgeapps.callrecorder.ui.root.setupCompose
-import com.redridgeapps.callrecorder.utils.launchNoJob
+import com.redridgeapps.callrecorder.utils.launchUnit
 import com.redridgeapps.callrecorder.utils.prefs.MyPrefs
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun setupUI() = lifecycleScope.launchNoJob {
+    private fun setupUI() = lifecycleScope.launchUnit {
 
         val isFirstRun = prefs.get(MyPrefs.IS_FIRST_RUN) { true }
         setupCompose(isFirstRun)
