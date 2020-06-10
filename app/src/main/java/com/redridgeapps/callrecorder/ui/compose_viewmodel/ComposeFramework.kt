@@ -50,10 +50,7 @@ class ComposeFramework @ViewModelInject constructor(
     }
 
     fun saveState(outState: Bundle) {
-        composeOwnerMap.entries.removeAll { (_, owner) ->
-            owner?.performSave(outState)
-            true
-        }
+        composeOwnerMap.values.forEach { it?.performSave(outState) }
     }
 
     fun getComposeOwner(key: String): ComposeOwner {
