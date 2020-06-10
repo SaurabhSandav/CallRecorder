@@ -1,6 +1,7 @@
 package com.redridgeapps.callrecorder.ui.compose_viewmodel
 
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.hilt.lifecycle.ViewModelAssistedFactory
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
@@ -38,7 +39,25 @@ class ComposeFramework @ViewModelInject constructor(
         viewModelStoreMap.remove(key)?.clear()
     }
 
-    fun restoreSavedState(savedState: Bundle?) {
+    fun setupSavedState(
+        componentActivity: ComponentActivity
+    ) = with(componentActivity.savedStateRegistry) {
+
+        // Restore state
+        val savedState = consumeRestoredStateForKey(COMPOSE_SAVED_STATE_KEY)
+        restoreSavedState(savedState)
+
+        // Save State
+        registerSavedStateProvider(COMPOSE_SAVED_STATE_KEY) {
+            Bundle().also { saveState(it) }
+        }
+    }
+
+    fun getComposeOwner(key: String): ComposeOwner {
+        return composeOwnerMap[key] ?: error("ComposeOwner does not exist")
+    }
+
+    private fun restoreSavedState(savedState: Bundle?) {
 
         this.savedState = savedState
 
@@ -49,11 +68,9 @@ class ComposeFramework @ViewModelInject constructor(
         }
     }
 
-    fun saveState(outState: Bundle) {
+    private fun saveState(outState: Bundle) {
         composeOwnerMap.values.forEach { it?.performSave(outState) }
     }
-
-    fun getComposeOwner(key: String): ComposeOwner {
-        return composeOwnerMap[key] ?: error("ComposeOwner does not exist")
-    }
 }
+
+const val COMPOSE_SAVED_STATE_KEY = "COMPOSE_SAVED_STATE_KEY"

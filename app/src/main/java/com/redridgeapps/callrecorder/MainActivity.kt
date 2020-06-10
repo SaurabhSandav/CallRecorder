@@ -48,14 +48,7 @@ class MainActivity : AppCompatActivity() {
         val composeFramework by viewModels<ComposeFramework>()
 
         composeFramework.setupViewModel()
-
-        // Handle saving/restoring State
-        with(savedStateRegistry) {
-            composeFramework.restoreSavedState(consumeRestoredStateForKey(COMPOSE_SAVED_STATE_KEY))
-            registerSavedStateProvider(COMPOSE_SAVED_STATE_KEY) {
-                Bundle().also { composeFramework.saveState(it) }
-            }
-        }
+        composeFramework.setupSavedState(this@MainActivity)
 
         // Handle back pressed
         onBackPressedDispatcher.addCallback(this@MainActivity) {
@@ -72,5 +65,3 @@ class MainActivity : AppCompatActivity() {
         showUI(isFirstRun, activityResultRegistry, composeViewModelFetcher)
     }
 }
-
-const val COMPOSE_SAVED_STATE_KEY = "COMPOSE_SAVED_STATE_KEY"
