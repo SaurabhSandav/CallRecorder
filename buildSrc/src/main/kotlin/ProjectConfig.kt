@@ -46,7 +46,8 @@ object Jetpack {
 }
 
 object Compose {
-    private const val VERSION = "0.1.0-SNAPSHOT"
+    const val VERSION = "0.1.0-SNAPSHOT"
+    const val KOTLIN_COMPILER_VERSION = "1.3.70-dev-withExperimentalGoogleExtensions-20200424"
 
     const val COMPOSE_RUNTIME = "androidx.compose:compose-runtime:$VERSION"
     const val UI_FOUNDATION = "androidx.ui:ui-foundation:$VERSION"
