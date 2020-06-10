@@ -1,15 +1,17 @@
 package com.redridgeapps.callrecorder.ui.compose_viewmodel
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelAssistedFactory
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelStore
 import javax.inject.Provider
 import kotlin.collections.set
 
 class ComposeFramework @ViewModelInject constructor(
+    @Assisted private val savedStateHandle: SavedStateHandle,
     viewModelAssistedFactories: Map<String, @JvmSuppressWildcards Provider<ViewModelAssistedFactory<out ViewModel>>>
 ) : ViewModel() {
 
@@ -18,6 +20,10 @@ class ComposeFramework @ViewModelInject constructor(
     private val viewModelStoreMap = mutableMapOf<String, ViewModelStore>()
 
     val viewModelFetcher = ComposeViewModelFetcher(this, viewModelAssistedFactories)
+
+    init {
+        setupSavedState()
+    }
 
     fun initializeViewModel(key: String) {
 
@@ -39,22 +45,20 @@ class ComposeFramework @ViewModelInject constructor(
         viewModelStoreMap.remove(key)?.clear()
     }
 
-    fun setupSavedState(
-        componentActivity: ComponentActivity
-    ) = with(componentActivity.savedStateRegistry) {
+    fun getComposeOwner(key: String): ComposeOwner {
+        return composeOwnerMap[key] ?: error("ComposeOwner does not exist")
+    }
+
+    private fun setupSavedState() {
 
         // Restore state
-        val savedState = consumeRestoredStateForKey(COMPOSE_SAVED_STATE_KEY)
+        val savedState = savedStateHandle.get<Bundle>(COMPOSE_FRAMEWORK_SAVED_STATE_KEY)
         restoreSavedState(savedState)
 
         // Save State
-        registerSavedStateProvider(COMPOSE_SAVED_STATE_KEY) {
+        savedStateHandle.setSavedStateProvider(COMPOSE_FRAMEWORK_SAVED_STATE_KEY) {
             Bundle().also { saveState(it) }
         }
-    }
-
-    fun getComposeOwner(key: String): ComposeOwner {
-        return composeOwnerMap[key] ?: error("ComposeOwner does not exist")
     }
 
     private fun restoreSavedState(savedState: Bundle?) {
@@ -73,4 +77,4 @@ class ComposeFramework @ViewModelInject constructor(
     }
 }
 
-const val COMPOSE_SAVED_STATE_KEY = "COMPOSE_SAVED_STATE_KEY"
+const val COMPOSE_FRAMEWORK_SAVED_STATE_KEY = "COMPOSE_FRAMEWORK_SAVED_STATE_KEY"

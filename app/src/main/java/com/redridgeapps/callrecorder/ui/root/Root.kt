@@ -23,7 +23,6 @@ fun ComponentActivity.setupCompose(isFirstRun: Boolean) {
     val composeFramework by viewModels<ComposeFramework>()
 
     composeFramework.setupViewModel()
-    composeFramework.setupSavedState(this@setupCompose)
 
     // Handle back pressed
     onBackPressedDispatcher.addCallback(this@setupCompose) {
