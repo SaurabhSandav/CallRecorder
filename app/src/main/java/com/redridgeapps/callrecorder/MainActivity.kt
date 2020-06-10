@@ -4,12 +4,10 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.koduok.compose.navigation.core.backStackController
 import com.redridgeapps.callrecorder.callutils.Recordings
 import com.redridgeapps.callrecorder.ui.compose_viewmodel.ComposeFramework
-import com.redridgeapps.callrecorder.ui.compose_viewmodel.viewModelStoreKey
+import com.redridgeapps.callrecorder.ui.compose_viewmodel.setupViewModel
 import com.redridgeapps.callrecorder.ui.root.showUI
-import com.redridgeapps.callrecorder.ui.routing.RouterBackStackListener
 import com.redridgeapps.callrecorder.ui.routing.composeHandleBackPressed
 import com.redridgeapps.callrecorder.utils.prefs.MyPrefs
 import com.redridgeapps.callrecorder.utils.prefs.Prefs
@@ -53,11 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         val composeFramework by viewModels<ComposeFramework>()
 
-        val backStackListener = RouterBackStackListener(
-            onRouteAdded = { composeFramework.initializeViewModel(it.viewModelStoreKey) },
-            onRouteRemoved = { composeFramework.destroyViewModel(it.viewModelStoreKey) }
-        )
-        backStackController.addListener(backStackListener)
+        composeFramework.setupViewModel()
 
         // Handle saving/restoring State
         with(savedStateRegistry) {
