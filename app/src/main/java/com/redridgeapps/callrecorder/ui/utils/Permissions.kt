@@ -5,17 +5,14 @@ import android.content.pm.PackageManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.Composable
-import androidx.compose.CompositionLifecycleObserver
-import androidx.compose.onPreCommit
-import androidx.compose.remember
+import androidx.compose.*
 import androidx.core.content.ContextCompat
 import androidx.ui.core.ContextAmbient
 
 @Composable
 fun requestPermissions(
     vararg requestedPermissions: String,
-    key: String,
+    key: String = currentComposer.currentCompoundKeyHash.toString(),
     onResult: (permissionResult: Map<String, Boolean>) -> Unit
 ) {
 

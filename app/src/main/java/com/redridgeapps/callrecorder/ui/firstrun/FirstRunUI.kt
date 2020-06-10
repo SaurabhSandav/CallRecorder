@@ -126,7 +126,6 @@ private fun PermissionsConfig(viewModel: FirstRunViewModel) {
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.READ_CALL_LOG,
             Manifest.permission.READ_CONTACTS,
-            key = "FIRST_RUN_CHECK_ALL_PERMISSIONS",
             onResult = { permissionResult ->
                 viewModel.uiState.permissionsGranted = permissionResult.all { it.value }
             }
