@@ -54,8 +54,8 @@ class MainActivity : AppCompatActivity() {
         val composeFramework by viewModels<ComposeFramework>()
 
         val backStackListener = RouterBackStackListener(
-            onRouteAdded = { composeFramework.destinationAdded(it.viewModelStoreKey) },
-            onRouteRemoved = { composeFramework.destinationRemoved(it.viewModelStoreKey) }
+            onRouteAdded = { composeFramework.initializeViewModel(it.viewModelStoreKey) },
+            onRouteRemoved = { composeFramework.destroyViewModel(it.viewModelStoreKey) }
         )
         backStackController.addListener(backStackListener)
 

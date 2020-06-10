@@ -18,7 +18,7 @@ class ComposeFramework @ViewModelInject constructor(
 
     val viewModelFetcher = ComposeViewModelFetcher(this, viewModelAssistedFactories)
 
-    fun destinationAdded(key: String) {
+    fun initializeViewModel(key: String) {
 
         val composeOwner = composeOwnerMap[key]
 
@@ -33,7 +33,7 @@ class ComposeFramework @ViewModelInject constructor(
         }
     }
 
-    fun destinationRemoved(key: String) {
+    fun destroyViewModel(key: String) {
         composeOwnerMap.remove(key)
         viewModelStoreMap.remove(key)?.clear()
     }
