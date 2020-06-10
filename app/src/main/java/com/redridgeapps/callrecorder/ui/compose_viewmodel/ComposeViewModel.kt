@@ -6,7 +6,6 @@ import com.koduok.compose.navigation.BackStackAmbient
 import com.koduok.compose.navigation.core.Route
 import com.koduok.compose.navigation.core.backStackController
 import com.redridgeapps.callrecorder.ui.routing.RouterBackStackListener
-import com.redridgeapps.callrecorder.ui.utils.ViewModelFetcherAmbient
 
 @Composable
 inline fun <reified T : ViewModel> fetchViewModel(): T {

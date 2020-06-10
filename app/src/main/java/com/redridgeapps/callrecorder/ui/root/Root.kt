@@ -11,12 +11,12 @@ import androidx.ui.material.MaterialTheme
 import com.koduok.compose.navigation.Router
 import com.koduok.compose.navigation.core.backStackController
 import com.redridgeapps.callrecorder.ui.compose_viewmodel.ComposeFramework
+import com.redridgeapps.callrecorder.ui.compose_viewmodel.WithViewModels
 import com.redridgeapps.callrecorder.ui.compose_viewmodel.setupViewModel
 import com.redridgeapps.callrecorder.ui.firstrun.FirstRunDestination
 import com.redridgeapps.callrecorder.ui.main.MainDestination
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.utils.ActivityResultRegistryAmbient
-import com.redridgeapps.callrecorder.ui.utils.ViewModelFetcherAmbient
 
 fun ComponentActivity.setupCompose(isFirstRun: Boolean) {
 
@@ -35,13 +35,12 @@ fun ComponentActivity.setupCompose(isFirstRun: Boolean) {
     }
 
     setContent {
-        val content = @Composable { Root(isFirstRun) }
 
-        Providers(
-            ActivityResultRegistryAmbient provides activityResultRegistry,
-            ViewModelFetcherAmbient provides composeFramework.viewModelFetcher,
-            children = content
-        )
+        Providers(ActivityResultRegistryAmbient provides activityResultRegistry) {
+            WithViewModels(composeFramework) {
+                Root(isFirstRun)
+            }
+        }
     }
 }
 
