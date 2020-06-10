@@ -6,8 +6,8 @@ import com.koduok.compose.navigation.core.Route
 import timber.log.Timber
 
 class RouterBackStackListener(
-    val onAdded: (Route<*>) -> Unit,
-    val onRemoved: (Route<*>) -> Unit
+    val onRouteAdded: (Route<*>) -> Unit,
+    val onRouteRemoved: (Route<*>) -> Unit
 ) : BackStackController.Listener {
 
     private var oldSnapshot = listOf<Route<*>>()
@@ -22,13 +22,13 @@ class RouterBackStackListener(
         val added = newSnapshot.minus(oldSnapshot)
 
         removed.forEach { route ->
-            onRemoved(route)
+            onRouteRemoved(route)
 
             Timber.d("Route removed: $route")
         }
 
         added.forEach { route ->
-            onAdded(route)
+            onRouteAdded(route)
 
             Timber.d("Route added: $route")
         }
