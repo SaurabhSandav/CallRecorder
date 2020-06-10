@@ -96,17 +96,15 @@ dependencies {
     implementation Lifecycle.VIEWMODEL_KTX
     implementation Lifecycle.COMMON_JAVA8
 
-    // Dagger
-    implementation Dagger.DAGGER
+    // Dagger Hilt
     implementation Dagger.HILT_ANDROID
-    kapt Dagger.COMPILER
     kapt Dagger.HILT_ANDROID_COMPILER
 
-    // Hilt
-    implementation Hilt.COMMON
-    implementation Hilt.WORK
-    implementation Hilt.LIFECYCLE_VIEWMODEL
-    kapt Hilt.COMPILER
+    // AndroidX Hilt
+    implementation AndroidXHilt.COMMON
+    implementation AndroidXHilt.WORK
+    implementation AndroidXHilt.LIFECYCLE_VIEWMODEL
+    kapt AndroidXHilt.COMPILER
 
     // Timber
     implementation Timber.TIMBER

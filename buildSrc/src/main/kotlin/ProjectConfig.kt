@@ -75,11 +75,7 @@ object Lifecycle {
 }
 
 object Dagger {
-    private const val VERSION = "2.28"
     private const val HILT_VERSION = "2.28-alpha"
-
-    const val DAGGER = "com.google.dagger:dagger:$VERSION"
-    const val COMPILER = "com.google.dagger:dagger-compiler:$VERSION"
 
     const val HILT_ANDROID = "com.google.dagger:hilt-android:$HILT_VERSION"
     const val HILT_ANDROID_COMPILER = "com.google.dagger:hilt-android-compiler:$HILT_VERSION"
@@ -87,7 +83,7 @@ object Dagger {
         "com.google.dagger:hilt-android-gradle-plugin:$HILT_VERSION"
 }
 
-object Hilt {
+object AndroidXHilt {
     private const val VERSION = "1.0.0-alpha01"
 
     const val COMMON = "androidx.hilt:hilt-common:$VERSION"
