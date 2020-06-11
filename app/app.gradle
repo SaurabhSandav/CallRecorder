@@ -8,7 +8,7 @@ plugins {
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    buildToolsVersion "30.0.0"
 
     defaultConfig {
         applicationId "com.redridgeapps.callrecorder"
@@ -53,6 +53,8 @@ android {
         kotlinCompilerVersion "1.3.70-dev-withExperimentalGoogleExtensions-20200424"
         kotlinCompilerExtensionVersion Compose.VERSION
     }
+
+    ndkVersion "21.3.6528147"
 }
 
 dependencies {

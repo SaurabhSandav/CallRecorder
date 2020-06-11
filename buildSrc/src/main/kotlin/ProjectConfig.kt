@@ -3,7 +3,7 @@
 object GoogleMaven {
     const val SNAPSHOT_BUILD_ID = "6564799"
 
-    const val SUPPORT_REPO_ENABLED = true
+    const val SUPPORT_REPO_ENABLED = false
     const val SUPPORT_REPO_URL =
         "https://androidx.dev/snapshots/builds/$SNAPSHOT_BUILD_ID/artifacts/repository"
 
@@ -13,7 +13,7 @@ object GoogleMaven {
 }
 
 object AndroidTools {
-    private const val GRADLE_PLUGIN_VERSION = "4.1.0-alpha10"
+    private const val GRADLE_PLUGIN_VERSION = "4.2.0-alpha01"
     private const val DESUGAR_JDK_LIBS_VERSION = "1.0.5"
 
     const val GRADLE_PLUGIN = "com.android.tools.build:gradle:$GRADLE_PLUGIN_VERSION"
@@ -32,9 +32,9 @@ object Kotlin {
 }
 
 object Jetpack {
-    private const val ACTIVITY_KTX_VERSION = "1.2.0-alpha05"
+    private const val ACTIVITY_KTX_VERSION = "1.2.0-alpha06"
     private const val APPCOMPAT_VERSION = "1.3.0-alpha01"
-    private const val CORE_KTX_VERSION = "1.4.0-alpha01"
+    private const val CORE_KTX_VERSION = "1.5.0-alpha01"
     private const val PREFERENCE_KTX_VERSION = "1.1.1"
 
     const val ACTIVITY_KTX = "androidx.activity:activity-ktx:$ACTIVITY_KTX_VERSION"
@@ -63,7 +63,7 @@ object ComposeNavigation {
 }
 
 object Lifecycle {
-    private const val VERSION = "2.3.0-alpha03"
+    private const val VERSION = "2.3.0-alpha04"
 
     const val SERVICE = "androidx.lifecycle:lifecycle-service:$VERSION"
     const val LIVEDATA_KTX = "androidx.lifecycle:lifecycle-livedata-ktx:$VERSION"
@@ -85,7 +85,7 @@ object Dagger {
 }
 
 object Hilt {
-    private const val VERSION = "1.0.0-SNAPSHOT"
+    private const val VERSION = "1.0.0-alpha01"
 
     const val COMMON = "androidx.hilt:hilt-common:$VERSION"
     const val COMPILER = "androidx.hilt:hilt-compiler:$VERSION"
