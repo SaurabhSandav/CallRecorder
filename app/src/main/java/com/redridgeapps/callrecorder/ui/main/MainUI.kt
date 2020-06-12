@@ -4,6 +4,7 @@ import androidx.compose.*
 import androidx.ui.animation.Crossfade
 import androidx.ui.core.Modifier
 import androidx.ui.foundation.*
+import androidx.ui.foundation.lazy.LazyColumnItems
 import androidx.ui.graphics.Color
 import androidx.ui.layout.*
 import androidx.ui.material.*
@@ -136,7 +137,6 @@ private fun IconFilter(viewModel: MainViewModel) {
                     Checkbox(
                         checked = filter in filterSet,
                         modifier = Modifier.padding(end = 16.dp),
-                        // TODO Remove this if/when DropdownMenuItem can consume clicks
                         onCheckedChange = { onClick() }
                     )
 
@@ -184,8 +184,8 @@ private fun ContentMain(viewModel: MainViewModel) {
 @Composable
 private fun RecordingList(viewModel: MainViewModel) {
 
-    AdapterList(
-        data = viewModel.uiState.recordingList,
+    LazyColumnItems(
+        items = viewModel.uiState.recordingList,
         modifier = Modifier.fillMaxSize()
     ) { recordingListItem ->
 

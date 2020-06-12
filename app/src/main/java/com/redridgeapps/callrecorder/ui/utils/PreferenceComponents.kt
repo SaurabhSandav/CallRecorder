@@ -7,24 +7,11 @@ import androidx.ui.animation.Crossfade
 import androidx.ui.core.Alignment
 import androidx.ui.core.ConfigurationAmbient
 import androidx.ui.core.Modifier
-import androidx.ui.foundation.Box
-import androidx.ui.foundation.ContentGravity
-import androidx.ui.foundation.Dialog
-import androidx.ui.foundation.Text
-import androidx.ui.foundation.VerticalScroller
-import androidx.ui.foundation.drawBackground
+import androidx.ui.foundation.*
+import androidx.ui.foundation.selection.selectable
 import androidx.ui.graphics.Color
-import androidx.ui.layout.Column
-import androidx.ui.layout.Row
-import androidx.ui.layout.padding
-import androidx.ui.layout.preferredHeight
-import androidx.ui.layout.preferredHeightIn
-import androidx.ui.material.Divider
-import androidx.ui.material.ListItem
-import androidx.ui.material.MaterialTheme
-import androidx.ui.material.RadioGroup
-import androidx.ui.material.Switch
-import androidx.ui.material.TextButton
+import androidx.ui.layout.*
+import androidx.ui.material.*
 import androidx.ui.text.TextStyle
 import androidx.ui.text.font.FontWeight
 import androidx.ui.unit.dp
@@ -131,15 +118,27 @@ private fun <T> KeyedRadioGroup(
     textStyle: TextStyle? = null
 ) {
 
-    RadioGroup {
-        Column {
-            keys.forEach { key ->
-                RadioGroupTextItem(
-                    selected = (key == selectedOption),
-                    onSelect = { onSelectedChange(key) },
+    Column {
+        keys.forEach { key ->
+
+            val selected = (key == selectedOption)
+            val onSelect = { onSelectedChange(key) }
+
+            Row(
+                modifier = Modifier.fillMaxWidth().selectable(
+                    selected = selected,
+                    onClick = { if (!selected) onSelect() }
+                ).padding(16.dp)
+            ) {
+                RadioButton(
+                    selected = selected,
+                    onClick = onSelect,
+                    selectedColor = radioColor
+                )
+                Text(
                     text = keyToTextMapper(key),
-                    radioColor = radioColor,
-                    textStyle = textStyle
+                    style = MaterialTheme.typography.body1.merge(textStyle),
+                    modifier = Modifier.padding(start = 16.dp)
                 )
             }
         }
