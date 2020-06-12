@@ -6,17 +6,15 @@ import com.koduok.compose.navigation.BackStackAmbient
 import com.koduok.compose.navigation.core.Route
 import com.koduok.compose.navigation.core.backStackController
 import com.redridgeapps.compose_viewmodel.ComposeFramework
-import com.redridgeapps.compose_viewmodel.ViewModelFetcherAmbient
+import com.redridgeapps.compose_viewmodel.fetchViewModel
 import kotlin.reflect.KClass
 
 @Composable
-inline fun <reified T : ViewModel> fetchViewModel(): T = fetchViewModel(T::class)
+inline fun <reified T : ViewModel> viewModel(): T = viewModel(T::class)
 
 @Composable
-fun <T : ViewModel> fetchViewModel(kClass: KClass<T>): T {
-    val viewModelFetcher = ViewModelFetcherAmbient.current
-    val key = BackStackAmbient.current.current.viewModelKey
-    return viewModelFetcher.fetch(key, kClass)
+fun <T : ViewModel> viewModel(kClass: KClass<T>): T {
+    return fetchViewModel(kClass, BackStackAmbient.current.current.viewModelKey)
 }
 
 fun ComposeFramework.setupViewModel() {

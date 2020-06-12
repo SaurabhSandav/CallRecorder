@@ -22,7 +22,7 @@ import com.redridgeapps.callrecorder.callutils.PlaybackState.NotStopped
 import com.redridgeapps.callrecorder.callutils.PlaybackState.NotStopped.Playing
 import com.redridgeapps.callrecorder.callutils.RecordingId
 import com.redridgeapps.callrecorder.ui.routing.Destination
-import com.redridgeapps.callrecorder.ui.routing.fetchViewModel
+import com.redridgeapps.callrecorder.ui.routing.viewModel
 import com.redridgeapps.callrecorder.ui.settings.SettingsDestination
 import com.redridgeapps.callrecorder.ui.utils.ListSelection
 import com.redridgeapps.callrecorder.ui.utils.drawScrim
@@ -32,7 +32,7 @@ object MainDestination : Destination {
     @Composable
     override fun initializeUI() {
 
-        val viewModel = fetchViewModel<MainViewModel>()
+        val viewModel = viewModel<MainViewModel>()
 
         MainUI(viewModel)
     }

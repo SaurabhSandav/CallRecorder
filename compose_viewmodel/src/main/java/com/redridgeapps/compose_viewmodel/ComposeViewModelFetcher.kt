@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import javax.inject.Provider
 import kotlin.reflect.KClass
 
-class ComposeViewModelFetcher(
+internal class ComposeViewModelFetcher(
     private val composeFramework: ComposeFramework,
     private val viewModelAssistedFactories: Map<String, @JvmSuppressWildcards Provider<ViewModelAssistedFactory<out ViewModel>>>
 ) {
