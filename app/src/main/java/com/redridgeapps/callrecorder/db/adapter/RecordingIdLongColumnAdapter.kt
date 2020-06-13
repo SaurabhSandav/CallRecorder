@@ -1,7 +1,8 @@
 package com.redridgeapps.callrecorder.db.adapter
 
-import com.redridgeapps.callrecorder.callutils.RecordingId
 import com.squareup.sqldelight.ColumnAdapter
+
+inline class RecordingId(val value: Long)
 
 // FIXME https://github.com/cashapp/sqldelight/issues/1653
 object RecordingIdLongColumnAdapter : ColumnAdapter<RecordingId, Long> {

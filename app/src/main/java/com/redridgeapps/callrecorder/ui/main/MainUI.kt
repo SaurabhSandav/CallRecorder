@@ -18,9 +18,9 @@ import androidx.ui.text.withStyle
 import androidx.ui.unit.Dp
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
-import com.redridgeapps.callrecorder.callutils.RecordingId
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped.Playing
+import com.redridgeapps.callrecorder.db.adapter.RecordingId
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.routing.viewModel
 import com.redridgeapps.callrecorder.ui.settings.SettingsDestination

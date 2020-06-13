@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat
 import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.RecordingQueries
 import com.redridgeapps.callrecorder.callutils.PcmEncoding.*
+import com.redridgeapps.callrecorder.db.adapter.RecordingId
 import com.redridgeapps.callrecorder.utils.extension
 import com.redridgeapps.callrecorder.utils.replaceExtension
 import com.redridgeapps.mp3encoder.*

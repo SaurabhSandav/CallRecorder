@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.callutils.PcmEncoding
-import com.redridgeapps.callrecorder.callutils.RecordingId
 import com.redridgeapps.callrecorder.callutils.Recordings
 import com.redridgeapps.callrecorder.callutils.asPcmEncoding
 import com.redridgeapps.callrecorder.callutils.callevents.CallDirection
@@ -13,6 +12,7 @@ import com.redridgeapps.callrecorder.callutils.playback.CallPlayback
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped.Paused
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped.Playing
+import com.redridgeapps.callrecorder.db.adapter.RecordingId
 import com.redridgeapps.callrecorder.services.AudioEndsTrimmingServiceLauncher
 import com.redridgeapps.callrecorder.services.Mp3ConversionServiceLauncher
 import com.redridgeapps.callrecorder.utils.humanReadableByteCount

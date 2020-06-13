@@ -3,8 +3,8 @@ package com.redridgeapps.callrecorder.ui.main
 import androidx.compose.getValue
 import androidx.compose.mutableStateOf
 import androidx.compose.setValue
-import com.redridgeapps.callrecorder.callutils.RecordingId
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState
+import com.redridgeapps.callrecorder.db.adapter.RecordingId
 import com.redridgeapps.callrecorder.ui.utils.ListSelection
 import kotlinx.coroutines.flow.StateFlow
 import java.util.*
