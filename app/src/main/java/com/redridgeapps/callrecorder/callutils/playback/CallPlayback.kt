@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.callutils
+package com.redridgeapps.callrecorder.callutils.playback
 
 import android.media.MediaPlayer
 import com.redridgeapps.callrecorder.Recording
@@ -14,6 +14,7 @@ import javax.inject.Inject
 class CallPlayback @Inject constructor() {
 
     private val _playbackState = MutableStateFlow<PlaybackState>(PlaybackState.Stopped)
+
     val playbackState: StateFlow<PlaybackState> = _playbackState
 
     suspend fun PlaybackState.startNewPlayback(recording: Recording) {
