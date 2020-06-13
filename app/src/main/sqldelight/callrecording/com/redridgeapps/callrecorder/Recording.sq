@@ -1,4 +1,4 @@
-import com.redridgeapps.callrecorder.callutils.CallDirection;
+import com.redridgeapps.callrecorder.callutils.callevents.CallDirection;
 import java.time.Duration;
 import java.time.Instant;
 

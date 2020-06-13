@@ -1,5 +1,6 @@
 package com.redridgeapps.callrecorder.callutils
 
+import com.redridgeapps.callrecorder.callutils.callevents.NewCallEvent
 import com.redridgeapps.callrecorder.prefs.MyPrefs
 import com.redridgeapps.callrecorder.prefs.Prefs
 import com.redridgeapps.callrecorder.utils.constants.Defaults
@@ -13,7 +14,7 @@ data class RecordingJob(
     val pcmChannels: PcmChannels,
     val pcmEncoding: PcmEncoding,
     val savePath: Path,
-    val callEvent: NewCallEvent,
+    val newCallEvent: NewCallEvent,
     val recordingStartInstant: Instant
 )
 
@@ -40,7 +41,7 @@ suspend fun RecordingJob(
             saveDir = prefs.get<String>(MyPrefs.RECORDING_PATH) { error("Recording path is empty") },
             fileName = recordingStartInstant.epochSecond.toString()
         ),
-        callEvent = callEvent,
+        newCallEvent = callEvent,
         recordingStartInstant = recordingStartInstant
     )
 }

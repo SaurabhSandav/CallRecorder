@@ -14,7 +14,13 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.redridgeapps.callrecorder.MainActivity
 import com.redridgeapps.callrecorder.R
-import com.redridgeapps.callrecorder.callutils.*
+import com.redridgeapps.callrecorder.callutils.AudioWriter
+import com.redridgeapps.callrecorder.callutils.CallRecorder
+import com.redridgeapps.callrecorder.callutils.RecordingJob
+import com.redridgeapps.callrecorder.callutils.RecordingState
+import com.redridgeapps.callrecorder.callutils.callevents.CallState
+import com.redridgeapps.callrecorder.callutils.callevents.CallStatusListener
+import com.redridgeapps.callrecorder.callutils.callevents.NewCallEvent
 import com.redridgeapps.callrecorder.prefs.Prefs
 import com.redridgeapps.callrecorder.utils.constants.NOTIFICATION_RECORDING_SERVICE_ID
 import dagger.hilt.android.AndroidEntryPoint
@@ -106,20 +112,21 @@ class CallingService : LifecycleService() {
             .launchIn(lifecycleScope)
     }
 
-    private suspend fun NewCallEvent.handleCallStatusChange() = with(callRecorder) {
-        when (callStatus()) {
-            CallStatus.STARTED -> {
-                val recorder = recordingState.value as? RecordingState.Idle
-                recorder?.startRecording(
-                    recordingJob = RecordingJob(prefs, this@handleCallStatusChange),
-                    audioWriter = audioWriter
-                )
-            }
-            CallStatus.ENDED -> {
-                (recordingState.value as? RecordingState.IsRecording)?.stopRecording()
-            }
-            else -> Unit
-        }
+    private suspend fun NewCallEvent.handleCallStatusChange() = when (callState) {
+        CallState.STARTED -> callStarted()
+        CallState.ENDED -> callEnded()
+        CallState.RINGING -> Unit
+    }
+
+    private suspend fun NewCallEvent.callStarted() = with(callRecorder) {
+        (recordingState.value as? RecordingState.Idle)?.startRecording(
+            recordingJob = RecordingJob(prefs, this@callStarted),
+            audioWriter = audioWriter
+        )
+    }
+
+    private suspend fun callEnded() = with(callRecorder) {
+        (recordingState.value as? RecordingState.IsRecording)?.stopRecording()
     }
 
     companion object {

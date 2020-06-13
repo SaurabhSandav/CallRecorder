@@ -8,6 +8,7 @@ import com.redridgeapps.callrecorder.callutils.*
 import com.redridgeapps.callrecorder.callutils.PlaybackState.NotStopped
 import com.redridgeapps.callrecorder.callutils.PlaybackState.NotStopped.Paused
 import com.redridgeapps.callrecorder.callutils.PlaybackState.NotStopped.Playing
+import com.redridgeapps.callrecorder.callutils.callevents.CallDirection
 import com.redridgeapps.callrecorder.services.AudioEndsTrimmingServiceLauncher
 import com.redridgeapps.callrecorder.services.Mp3ConversionServiceLauncher
 import com.redridgeapps.callrecorder.utils.humanReadableByteCount
