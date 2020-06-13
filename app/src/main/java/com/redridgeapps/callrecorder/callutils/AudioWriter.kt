@@ -39,7 +39,7 @@ class AudioWriter(private val coroutineScope: CoroutineScope) {
                     AudioRecord.READ_BLOCKING
                 )
 
-                crashIfError(bytesRead, recordingJob.savePath)
+                checkError(bytesRead, recordingJob.savePath)
 
                 byteBuffer.position(bytesRead)
                 byteBuffer.flip()
@@ -58,7 +58,7 @@ class AudioWriter(private val coroutineScope: CoroutineScope) {
         writingFinishedSignal.complete(Unit)
     }
 
-    private suspend fun crashIfError(bytesRead: Int, savePath: Path) = withContext(Dispatchers.IO) {
+    private suspend fun checkError(bytesRead: Int, savePath: Path) = withContext(Dispatchers.IO) {
 
         val errorStr = when (bytesRead) {
             AudioRecord.ERROR_INVALID_OPERATION -> "AudioRecord: ERROR_INVALID_OPERATION"
