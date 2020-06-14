@@ -1,4 +1,4 @@
-package com.redridgeapps.compose_viewmodel
+package com.redridgeapps.compose.viewmodel
 
 import android.os.Bundle
 import androidx.lifecycle.*

@@ -1,4 +1,4 @@
-package com.redridgeapps.compose_viewmodel
+package com.redridgeapps.compose.viewmodel
 
 import androidx.hilt.lifecycle.ViewModelAssistedFactory
 import androidx.lifecycle.ViewModel

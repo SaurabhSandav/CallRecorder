@@ -1,4 +1,4 @@
-package com.redridgeapps.compose_viewmodel
+package com.redridgeapps.compose.viewmodel
 
 import android.annotation.SuppressLint
 import androidx.hilt.lifecycle.ViewModelAssistedFactory

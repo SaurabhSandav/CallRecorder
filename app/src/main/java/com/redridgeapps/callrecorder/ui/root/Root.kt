@@ -15,8 +15,8 @@ import com.redridgeapps.callrecorder.ui.main.MainDestination
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.routing.setupViewModel
 import com.redridgeapps.callrecorder.ui.utils.ActivityResultRegistryAmbient
-import com.redridgeapps.compose_viewmodel.ComposeFramework
-import com.redridgeapps.compose_viewmodel.WithViewModels
+import com.redridgeapps.compose.viewmodel.ComposeFramework
+import com.redridgeapps.compose.viewmodel.WithViewModels
 
 fun ComponentActivity.setupCompose(isFirstRun: Boolean) {
 
