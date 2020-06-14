@@ -8,7 +8,7 @@ import com.redridgeapps.callrecorder.RecordingQueries
 import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding.*
 import com.redridgeapps.callrecorder.callutils.recording.RecordingJob
 import com.redridgeapps.callrecorder.callutils.recording.asPcmEncoding
-import com.redridgeapps.callrecorder.db.adapter.RecordingId
+import com.redridgeapps.callrecorder.db.adapters.RecordingId
 import com.redridgeapps.callrecorder.utils.extension
 import com.redridgeapps.callrecorder.utils.replaceExtension
 import com.redridgeapps.mp3encoder.*

@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.db.adapter
+package com.redridgeapps.callrecorder.db.adapters
 
 import com.squareup.sqldelight.ColumnAdapter
 import java.time.Duration

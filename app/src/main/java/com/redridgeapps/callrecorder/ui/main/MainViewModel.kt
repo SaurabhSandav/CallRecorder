@@ -12,7 +12,7 @@ import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped
 import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
 import com.redridgeapps.callrecorder.callutils.recording.asPcmEncoding
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
-import com.redridgeapps.callrecorder.db.adapter.RecordingId
+import com.redridgeapps.callrecorder.db.adapters.RecordingId
 import com.redridgeapps.callrecorder.services.AudioEndsTrimmingServiceLauncher
 import com.redridgeapps.callrecorder.services.Mp3ConversionServiceLauncher
 import com.redridgeapps.callrecorder.utils.humanReadableByteCount

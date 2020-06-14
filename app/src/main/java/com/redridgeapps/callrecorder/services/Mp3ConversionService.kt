@@ -11,7 +11,7 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.redridgeapps.callrecorder.R
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
-import com.redridgeapps.callrecorder.db.adapter.RecordingId
+import com.redridgeapps.callrecorder.db.adapters.RecordingId
 import com.redridgeapps.callrecorder.utils.constants.NOTIFICATION_MP3_CONVERSION_FINISHED_ID
 import com.redridgeapps.callrecorder.utils.constants.NOTIFICATION_MP3_CONVERSION_ONGOING_ID
 import dagger.hilt.android.AndroidEntryPoint
