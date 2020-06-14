@@ -2,7 +2,7 @@ package com.redridgeapps.callrecorder.callutils.recording
 
 import android.media.AudioRecord
 import android.media.MediaRecorder.AudioSource
-import com.redridgeapps.callrecorder.callutils.Recordings
+import com.redridgeapps.callrecorder.callutils.storage.Recordings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

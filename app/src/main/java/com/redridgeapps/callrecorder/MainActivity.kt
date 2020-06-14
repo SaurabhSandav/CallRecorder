@@ -3,7 +3,7 @@ package com.redridgeapps.callrecorder
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.redridgeapps.callrecorder.callutils.Recordings
+import com.redridgeapps.callrecorder.callutils.storage.Recordings
 import com.redridgeapps.callrecorder.prefs.MyPrefs
 import com.redridgeapps.callrecorder.prefs.Prefs
 import com.redridgeapps.callrecorder.ui.root.setupCompose

@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.callutils
+package com.redridgeapps.callrecorder.callutils.storage
 
 import android.content.ContentResolver
 import android.net.Uri

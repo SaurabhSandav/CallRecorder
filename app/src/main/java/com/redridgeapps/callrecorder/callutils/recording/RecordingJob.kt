@@ -1,7 +1,7 @@
 package com.redridgeapps.callrecorder.callutils.recording
 
-import com.redridgeapps.callrecorder.callutils.Recordings
 import com.redridgeapps.callrecorder.callutils.callevents.NewCallEvent
+import com.redridgeapps.callrecorder.callutils.storage.Recordings
 import com.redridgeapps.callrecorder.prefs.MyPrefs
 import com.redridgeapps.callrecorder.prefs.Prefs
 import com.redridgeapps.callrecorder.utils.constants.Defaults
