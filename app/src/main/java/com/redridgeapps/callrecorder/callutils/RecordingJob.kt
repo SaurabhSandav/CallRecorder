@@ -30,17 +30,22 @@ suspend fun RecordingJob(
         async { prefs.get(MyPrefs.AUDIO_RECORD_CHANNELS) { Defaults.AUDIO_RECORD_CHANNELS } }
     val audioEncoding =
         async { prefs.get(MyPrefs.AUDIO_RECORD_ENCODING) { Defaults.AUDIO_RECORD_ENCODING } }
+    val recordingsStoragePath = async {
+        prefs.get<String>(MyPrefs.RECORDINGS_STORAGE_PATH) { error("Recordings storage path is empty") }
+    }
 
     val recordingStartInstant = Instant.now()
+
+    val savePath = Recordings.generateFilePath(
+        saveDir = recordingsStoragePath.await(),
+        fileName = recordingStartInstant.epochSecond.toString()
+    )
 
     RecordingJob(
         pcmSampleRate = sampleRate.await(),
         pcmChannels = audioChannel.await(),
         pcmEncoding = audioEncoding.await(),
-        savePath = Recordings.generateFilePath(
-            saveDir = prefs.get<String>(MyPrefs.RECORDING_PATH) { error("Recording path is empty") },
-            fileName = recordingStartInstant.epochSecond.toString()
-        ),
+        savePath = savePath,
         newCallEvent = callEvent,
         recordingStartInstant = recordingStartInstant
     )

@@ -144,7 +144,7 @@ class Recordings @Inject constructor(
             return Paths.get(saveDir).resolve(fileNameWithExt)
         }
 
-        fun getRecordingStoragePath(context: Context): Path {
+        fun getRecordingsStoragePath(context: Context): Path {
 
             if (Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED)
                 error("External storage is not writable")

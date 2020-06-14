@@ -21,17 +21,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setRecordingPath()
+        setupRecordingsStoragePath()
         setupUI()
     }
 
-    private fun setRecordingPath() = lifecycleScope.launch {
+    private fun setupRecordingsStoragePath() = lifecycleScope.launch {
 
-        if (prefs.get(MyPrefs.RECORDING_PATH) { "" }.isNotEmpty()) return@launch
+        if (prefs.get(MyPrefs.RECORDINGS_STORAGE_PATH) { "" }.isNotEmpty()) return@launch
 
         prefs.set(
-            pref = MyPrefs.RECORDING_PATH,
-            newValue = Recordings.getRecordingStoragePath(applicationContext).toString()
+            pref = MyPrefs.RECORDINGS_STORAGE_PATH,
+            newValue = Recordings.getRecordingsStoragePath(applicationContext).toString()
         )
     }
 

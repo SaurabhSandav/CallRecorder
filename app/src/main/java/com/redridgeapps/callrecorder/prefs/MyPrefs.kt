@@ -13,7 +13,7 @@ enum class MyPrefs(val type: PrefType<*>) {
 
     IS_RECORDING_ON(PrefBoolean),
 
-    RECORDING_PATH(PrefString),
+    RECORDINGS_STORAGE_PATH(PrefString),
 
     AUDIO_RECORD_SAMPLE_RATE(PrefEnum<PcmSampleRate>()),
 
