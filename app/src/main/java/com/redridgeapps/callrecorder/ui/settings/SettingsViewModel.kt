@@ -3,10 +3,10 @@ package com.redridgeapps.callrecorder.ui.settings
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.redridgeapps.callrecorder.callutils.PcmChannels
-import com.redridgeapps.callrecorder.callutils.PcmEncoding
-import com.redridgeapps.callrecorder.callutils.PcmSampleRate
 import com.redridgeapps.callrecorder.callutils.Recordings
+import com.redridgeapps.callrecorder.callutils.recording.PcmChannels
+import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
+import com.redridgeapps.callrecorder.callutils.recording.PcmSampleRate
 import com.redridgeapps.callrecorder.prefs.MyPrefs
 import com.redridgeapps.callrecorder.prefs.Prefs
 import com.redridgeapps.callrecorder.utils.Systemizer

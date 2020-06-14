@@ -1,8 +1,8 @@
 package com.redridgeapps.callrecorder.ui.settings
 
-import com.redridgeapps.callrecorder.callutils.PcmChannels
-import com.redridgeapps.callrecorder.callutils.PcmEncoding
-import com.redridgeapps.callrecorder.callutils.PcmSampleRate
+import com.redridgeapps.callrecorder.callutils.recording.PcmChannels
+import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
+import com.redridgeapps.callrecorder.callutils.recording.PcmSampleRate
 import kotlinx.coroutines.flow.Flow
 
 class SettingsState(

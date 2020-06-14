@@ -16,9 +16,9 @@ import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.ArrowBack
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
-import com.redridgeapps.callrecorder.callutils.PcmChannels
-import com.redridgeapps.callrecorder.callutils.PcmEncoding
-import com.redridgeapps.callrecorder.callutils.PcmSampleRate
+import com.redridgeapps.callrecorder.callutils.recording.PcmChannels
+import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
+import com.redridgeapps.callrecorder.callutils.recording.PcmSampleRate
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.routing.viewModel
 import com.redridgeapps.callrecorder.ui.utils.SingleSelectListPreference

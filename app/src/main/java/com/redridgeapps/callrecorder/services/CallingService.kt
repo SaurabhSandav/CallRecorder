@@ -14,13 +14,13 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.redridgeapps.callrecorder.MainActivity
 import com.redridgeapps.callrecorder.R
-import com.redridgeapps.callrecorder.callutils.AudioWriter
-import com.redridgeapps.callrecorder.callutils.CallRecorder
-import com.redridgeapps.callrecorder.callutils.RecordingJob
-import com.redridgeapps.callrecorder.callutils.RecordingState
 import com.redridgeapps.callrecorder.callutils.callevents.CallState
 import com.redridgeapps.callrecorder.callutils.callevents.CallStatusListener
 import com.redridgeapps.callrecorder.callutils.callevents.NewCallEvent
+import com.redridgeapps.callrecorder.callutils.recording.AudioWriter
+import com.redridgeapps.callrecorder.callutils.recording.CallRecorder
+import com.redridgeapps.callrecorder.callutils.recording.RecordingJob
+import com.redridgeapps.callrecorder.callutils.recording.RecordingState
 import com.redridgeapps.callrecorder.prefs.Prefs
 import com.redridgeapps.callrecorder.utils.constants.NOTIFICATION_RECORDING_SERVICE_ID
 import dagger.hilt.android.AndroidEntryPoint

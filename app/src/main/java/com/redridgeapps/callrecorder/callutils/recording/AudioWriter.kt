@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.callutils
+package com.redridgeapps.callrecorder.callutils.recording
 
 import android.media.AudioRecord
 import com.redridgeapps.wavutils.WAV_HEADER_SIZE
