@@ -40,6 +40,6 @@ class CallStatusListener : PhoneStateListener() {
             isIncoming = true
             INCOMING_CALL_RECEIVED
         }
-        else -> error("Unexpected call state!")
+        else -> error("Impossible call state!")
     }
 }
