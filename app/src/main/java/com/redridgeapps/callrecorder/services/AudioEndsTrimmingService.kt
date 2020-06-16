@@ -60,15 +60,16 @@ class AudioEndsTrimmingService : LifecycleService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
 
-        if (intent!!.action == ACTION_STOP) {
+        if (intent?.action == ACTION_STOP) {
             stopForeground(true)
             stopSelf()
 
             return START_NOT_STICKY
         }
 
-        val recordingIdList =
-            intent.extras!!.getLongArray(EXTRA_RECORDING_ID)!!.map { RecordingId(it) }
+        val recordingIdList = intent?.extras?.getLongArray(EXTRA_RECORDING_ID)
+            ?.map { RecordingId(it) }
+            .orEmpty()
 
         totalJobCount += recordingIdList.size
         showOngoingNotification()

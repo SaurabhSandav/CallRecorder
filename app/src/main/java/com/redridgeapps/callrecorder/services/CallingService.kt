@@ -56,7 +56,7 @@ class CallingService : LifecycleService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
 
-        if (intent!!.action == ACTION_STOP) {
+        if (intent?.action == ACTION_STOP) {
             stopForeground(true)
             stopSelf()
 
