@@ -4,11 +4,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
-import com.redridgeapps.callrecorder.prefs.MyPrefs
+import com.redridgeapps.callrecorder.prefs.PREF_IS_FIRST_RUN
+import com.redridgeapps.callrecorder.prefs.PREF_RECORDINGS_STORAGE_PATH
 import com.redridgeapps.callrecorder.prefs.Prefs
 import com.redridgeapps.callrecorder.ui.root.setupCompose
 import com.redridgeapps.callrecorder.utils.launchUnit
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,17 +29,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecordingsStoragePath() = lifecycleScope.launch {
 
-        if (prefs.get(MyPrefs.RECORDINGS_STORAGE_PATH) { "" }.isNotEmpty()) return@launch
+        if (prefs.prefString<String?>(PREF_RECORDINGS_STORAGE_PATH) { null }.first() == null) {
 
-        prefs.set(
-            pref = MyPrefs.RECORDINGS_STORAGE_PATH,
-            newValue = Recordings.getRecordingsStoragePath(applicationContext).toString()
-        )
+            val newRecordingPath =
+                Recordings.getRecordingsStoragePath(applicationContext).toString()
+
+            prefs.editor { setString(PREF_RECORDINGS_STORAGE_PATH, newRecordingPath) }
+        }
     }
 
     private fun setupUI() = lifecycleScope.launchUnit {
 
-        val isFirstRun = prefs.get(MyPrefs.IS_FIRST_RUN) { true }
+        val isFirstRun = prefs.prefBoolean(PREF_IS_FIRST_RUN) { true }.first()
         setupCompose(isFirstRun)
 
         // Remove Splash Screen

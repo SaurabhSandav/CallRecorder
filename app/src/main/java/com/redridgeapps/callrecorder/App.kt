@@ -1,7 +1,7 @@
 package com.redridgeapps.callrecorder
 
 import android.app.Application
-import com.redridgeapps.callrecorder.prefs.MyPrefs
+import com.redridgeapps.callrecorder.prefs.PREF_IS_RECORDING_ON
 import com.redridgeapps.callrecorder.prefs.Prefs
 import com.redridgeapps.callrecorder.services.CallingService
 import com.redridgeapps.callrecorder.utils.HyperlinkedDebugTree
@@ -41,12 +41,12 @@ class App : Application() {
 
     private fun setupCallingService() {
 
-        prefs.getFlow(MyPrefs.IS_RECORDING_ON) { Defaults.IS_RECORDING_ON }
+        prefs.prefBoolean(PREF_IS_RECORDING_ON) { Defaults.IS_RECORDING_ON }
             .onEach { recordingOn ->
-                if (recordingOn)
-                    CallingService.start(this@App)
-                else
-                    CallingService.stop(this@App)
+                when {
+                    recordingOn -> CallingService.start(this@App)
+                    else -> CallingService.stop(this@App)
+                }
             }
             .launchIn(GlobalScope)
     }

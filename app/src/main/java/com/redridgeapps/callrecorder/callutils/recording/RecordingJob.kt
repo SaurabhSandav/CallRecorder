@@ -2,11 +2,11 @@ package com.redridgeapps.callrecorder.callutils.recording
 
 import com.redridgeapps.callrecorder.callutils.callevents.NewCallEvent
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
-import com.redridgeapps.callrecorder.prefs.MyPrefs
-import com.redridgeapps.callrecorder.prefs.Prefs
+import com.redridgeapps.callrecorder.prefs.*
 import com.redridgeapps.callrecorder.utils.constants.Defaults
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.first
 import java.nio.file.Path
 import java.time.Instant
 
@@ -26,16 +26,17 @@ suspend fun RecordingJob(
 ): RecordingJob = coroutineScope {
 
     val sampleRate = async {
-        prefs.get(MyPrefs.AUDIO_RECORD_SAMPLE_RATE) { Defaults.AUDIO_RECORD_SAMPLE_RATE }
+        prefs.prefEnum(PREF_AUDIO_RECORD_SAMPLE_RATE) { Defaults.AUDIO_RECORD_SAMPLE_RATE }.first()
     }
     val audioChannel = async {
-        prefs.get(MyPrefs.AUDIO_RECORD_CHANNELS) { Defaults.AUDIO_RECORD_CHANNELS }
+        prefs.prefEnum(PREF_AUDIO_RECORD_CHANNELS) { Defaults.AUDIO_RECORD_CHANNELS }.first()
     }
     val audioEncoding = async {
-        prefs.get(MyPrefs.AUDIO_RECORD_ENCODING) { Defaults.AUDIO_RECORD_ENCODING }
+        prefs.prefEnum(PREF_AUDIO_RECORD_ENCODING) { Defaults.AUDIO_RECORD_ENCODING }.first()
     }
     val recordingsStoragePath = async {
-        prefs.get<String>(MyPrefs.RECORDINGS_STORAGE_PATH) { error("Recordings storage path is empty") }
+        prefs.prefString<String>(PREF_RECORDINGS_STORAGE_PATH) { error("Recordings storage path is empty") }
+            .first()
     }
 
     val recordingStartInstant = Instant.now()
