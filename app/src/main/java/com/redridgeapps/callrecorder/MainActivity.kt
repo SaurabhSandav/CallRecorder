@@ -4,11 +4,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
+import com.redridgeapps.callrecorder.common.utils.launchUnit
 import com.redridgeapps.callrecorder.prefs.PREF_IS_FIRST_RUN
 import com.redridgeapps.callrecorder.prefs.PREF_RECORDINGS_STORAGE_PATH
 import com.redridgeapps.callrecorder.prefs.Prefs
 import com.redridgeapps.callrecorder.ui.root.setupCompose
-import com.redridgeapps.callrecorder.utils.launchUnit
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

@@ -1,3 +1,4 @@
+include ':common'
 include ':prefs'
 include ':compose_viewmodel'
 include ':wav_utils'

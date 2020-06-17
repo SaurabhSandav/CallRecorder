@@ -8,8 +8,8 @@ import com.redridgeapps.callrecorder.RecordingQueries
 import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding.*
 import com.redridgeapps.callrecorder.callutils.recording.RecordingJob
 import com.redridgeapps.callrecorder.callutils.recording.asPcmEncoding
-import com.redridgeapps.callrecorder.utils.extension
-import com.redridgeapps.callrecorder.utils.replaceExtension
+import com.redridgeapps.callrecorder.common.utils.extension
+import com.redridgeapps.callrecorder.common.utils.replaceExtension
 import com.redridgeapps.mp3encoder.*
 import com.redridgeapps.wavutils.WavData
 import com.redridgeapps.wavutils.WavFileUtils

@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.utils
+package com.redridgeapps.callrecorder.common.utils
 
 import java.nio.file.Path
 

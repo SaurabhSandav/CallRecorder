@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.utils
+package com.redridgeapps.callrecorder.common.utils
 
 import kotlin.math.ln
 import kotlin.math.pow

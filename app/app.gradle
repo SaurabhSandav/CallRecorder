@@ -62,6 +62,7 @@ dependencies {
     implementation project(":mp3_encoder")
     implementation project(":compose_viewmodel")
     implementation project(":prefs")
+    implementation project(":common")
 
     // Kotlin
     implementation Kotlin.STDLIB

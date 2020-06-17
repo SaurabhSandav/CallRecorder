@@ -1,0 +1,39 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "30.0.0"
+
+    defaultConfig {
+        minSdkVersion 29
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+    }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    coreLibraryDesugaring AndroidTools.DESUGAR_JDK_LIBS
+
+    // Kotlin
+    implementation Kotlin.STDLIB
+    implementation Kotlin.COROUTINES_ANDROID
+
+    // SQLDelight
+    implementation SQLDelight.ANDROID_DRIVER
+
+    // Timber
+    implementation Timber.TIMBER
+}
