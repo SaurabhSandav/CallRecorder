@@ -15,9 +15,9 @@ class AudioWriter(private val coroutineScope: CoroutineScope) {
 
     private val writingFinishedSignal = CompletableDeferred(Unit)
 
-    suspend fun awaitWritingFinished() = writingFinishedSignal.await()
+    internal suspend fun awaitWritingFinished() = writingFinishedSignal.await()
 
-    suspend fun startWriting(
+    internal suspend fun startWriting(
         recorder: AudioRecord,
         recordingJob: RecordingJob,
         bufferSize: Int

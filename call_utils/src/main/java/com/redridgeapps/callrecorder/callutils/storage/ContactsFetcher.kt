@@ -10,7 +10,7 @@ class ContactNameFetcher @Inject constructor(
     private val contentResolver: ContentResolver
 ) {
 
-    fun getContactName(phoneNumber: String): String? {
+    internal fun getContactName(phoneNumber: String): String? {
 
         val uri = Uri.withAppendedPath(
             ContactsContract.PhoneLookup.CONTENT_FILTER_URI,

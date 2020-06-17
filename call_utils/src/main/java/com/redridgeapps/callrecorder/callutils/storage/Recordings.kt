@@ -138,7 +138,7 @@ class Recordings @Inject constructor(
 
     companion object {
 
-        fun generateFilePath(saveDir: String, fileName: String): Path {
+        internal fun generateFilePath(saveDir: String, fileName: String): Path {
             val fileNameWithExt = "$fileName.wav"
             return Paths.get(saveDir).resolve(fileNameWithExt)
         }

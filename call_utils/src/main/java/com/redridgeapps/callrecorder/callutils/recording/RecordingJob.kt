@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.first
 import java.nio.file.Path
 import java.time.Instant
 
-data class RecordingJob(
+data class RecordingJob internal constructor(
     val pcmSampleRate: PcmSampleRate,
     val pcmChannels: PcmChannels,
     val pcmEncoding: PcmEncoding,
