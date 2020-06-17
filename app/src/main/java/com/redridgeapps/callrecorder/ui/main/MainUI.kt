@@ -20,7 +20,6 @@ import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped.Playing
-import com.redridgeapps.callrecorder.db.adapters.RecordingId
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.routing.viewModel
 import com.redridgeapps.callrecorder.ui.settings.SettingsDestination
@@ -233,7 +232,7 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
     }
 
     viewModel.uiState.playbackState.collectAsState().value.let {
-        if (it is NotStopped && it.recording.id == recordingEntry.id.value) {
+        if (it is NotStopped && it.recording.id == recordingEntry.id) {
             modifier = modifier.drawScrim(MaterialTheme.colors.secondary)
         }
     }
@@ -251,13 +250,13 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
 @Composable
 private fun PlayPauseIcon(
     viewModel: MainViewModel,
-    recordingId: RecordingId,
+    recordingId: Long,
     iconSideSize: Dp,
     modifier: Modifier = Modifier
 ) {
 
     val recordingIsPlaying = viewModel.uiState.playbackState.collectAsState().value.let {
-        it is Playing && it.recording.id == recordingId.value
+        it is Playing && it.recording.id == recordingId
     }
 
     val onClick = {
@@ -330,7 +329,7 @@ private fun PlaybackBar(viewModel: MainViewModel) {
 
             PlayPauseIcon(
                 viewModel = viewModel,
-                recordingId = RecordingId(playbackState.recording.id),
+                recordingId = playbackState.recording.id,
                 iconSideSize = 40.dp,
                 modifier = Modifier.constrainAs(playbackIcon) {
                     centerVerticallyTo(parent)

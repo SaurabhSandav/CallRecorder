@@ -4,7 +4,6 @@ import androidx.compose.getValue
 import androidx.compose.mutableStateOf
 import androidx.compose.setValue
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState
-import com.redridgeapps.callrecorder.db.adapters.RecordingId
 import com.redridgeapps.callrecorder.ui.utils.ListSelection
 import kotlinx.coroutines.flow.StateFlow
 import java.util.*
@@ -26,7 +25,7 @@ sealed class RecordingListItem {
     class Divider(val title: String) : RecordingListItem()
 
     class Entry(
-        val id: RecordingId,
+        val id: Long,
         val name: String,
         val number: String,
         val overlineText: String,

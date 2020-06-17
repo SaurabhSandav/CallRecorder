@@ -8,7 +8,6 @@ import com.redridgeapps.callrecorder.RecordingQueries
 import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding.*
 import com.redridgeapps.callrecorder.callutils.recording.RecordingJob
 import com.redridgeapps.callrecorder.callutils.recording.asPcmEncoding
-import com.redridgeapps.callrecorder.db.adapters.RecordingId
 import com.redridgeapps.callrecorder.utils.extension
 import com.redridgeapps.callrecorder.utils.replaceExtension
 import com.redridgeapps.mp3encoder.*
@@ -54,15 +53,15 @@ class Recordings @Inject constructor(
         )
     }
 
-    fun getRecording(recordingId: RecordingId): Flow<Recording> {
-        return recordingQueries.get(listOf(recordingId.value)).asFlow().mapToOne(Dispatchers.IO)
+    fun getRecording(recordingId: Long): Flow<Recording> {
+        return recordingQueries.get(listOf(recordingId)).asFlow().mapToOne(Dispatchers.IO)
     }
 
     fun getRecordingList(): Flow<List<Recording>> {
         return recordingQueries.getAll().asFlow().mapToList(Dispatchers.IO)
     }
 
-    suspend fun trimSilenceEnds(recordingId: RecordingId) = withContext(Dispatchers.IO) {
+    suspend fun trimSilenceEnds(recordingId: Long) = withContext(Dispatchers.IO) {
 
         val recording = getRecording(recordingId).first()
         val recordingPath = Paths.get(recording.save_path)
@@ -77,10 +76,10 @@ class Recordings @Inject constructor(
         // Update duration
         val duration =
             FileChannel.open(recordingPath, READ).use { WavFileUtils.calculateDuration(it) }
-        recordingQueries.updateDuration(duration, recordingId.value)
+        recordingQueries.updateDuration(duration, recordingId)
     }
 
-    suspend fun convertToMp3(recordingId: RecordingId) = withContext(Dispatchers.IO) {
+    suspend fun convertToMp3(recordingId: Long) = withContext(Dispatchers.IO) {
 
         val recording = getRecording(recordingId).first()
         val recordingPath = Paths.get(recording.save_path)
@@ -104,18 +103,18 @@ class Recordings @Inject constructor(
         return@withContext
     }
 
-    suspend fun deleteRecording(recordingId: List<RecordingId>) = withContext(Dispatchers.IO) {
-        val recordings = recordingQueries.get(recordingId.map { it.value }).executeAsList()
+    suspend fun deleteRecording(recordingIdList: List<Long>) = withContext(Dispatchers.IO) {
+        val recordings = recordingQueries.get(recordingIdList).executeAsList()
 
         recordings.forEach {
             Files.delete(Paths.get(it.save_path))
         }
 
-        recordingQueries.delete(recordingId.map { it.value })
+        recordingQueries.delete(recordingIdList)
     }
 
-    suspend fun toggleStar(recordingId: List<RecordingId>) = withContext(Dispatchers.IO) {
-        recordingQueries.toggleStar(recordingId.map { it.value })
+    suspend fun toggleStar(recordingIdList: List<Long>) = withContext(Dispatchers.IO) {
+        recordingQueries.toggleStar(recordingIdList)
     }
 
     suspend fun updateContactNames() = withContext(Dispatchers.IO) {
@@ -128,9 +127,7 @@ class Recordings @Inject constructor(
         }
     }
 
-    suspend fun getWavData(
-        recordingId: RecordingId
-    ): WavData = withContext(Dispatchers.IO) {
+    suspend fun getWavData(recordingId: Long): WavData = withContext(Dispatchers.IO) {
 
         val recording = getRecording(recordingId).first()
         val recordingPath = Paths.get(recording.save_path)

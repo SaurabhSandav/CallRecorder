@@ -12,7 +12,6 @@ import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped
 import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
 import com.redridgeapps.callrecorder.callutils.recording.asPcmEncoding
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
-import com.redridgeapps.callrecorder.db.adapters.RecordingId
 import com.redridgeapps.callrecorder.services.AudioEndsTrimmingServiceLauncher
 import com.redridgeapps.callrecorder.services.Mp3ConversionServiceLauncher
 import com.redridgeapps.callrecorder.utils.humanReadableByteCount
@@ -43,7 +42,7 @@ class MainViewModel @ViewModelInject constructor(
         recordingListFilter = recordingListFilter
     )
 
-    fun startPlayback(recordingId: RecordingId) = viewModelScope.launchUnit {
+    fun startPlayback(recordingId: Long) = viewModelScope.launchUnit {
 
         val recording = recordings.getRecording(recordingId).first()
         val playbackStatus = callPlayback.playbackState.first()
@@ -209,7 +208,7 @@ class MainViewModel @ViewModelInject constructor(
 
                     // Mapped recording entry
                     RecordingListItem.Entry(
-                        id = RecordingId(it.id),
+                        id = it.id,
                         name = "${it.id} - ${it.name}",
                         number = it.number,
                         overlineText = overlineText,

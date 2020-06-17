@@ -55,7 +55,6 @@ allprojects {
                     '-Xopt-in=kotlinx.coroutines.FlowPreview',
                     '-Xopt-in=androidx.ui.layout.ExperimentalLayout',
                     '-Xopt-in=kotlin.ExperimentalStdlibApi',
-                    '-Xinline-classes',
                     /*'-Xnew-inference'*/
             ]
         }
