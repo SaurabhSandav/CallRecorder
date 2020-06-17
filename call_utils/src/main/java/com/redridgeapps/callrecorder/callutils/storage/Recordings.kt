@@ -3,8 +3,8 @@ package com.redridgeapps.callrecorder.callutils.storage
 import android.content.Context
 import android.os.Environment
 import androidx.core.content.ContextCompat
-import com.redridgeapps.callrecorder.Recording
-import com.redridgeapps.callrecorder.RecordingQueries
+import com.redridgeapps.callrecorder.callutils.db.Recording
+import com.redridgeapps.callrecorder.callutils.db.RecordingQueries
 import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding.*
 import com.redridgeapps.callrecorder.callutils.recording.RecordingJob
 import com.redridgeapps.callrecorder.callutils.recording.asPcmEncoding

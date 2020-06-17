@@ -1,9 +1,9 @@
-package com.redridgeapps.callrecorder.di.modules
+package com.redridgeapps.callrecorder.callutils.di.modules
 
 import android.content.Context
-import com.redridgeapps.callrecorder.CallRecordingDB
-import com.redridgeapps.callrecorder.Recording
-import com.redridgeapps.callrecorder.RecordingQueries
+import com.redridgeapps.callrecorder.callutils.db.CallRecordingDB
+import com.redridgeapps.callrecorder.callutils.db.Recording
+import com.redridgeapps.callrecorder.callutils.db.RecordingQueries
 import com.redridgeapps.callrecorder.common.db.adapters.DurationLongColumnAdapter
 import com.redridgeapps.callrecorder.common.db.adapters.InstantIntegerColumnAdapter
 import com.squareup.sqldelight.EnumColumnAdapter

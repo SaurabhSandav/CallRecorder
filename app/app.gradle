@@ -32,15 +32,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    sourceSets {
-        main {
-            java.srcDirs = [
-                    "src/main/java",
-                    "src/main/sqldelight/callrecording"
-            ]
-        }
-    }
-
     buildFeatures {
         compose true
     }
@@ -58,11 +49,11 @@ dependencies {
 
     coreLibraryDesugaring AndroidTools.DESUGAR_JDK_LIBS
 
-    implementation project(":wav_utils")
-    implementation project(":mp3_encoder")
-    implementation project(":compose_viewmodel")
-    implementation project(":prefs")
     implementation project(":common")
+    implementation project(":prefs")
+    implementation project(":compose_viewmodel")
+    implementation project(":wav_utils")
+    implementation project(":call_utils")
 
     // Kotlin
     implementation Kotlin.STDLIB

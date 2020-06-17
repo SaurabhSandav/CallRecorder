@@ -1,7 +1,7 @@
 package com.redridgeapps.callrecorder.callutils.playback
 
 import android.media.MediaPlayer
-import com.redridgeapps.callrecorder.Recording
+import com.redridgeapps.callrecorder.callutils.db.Recording
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow

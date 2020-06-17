@@ -3,8 +3,8 @@ package com.redridgeapps.callrecorder.ui.main
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.redridgeapps.callrecorder.Recording
 import com.redridgeapps.callrecorder.callutils.callevents.CallDirection
+import com.redridgeapps.callrecorder.callutils.db.Recording
 import com.redridgeapps.callrecorder.callutils.playback.CallPlayback
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped.Paused
