@@ -18,8 +18,8 @@ class RouterBackStackListener(
 
         if (oldSnapshot == snapshot) return
 
-        val removed = oldSnapshot.minus(newSnapshot)
-        val added = newSnapshot.minus(oldSnapshot)
+        val removed = oldSnapshot subtract newSnapshot
+        val added = newSnapshot subtract oldSnapshot
 
         removed.forEach { route ->
             onRouteRemoved(route)
