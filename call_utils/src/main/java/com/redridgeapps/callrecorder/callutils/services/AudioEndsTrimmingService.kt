@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.services
+package com.redridgeapps.callrecorder.callutils.services
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -9,10 +9,10 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import com.redridgeapps.callrecorder.R
+import com.redridgeapps.callrecorder.callutils.R
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
-import com.redridgeapps.callrecorder.utils.constants.NOTIFICATION_WAV_TRIMMING_FINISHED_ID
-import com.redridgeapps.callrecorder.utils.constants.NOTIFICATION_WAV_TRIMMING_ONGOING_ID
+import com.redridgeapps.callrecorder.common.constants.NOTIFICATION_WAV_TRIMMING_FINISHED_ID
+import com.redridgeapps.callrecorder.common.constants.NOTIFICATION_WAV_TRIMMING_ONGOING_ID
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineStart

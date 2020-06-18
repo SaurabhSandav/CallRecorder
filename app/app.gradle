@@ -79,7 +79,7 @@ dependencies {
     implementation ComposeNavigation.CORE
     implementation ComposeNavigation.NAVIGATION
 
-    // ViewModel and LiveData
+    // Lifecycle, ViewModel and LiveData
     implementation Lifecycle.SERVICE
     implementation Lifecycle.LIVEDATA_KTX
     implementation Lifecycle.VIEWMODEL_KTX

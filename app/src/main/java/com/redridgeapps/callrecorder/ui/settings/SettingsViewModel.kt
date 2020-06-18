@@ -11,7 +11,6 @@ import com.redridgeapps.callrecorder.callutils.storage.Recordings
 import com.redridgeapps.callrecorder.common.utils.launchUnit
 import com.redridgeapps.callrecorder.prefs.*
 import com.redridgeapps.callrecorder.utils.Systemizer
-import com.redridgeapps.callrecorder.utils.constants.Defaults
 import kotlinx.coroutines.flow.first
 
 class SettingsViewModel @ViewModelInject constructor(
@@ -22,7 +21,7 @@ class SettingsViewModel @ViewModelInject constructor(
 
     val uiState: SettingsState = SettingsState(
         isSystemized = systemizer.isAppSystemizedFlow,
-        isRecordingOn = prefs.prefBoolean(PREF_IS_RECORDING_ON) { Defaults.IS_RECORDING_ON },
+        isRecordingOn = prefs.prefBoolean(PREF_IS_RECORDING_ON) { RecordingDefaults.IS_RECORDING_ON },
         audioRecordSampleRate = prefs.prefEnum(PREF_AUDIO_RECORD_SAMPLE_RATE) { RecordingDefaults.AUDIO_RECORD_SAMPLE_RATE },
         audioRecordChannels = prefs.prefEnum(PREF_AUDIO_RECORD_CHANNELS) { RecordingDefaults.AUDIO_RECORD_CHANNELS },
         audioRecordEncoding = prefs.prefEnum(PREF_AUDIO_RECORD_ENCODING) { RecordingDefaults.AUDIO_RECORD_ENCODING }
@@ -38,7 +37,7 @@ class SettingsViewModel @ViewModelInject constructor(
 
     fun flipRecording() = viewModelScope.launchUnit {
         val flippedIsRecording =
-            !prefs.prefBoolean(PREF_IS_RECORDING_ON) { Defaults.IS_RECORDING_ON }.first()
+            !prefs.prefBoolean(PREF_IS_RECORDING_ON) { RecordingDefaults.IS_RECORDING_ON }.first()
         prefs.editor { setBoolean(PREF_IS_RECORDING_ON, flippedIsRecording) }
     }
 

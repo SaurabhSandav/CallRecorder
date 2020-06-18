@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'com.squareup.sqldelight'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -45,6 +46,10 @@ dependencies {
 
     // Jetpack
     implementation Jetpack.CORE_KTX
+
+    // Lifecycle
+    implementation Lifecycle.SERVICE
+    implementation Lifecycle.RUNTIME_KTX
 
     // Dagger Hilt
     implementation Dagger.HILT_ANDROID

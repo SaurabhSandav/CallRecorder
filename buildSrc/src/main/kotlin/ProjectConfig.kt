@@ -69,6 +69,7 @@ object Lifecycle {
     private const val VERSION = "2.3.0-alpha04"
 
     const val SERVICE = "androidx.lifecycle:lifecycle-service:$VERSION"
+    const val RUNTIME_KTX = "androidx.lifecycle:lifecycle-runtime-ktx:$VERSION"
     const val LIVEDATA_KTX = "androidx.lifecycle:lifecycle-livedata-ktx:$VERSION"
     const val VIEWMODEL_KTX = "androidx.lifecycle:lifecycle-viewmodel-ktx:$VERSION"
     const val COMMON_JAVA8 = "androidx.lifecycle:lifecycle-common-java8:$VERSION"

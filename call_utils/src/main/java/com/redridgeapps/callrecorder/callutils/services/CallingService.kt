@@ -1,9 +1,6 @@
-package com.redridgeapps.callrecorder.services
+package com.redridgeapps.callrecorder.callutils.services
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.telephony.PhoneStateListener
@@ -12,8 +9,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import com.redridgeapps.callrecorder.MainActivity
-import com.redridgeapps.callrecorder.R
+import com.redridgeapps.callrecorder.callutils.R
 import com.redridgeapps.callrecorder.callutils.callevents.CallState
 import com.redridgeapps.callrecorder.callutils.callevents.CallStatusListener
 import com.redridgeapps.callrecorder.callutils.callevents.NewCallEvent
@@ -21,13 +17,14 @@ import com.redridgeapps.callrecorder.callutils.recording.AudioWriter
 import com.redridgeapps.callrecorder.callutils.recording.CallRecorder
 import com.redridgeapps.callrecorder.callutils.recording.RecordingJob
 import com.redridgeapps.callrecorder.callutils.recording.RecordingState
+import com.redridgeapps.callrecorder.common.constants.NOTIFICATION_RECORDING_SERVICE_ID
 import com.redridgeapps.callrecorder.prefs.Prefs
-import com.redridgeapps.callrecorder.utils.constants.NOTIFICATION_RECORDING_SERVICE_ID
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.reflect.KClass
 
 @AndroidEntryPoint
 class CallingService : LifecycleService() {
@@ -46,11 +43,12 @@ class CallingService : LifecycleService() {
 
     private val callStatusListener = CallStatusListener()
     private val audioWriter = AudioWriter(lifecycleScope)
+    private var pendingActivity: Class<out Activity>? = null
 
     override fun onCreate() {
         super.onCreate()
 
-        createNotification()
+        pendingActivity?.let { createNotification(it) }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -63,7 +61,7 @@ class CallingService : LifecycleService() {
             return START_NOT_STICKY
         }
 
-        createNotification()
+        createNotification(getNotificationPendingActivity(intent))
 
         telephonyManager.listen(callStatusListener, PhoneStateListener.LISTEN_CALL_STATE)
         observeCallStatusForRecording()
@@ -83,7 +81,18 @@ class CallingService : LifecycleService() {
         }
     }
 
-    private fun createNotification() {
+    private fun getNotificationPendingActivity(intent: Intent?): Class<out Activity> {
+
+        @Suppress("UNCHECKED_CAST")
+        pendingActivity = intent?.getSerializableExtra(EXTRA_NOTIFICATION_PENDING_ACTIVITY)
+                as Class<out Activity>?
+
+        return requireNotNull(pendingActivity) {
+            "CallingService: notificationPendingActivity is empty"
+        }
+    }
+
+    private fun createNotification(pendingActivity: Class<out Activity>) {
 
         val channel = NotificationChannel(
             CallingService::class.simpleName,
@@ -93,7 +102,7 @@ class CallingService : LifecycleService() {
 
         notificationManager.createNotificationChannel(channel)
 
-        val notificationIntent = Intent(this, MainActivity::class.java)
+        val notificationIntent = Intent(this, pendingActivity)
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 
         val notification = NotificationCompat.Builder(this, channel.id)
@@ -132,13 +141,19 @@ class CallingService : LifecycleService() {
     companion object {
 
         private const val ACTION_STOP = "ACTION_STOP"
+        private const val EXTRA_NOTIFICATION_PENDING_ACTIVITY =
+            "EXTRA_NOTIFICATION_PENDING_ACTIVITY"
 
-        fun start(context: Context) {
+        fun start(context: Context, notificationPendingActivity: KClass<out Activity>) {
 
-            ContextCompat.startForegroundService(
-                context,
-                Intent(context, CallingService::class.java)
-            )
+            val intent = Intent(context, CallingService::class.java).apply {
+                putExtra(
+                    EXTRA_NOTIFICATION_PENDING_ACTIVITY,
+                    notificationPendingActivity.java
+                )
+            }
+
+            ContextCompat.startForegroundService(context, intent)
         }
 
         fun stop(context: Context) {

@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.utils.constants
+package com.redridgeapps.callrecorder.common.constants
 
 const val NOTIFICATION_RECORDING_SERVICE_ID = 1
 const val NOTIFICATION_MP3_CONVERSION_ONGOING_ID = 2
