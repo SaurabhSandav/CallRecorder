@@ -4,8 +4,6 @@ import android.app.NotificationManager
 import android.content.ContentResolver
 import android.content.Context
 import android.content.SharedPreferences
-import android.media.AudioManager
-import android.os.PowerManager
 import android.telephony.TelephonyManager
 import androidx.core.content.getSystemService
 import androidx.preference.PreferenceManager
@@ -25,19 +23,11 @@ object AppModule {
     }
 
     @Provides
-    fun @receiver:ApplicationContext Context.provideAudioManager(): AudioManager =
-        getSystemService()!!
-
-    @Provides
     fun @receiver:ApplicationContext Context.provideTelephonyManager(): TelephonyManager =
         getSystemService()!!
 
     @Provides
     fun @receiver:ApplicationContext Context.provideNotificationManager(): NotificationManager =
-        getSystemService()!!
-
-    @Provides
-    fun @receiver:ApplicationContext Context.providePowerManager(): PowerManager =
         getSystemService()!!
 
     @Provides
