@@ -48,7 +48,7 @@ class CallingService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
 
-        pendingActivity?.let { createNotification(it) }
+        showOngoingNotification()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -61,7 +61,8 @@ class CallingService : LifecycleService() {
             return START_NOT_STICKY
         }
 
-        createNotification(getNotificationPendingActivity(intent))
+        getNotificationPendingActivity(intent)
+        showOngoingNotification()
 
         telephonyManager.listen(callStatusListener, PhoneStateListener.LISTEN_CALL_STATE)
         observeCallStatusForRecording()
@@ -81,18 +82,17 @@ class CallingService : LifecycleService() {
         }
     }
 
-    private fun getNotificationPendingActivity(intent: Intent?): Class<out Activity> {
+    private fun getNotificationPendingActivity(intent: Intent?) {
+
+        val newPendingActivity = intent?.getSerializableExtra(EXTRA_NOTIFICATION_PENDING_ACTIVITY)
+
+        requireNotNull(newPendingActivity) { "CallingService: notificationPendingActivity is empty" }
 
         @Suppress("UNCHECKED_CAST")
-        pendingActivity = intent?.getSerializableExtra(EXTRA_NOTIFICATION_PENDING_ACTIVITY)
-                as Class<out Activity>?
-
-        return requireNotNull(pendingActivity) {
-            "CallingService: notificationPendingActivity is empty"
-        }
+        pendingActivity = newPendingActivity as Class<out Activity>?
     }
 
-    private fun createNotification(pendingActivity: Class<out Activity>) {
+    private fun showOngoingNotification() {
 
         val channel = NotificationChannel(
             CallingService::class.simpleName,
@@ -102,17 +102,19 @@ class CallingService : LifecycleService() {
 
         notificationManager.createNotificationChannel(channel)
 
-        val notificationIntent = Intent(this, pendingActivity)
-        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
-
-        val notification = NotificationCompat.Builder(this, channel.id)
+        val notificationBuilder = NotificationCompat
+            .Builder(this, channel.id)
             .setContentText("Standing by to record...")
-            .setContentIntent(pendingIntent)
             .setSmallIcon(R.drawable.ic_stat_name)
             .setShowWhen(false)
-            .build()
 
-        startForeground(NOTIFICATION_RECORDING_SERVICE_ID, notification)
+        pendingActivity?.let {
+            val notificationIntent = Intent(this, it)
+            val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
+            notificationBuilder.setContentIntent(pendingIntent)
+        }
+
+        startForeground(NOTIFICATION_RECORDING_SERVICE_ID, notificationBuilder.build())
     }
 
     private fun observeCallStatusForRecording() {
