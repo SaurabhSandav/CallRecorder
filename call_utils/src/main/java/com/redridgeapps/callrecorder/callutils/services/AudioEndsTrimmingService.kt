@@ -34,7 +34,10 @@ class AudioEndsTrimmingService : LifecycleService() {
 
     private val trimmingActor = lifecycleScope.actor<Long>(start = CoroutineStart.LAZY) {
 
-        channel.invokeOnClose { stopService(applicationContext) }
+        channel.invokeOnClose {
+            stopService(applicationContext)
+            showFinishedNotification()
+        }
 
         for (recordingId in channel) {
 
@@ -43,10 +46,7 @@ class AudioEndsTrimmingService : LifecycleService() {
 
             recordings.trimSilenceEnds(recordingId)
 
-            if (isEmpty) {
-                channel.close()
-                showFinishedNotification()
-            }
+            if (isEmpty) channel.close()
         }
     }
 
@@ -123,7 +123,7 @@ class AudioEndsTrimmingService : LifecycleService() {
 
         fun start(context: Context, recordingIdList: List<Long>) {
 
-            val recordingIdArray = recordingIdList.toTypedArray()
+            val recordingIdArray = recordingIdList.toLongArray()
 
             val intent = Intent(context, AudioEndsTrimmingService::class.java).apply {
                 putExtra(EXTRA_RECORDING_ID, recordingIdArray)

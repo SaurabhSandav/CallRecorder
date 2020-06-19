@@ -34,7 +34,10 @@ class Mp3ConversionService : LifecycleService() {
 
     private val conversionActor = lifecycleScope.actor<Long>(start = CoroutineStart.LAZY) {
 
-        channel.invokeOnClose { stopService(applicationContext) }
+        channel.invokeOnClose {
+            stopService(applicationContext)
+            showFinishedNotification()
+        }
 
         for (recordingId in channel) {
 
@@ -43,10 +46,7 @@ class Mp3ConversionService : LifecycleService() {
 
             recordings.convertToMp3(recordingId)
 
-            if (isEmpty) {
-                channel.close()
-                showFinishedNotification()
-            }
+            if (isEmpty) channel.close()
         }
     }
 
@@ -123,7 +123,7 @@ class Mp3ConversionService : LifecycleService() {
 
         fun start(context: Context, recordingIdList: List<Long>) {
 
-            val recordingIdArray = recordingIdList.toTypedArray()
+            val recordingIdArray = recordingIdList.toLongArray()
 
             val intent = Intent(context, Mp3ConversionService::class.java).apply {
                 putExtra(EXTRA_RECORDING_ID, recordingIdArray)
