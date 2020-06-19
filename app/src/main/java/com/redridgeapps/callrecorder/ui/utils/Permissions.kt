@@ -43,7 +43,8 @@ private class PermissionManager(
 
     override fun onEnter() {
         permissionRequest = activityResultRegistry.register(key, contract) { permissionResult ->
-            onResult?.let { it(permissionResult) }
+            if (permissionResult.isNotEmpty())
+                onResult?.let { it(permissionResult) }
         }
     }
 
@@ -57,11 +58,15 @@ private class PermissionManager(
         onResult: (permissionResult: Map<String, Boolean>) -> Unit
     ) {
 
-        val unGrantedPermissions =
-            permissions.filterNot { isPermissionGranted(context, it) }.toTypedArray()
+        val permissionsStatus = permissions.associate { it to isPermissionGranted(context, it) }
 
-        this.onResult = onResult
-        permissionRequest?.launch(unGrantedPermissions)
+        when {
+            permissionsStatus.all { it.value } -> onResult(permissionsStatus)
+            else -> {
+                this.onResult = onResult
+                permissionRequest?.launch(permissionsStatus.filterValues { !it }.keys.toTypedArray())
+            }
+        }
     }
 
     companion object {
