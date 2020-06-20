@@ -75,6 +75,12 @@ object Lifecycle {
     const val COMMON_JAVA8 = "androidx.lifecycle:lifecycle-common-java8:$VERSION"
 }
 
+object WorkManager {
+    private const val VERSION = "2.4.0-beta01"
+
+    const val WORK_RUNTIME_KTX = "androidx.work:work-runtime-ktx:$VERSION"
+}
+
 object Dagger {
     private const val HILT_VERSION = "2.28-alpha"
 

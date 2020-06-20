@@ -85,6 +85,9 @@ dependencies {
     implementation Lifecycle.VIEWMODEL_KTX
     implementation Lifecycle.COMMON_JAVA8
 
+    // WorkManager
+    implementation WorkManager.WORK_RUNTIME_KTX
+
     // Dagger Hilt
     implementation Dagger.HILT_ANDROID
     kapt Dagger.HILT_ANDROID_COMPILER
