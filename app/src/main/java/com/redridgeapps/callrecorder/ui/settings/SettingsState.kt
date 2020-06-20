@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class SettingsState(
     val isSystemized: Flow<Boolean>,
-    val isRecordingOn: Flow<Boolean>,
+    val recordingEnabled: Flow<Boolean>,
     val audioRecordSampleRate: Flow<PcmSampleRate>,
     val audioRecordChannels: Flow<PcmChannels>,
     val audioRecordEncoding: Flow<PcmEncoding>

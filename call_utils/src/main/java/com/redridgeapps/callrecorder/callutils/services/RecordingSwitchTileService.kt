@@ -2,8 +2,8 @@ package com.redridgeapps.callrecorder.callutils.services
 
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import com.redridgeapps.callrecorder.callutils.RecordingDefaults
-import com.redridgeapps.callrecorder.prefs.PREF_IS_RECORDING_ON
+import com.redridgeapps.callrecorder.callutils.Defaults
+import com.redridgeapps.callrecorder.prefs.PREF_RECORDING_ENABLED
 import com.redridgeapps.callrecorder.prefs.Prefs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -43,19 +43,21 @@ class RecordingSwitchTileService : TileService() {
 
     private fun flipTile() = coroutineScope.launch {
 
-        val flippedIsRecordingOn =
-            !prefs.prefBoolean(PREF_IS_RECORDING_ON) { RecordingDefaults.IS_RECORDING_ON }.first()
-        prefs.editor { setBoolean(PREF_IS_RECORDING_ON, flippedIsRecordingOn) }
+        val flipped = !prefs.prefBoolean(PREF_RECORDING_ENABLED) {
+            Defaults.RECORDING_ENABLED
+        }.first()
+        prefs.editor { setBoolean(PREF_RECORDING_ENABLED, flipped) }
 
         updateTile()
     }
 
     private fun updateTile() = coroutineScope.launch {
 
-        val isRecordingOn =
-            prefs.prefBoolean(PREF_IS_RECORDING_ON) { RecordingDefaults.IS_RECORDING_ON }.first()
+        val recordingEnabled = prefs.prefBoolean(PREF_RECORDING_ENABLED) {
+            Defaults.RECORDING_ENABLED
+        }.first()
 
-        qsTile.state = if (isRecordingOn) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
+        qsTile.state = if (recordingEnabled) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
         qsTile.updateTile()
     }
 }

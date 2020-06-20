@@ -3,7 +3,7 @@ package com.redridgeapps.callrecorder.ui.settings
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.redridgeapps.callrecorder.callutils.RecordingDefaults
+import com.redridgeapps.callrecorder.callutils.Defaults
 import com.redridgeapps.callrecorder.callutils.recording.PcmChannels
 import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
 import com.redridgeapps.callrecorder.callutils.recording.PcmSampleRate
@@ -21,24 +21,32 @@ class SettingsViewModel @ViewModelInject constructor(
 
     val uiState: SettingsState = SettingsState(
         isSystemized = systemizer.isAppSystemizedFlow,
-        isRecordingOn = prefs.prefBoolean(PREF_IS_RECORDING_ON) { RecordingDefaults.IS_RECORDING_ON },
-        audioRecordSampleRate = prefs.prefEnum(PREF_AUDIO_RECORD_SAMPLE_RATE) { RecordingDefaults.AUDIO_RECORD_SAMPLE_RATE },
-        audioRecordChannels = prefs.prefEnum(PREF_AUDIO_RECORD_CHANNELS) { RecordingDefaults.AUDIO_RECORD_CHANNELS },
-        audioRecordEncoding = prefs.prefEnum(PREF_AUDIO_RECORD_ENCODING) { RecordingDefaults.AUDIO_RECORD_ENCODING }
+        recordingEnabled = prefs.prefBoolean(PREF_RECORDING_ENABLED) {
+            Defaults.RECORDING_ENABLED
+        },
+        audioRecordSampleRate = prefs.prefEnum(PREF_AUDIO_RECORD_SAMPLE_RATE) {
+            Defaults.AUDIO_RECORD_SAMPLE_RATE
+        },
+        audioRecordChannels = prefs.prefEnum(PREF_AUDIO_RECORD_CHANNELS) {
+            Defaults.AUDIO_RECORD_CHANNELS
+        },
+        audioRecordEncoding = prefs.prefEnum(PREF_AUDIO_RECORD_ENCODING) {
+            Defaults.AUDIO_RECORD_ENCODING
+        }
     )
 
     fun flipSystemization() = viewModelScope.launchUnit {
-
-        if (systemizer.isAppSystemizedFlow.first())
-            systemizer.unSystemize()
-        else
-            systemizer.systemize()
+        when {
+            systemizer.isAppSystemizedFlow.first() -> systemizer.unSystemize()
+            else -> systemizer.systemize()
+        }
     }
 
-    fun flipRecording() = viewModelScope.launchUnit {
-        val flippedIsRecording =
-            !prefs.prefBoolean(PREF_IS_RECORDING_ON) { RecordingDefaults.IS_RECORDING_ON }.first()
-        prefs.editor { setBoolean(PREF_IS_RECORDING_ON, flippedIsRecording) }
+    fun flipRecordingEnabled() = viewModelScope.launchUnit {
+        val flipped = !prefs.prefBoolean(PREF_RECORDING_ENABLED) {
+            Defaults.RECORDING_ENABLED
+        }.first()
+        prefs.editor { setBoolean(PREF_RECORDING_ENABLED, flipped) }
     }
 
     fun updateContactNames() = viewModelScope.launchUnit {

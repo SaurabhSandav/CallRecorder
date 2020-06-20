@@ -1,9 +1,9 @@
 package com.redridgeapps.callrecorder
 
 import android.app.Application
-import com.redridgeapps.callrecorder.callutils.RecordingDefaults
+import com.redridgeapps.callrecorder.callutils.Defaults
 import com.redridgeapps.callrecorder.callutils.services.CallingService
-import com.redridgeapps.callrecorder.prefs.PREF_IS_RECORDING_ON
+import com.redridgeapps.callrecorder.prefs.PREF_RECORDING_ENABLED
 import com.redridgeapps.callrecorder.prefs.Prefs
 import com.redridgeapps.callrecorder.utils.HyperlinkedDebugTree
 import com.topjohnwu.superuser.Shell
@@ -41,7 +41,7 @@ class App : Application() {
 
     private fun setupCallingService() {
 
-        prefs.prefBoolean(PREF_IS_RECORDING_ON) { RecordingDefaults.IS_RECORDING_ON }
+        prefs.prefBoolean(PREF_RECORDING_ENABLED) { Defaults.RECORDING_ENABLED }
             .onEach { recordingOn ->
                 when {
                     recordingOn -> CallingService.start(this@App, MainActivity::class)

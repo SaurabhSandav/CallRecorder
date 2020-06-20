@@ -65,10 +65,10 @@ private fun ContentMain(viewModel: SettingsViewModel, modifier: Modifier) {
 
     Column(modifier) {
 
-        val isRecordingOn by viewModel.uiState.isRecordingOn.collectAsState(initial = null)
+        val isRecordingOn by viewModel.uiState.recordingEnabled.collectAsState(initial = null)
 
         SwitchPreference("Recording", isRecordingOn) {
-            viewModel.flipRecording()
+            viewModel.flipRecordingEnabled()
         }
 
         val isSystemized by viewModel.uiState.isSystemized.collectAsState(initial = null)
@@ -82,16 +82,16 @@ private fun ContentMain(viewModel: SettingsViewModel, modifier: Modifier) {
             onClick = { viewModel.updateContactNames() }
         )
 
-        AudioRecordAPIPreference(viewModel)
+        RecordingPreference(viewModel)
     }
 }
 
 @Composable
-private fun AudioRecordAPIPreference(viewModel: SettingsViewModel) {
+private fun RecordingPreference(viewModel: SettingsViewModel) {
 
     Column {
 
-        TitlePreference(text = "AudioRecord API")
+        TitlePreference(text = "Recording")
 
         val audioRecordSampleRate by viewModel.uiState.audioRecordSampleRate.collectAsState(initial = null)
 

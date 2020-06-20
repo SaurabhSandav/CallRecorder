@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.common.utils.launchUnit
 import com.redridgeapps.callrecorder.prefs.PREF_IS_FIRST_RUN
-import com.redridgeapps.callrecorder.prefs.PREF_IS_RECORDING_ON
+import com.redridgeapps.callrecorder.prefs.PREF_RECORDING_ENABLED
 import com.redridgeapps.callrecorder.prefs.Prefs
 import com.redridgeapps.callrecorder.utils.Systemizer
 
@@ -23,7 +23,7 @@ class FirstRunViewModel @ViewModelInject constructor(
     fun configurationFinished() = viewModelScope.launchUnit {
         prefs.editor {
             setBoolean(PREF_IS_FIRST_RUN, false)
-            setBoolean(PREF_IS_RECORDING_ON, true)
+            setBoolean(PREF_RECORDING_ENABLED, true)
         }
     }
 }

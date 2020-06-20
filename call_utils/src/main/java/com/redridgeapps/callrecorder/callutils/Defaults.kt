@@ -4,9 +4,9 @@ import com.redridgeapps.callrecorder.callutils.recording.PcmChannels
 import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
 import com.redridgeapps.callrecorder.callutils.recording.PcmSampleRate
 
-object RecordingDefaults {
+object Defaults {
 
-    const val IS_RECORDING_ON = false
+    const val RECORDING_ENABLED = false
 
     val AUDIO_RECORD_SAMPLE_RATE = PcmSampleRate.S44_100
     val AUDIO_RECORD_CHANNELS = PcmChannels.MONO
