@@ -127,6 +127,14 @@ class Prefs @Inject constructor(private val sharedPrefs: SharedPreferences) {
         fun setStringSet(key: String, value: Set<String>) {
             editor.putStringSet(key, value)
         }
+
+        fun remove(key: String) {
+            editor.remove(key)
+        }
+
+        fun clear() {
+            editor.clear()
+        }
     }
 
     // endregion Editing
