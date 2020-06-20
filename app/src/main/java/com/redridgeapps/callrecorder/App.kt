@@ -1,6 +1,8 @@
 package com.redridgeapps.callrecorder
 
 import android.app.Application
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import com.redridgeapps.callrecorder.callutils.Defaults
 import com.redridgeapps.callrecorder.callutils.services.CallingService
 import com.redridgeapps.callrecorder.prefs.PREF_RECORDING_ENABLED
@@ -15,10 +17,13 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltAndroidApp
-class App : Application() {
+class App : Application(), Configuration.Provider {
 
     @Inject
     lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
 
     init {
         Shell.Config.setFlags(Shell.FLAG_REDIRECT_STDERR)
@@ -49,5 +54,11 @@ class App : Application() {
                 }
             }
             .launchIn(GlobalScope)
+    }
+
+    override fun getWorkManagerConfiguration(): Configuration {
+        return Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
     }
 }

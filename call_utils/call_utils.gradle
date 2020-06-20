@@ -58,6 +58,11 @@ dependencies {
     implementation Dagger.HILT_ANDROID
     kapt Dagger.HILT_ANDROID_COMPILER
 
+    // AndroidX Hilt
+    implementation AndroidXHilt.COMMON
+    implementation AndroidXHilt.WORK
+    kapt AndroidXHilt.COMPILER
+
     // SQLDelight
     implementation SQLDelight.ANDROID_DRIVER
     implementation SQLDelight.COROUTINES_EXTENSIONS
