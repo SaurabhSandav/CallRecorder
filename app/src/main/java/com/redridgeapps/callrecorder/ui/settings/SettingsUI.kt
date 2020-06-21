@@ -19,11 +19,11 @@ import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.callrecorder.callutils.recording.PcmChannels
 import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
 import com.redridgeapps.callrecorder.callutils.recording.PcmSampleRate
+import com.redridgeapps.callrecorder.ui.prefcomponents.SingleSelectListPreference
+import com.redridgeapps.callrecorder.ui.prefcomponents.SwitchPreference
+import com.redridgeapps.callrecorder.ui.prefcomponents.TitlePreference
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.routing.viewModel
-import com.redridgeapps.callrecorder.ui.utils.SingleSelectListPreference
-import com.redridgeapps.callrecorder.ui.utils.SwitchPreference
-import com.redridgeapps.callrecorder.ui.utils.TitlePreference
 
 object SettingsDestination : Destination {
 
@@ -98,7 +98,7 @@ private fun RecordingPreference(viewModel: SettingsViewModel) {
         SingleSelectListPreference(
             title = "Sample Rate",
             keys = PcmSampleRate.values().asList(),
-            keyToTextMapper = { it.sampleRate.toString() },
+            itemText = { it.sampleRate.toString() },
             selectedItem = audioRecordSampleRate,
             onSelectedChange = { viewModel.setAudioRecordSampleRate(it) }
         )
@@ -108,7 +108,7 @@ private fun RecordingPreference(viewModel: SettingsViewModel) {
         SingleSelectListPreference(
             title = "Channels",
             keys = PcmChannels.values().asList(),
-            keyToTextMapper = { it.toReadableString() },
+            itemText = { it.toReadableString() },
             selectedItem = audioRecordChannels,
             onSelectedChange = { viewModel.setAudioRecordChannels(it) }
         )
@@ -118,7 +118,7 @@ private fun RecordingPreference(viewModel: SettingsViewModel) {
         SingleSelectListPreference(
             title = "Encoding",
             keys = PcmEncoding.values().asList(),
-            keyToTextMapper = { it.toReadableString() },
+            itemText = { it.toReadableString() },
             selectedItem = audioRecordEncoding,
             onSelectedChange = { viewModel.setAudioRecordEncoding(it) }
         )
