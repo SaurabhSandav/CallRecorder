@@ -17,7 +17,7 @@ class MainState(
 
     var recordingList: List<RecordingListItem> by mutableStateOf(emptyList())
 
-    val selection: ListSelection<RecordingListItem.Entry> = ListSelection()
+    val selection: ListSelection<Long> = ListSelection()
 }
 
 sealed class RecordingListItem {

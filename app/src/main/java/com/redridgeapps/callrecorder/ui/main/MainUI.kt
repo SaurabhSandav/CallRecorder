@@ -21,10 +21,10 @@ import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped.Playing
+import com.redridgeapps.callrecorder.ui.prefcomponents.SwitchPreference
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.routing.viewModel
 import com.redridgeapps.callrecorder.ui.settings.SettingsDestination
-import com.redridgeapps.callrecorder.ui.utils.ListSelection
 import com.redridgeapps.callrecorder.ui.utils.drawScrim
 
 object MainDestination : Destination {
@@ -223,11 +223,11 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
     val selection = viewModel.uiState.selection
 
     var modifier = Modifier.clickable(
-        onClick = { selection.select(recordingEntry) },
-        onLongClick = { selection.multiSelect(recordingEntry) }
+        onClick = { selection.select(recordingEntry.id) },
+        onLongClick = { selection.multiSelect(recordingEntry.id) }
     )
 
-    if (recordingEntry in selection) {
+    if (recordingEntry.id in selection) {
         modifier = modifier.drawScrim()
     }
 
@@ -382,7 +382,7 @@ private fun OptionsDialog(viewModel: MainViewModel) {
             Crossfade(selectedIndex) { tabIndex ->
                 VerticalScroller {
                     when (tabIndex) {
-                        0 -> OptionsDialogOptionsTab(viewModel, selection)
+                        0 -> OptionsDialogOptionsTab(viewModel)
                         1 -> OptionsDialogInfoTab(recordingInfo)
                     }
                 }
@@ -404,17 +404,15 @@ private suspend fun annotateRecordingInfo(viewModel: MainViewModel): List<Annota
 }
 
 @Composable
-private fun OptionsDialogOptionsTab(
-    viewModel: MainViewModel,
-    selection: ListSelection<RecordingListItem.Entry>
-) {
+private fun OptionsDialogOptionsTab(viewModel: MainViewModel) {
 
     Column {
 
-        val isStarred = RecordingListFilter.Starred in selection.single().applicableFilters
-        ListItem(
-            text = if (isStarred) "Unstar" else "Star",
-            onClick = { viewModel.toggleStar() }
+        val isStarred by viewModel.getSelectionIsStarred().collectAsState(initial = null)
+        SwitchPreference(
+            text = "Star",
+            checked = isStarred,
+            onCheckedChange = { viewModel.toggleStar() }
         )
 
         ListItem("Trim silence at start/end", onClick = { viewModel.trimSilenceEnds() })

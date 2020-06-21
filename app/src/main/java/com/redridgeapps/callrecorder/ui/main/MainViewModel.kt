@@ -73,23 +73,26 @@ class MainViewModel @ViewModelInject constructor(
         }
     }
 
+    fun getSelectionIsStarred(): Flow<Boolean> {
+        return recordings.getIsStarred(uiState.selection.single())
+    }
+
     fun toggleStar() = viewModelScope.launchUnit {
-        recordings.toggleStar(uiState.selection.map { it.id })
-        uiState.selection.clear()
+        recordings.toggleStar(uiState.selection.toList())
     }
 
     fun trimSilenceEnds() = viewModelScope.launchUnit {
-        audioEndsTrimmingServiceLauncher.launch(uiState.selection.map { it.id })
+        audioEndsTrimmingServiceLauncher.launch(uiState.selection.toList())
         uiState.selection.clear()
     }
 
     fun convertToMp3() = viewModelScope.launchUnit {
-        mp3ConversionServiceLauncher.launch(uiState.selection.map { it.id })
+        mp3ConversionServiceLauncher.launch(uiState.selection.toList())
         uiState.selection.clear()
     }
 
     fun deleteRecordings() = viewModelScope.launchUnit {
-        recordings.deleteRecording(uiState.selection.map { it.id })
+        recordings.deleteRecording(uiState.selection.toList())
         uiState.selection.clear()
     }
 
@@ -112,8 +115,8 @@ class MainViewModel @ViewModelInject constructor(
     suspend fun getSelectionInfo(): List<Pair<String, String>> {
 
         val selection = uiState.selection.single()
-        val wavData = recordings.getWavData(selection.id)
-        val recording = recordings.getRecording(selection.id).first()
+        val wavData = recordings.getWavData(selection)
+        val recording = recordings.getRecording(selection).first()
 
         return buildList {
 

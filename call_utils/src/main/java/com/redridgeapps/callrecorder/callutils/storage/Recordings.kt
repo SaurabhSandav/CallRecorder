@@ -114,6 +114,10 @@ class Recordings @Inject constructor(
         recordingQueries.delete(recordingIdList)
     }
 
+    fun getIsStarred(recordingId: Long): Flow<Boolean> {
+        return recordingQueries.getIsStarred(recordingId).asFlow().mapToOne()
+    }
+
     suspend fun toggleStar(recordingIdList: List<Long>) = withContext(Dispatchers.IO) {
         recordingQueries.toggleStar(recordingIdList)
     }

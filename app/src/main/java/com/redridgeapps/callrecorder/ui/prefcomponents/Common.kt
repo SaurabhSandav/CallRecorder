@@ -25,7 +25,7 @@ fun TitlePreference(text: String) {
 @Composable
 fun SwitchPreference(
     text: String,
-    checked: Boolean? = null,
+    checked: Boolean?,
     onCheckedChange: (Boolean) -> Unit
 ) {
 

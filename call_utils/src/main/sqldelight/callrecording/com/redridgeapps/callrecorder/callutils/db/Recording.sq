@@ -26,6 +26,10 @@ getAll:
 SELECT * FROM Recording
 ORDER BY id DESC;
 
+getIsStarred:
+SELECT is_starred FROM Recording
+WHERE id = ?;
+
 toggleStar:
 UPDATE Recording
 SET is_starred = ((is_starred | 1) - (is_starred & 1))
