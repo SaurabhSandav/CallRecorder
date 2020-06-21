@@ -43,3 +43,7 @@ WHERE id = ?;
 
 delete:
 DELETE FROM Recording WHERE id IN ?;
+
+deleteOverDaysOld:
+DELETE FROM Recording
+WHERE (julianday('now') - julianday(start_instant, 'unixepoch')) > ?;

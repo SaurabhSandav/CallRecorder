@@ -25,6 +25,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardOpenOption.READ
+import java.time.Duration
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -134,6 +135,11 @@ class Recordings @Inject constructor(
         val fileChannel = FileChannel.open(recordingPath, READ)
 
         return@withContext fileChannel.use { WavFileUtils.readWavData(fileChannel) }
+    }
+
+    internal suspend fun deleteOverDaysOld(duration: Duration) = withContext(Dispatchers.IO) {
+        val days = duration.toDays()
+        recordingQueries.deleteOverDaysOld(days.toString())
     }
 
     companion object {
