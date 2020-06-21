@@ -5,7 +5,7 @@ import java.time.Instant
 
 object InstantIntegerColumnAdapter : ColumnAdapter<Instant, Long> {
 
-    override fun decode(databaseValue: Long): Instant = Instant.ofEpochMilli(databaseValue)
+    override fun decode(databaseValue: Long): Instant = Instant.ofEpochSecond(databaseValue)
 
-    override fun encode(value: Instant): Long = value.toEpochMilli()
+    override fun encode(value: Instant): Long = value.epochSecond
 }
