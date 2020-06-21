@@ -31,6 +31,9 @@ dependencies {
     implementation Kotlin.STDLIB
     implementation Kotlin.COROUTINES_ANDROID
 
+    // JavaX Inject
+    implementation JavaXInject.JAVAX_INJECT
+
     // SQLDelight
     implementation SQLDelight.ANDROID_DRIVER
 

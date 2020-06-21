@@ -9,10 +9,12 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.redridgeapps.callrecorder.callutils.Defaults
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
+import com.redridgeapps.callrecorder.common.StartupInitializer
 import com.redridgeapps.callrecorder.prefs.PREF_RECORDING_AUTO_DELETE_AFTER_DAYS
 import com.redridgeapps.callrecorder.prefs.Prefs
 import kotlinx.coroutines.flow.first
 import java.time.Duration
+import javax.inject.Inject
 
 class RecordingAutoDeleteWorker @WorkerInject constructor(
     @Assisted appContext: Context,
@@ -34,12 +36,19 @@ class RecordingAutoDeleteWorker @WorkerInject constructor(
 
     companion object {
 
-        fun schedule(context: Context) {
+        internal fun schedule(context: Context) {
 
             val workRequest =
                 PeriodicWorkRequestBuilder<RecordingAutoDeleteWorker>(Duration.ofDays(1)).build()
 
             WorkManager.getInstance(context).enqueue(workRequest)
+        }
+    }
+
+    class Initializer @Inject constructor() : StartupInitializer {
+
+        override fun initialize(context: Context) {
+            schedule(context)
         }
     }
 }

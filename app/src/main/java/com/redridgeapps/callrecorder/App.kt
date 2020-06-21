@@ -3,57 +3,27 @@ package com.redridgeapps.callrecorder
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
-import com.redridgeapps.callrecorder.callutils.Defaults
-import com.redridgeapps.callrecorder.callutils.services.CallingService
-import com.redridgeapps.callrecorder.prefs.PREF_RECORDING_ENABLED
-import com.redridgeapps.callrecorder.prefs.Prefs
-import com.redridgeapps.callrecorder.utils.HyperlinkedDebugTree
-import com.topjohnwu.superuser.Shell
+import com.redridgeapps.callrecorder.common.StartupInitializer
 import dagger.hilt.android.HiltAndroidApp
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltAndroidApp
 class App : Application(), Configuration.Provider {
 
     @Inject
-    lateinit var prefs: Prefs
-
-    @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
-    init {
-        Shell.Config.setFlags(Shell.FLAG_REDIRECT_STDERR)
-        Shell.Config.verboseLogging(false)
-        Shell.Config.setTimeout(10)
-    }
+    @Inject
+    lateinit var startupInitializers: Set<@JvmSuppressWildcards StartupInitializer>
 
     override fun onCreate() {
         super.onCreate()
 
-        setupTimber()
-        setupCallingService()
+        setupStartupInitialization()
     }
 
-    private fun setupTimber() {
-        if (BuildConfig.DEBUG)
-            Timber.plant(HyperlinkedDebugTree)
-        else TODO()
-    }
-
-    private fun setupCallingService() {
-
-        prefs.prefBoolean(PREF_RECORDING_ENABLED) { Defaults.RECORDING_ENABLED }
-            .onEach { recordingOn ->
-                when {
-                    recordingOn -> CallingService.start(this@App, MainActivity::class)
-                    else -> CallingService.stop(this@App)
-                }
-            }
-            .launchIn(GlobalScope)
+    private fun setupStartupInitialization() {
+        startupInitializers.forEach { it.initialize(this@App) }
     }
 
     override fun getWorkManagerConfiguration(): Configuration {

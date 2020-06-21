@@ -9,6 +9,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
+import com.redridgeapps.callrecorder.callutils.Defaults
 import com.redridgeapps.callrecorder.callutils.R
 import com.redridgeapps.callrecorder.callutils.callevents.CallState
 import com.redridgeapps.callrecorder.callutils.callevents.CallStatusListener
@@ -17,9 +18,13 @@ import com.redridgeapps.callrecorder.callutils.recording.AudioWriter
 import com.redridgeapps.callrecorder.callutils.recording.CallRecorder
 import com.redridgeapps.callrecorder.callutils.recording.RecordingJob
 import com.redridgeapps.callrecorder.callutils.recording.RecordingState
+import com.redridgeapps.callrecorder.common.StartupInitializer
 import com.redridgeapps.callrecorder.common.constants.NOTIFICATION_RECORDING_SERVICE_ID
+import com.redridgeapps.callrecorder.common.di.qualifiers.NotificationPendingActivity
+import com.redridgeapps.callrecorder.prefs.PREF_RECORDING_ENABLED
 import com.redridgeapps.callrecorder.prefs.Prefs
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -146,7 +151,7 @@ class CallingService : LifecycleService() {
         private const val EXTRA_NOTIFICATION_PENDING_ACTIVITY =
             "EXTRA_NOTIFICATION_PENDING_ACTIVITY"
 
-        fun start(context: Context, notificationPendingActivity: KClass<out Activity>) {
+        internal fun start(context: Context, notificationPendingActivity: KClass<out Activity>) {
 
             val intent = Intent(context, CallingService::class.java).apply {
                 putExtra(
@@ -158,12 +163,30 @@ class CallingService : LifecycleService() {
             ContextCompat.startForegroundService(context, intent)
         }
 
-        fun stop(context: Context) {
+        internal fun stop(context: Context) {
 
             val intent = Intent(context, CallingService::class.java)
             intent.action = ACTION_STOP
 
             ContextCompat.startForegroundService(context, intent)
+        }
+    }
+
+    class Initializer @Inject constructor(
+        private val prefs: Prefs,
+        @NotificationPendingActivity private val notificationPendingActivity: KClass<out Activity>
+    ) : StartupInitializer {
+
+        override fun initialize(context: Context) {
+
+            prefs.prefBoolean(PREF_RECORDING_ENABLED) { Defaults.RECORDING_ENABLED }
+                .onEach { recordingOn ->
+                    when {
+                        recordingOn -> start(context, notificationPendingActivity)
+                        else -> stop(context)
+                    }
+                }
+                .launchIn(GlobalScope)
         }
     }
 }

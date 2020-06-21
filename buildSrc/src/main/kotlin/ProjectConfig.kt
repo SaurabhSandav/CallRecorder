@@ -81,6 +81,12 @@ object WorkManager {
     const val WORK_RUNTIME_KTX = "androidx.work:work-runtime-ktx:$VERSION"
 }
 
+object JavaXInject {
+    private const val VERSION = "1"
+
+    const val JAVAX_INJECT = "javax.inject:javax.inject:$VERSION"
+}
+
 object Dagger {
     private const val HILT_VERSION = "2.28-alpha"
 

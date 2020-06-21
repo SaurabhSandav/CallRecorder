@@ -1,8 +1,8 @@
-package com.redridgeapps.callrecorder.utils
+package com.redridgeapps.callrecorder.utils.timber
 
 import timber.log.Timber
 
-object HyperlinkedDebugTree : Timber.DebugTree() {
+internal object HyperlinkedDebugTree : Timber.DebugTree() {
 
     override fun createStackElementTag(element: StackTraceElement): String? {
         return "(${element.fileName}:${element.lineNumber})"
