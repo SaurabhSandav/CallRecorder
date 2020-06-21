@@ -10,5 +10,7 @@ class SettingsState(
     val recordingEnabled: Flow<Boolean>,
     val audioRecordSampleRate: Flow<PcmSampleRate>,
     val audioRecordChannels: Flow<PcmChannels>,
-    val audioRecordEncoding: Flow<PcmEncoding>
+    val audioRecordEncoding: Flow<PcmEncoding>,
+    val recordingAutoDeleteEnabled: Flow<Boolean>,
+    val recordingAutoDeleteAfterDays: Flow<Int>
 )

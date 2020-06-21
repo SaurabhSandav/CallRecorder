@@ -21,6 +21,7 @@ import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
 import com.redridgeapps.callrecorder.callutils.recording.PcmSampleRate
 import com.redridgeapps.callrecorder.ui.prefcomponents.SingleSelectListPreference
 import com.redridgeapps.callrecorder.ui.prefcomponents.SwitchPreference
+import com.redridgeapps.callrecorder.ui.prefcomponents.TextFieldPreference
 import com.redridgeapps.callrecorder.ui.prefcomponents.TitlePreference
 import com.redridgeapps.callrecorder.ui.routing.Destination
 import com.redridgeapps.callrecorder.ui.routing.viewModel
@@ -121,6 +122,31 @@ private fun RecordingPreference(viewModel: SettingsViewModel) {
             itemText = { it.toReadableString() },
             selectedItem = audioRecordEncoding,
             onSelectedChange = { viewModel.setAudioRecordEncoding(it) }
+        )
+
+        RecordingAutoDeletePreference(viewModel)
+    }
+}
+
+@Composable
+fun RecordingAutoDeletePreference(viewModel: SettingsViewModel) {
+
+    val recordingAutoDeleteEnabled by viewModel.uiState.recordingAutoDeleteEnabled
+        .collectAsState(initial = null)
+
+    SwitchPreference("Auto delete", recordingAutoDeleteEnabled) {
+        viewModel.flipRecordingAutoDeleteEnabled()
+    }
+
+    val autoDeleteAfterDays = viewModel.uiState.recordingAutoDeleteAfterDays
+        .collectAsState(initial = null).value
+
+    if (recordingAutoDeleteEnabled == true && autoDeleteAfterDays != null) {
+
+        TextFieldPreference(
+            title = "Auto delete after",
+            text = autoDeleteAfterDays.toString(),
+            onValueChange = { viewModel.setRecordingAutoDeleteAfterDays(it.toInt()) }
         )
     }
 }

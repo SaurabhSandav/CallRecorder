@@ -32,6 +32,12 @@ class SettingsViewModel @ViewModelInject constructor(
         },
         audioRecordEncoding = prefs.prefEnum(PREF_AUDIO_RECORD_ENCODING) {
             Defaults.AUDIO_RECORD_ENCODING
+        },
+        recordingAutoDeleteEnabled = prefs.prefBoolean(PREF_RECORDING_AUTO_DELETE_ENABLED) {
+            Defaults.RECORDING_AUTO_DELETE_ENABLED
+        },
+        recordingAutoDeleteAfterDays = prefs.prefInt(PREF_RECORDING_AUTO_DELETE_AFTER_DAYS) {
+            Defaults.RECORDING_AUTO_DELETE_AFTER_DAYS
         }
     )
 
@@ -69,5 +75,16 @@ class SettingsViewModel @ViewModelInject constructor(
         audioRecordEncoding: PcmEncoding
     ) = viewModelScope.launchUnit {
         prefs.editor { setEnum(PREF_AUDIO_RECORD_ENCODING, audioRecordEncoding) }
+    }
+
+    fun flipRecordingAutoDeleteEnabled() = viewModelScope.launchUnit {
+        val flippedIsRecording = !prefs.prefBoolean(PREF_RECORDING_AUTO_DELETE_ENABLED) {
+            Defaults.RECORDING_AUTO_DELETE_ENABLED
+        }.first()
+        prefs.editor { setBoolean(PREF_RECORDING_AUTO_DELETE_ENABLED, flippedIsRecording) }
+    }
+
+    fun setRecordingAutoDeleteAfterDays(days: Int) = viewModelScope.launchUnit {
+        prefs.editor { setInt(PREF_RECORDING_AUTO_DELETE_AFTER_DAYS, days) }
     }
 }
