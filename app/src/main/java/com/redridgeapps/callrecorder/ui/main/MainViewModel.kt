@@ -3,6 +3,7 @@ package com.redridgeapps.callrecorder.ui.main
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.redridgeapps.callrecorder.callutils.Defaults
 import com.redridgeapps.callrecorder.callutils.callevents.CallDirection
 import com.redridgeapps.callrecorder.callutils.db.Recording
 import com.redridgeapps.callrecorder.callutils.playback.CallPlayback
@@ -18,6 +19,8 @@ import com.redridgeapps.callrecorder.common.utils.humanReadableByteCount
 import com.redridgeapps.callrecorder.common.utils.launchUnit
 import com.redridgeapps.callrecorder.common.utils.toLocalDate
 import com.redridgeapps.callrecorder.common.utils.toLocalDateTime
+import com.redridgeapps.callrecorder.prefs.PREF_RECORDING_AUTO_DELETE_ENABLED
+import com.redridgeapps.callrecorder.prefs.Prefs
 import kotlinx.coroutines.flow.*
 import java.nio.file.Paths
 import java.time.Duration
@@ -25,6 +28,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 class MainViewModel @ViewModelInject constructor(
+    prefs: Prefs,
     private val recordings: Recordings,
     private val callPlayback: CallPlayback,
     private val mp3ConversionServiceLauncher: Mp3ConversionServiceLauncher,
@@ -39,7 +43,10 @@ class MainViewModel @ViewModelInject constructor(
 
     val uiState = MainState(
         playbackState = callPlayback.playbackState,
-        recordingListFilter = recordingListFilter
+        recordingListFilter = recordingListFilter,
+        recordingAutoDeleteEnabled = prefs.prefBoolean(PREF_RECORDING_AUTO_DELETE_ENABLED) {
+            Defaults.RECORDING_AUTO_DELETE_ENABLED
+        }
     )
 
     fun startPlayback(recordingId: Long) = viewModelScope.launchUnit {
@@ -79,6 +86,14 @@ class MainViewModel @ViewModelInject constructor(
 
     fun toggleStar() = viewModelScope.launchUnit {
         recordings.toggleStar(uiState.selection.toList())
+    }
+
+    fun getSelectionSkipAutoDelete(): Flow<Boolean> {
+        return recordings.getSkipAutoDelete(uiState.selection.single())
+    }
+
+    fun toggleSkipAutoDelete() = viewModelScope.launchUnit {
+        recordings.toggleSkipAutoDelete(uiState.selection.toList())
     }
 
     fun trimSilenceEnds() = viewModelScope.launchUnit {

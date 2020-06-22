@@ -2,6 +2,9 @@ import com.redridgeapps.callrecorder.callutils.callevents.CallDirection;
 import java.time.Duration;
 import java.time.Instant;
 
+-- 0 == false
+-- 1 == true
+
 CREATE TABLE IF NOT EXISTS Recording (
 id INTEGER AS Long NOT NULL PRIMARY KEY AUTOINCREMENT,
 name TEXT NOT NULL,
@@ -11,7 +14,8 @@ duration INTEGER AS Duration NOT NULL,
 call_direction TEXT AS CallDirection NOT NULL,
 save_path TEXT NOT NULL,
 save_format TEXT NOT NULL,
-is_starred INTEGER AS Boolean NOT NULL DEFAULT 0 CHECK(is_starred IN (0, 1))
+is_starred INTEGER AS Boolean NOT NULL DEFAULT 0 CHECK(is_starred IN (0, 1)), -- DEFAULT false
+skip_auto_delete INTEGER AS Boolean NOT NULL DEFAULT 0 CHECK(is_starred IN (0, 1)) -- DEFAULT talse
 );
 
 insert:
@@ -30,9 +34,18 @@ getIsStarred:
 SELECT is_starred FROM Recording
 WHERE id = ?;
 
+getSkipAutoDelete:
+SELECT skip_auto_delete FROM Recording
+WHERE id = ?;
+
 toggleStar:
 UPDATE Recording
-SET is_starred = ((is_starred | 1) - (is_starred & 1))
+SET is_starred = ((is_starred | 1) - (is_starred & 1)) -- SET is_starred = !is_starred
+WHERE id IN ?;
+
+toggleSkipAutoDelete:
+UPDATE Recording
+SET skip_auto_delete = ((skip_auto_delete | 1) - (skip_auto_delete & 1)) -- SET skip_auto_delete = !skip_auto_delete
 WHERE id IN ?;
 
 updateContactName:
@@ -48,6 +61,7 @@ WHERE id = ?;
 delete:
 DELETE FROM Recording WHERE id IN ?;
 
-deleteOverDaysOld:
+deleteOverDaysOldIfNotSkippedAutoDelete:
 DELETE FROM Recording
-WHERE (julianday('now') - julianday(start_instant, 'unixepoch')) > ?;
+WHERE (julianday('now') - julianday(start_instant, 'unixepoch')) > :overDaysOld
+AND skip_auto_delete = 0; -- AND skip_auto_delete = false

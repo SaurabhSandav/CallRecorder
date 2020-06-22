@@ -415,6 +415,18 @@ private fun OptionsDialogOptionsTab(viewModel: MainViewModel) {
             onCheckedChange = { viewModel.toggleStar() }
         )
 
+        if (viewModel.uiState.recordingAutoDeleteEnabled.collectAsState(initial = false).value) {
+
+            val skipAutoDelete by viewModel.getSelectionSkipAutoDelete()
+                .collectAsState(initial = null)
+
+            SwitchPreference(
+                text = "Skip auto delete",
+                checked = skipAutoDelete,
+                onCheckedChange = { viewModel.toggleSkipAutoDelete() }
+            )
+        }
+
         ListItem("Trim silence at start/end", onClick = { viewModel.trimSilenceEnds() })
         ListItem("Convert to Mp3", onClick = { viewModel.convertToMp3() })
         ListItem("Delete", onClick = { viewModel.deleteRecordings() })

@@ -122,6 +122,14 @@ class Recordings @Inject constructor(
         recordingQueries.toggleStar(recordingIdList)
     }
 
+    fun getSkipAutoDelete(recordingId: Long): Flow<Boolean> {
+        return recordingQueries.getSkipAutoDelete(recordingId).asFlow().mapToOne()
+    }
+
+    suspend fun toggleSkipAutoDelete(recordingIdList: List<Long>) = withContext(Dispatchers.IO) {
+        recordingQueries.toggleSkipAutoDelete(recordingIdList)
+    }
+
     suspend fun updateContactNames() = withContext(Dispatchers.IO) {
 
         val recordings = recordingQueries.getAll().executeAsList()
@@ -141,9 +149,11 @@ class Recordings @Inject constructor(
         return@withContext fileChannel.use { WavFileUtils.readWavData(fileChannel) }
     }
 
-    internal suspend fun deleteOverDaysOld(duration: Duration) = withContext(Dispatchers.IO) {
+    internal suspend fun deleteOverDaysOldIfNotSkippedAutoDelete(
+        duration: Duration
+    ) = withContext(Dispatchers.IO) {
         val days = duration.toDays()
-        recordingQueries.deleteOverDaysOld(days.toString())
+        recordingQueries.deleteOverDaysOldIfNotSkippedAutoDelete(days.toString())
     }
 
     companion object {

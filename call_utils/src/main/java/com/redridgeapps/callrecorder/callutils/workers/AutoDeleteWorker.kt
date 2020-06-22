@@ -29,7 +29,7 @@ class RecordingAutoDeleteWorker @WorkerInject constructor(
             Defaults.RECORDING_AUTO_DELETE_AFTER_DAYS
         }.first()
 
-        recordings.deleteOverDaysOld(Duration.ofDays(days.toLong()))
+        recordings.deleteOverDaysOldIfNotSkippedAutoDelete(Duration.ofDays(days.toLong()))
 
         return Result.success()
     }
