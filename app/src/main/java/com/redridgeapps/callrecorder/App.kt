@@ -24,6 +24,7 @@ class App : Application(), Configuration.Provider {
 
     private fun setupStartupInitialization() {
         startupInitializers.forEach { it.initialize(this@App) }
+        startupInitializers = emptySet()
     }
 
     override fun getWorkManagerConfiguration(): Configuration {
