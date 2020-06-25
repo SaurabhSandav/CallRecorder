@@ -1,12 +1,12 @@
 package com.redridgeapps.callrecorder.ui.utils
 
-import androidx.compose.frames.modelListOf
 import androidx.compose.getValue
+import androidx.compose.mutableStateListOf
 import androidx.compose.mutableStateOf
 import androidx.compose.setValue
 
 class ListSelection<T>(
-    private val _selection: MutableList<T> = modelListOf()
+    private val _selection: MutableList<T> = mutableStateListOf()
 ) : List<T> by _selection {
 
     var inMultiSelectMode: Boolean by mutableStateOf(false)

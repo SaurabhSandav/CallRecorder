@@ -65,7 +65,7 @@ private fun MainUI(viewModel: MainViewModel) {
 private fun MainTopAppBar(viewModel: MainViewModel) {
 
     TopAppBar(
-        title = { Text(text = "Call Recorder", modifier = Modifier.padding(bottom = 16.dp)) },
+        title = { Text("Call Recorder") },
         actions = {
             IconFilter(viewModel)
             IconSettings()
@@ -79,12 +79,7 @@ private fun SelectionTopAppBar(viewModel: MainViewModel) {
     val selectionSize = viewModel.uiState.selection.size
 
     TopAppBar(
-        title = {
-            Text(
-                text = "$selectionSize selected",
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-        },
+        title = { Text("$selectionSize selected") },
         actions = {
             IconDelete(viewModel)
             IconCloseSelectionMode(viewModel)
@@ -408,17 +403,16 @@ private fun OptionsDialogOptionsTab(viewModel: MainViewModel) {
 
     Column {
 
-        val isStarred by viewModel.getSelectionIsStarred().collectAsState(initial = null)
+        val isStarred by viewModel.getSelectionIsStarred().collectAsState(null)
         SwitchPreference(
             text = "Star",
             checked = isStarred,
             onCheckedChange = { viewModel.toggleStar() }
         )
 
-        if (viewModel.uiState.recordingAutoDeleteEnabled.collectAsState(initial = false).value) {
+        if (viewModel.uiState.recordingAutoDeleteEnabled.collectAsState(false).value) {
 
-            val skipAutoDelete by viewModel.getSelectionSkipAutoDelete()
-                .collectAsState(initial = null)
+            val skipAutoDelete by viewModel.getSelectionSkipAutoDelete().collectAsState(null)
 
             SwitchPreference(
                 text = "Skip auto delete",

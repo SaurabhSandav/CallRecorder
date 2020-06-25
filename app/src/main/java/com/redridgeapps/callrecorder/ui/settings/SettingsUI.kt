@@ -14,7 +14,6 @@ import androidx.ui.material.Scaffold
 import androidx.ui.material.TopAppBar
 import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.ArrowBack
-import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.callrecorder.callutils.recording.PcmChannels
 import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
@@ -51,7 +50,7 @@ private fun SettingsUI(viewModel: SettingsViewModel) {
 
     val topAppBar = @Composable {
         TopAppBar(
-            title = { Text("Settings", modifier = Modifier.padding(bottom = 16.dp)) },
+            title = { Text("Settings") },
             navigationIcon = navigationIcon
         )
     }
@@ -66,13 +65,13 @@ private fun ContentMain(viewModel: SettingsViewModel, modifier: Modifier) {
 
     Column(modifier) {
 
-        val isRecordingOn by viewModel.uiState.recordingEnabled.collectAsState(initial = null)
+        val isRecordingOn by viewModel.uiState.recordingEnabled.collectAsState(null)
 
         SwitchPreference("Recording", isRecordingOn) {
             viewModel.flipRecordingEnabled()
         }
 
-        val isSystemized by viewModel.uiState.isSystemized.collectAsState(initial = null)
+        val isSystemized by viewModel.uiState.isSystemized.collectAsState(null)
 
         SwitchPreference("Systemize", isSystemized) {
             viewModel.flipSystemization()
@@ -94,7 +93,7 @@ private fun RecordingPreference(viewModel: SettingsViewModel) {
 
         TitlePreference(text = "Recording")
 
-        val audioRecordSampleRate by viewModel.uiState.audioRecordSampleRate.collectAsState(initial = null)
+        val audioRecordSampleRate by viewModel.uiState.audioRecordSampleRate.collectAsState(null)
 
         SingleSelectListPreference(
             title = "Sample Rate",
@@ -104,7 +103,7 @@ private fun RecordingPreference(viewModel: SettingsViewModel) {
             onSelectedChange = { viewModel.setAudioRecordSampleRate(it) }
         )
 
-        val audioRecordChannels by viewModel.uiState.audioRecordChannels.collectAsState(initial = null)
+        val audioRecordChannels by viewModel.uiState.audioRecordChannels.collectAsState(null)
 
         SingleSelectListPreference(
             title = "Channels",
@@ -114,7 +113,7 @@ private fun RecordingPreference(viewModel: SettingsViewModel) {
             onSelectedChange = { viewModel.setAudioRecordChannels(it) }
         )
 
-        val audioRecordEncoding by viewModel.uiState.audioRecordEncoding.collectAsState(initial = null)
+        val audioRecordEncoding by viewModel.uiState.audioRecordEncoding.collectAsState(null)
 
         SingleSelectListPreference(
             title = "Encoding",
@@ -132,14 +131,14 @@ private fun RecordingPreference(viewModel: SettingsViewModel) {
 fun RecordingAutoDeletePreference(viewModel: SettingsViewModel) {
 
     val recordingAutoDeleteEnabled by viewModel.uiState.recordingAutoDeleteEnabled
-        .collectAsState(initial = null)
+        .collectAsState(null)
 
     SwitchPreference("Auto delete", recordingAutoDeleteEnabled) {
         viewModel.flipRecordingAutoDeleteEnabled()
     }
 
-    val autoDeleteAfterDays = viewModel.uiState.recordingAutoDeleteAfterDays
-        .collectAsState(initial = null).value
+    val autoDeleteAfterDays =
+        viewModel.uiState.recordingAutoDeleteAfterDays.collectAsState(null).value
 
     if (recordingAutoDeleteEnabled == true && autoDeleteAfterDays != null) {
 

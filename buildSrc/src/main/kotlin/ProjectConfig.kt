@@ -1,7 +1,7 @@
 @file:Suppress("unused")
 
 object GoogleMaven {
-    const val SNAPSHOT_BUILD_ID = "6611120"
+    const val SNAPSHOT_BUILD_ID = "6634459"
 
     const val SUPPORT_REPO_ENABLED = false
     const val SUPPORT_REPO_URL =
@@ -14,7 +14,7 @@ object GoogleMaven {
 
 object AndroidTools {
     private const val GRADLE_PLUGIN_VERSION = "4.2.0-alpha02"
-    private const val DESUGAR_JDK_LIBS_VERSION = "1.0.5"
+    private const val DESUGAR_JDK_LIBS_VERSION = "1.0.9"
 
     const val GRADLE_PLUGIN = "com.android.tools.build:gradle:$GRADLE_PLUGIN_VERSION"
     const val DESUGAR_JDK_LIBS = "com.android.tools:desugar_jdk_libs:$DESUGAR_JDK_LIBS_VERSION"
@@ -66,7 +66,7 @@ object ComposeNavigation {
 }
 
 object Lifecycle {
-    private const val VERSION = "2.3.0-alpha04"
+    private const val VERSION = "2.3.0-alpha05"
 
     const val SERVICE = "androidx.lifecycle:lifecycle-service:$VERSION"
     const val RUNTIME_KTX = "androidx.lifecycle:lifecycle-runtime-ktx:$VERSION"
@@ -76,7 +76,7 @@ object Lifecycle {
 }
 
 object WorkManager {
-    private const val VERSION = "2.4.0-beta01"
+    private const val VERSION = "2.4.0-rc01"
 
     const val WORK_RUNTIME_KTX = "androidx.work:work-runtime-ktx:$VERSION"
 }
@@ -88,7 +88,7 @@ object JavaXInject {
 }
 
 object Dagger {
-    private const val HILT_VERSION = "2.28-alpha"
+    private const val HILT_VERSION = "2.28.1-alpha"
 
     const val HILT_ANDROID = "com.google.dagger:hilt-android:$HILT_VERSION"
     const val HILT_ANDROID_COMPILER = "com.google.dagger:hilt-android-compiler:$HILT_VERSION"
@@ -119,7 +119,7 @@ object LibSU {
 }
 
 object SQLDelight {
-    private const val VERSION = "1.3.0"
+    private const val VERSION = "1.4.0"
 
     const val GRADLE_PLUGIN = "com.squareup.sqldelight:gradle-plugin:$VERSION"
     const val ANDROID_DRIVER = "com.squareup.sqldelight:android-driver:$VERSION"

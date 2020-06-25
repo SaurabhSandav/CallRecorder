@@ -47,7 +47,7 @@ private fun FirstRunUI(viewModel: FirstRunViewModel) {
 
     val topBar = @Composable {
         TopAppBar(
-            title = { Text("Configure App", Modifier.padding(bottom = 16.dp)) }
+            title = { Text("Configure App") }
         )
     }
 
@@ -85,7 +85,7 @@ private fun SystemizationConfig(viewModel: FirstRunViewModel) {
 
         Spacer(modifier = Modifier.preferredHeight(10.dp))
 
-        val isAppSystemized by viewModel.uiState.isAppSystemized.collectAsState(initial = null)
+        val isAppSystemized by viewModel.uiState.isAppSystemized.collectAsState(null)
 
         Crossfade(current = isAppSystemized) {
             when (isAppSystemized) {
