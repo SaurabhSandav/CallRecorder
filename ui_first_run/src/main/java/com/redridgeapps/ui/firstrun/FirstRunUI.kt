@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.ui.firstrun
+package com.redridgeapps.ui.firstrun
 
 import android.Manifest
 import androidx.compose.Composable
@@ -14,11 +14,11 @@ import androidx.ui.layout.*
 import androidx.ui.material.*
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
-import com.redridgeapps.callrecorder.ui.main.MainDestination
 import com.redridgeapps.ui.common.routing.Destination
 import com.redridgeapps.ui.common.routing.viewModel
 import com.redridgeapps.ui.common.utils.isPermissionGranted
 import com.redridgeapps.ui.common.utils.requestPermissions
+import com.redridgeapps.ui.main.MainDestination
 
 object FirstRunDestination : Destination {
 

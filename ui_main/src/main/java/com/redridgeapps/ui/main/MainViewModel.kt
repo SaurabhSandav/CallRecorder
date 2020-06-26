@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.ui.main
+package com.redridgeapps.ui.main
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel

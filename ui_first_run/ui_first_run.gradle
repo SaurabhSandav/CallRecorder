@@ -1,9 +1,7 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'com.squareup.sqldelight'
-    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -11,23 +9,13 @@ android {
     buildToolsVersion "30.0.0"
 
     defaultConfig {
-        applicationId "com.redridgeapps.callrecorder"
         minSdkVersion 29
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-
     compileOptions {
-        coreLibraryDesugaringEnabled true
-
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -40,34 +28,19 @@ android {
         kotlinCompilerVersion Compose.KOTLIN_COMPILER_VERSION
         kotlinCompilerExtensionVersion Compose.VERSION
     }
-
-    ndkVersion "21.3.6528147"
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    coreLibraryDesugaring AndroidTools.DESUGAR_JDK_LIBS
-
-    implementation project(":common")
-    implementation project(":prefs")
-    implementation project(":compose_viewmodel")
-    implementation project(":call_utils")
     implementation project(":ui_common")
-    implementation project(":ui_first_run")
     implementation project(":ui_main")
-    implementation project(":ui_settings")
+    implementation project(":prefs")
+    implementation project(":common")
 
     // Kotlin
     implementation Kotlin.STDLIB
     implementation Kotlin.COROUTINES_ANDROID
-
-    // Jetpack
-    implementation Jetpack.ACTIVITY_KTX
-    implementation Jetpack.APPCOMPAT
-    implementation Jetpack.CORE_KTX
-    implementation Jetpack.FRAGMENT_KTX
-    implementation Jetpack.PREFERENCE_KTX
 
     // Compose
     implementation Compose.COMPOSE_RUNTIME
@@ -82,14 +55,9 @@ dependencies {
     implementation ComposeNavigation.CORE
     implementation ComposeNavigation.NAVIGATION
 
-    // Lifecycle, ViewModel and LiveData
-    implementation Lifecycle.SERVICE
-    implementation Lifecycle.LIVEDATA_KTX
+    // ViewModel
     implementation Lifecycle.VIEWMODEL_KTX
     implementation Lifecycle.COMMON_JAVA8
-
-    // WorkManager
-    implementation WorkManager.WORK_RUNTIME_KTX
 
     // Dagger Hilt
     implementation Dagger.HILT_ANDROID
@@ -97,7 +65,6 @@ dependencies {
 
     // AndroidX Hilt
     implementation AndroidXHilt.COMMON
-    implementation AndroidXHilt.WORK
     implementation AndroidXHilt.LIFECYCLE_VIEWMODEL
     kapt AndroidXHilt.COMPILER
 

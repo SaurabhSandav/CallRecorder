@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.ui.settings
+package com.redridgeapps.ui.settings
 
 import com.redridgeapps.callrecorder.callutils.recording.PcmChannels
 import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding

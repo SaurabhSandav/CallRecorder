@@ -8,7 +8,6 @@ import com.redridgeapps.callrecorder.common.utils.launchUnit
 import com.redridgeapps.callrecorder.prefs.PREF_IS_FIRST_RUN
 import com.redridgeapps.callrecorder.prefs.PREF_RECORDINGS_STORAGE_PATH
 import com.redridgeapps.callrecorder.prefs.Prefs
-import com.redridgeapps.callrecorder.ui.root.setupCompose
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

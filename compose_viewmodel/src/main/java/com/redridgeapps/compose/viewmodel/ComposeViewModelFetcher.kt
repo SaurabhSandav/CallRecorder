@@ -14,7 +14,7 @@ internal class ComposeViewModelFetcher(
     fun <T : ViewModel> fetch(key: String, kClass: KClass<T>): T {
 
         val viewModelAssistedFactory = viewModelAssistedFactories[kClass.qualifiedName]?.get()
-            ?: error("ViewModelAssistedFactory not found")
+            ?: error("ViewModelAssistedFactory (${kClass.qualifiedName}) not found")
 
         val owner = composeFramework.getComposeOwner(key)
         val viewModelFactory = ComposeSavedStateViewModelFactory(owner, viewModelAssistedFactory)

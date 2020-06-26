@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.ui.firstrun
+package com.redridgeapps.ui.firstrun
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel

@@ -1,3 +1,6 @@
+include ':ui_first_run'
+include ':ui_settings'
+include ':ui_main'
 include ':ui_common'
 include ':call_utils'
 include ':common'

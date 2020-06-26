@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.ui.main
+package com.redridgeapps.ui.main
 
 import androidx.compose.getValue
 import androidx.compose.mutableStateOf

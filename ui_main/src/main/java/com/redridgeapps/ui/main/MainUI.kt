@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.ui.main
+package com.redridgeapps.ui.main
 
 import androidx.compose.*
 import androidx.ui.animation.Crossfade
@@ -21,10 +21,10 @@ import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped.Playing
-import com.redridgeapps.callrecorder.ui.settings.SettingsDestination
 import com.redridgeapps.ui.common.prefcomponents.SwitchPreference
 import com.redridgeapps.ui.common.routing.Destination
 import com.redridgeapps.ui.common.routing.viewModel
+import com.redridgeapps.ui.settings.SettingsDestination
 
 object MainDestination : Destination {
 
