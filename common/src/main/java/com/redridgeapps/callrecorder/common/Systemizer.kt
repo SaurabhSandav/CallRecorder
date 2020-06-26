@@ -1,8 +1,7 @@
-package com.redridgeapps.callrecorder.utils
+package com.redridgeapps.callrecorder.common
 
 import android.content.Context
 import android.content.pm.PackageManager
-import com.redridgeapps.callrecorder.common.StartupInitializer
 import com.topjohnwu.superuser.Shell
 import com.topjohnwu.superuser.io.SuFile
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -15,13 +14,21 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
+@Singleton
 class Systemizer @Inject constructor(
     @ApplicationContext context: Context
 ) {
+
+    init {
+        Shell.Config.setFlags(Shell.FLAG_REDIRECT_STDERR)
+        Shell.Config.verboseLogging(false)
+        Shell.Config.setTimeout(10)
+    }
 
     private val packageName = context.packageName
     private val currentApkLocation = context.applicationInfo.sourceDir
@@ -167,15 +174,6 @@ class Systemizer @Inject constructor(
             |Error: ${result.err.ifEmpty { "null" }}
         """.trimMargin()
     )
-
-    class Initializer @Inject constructor() : StartupInitializer {
-
-        override fun initialize(context: Context) {
-            Shell.Config.setFlags(Shell.FLAG_REDIRECT_STDERR)
-            Shell.Config.verboseLogging(false)
-            Shell.Config.setTimeout(10)
-        }
-    }
 }
 
 // APK

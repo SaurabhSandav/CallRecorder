@@ -8,9 +8,9 @@ import com.redridgeapps.callrecorder.callutils.recording.PcmChannels
 import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
 import com.redridgeapps.callrecorder.callutils.recording.PcmSampleRate
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
+import com.redridgeapps.callrecorder.common.Systemizer
 import com.redridgeapps.callrecorder.common.utils.launchUnit
 import com.redridgeapps.callrecorder.prefs.*
-import com.redridgeapps.callrecorder.utils.Systemizer
 import kotlinx.coroutines.flow.first
 
 class SettingsViewModel @ViewModelInject constructor(
