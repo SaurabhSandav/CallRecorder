@@ -105,17 +105,4 @@ dependencies {
     // LibSU
     implementation LibSU.CORE
     implementation LibSU.IO
-
-    // SQLDelight
-    implementation SQLDelight.ANDROID_DRIVER
-    implementation SQLDelight.COROUTINES_EXTENSIONS
-}
-
-sqldelight {
-
-    CallRecordingDB {
-        packageName = "com.redridgeapps.callrecorder"
-        sourceFolders = ["sqldelight/callrecording"]
-        schemaOutputDirectory = file("build/callrecording")
-    }
 }
