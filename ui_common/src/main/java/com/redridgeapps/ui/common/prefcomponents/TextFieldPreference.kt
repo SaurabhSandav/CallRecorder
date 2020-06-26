@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.ui.prefcomponents
+package com.redridgeapps.ui.common.prefcomponents
 
 import androidx.compose.Composable
 import androidx.compose.getValue

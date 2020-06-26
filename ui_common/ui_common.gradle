@@ -1,0 +1,53 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.0"
+
+    defaultConfig {
+        minSdkVersion 29
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures {
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerVersion Compose.KOTLIN_COMPILER_VERSION
+        kotlinCompilerExtensionVersion Compose.VERSION
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation project(":compose_viewmodel")
+
+    // Kotlin
+    implementation Kotlin.STDLIB
+    implementation Kotlin.COROUTINES_ANDROID
+
+    // Compose
+    implementation Compose.COMPOSE_RUNTIME
+    implementation Compose.UI_FOUNDATION
+    implementation Compose.UI_LAYOUT
+    implementation Compose.UI_MATERIAL
+
+    // compose-navigation
+    implementation ComposeNavigation.CORE
+    implementation ComposeNavigation.NAVIGATION
+
+    // Timber
+    implementation Timber.TIMBER
+}

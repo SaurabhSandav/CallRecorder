@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.ui.utils
+package com.redridgeapps.ui.common.utils
 
 import android.content.Context
 import android.content.pm.PackageManager

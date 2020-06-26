@@ -21,11 +21,10 @@ import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped.Playing
-import com.redridgeapps.callrecorder.ui.prefcomponents.SwitchPreference
-import com.redridgeapps.callrecorder.ui.routing.Destination
-import com.redridgeapps.callrecorder.ui.routing.viewModel
 import com.redridgeapps.callrecorder.ui.settings.SettingsDestination
-import com.redridgeapps.callrecorder.ui.utils.drawScrim
+import com.redridgeapps.ui.common.prefcomponents.SwitchPreference
+import com.redridgeapps.ui.common.routing.Destination
+import com.redridgeapps.ui.common.routing.viewModel
 
 object MainDestination : Destination {
 
@@ -223,12 +222,13 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
     )
 
     if (recordingEntry.id in selection) {
-        modifier = modifier.drawScrim()
+        modifier = modifier.drawBackground(MaterialTheme.colors.onSurface.copy(alpha = SCRIM_ALPHA))
     }
 
     viewModel.uiState.playbackState.collectAsState().value.let {
         if (it is NotStopped && it.recording.id == recordingEntry.id) {
-            modifier = modifier.drawScrim(MaterialTheme.colors.secondary)
+            modifier =
+                modifier.drawBackground(MaterialTheme.colors.secondary.copy(alpha = SCRIM_ALPHA))
         }
     }
 
@@ -433,3 +433,5 @@ private fun OptionsDialogInfoTab(recordingInfo: List<AnnotatedString>) {
         ListItem(text = { Text(it) })
     }
 }
+
+private const val SCRIM_ALPHA = 0.32F

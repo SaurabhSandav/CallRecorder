@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.ui.routing
+package com.redridgeapps.ui.common.routing
 
 import com.koduok.compose.navigation.core.BackStackController
 import com.koduok.compose.navigation.core.GlobalRoute

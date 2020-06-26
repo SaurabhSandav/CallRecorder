@@ -18,12 +18,12 @@ import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.callrecorder.callutils.recording.PcmChannels
 import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
 import com.redridgeapps.callrecorder.callutils.recording.PcmSampleRate
-import com.redridgeapps.callrecorder.ui.prefcomponents.SingleSelectListPreference
-import com.redridgeapps.callrecorder.ui.prefcomponents.SwitchPreference
-import com.redridgeapps.callrecorder.ui.prefcomponents.TextFieldPreference
-import com.redridgeapps.callrecorder.ui.prefcomponents.TitlePreference
-import com.redridgeapps.callrecorder.ui.routing.Destination
-import com.redridgeapps.callrecorder.ui.routing.viewModel
+import com.redridgeapps.ui.common.prefcomponents.SingleSelectListPreference
+import com.redridgeapps.ui.common.prefcomponents.SwitchPreference
+import com.redridgeapps.ui.common.prefcomponents.TextFieldPreference
+import com.redridgeapps.ui.common.prefcomponents.TitlePreference
+import com.redridgeapps.ui.common.routing.Destination
+import com.redridgeapps.ui.common.routing.viewModel
 
 object SettingsDestination : Destination {
 

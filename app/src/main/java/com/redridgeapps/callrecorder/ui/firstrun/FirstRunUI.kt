@@ -15,10 +15,10 @@ import androidx.ui.material.*
 import androidx.ui.unit.dp
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.callrecorder.ui.main.MainDestination
-import com.redridgeapps.callrecorder.ui.routing.Destination
-import com.redridgeapps.callrecorder.ui.routing.viewModel
-import com.redridgeapps.callrecorder.ui.utils.isPermissionGranted
-import com.redridgeapps.callrecorder.ui.utils.requestPermissions
+import com.redridgeapps.ui.common.routing.Destination
+import com.redridgeapps.ui.common.routing.viewModel
+import com.redridgeapps.ui.common.utils.isPermissionGranted
+import com.redridgeapps.ui.common.utils.requestPermissions
 
 object FirstRunDestination : Destination {
 

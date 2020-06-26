@@ -54,6 +54,7 @@ dependencies {
     implementation project(":compose_viewmodel")
     implementation project(":wav_utils")
     implementation project(":call_utils")
+    implementation project(":ui_common")
 
     // Kotlin
     implementation Kotlin.STDLIB
