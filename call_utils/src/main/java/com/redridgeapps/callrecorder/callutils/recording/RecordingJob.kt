@@ -41,7 +41,7 @@ suspend fun RecordingJob(
         }.first()
     }
     val recordingsStoragePath = async {
-        prefs.prefString<String>(PREF_RECORDINGS_STORAGE_PATH) {
+        prefs.prefString(PREF_RECORDINGS_STORAGE_PATH) {
             error("Recordings storage path is empty")
         }.first()
     }

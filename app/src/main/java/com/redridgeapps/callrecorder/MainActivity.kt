@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecordingsStoragePath() = lifecycleScope.launch {
 
-        if (prefs.prefString<String?>(PREF_RECORDINGS_STORAGE_PATH) { null }.first() == null) {
+        if (prefs.prefStringOrNull(PREF_RECORDINGS_STORAGE_PATH).first() == null) {
 
             val newRecordingPath =
                 Recordings.getRecordingsStoragePath(applicationContext).toString()

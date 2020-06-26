@@ -1,4 +1,4 @@
-@file:Suppress("Unused")
+@file:Suppress("Unused", "MemberVisibilityCanBePrivate")
 
 package com.redridgeapps.callrecorder.prefs
 
@@ -33,63 +33,65 @@ class Prefs @Inject constructor(private val sharedPrefs: SharedPreferences) {
 
     // region Fetching
 
-    fun <T : String?> prefString(
-        key: String,
-        default: () -> T
-    ): Flow<T> = pref(key, default) {
-        @Suppress("UNCHECKED_CAST")
-        sharedPrefs.getString(key, "")!! as T
-    }
+    fun prefStringOrNull(
+        key: String
+    ): Flow<String?> = pref<String?>(key) { sharedPrefs.getString(key, "")!! }
 
-    fun <T : Set<String>?> prefStringSet(
-        key: String,
-        default: () -> T
-    ): Flow<T> = pref(key, default) {
-        @Suppress("UNCHECKED_CAST")
-        sharedPrefs.getStringSet(key, emptySet())!! as T
-    }
+    fun prefStringSetOrNull(
+        key: String
+    ): Flow<Set<String>?> = pref<Set<String>?>(key) { sharedPrefs.getStringSet(key, emptySet())!! }
 
-    fun <T : Boolean?> prefBoolean(
-        key: String,
-        default: () -> T
-    ): Flow<T> = pref(key, default) {
-        @Suppress("UNCHECKED_CAST")
-        sharedPrefs.getBoolean(key, false) as T
-    }
+    fun prefBooleanOrNull(
+        key: String
+    ): Flow<Boolean?> = pref(key) { sharedPrefs.getBoolean(key, false) }
 
-    fun <T : Int?> prefInt(
-        key: String,
-        default: () -> T
-    ): Flow<T> = pref(key, default) {
-        @Suppress("UNCHECKED_CAST")
-        sharedPrefs.getInt(key, Int.MAX_VALUE) as T
-    }
+    fun prefIntOrNull(
+        key: String
+    ): Flow<Int?> = pref(key) { sharedPrefs.getInt(key, Int.MAX_VALUE) }
 
-    fun <T : Long?> prefLong(
-        key: String,
-        default: () -> T
-    ): Flow<T> = pref(key, default) {
-        @Suppress("UNCHECKED_CAST")
-        sharedPrefs.getLong(key, Long.MAX_VALUE) as T
-    }
+    fun prefLongOrNull(
+        key: String
+    ): Flow<Long?> = pref(key) { sharedPrefs.getLong(key, Long.MAX_VALUE) }
 
-    fun <T : Float?> prefFloat(
-        key: String,
-        default: () -> T
-    ): Flow<T> = pref(key, default) {
-        @Suppress("UNCHECKED_CAST")
-        sharedPrefs.getFloat(key, Float.MAX_VALUE) as T
-    }
+    fun prefFloatOrNull(
+        key: String
+    ): Flow<Float?> = pref(key) { sharedPrefs.getFloat(key, Float.MAX_VALUE) }
 
-    private fun <T> pref(
+    fun prefString(
         key: String,
-        default: () -> T,
-        prefGetter: () -> T
-    ): Flow<T> {
+        default: () -> String
+    ): Flow<String> = prefStringOrNull(key).map { it ?: default() }
+
+    fun prefStringSet(
+        key: String,
+        default: () -> Set<String>
+    ): Flow<Set<String>> = prefStringSetOrNull(key).map { it ?: default() }
+
+    fun prefBoolean(
+        key: String,
+        default: () -> Boolean
+    ): Flow<Boolean> = prefBooleanOrNull(key).map { it ?: default() }
+
+    fun prefInt(
+        key: String,
+        default: () -> Int
+    ): Flow<Int> = prefIntOrNull(key).map { it ?: default() }
+
+    fun prefLong(
+        key: String,
+        default: () -> Long
+    ): Flow<Long> = prefLongOrNull(key).map { it ?: default() }
+
+    fun prefFloat(
+        key: String,
+        default: () -> Float
+    ): Flow<Float> = prefFloatOrNull(key).map { it ?: default() }
+
+    private fun <T> pref(key: String, prefGetter: () -> T): Flow<T?> {
         return allPrefs
             .filter { it == key }
             .onStart { emit(key) }
-            .map { if (sharedPrefs.contains(key)) prefGetter() else default() }
+            .map { if (sharedPrefs.contains(key)) prefGetter() else null }
     }
 
     // endregion Fetching
