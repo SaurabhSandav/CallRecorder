@@ -1,4 +1,4 @@
-package com.redridgeapps.callrecorder.utils.timber
+package com.redridgeapps.callrecorder.utils
 
 import android.content.Context
 import com.redridgeapps.callrecorder.BuildConfig
@@ -9,9 +9,16 @@ import javax.inject.Inject
 class TimberInitializer @Inject constructor() : StartupInitializer {
 
     override fun initialize(context: Context) {
-        when {
-            BuildConfig.DEBUG -> Timber.plant(HyperlinkedDebugTree)
-            else -> TODO()
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(HyperlinkedDebugTree)
         }
+    }
+}
+
+private object HyperlinkedDebugTree : Timber.DebugTree() {
+
+    override fun createStackElementTag(element: StackTraceElement): String? {
+        return "(${element.fileName}:${element.lineNumber})"
     }
 }
