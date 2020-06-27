@@ -6,10 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callrecorder.callutils.Defaults
 import com.redridgeapps.callrecorder.callutils.callevents.CallDirection
 import com.redridgeapps.callrecorder.callutils.db.Recording
-import com.redridgeapps.callrecorder.callutils.playback.CallPlayback
-import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped
-import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped.Paused
-import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped.Playing
 import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
 import com.redridgeapps.callrecorder.callutils.recording.asPcmEncoding
 import com.redridgeapps.callrecorder.callutils.services.AudioEndsTrimmingServiceLauncher
@@ -30,7 +26,6 @@ import java.util.*
 internal class MainViewModel @ViewModelInject constructor(
     prefs: Prefs,
     private val recordings: Recordings,
-    private val callPlayback: CallPlayback,
     private val mp3ConversionServiceLauncher: Mp3ConversionServiceLauncher,
     private val audioEndsTrimmingServiceLauncher: AudioEndsTrimmingServiceLauncher
 ) : ViewModel() {
@@ -42,43 +37,11 @@ internal class MainViewModel @ViewModelInject constructor(
     }
 
     val uiState = MainState(
-        playbackState = callPlayback.playbackState,
         recordingListFilter = recordingListFilter,
         recordingAutoDeleteEnabled = prefs.prefBoolean(PREF_RECORDING_AUTO_DELETE_ENABLED) {
             Defaults.RECORDING_AUTO_DELETE_ENABLED
         }
     )
-
-    fun startPlayback(recordingId: Long) = viewModelScope.launchUnit {
-
-        val recording = recordings.getRecording(recordingId).first()
-        val playbackStatus = callPlayback.playbackState.first()
-
-        with(callPlayback) {
-            when {
-                playbackStatus is Paused && playbackStatus.recording.id == recording.id -> {
-                    playbackStatus.resumePlayback()
-                }
-                else -> playbackStatus.startNewPlayback(recording)
-            }
-        }
-    }
-
-    fun pausePlayback() = viewModelScope.launchUnit {
-        val playbackStatus = callPlayback.playbackState.first()
-
-        with(callPlayback) {
-            (playbackStatus as? Playing)?.pausePlayback()
-        }
-    }
-
-    fun setPlaybackPosition(position: Float) = viewModelScope.launchUnit {
-        val playbackStatus = callPlayback.playbackState.first()
-
-        with(callPlayback) {
-            (playbackStatus as? NotStopped)?.setPosition(position)
-        }
-    }
 
     fun getSelectionIsStarred(): Flow<Boolean> {
         return recordings.getIsStarred(uiState.selection.single())
@@ -167,11 +130,6 @@ internal class MainViewModel @ViewModelInject constructor(
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        stopPlayback()
-    }
-
     private fun observeRecordingList() {
 
         recordings.getRecordingList()
@@ -235,14 +193,6 @@ internal class MainViewModel @ViewModelInject constructor(
                     )
                 }
             }
-    }
-
-    private fun stopPlayback() = viewModelScope.launchUnit {
-        val playbackStatus = callPlayback.playbackState.first()
-
-        with(callPlayback) {
-            (playbackStatus as? NotStopped)?.stopPlayback()
-        }
     }
 }
 

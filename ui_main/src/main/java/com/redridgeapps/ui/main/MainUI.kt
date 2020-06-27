@@ -24,6 +24,7 @@ import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped
 import com.redridgeapps.ui.common.prefcomponents.SwitchPreference
 import com.redridgeapps.ui.common.routing.Destination
 import com.redridgeapps.ui.common.routing.viewModel
+import com.redridgeapps.ui.main.viewmodels.PlaybackViewModel
 import com.redridgeapps.ui.settings.SettingsDestination
 
 object MainDestination : Destination {
@@ -40,6 +41,8 @@ object MainDestination : Destination {
 @Composable
 private fun MainUI(viewModel: MainViewModel) {
 
+    val playbackViewModel = viewModel<PlaybackViewModel>()
+
     val topBar = @Composable {
         when {
             viewModel.uiState.selection.inMultiSelectMode -> SelectionTopAppBar(viewModel)
@@ -53,9 +56,9 @@ private fun MainUI(viewModel: MainViewModel) {
 
         Column(Modifier.padding(innerPadding)) {
             Box(Modifier.weight(1F)) {
-                ContentMain(viewModel)
+                ContentMain(viewModel, playbackViewModel)
             }
-            PlaybackBar(viewModel)
+            PlaybackBar(playbackViewModel)
         }
     }
 }
@@ -160,14 +163,14 @@ private fun IconSettings() {
 }
 
 @Composable
-private fun ContentMain(viewModel: MainViewModel) {
+private fun ContentMain(viewModel: MainViewModel, playbackViewModel: PlaybackViewModel) {
 
     Crossfade(current = viewModel.uiState.isRefreshing) { isRefreshing ->
 
         Box(Modifier.fillMaxSize(), gravity = ContentGravity.Center) {
             when {
                 isRefreshing -> CircularProgressIndicator()
-                else -> RecordingList(viewModel)
+                else -> RecordingList(viewModel, playbackViewModel)
             }
         }
     }
@@ -176,7 +179,7 @@ private fun ContentMain(viewModel: MainViewModel) {
 }
 
 @Composable
-private fun RecordingList(viewModel: MainViewModel) {
+private fun RecordingList(viewModel: MainViewModel, playbackViewModel: PlaybackViewModel) {
 
     LazyColumnItems(
         items = viewModel.uiState.recordingList,
@@ -185,7 +188,11 @@ private fun RecordingList(viewModel: MainViewModel) {
 
         when (recordingListItem) {
             is RecordingListItem.Divider -> RecordingListDateDivider(dateText = recordingListItem.title)
-            is RecordingListItem.Entry -> RecordingListItem(recordingListItem, viewModel)
+            is RecordingListItem.Entry -> RecordingListItem(
+                recordingListItem,
+                viewModel,
+                playbackViewModel
+            )
         }
     }
 }
@@ -212,7 +219,11 @@ private fun RecordingListDateDivider(dateText: String) {
 }
 
 @Composable
-private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel: MainViewModel) {
+private fun RecordingListItem(
+    recordingEntry: RecordingListItem.Entry,
+    viewModel: MainViewModel,
+    playbackViewModel: PlaybackViewModel
+) {
 
     val selection = viewModel.uiState.selection
 
@@ -225,7 +236,7 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
         modifier = modifier.drawBackground(MaterialTheme.colors.onSurface.copy(alpha = SCRIM_ALPHA))
     }
 
-    viewModel.uiState.playbackState.collectAsState().value.let {
+    playbackViewModel.playbackState.collectAsState().value.let {
         if (it is NotStopped && it.recording.id == recordingEntry.id) {
             modifier =
                 modifier.drawBackground(MaterialTheme.colors.secondary.copy(alpha = SCRIM_ALPHA))
@@ -234,7 +245,7 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
 
     ListItem(
         modifier = modifier,
-        icon = { PlayPauseIcon(viewModel, recordingEntry.id, 45.dp) },
+        icon = { PlayPauseIcon(playbackViewModel, recordingEntry.id, 45.dp) },
         secondaryText = { Text(recordingEntry.number) },
         overlineText = { Text(recordingEntry.overlineText) },
         trailing = { Text(recordingEntry.metaText) },
@@ -244,20 +255,20 @@ private fun RecordingListItem(recordingEntry: RecordingListItem.Entry, viewModel
 
 @Composable
 private fun PlayPauseIcon(
-    viewModel: MainViewModel,
+    playbackViewModel: PlaybackViewModel,
     recordingId: Long,
     iconSideSize: Dp,
     modifier: Modifier = Modifier
 ) {
 
-    val recordingIsPlaying = viewModel.uiState.playbackState.collectAsState().value.let {
+    val recordingIsPlaying = playbackViewModel.playbackState.collectAsState().value.let {
         it is Playing && it.recording.id == recordingId
     }
 
     val onClick = {
         when {
-            recordingIsPlaying -> viewModel.pausePlayback()
-            else -> viewModel.startPlayback(recordingId)
+            recordingIsPlaying -> playbackViewModel.pausePlayback()
+            else -> playbackViewModel.startPlayback(recordingId)
         }
     }
 
@@ -278,9 +289,9 @@ private fun PlayPauseIcon(
 }
 
 @Composable
-private fun PlaybackBar(viewModel: MainViewModel) {
+private fun PlaybackBar(playbackViewModel: PlaybackViewModel) {
 
-    val playbackState = viewModel.uiState.playbackState.collectAsState().value
+    val playbackState = playbackViewModel.playbackState.collectAsState().value
 
     if (playbackState !is NotStopped) return
 
@@ -310,7 +321,7 @@ private fun PlaybackBar(viewModel: MainViewModel) {
             Slider(
                 value = playbackState.progress.collectAsState(0F).value,
                 onValueChange = { sliderPosition = it },
-                onValueChangeEnd = { viewModel.setPlaybackPosition(sliderPosition) },
+                onValueChangeEnd = { playbackViewModel.setPlaybackPosition(sliderPosition) },
                 modifier = Modifier.constrainAs(slider) {
                     top.linkTo(name.bottom)
                     bottom.linkTo(parent.bottom)
@@ -323,7 +334,7 @@ private fun PlaybackBar(viewModel: MainViewModel) {
             )
 
             PlayPauseIcon(
-                viewModel = viewModel,
+                playbackViewModel = playbackViewModel,
                 recordingId = playbackState.recording.id,
                 iconSideSize = 40.dp,
                 modifier = Modifier.constrainAs(playbackIcon) {

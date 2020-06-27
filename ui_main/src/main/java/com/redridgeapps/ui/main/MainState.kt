@@ -3,14 +3,12 @@ package com.redridgeapps.ui.main
 import androidx.compose.getValue
 import androidx.compose.mutableStateOf
 import androidx.compose.setValue
-import com.redridgeapps.callrecorder.callutils.playback.PlaybackState
 import com.redridgeapps.ui.common.utils.ListSelection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.*
 
 internal class MainState(
-    val playbackState: StateFlow<PlaybackState>,
     val recordingListFilter: StateFlow<EnumSet<RecordingListFilter>>,
     val recordingAutoDeleteEnabled: Flow<Boolean>
 ) {
