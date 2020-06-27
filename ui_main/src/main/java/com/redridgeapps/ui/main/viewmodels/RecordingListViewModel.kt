@@ -1,4 +1,4 @@
-package com.redridgeapps.ui.main
+package com.redridgeapps.ui.main.viewmodels
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
@@ -8,6 +8,9 @@ import com.redridgeapps.callrecorder.callutils.db.Recording
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
 import com.redridgeapps.callrecorder.common.utils.toLocalDate
 import com.redridgeapps.callrecorder.common.utils.toLocalDateTime
+import com.redridgeapps.ui.main.MainState
+import com.redridgeapps.ui.main.RecordingListFilter
+import com.redridgeapps.ui.main.RecordingListItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
@@ -16,7 +19,7 @@ import java.time.Duration
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-internal class MainViewModel @ViewModelInject constructor(
+internal class RecordingListViewModel @ViewModelInject constructor(
     private val recordings: Recordings
 ) : ViewModel() {
 

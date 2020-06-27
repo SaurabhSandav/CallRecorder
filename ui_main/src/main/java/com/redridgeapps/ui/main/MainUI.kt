@@ -25,30 +25,27 @@ import com.redridgeapps.ui.common.prefcomponents.SwitchPreference
 import com.redridgeapps.ui.common.routing.Destination
 import com.redridgeapps.ui.common.routing.viewModel
 import com.redridgeapps.ui.main.viewmodels.PlaybackViewModel
+import com.redridgeapps.ui.main.viewmodels.RecordingListViewModel
 import com.redridgeapps.ui.main.viewmodels.SelectionViewModel
 import com.redridgeapps.ui.settings.SettingsDestination
 
 object MainDestination : Destination {
 
     @Composable
-    override fun initializeUI() {
-
-        val viewModel = viewModel<MainViewModel>()
-
-        MainUI(viewModel)
-    }
+    override fun initializeUI() = MainUI()
 }
 
 @Composable
-private fun MainUI(viewModel: MainViewModel) {
+private fun MainUI() {
 
+    val recordingListViewModel = viewModel<RecordingListViewModel>()
     val playbackViewModel = viewModel<PlaybackViewModel>()
     val selectionViewModel = viewModel<SelectionViewModel>()
 
     val topBar = @Composable {
         when {
             selectionViewModel.selection.inMultiSelectMode -> SelectionTopAppBar(selectionViewModel)
-            else -> MainTopAppBar(viewModel)
+            else -> MainTopAppBar(recordingListViewModel)
         }
     }
 
@@ -58,7 +55,7 @@ private fun MainUI(viewModel: MainViewModel) {
 
         Column(Modifier.padding(innerPadding)) {
             Box(Modifier.weight(1F)) {
-                ContentMain(viewModel, playbackViewModel, selectionViewModel)
+                ContentMain(recordingListViewModel, playbackViewModel, selectionViewModel)
             }
             PlaybackBar(playbackViewModel)
         }
@@ -66,12 +63,12 @@ private fun MainUI(viewModel: MainViewModel) {
 }
 
 @Composable
-private fun MainTopAppBar(viewModel: MainViewModel) {
+private fun MainTopAppBar(recordingListViewModel: RecordingListViewModel) {
 
     TopAppBar(
         title = { Text("Call Recorder") },
         actions = {
-            IconFilter(viewModel)
+            IconFilter(recordingListViewModel)
             IconSettings()
         }
     )
@@ -110,7 +107,7 @@ private fun IconCloseSelectionMode(selectionViewModel: SelectionViewModel) {
 }
 
 @Composable
-private fun IconFilter(viewModel: MainViewModel) {
+private fun IconFilter(recordingListViewModel: RecordingListViewModel) {
 
     var expanded by state { false }
 
@@ -128,8 +125,8 @@ private fun IconFilter(viewModel: MainViewModel) {
 
         for (filter in RecordingListFilter.values()) {
 
-            val filterSet by viewModel.uiState.recordingListFilter.collectAsState()
-            val onClick = { viewModel.toggleRecordingListFilter(filter) }
+            val filterSet by recordingListViewModel.uiState.recordingListFilter.collectAsState()
+            val onClick = { recordingListViewModel.toggleRecordingListFilter(filter) }
 
             DropdownMenuItem(onClick = onClick) {
                 Row {
@@ -144,7 +141,7 @@ private fun IconFilter(viewModel: MainViewModel) {
             }
         }
 
-        DropdownMenuItem(onClick = { viewModel.clearRecordingListFilters() }) {
+        DropdownMenuItem(onClick = { recordingListViewModel.clearRecordingListFilters() }) {
             Text(
                 text = "Clear Filters",
                 modifier = Modifier.fillMaxWidth(),
@@ -166,17 +163,17 @@ private fun IconSettings() {
 
 @Composable
 private fun ContentMain(
-    viewModel: MainViewModel,
+    recordingListViewModel: RecordingListViewModel,
     playbackViewModel: PlaybackViewModel,
     selectionViewModel: SelectionViewModel
 ) {
 
-    Crossfade(current = viewModel.uiState.isRefreshing) { isRefreshing ->
+    Crossfade(current = recordingListViewModel.uiState.isRefreshing) { isRefreshing ->
 
         Box(Modifier.fillMaxSize(), gravity = ContentGravity.Center) {
             when {
                 isRefreshing -> CircularProgressIndicator()
-                else -> RecordingList(viewModel, playbackViewModel, selectionViewModel)
+                else -> RecordingList(recordingListViewModel, playbackViewModel, selectionViewModel)
             }
         }
     }
@@ -186,13 +183,13 @@ private fun ContentMain(
 
 @Composable
 private fun RecordingList(
-    viewModel: MainViewModel,
+    recordingListViewModel: RecordingListViewModel,
     playbackViewModel: PlaybackViewModel,
     selectionViewModel: SelectionViewModel
 ) {
 
     LazyColumnItems(
-        items = viewModel.uiState.recordingList,
+        items = recordingListViewModel.uiState.recordingList,
         modifier = Modifier.fillMaxSize()
     ) { recordingListItem ->
 
