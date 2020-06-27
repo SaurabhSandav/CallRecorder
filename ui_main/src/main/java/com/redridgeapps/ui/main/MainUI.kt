@@ -25,6 +25,7 @@ import com.redridgeapps.ui.common.prefcomponents.SwitchPreference
 import com.redridgeapps.ui.common.routing.Destination
 import com.redridgeapps.ui.common.routing.viewModel
 import com.redridgeapps.ui.main.viewmodels.PlaybackViewModel
+import com.redridgeapps.ui.main.viewmodels.SelectionViewModel
 import com.redridgeapps.ui.settings.SettingsDestination
 
 object MainDestination : Destination {
@@ -42,10 +43,11 @@ object MainDestination : Destination {
 private fun MainUI(viewModel: MainViewModel) {
 
     val playbackViewModel = viewModel<PlaybackViewModel>()
+    val selectionViewModel = viewModel<SelectionViewModel>()
 
     val topBar = @Composable {
         when {
-            viewModel.uiState.selection.inMultiSelectMode -> SelectionTopAppBar(viewModel)
+            selectionViewModel.selection.inMultiSelectMode -> SelectionTopAppBar(selectionViewModel)
             else -> MainTopAppBar(viewModel)
         }
     }
@@ -56,7 +58,7 @@ private fun MainUI(viewModel: MainViewModel) {
 
         Column(Modifier.padding(innerPadding)) {
             Box(Modifier.weight(1F)) {
-                ContentMain(viewModel, playbackViewModel)
+                ContentMain(viewModel, playbackViewModel, selectionViewModel)
             }
             PlaybackBar(playbackViewModel)
         }
@@ -76,31 +78,31 @@ private fun MainTopAppBar(viewModel: MainViewModel) {
 }
 
 @Composable
-private fun SelectionTopAppBar(viewModel: MainViewModel) {
+private fun SelectionTopAppBar(selectionViewModel: SelectionViewModel) {
 
-    val selectionSize = viewModel.uiState.selection.size
+    val selectionSize = selectionViewModel.selection.size
 
     TopAppBar(
         title = { Text("$selectionSize selected") },
         actions = {
-            IconDelete(viewModel)
-            IconCloseSelectionMode(viewModel)
+            IconDelete(selectionViewModel)
+            IconCloseSelectionMode(selectionViewModel)
         }
     )
 }
 
 @Composable
-private fun IconDelete(viewModel: MainViewModel) {
+private fun IconDelete(selectionViewModel: SelectionViewModel) {
 
-    IconButton(onClick = { viewModel.deleteRecordings() }) {
+    IconButton(onClick = { selectionViewModel.deleteRecordings() }) {
         Icon(Icons.Default.Delete)
     }
 }
 
 @Composable
-private fun IconCloseSelectionMode(viewModel: MainViewModel) {
+private fun IconCloseSelectionMode(selectionViewModel: SelectionViewModel) {
 
-    val onClick = { viewModel.uiState.selection.clear() }
+    val onClick = { selectionViewModel.selection.clear() }
 
     IconButton(onClick) {
         Icon(Icons.Default.Close)
@@ -163,23 +165,31 @@ private fun IconSettings() {
 }
 
 @Composable
-private fun ContentMain(viewModel: MainViewModel, playbackViewModel: PlaybackViewModel) {
+private fun ContentMain(
+    viewModel: MainViewModel,
+    playbackViewModel: PlaybackViewModel,
+    selectionViewModel: SelectionViewModel
+) {
 
     Crossfade(current = viewModel.uiState.isRefreshing) { isRefreshing ->
 
         Box(Modifier.fillMaxSize(), gravity = ContentGravity.Center) {
             when {
                 isRefreshing -> CircularProgressIndicator()
-                else -> RecordingList(viewModel, playbackViewModel)
+                else -> RecordingList(viewModel, playbackViewModel, selectionViewModel)
             }
         }
     }
 
-    OptionsDialog(viewModel = viewModel)
+    OptionsDialog(selectionViewModel)
 }
 
 @Composable
-private fun RecordingList(viewModel: MainViewModel, playbackViewModel: PlaybackViewModel) {
+private fun RecordingList(
+    viewModel: MainViewModel,
+    playbackViewModel: PlaybackViewModel,
+    selectionViewModel: SelectionViewModel
+) {
 
     LazyColumnItems(
         items = viewModel.uiState.recordingList,
@@ -190,8 +200,8 @@ private fun RecordingList(viewModel: MainViewModel, playbackViewModel: PlaybackV
             is RecordingListItem.Divider -> RecordingListDateDivider(dateText = recordingListItem.title)
             is RecordingListItem.Entry -> RecordingListItem(
                 recordingListItem,
-                viewModel,
-                playbackViewModel
+                playbackViewModel,
+                selectionViewModel
             )
         }
     }
@@ -221,11 +231,11 @@ private fun RecordingListDateDivider(dateText: String) {
 @Composable
 private fun RecordingListItem(
     recordingEntry: RecordingListItem.Entry,
-    viewModel: MainViewModel,
-    playbackViewModel: PlaybackViewModel
+    playbackViewModel: PlaybackViewModel,
+    selectionViewModel: SelectionViewModel
 ) {
 
-    val selection = viewModel.uiState.selection
+    val selection = selectionViewModel.selection
 
     var modifier = Modifier.clickable(
         onClick = { selection.select(recordingEntry.id) },
@@ -347,9 +357,9 @@ private fun PlaybackBar(playbackViewModel: PlaybackViewModel) {
 }
 
 @Composable
-private fun OptionsDialog(viewModel: MainViewModel) {
+private fun OptionsDialog(selectionViewModel: SelectionViewModel) {
 
-    val selection = viewModel.uiState.selection
+    val selection = selectionViewModel.selection
 
     if (selection.inMultiSelectMode || selection.isEmpty()) return
 
@@ -382,13 +392,13 @@ private fun OptionsDialog(viewModel: MainViewModel) {
             var recordingInfo by state<List<AnnotatedString>> { emptyList() }
 
             launchInComposition {
-                recordingInfo = annotateRecordingInfo(viewModel)
+                recordingInfo = annotateRecordingInfo(selectionViewModel)
             }
 
             Crossfade(selectedIndex) { tabIndex ->
                 VerticalScroller {
                     when (tabIndex) {
-                        0 -> OptionsDialogOptionsTab(viewModel)
+                        0 -> OptionsDialogOptionsTab(selectionViewModel)
                         1 -> OptionsDialogInfoTab(recordingInfo)
                     }
                 }
@@ -397,9 +407,9 @@ private fun OptionsDialog(viewModel: MainViewModel) {
     }
 }
 
-private suspend fun annotateRecordingInfo(viewModel: MainViewModel): List<AnnotatedString> {
+private suspend fun annotateRecordingInfo(selectionViewModel: SelectionViewModel): List<AnnotatedString> {
 
-    val infoPairs = viewModel.getSelectionInfo()
+    val infoPairs = selectionViewModel.getInfo()
 
     return infoPairs.map {
         annotatedString {
@@ -410,31 +420,31 @@ private suspend fun annotateRecordingInfo(viewModel: MainViewModel): List<Annota
 }
 
 @Composable
-private fun OptionsDialogOptionsTab(viewModel: MainViewModel) {
+private fun OptionsDialogOptionsTab(selectionViewModel: SelectionViewModel) {
 
     Column {
 
-        val isStarred by viewModel.getSelectionIsStarred().collectAsState(null)
+        val isStarred by selectionViewModel.getIsStarred().collectAsState(null)
         SwitchPreference(
             text = "Star",
             checked = isStarred,
-            onCheckedChange = { viewModel.toggleStar() }
+            onCheckedChange = { selectionViewModel.toggleStar() }
         )
 
-        if (viewModel.uiState.recordingAutoDeleteEnabled.collectAsState(false).value) {
+        if (selectionViewModel.showSkipAutoDelete.collectAsState(false).value) {
 
-            val skipAutoDelete by viewModel.getSelectionSkipAutoDelete().collectAsState(null)
+            val skipAutoDelete by selectionViewModel.getSkipAutoDelete().collectAsState(null)
 
             SwitchPreference(
                 text = "Skip auto delete",
                 checked = skipAutoDelete,
-                onCheckedChange = { viewModel.toggleSkipAutoDelete() }
+                onCheckedChange = { selectionViewModel.toggleSkipAutoDelete() }
             )
         }
 
-        ListItem("Trim silence at start/end", onClick = { viewModel.trimSilenceEnds() })
-        ListItem("Convert to Mp3", onClick = { viewModel.convertToMp3() })
-        ListItem("Delete", onClick = { viewModel.deleteRecordings() })
+        ListItem("Trim silence at start/end", onClick = { selectionViewModel.trimSilenceEnds() })
+        ListItem("Convert to Mp3", onClick = { selectionViewModel.convertToMp3() })
+        ListItem("Delete", onClick = { selectionViewModel.deleteRecordings() })
     }
 }
 

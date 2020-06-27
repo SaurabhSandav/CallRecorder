@@ -3,31 +3,21 @@ package com.redridgeapps.ui.main
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.redridgeapps.callrecorder.callutils.Defaults
 import com.redridgeapps.callrecorder.callutils.callevents.CallDirection
 import com.redridgeapps.callrecorder.callutils.db.Recording
-import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
-import com.redridgeapps.callrecorder.callutils.recording.asPcmEncoding
-import com.redridgeapps.callrecorder.callutils.services.AudioEndsTrimmingServiceLauncher
-import com.redridgeapps.callrecorder.callutils.services.Mp3ConversionServiceLauncher
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
-import com.redridgeapps.callrecorder.common.utils.humanReadableByteCount
-import com.redridgeapps.callrecorder.common.utils.launchUnit
 import com.redridgeapps.callrecorder.common.utils.toLocalDate
 import com.redridgeapps.callrecorder.common.utils.toLocalDateTime
-import com.redridgeapps.callrecorder.prefs.PREF_RECORDING_AUTO_DELETE_ENABLED
-import com.redridgeapps.callrecorder.prefs.Prefs
-import kotlinx.coroutines.flow.*
-import java.nio.file.Paths
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import java.time.Duration
 import java.time.format.DateTimeFormatter
 import java.util.*
 
 internal class MainViewModel @ViewModelInject constructor(
-    prefs: Prefs,
-    private val recordings: Recordings,
-    private val mp3ConversionServiceLauncher: Mp3ConversionServiceLauncher,
-    private val audioEndsTrimmingServiceLauncher: AudioEndsTrimmingServiceLauncher
+    private val recordings: Recordings
 ) : ViewModel() {
 
     private val recordingListFilter = MutableStateFlow(enumSetNoneOf<RecordingListFilter>())
@@ -36,43 +26,7 @@ internal class MainViewModel @ViewModelInject constructor(
         observeRecordingList()
     }
 
-    val uiState = MainState(
-        recordingListFilter = recordingListFilter,
-        recordingAutoDeleteEnabled = prefs.prefBoolean(PREF_RECORDING_AUTO_DELETE_ENABLED) {
-            Defaults.RECORDING_AUTO_DELETE_ENABLED
-        }
-    )
-
-    fun getSelectionIsStarred(): Flow<Boolean> {
-        return recordings.getIsStarred(uiState.selection.single())
-    }
-
-    fun toggleStar() = viewModelScope.launchUnit {
-        recordings.toggleStar(uiState.selection.toList())
-    }
-
-    fun getSelectionSkipAutoDelete(): Flow<Boolean> {
-        return recordings.getSkipAutoDelete(uiState.selection.single())
-    }
-
-    fun toggleSkipAutoDelete() = viewModelScope.launchUnit {
-        recordings.toggleSkipAutoDelete(uiState.selection.toList())
-    }
-
-    fun trimSilenceEnds() = viewModelScope.launchUnit {
-        audioEndsTrimmingServiceLauncher.launch(uiState.selection.toList())
-        uiState.selection.clear()
-    }
-
-    fun convertToMp3() = viewModelScope.launchUnit {
-        mp3ConversionServiceLauncher.launch(uiState.selection.toList())
-        uiState.selection.clear()
-    }
-
-    fun deleteRecordings() = viewModelScope.launchUnit {
-        recordings.deleteRecording(uiState.selection.toList())
-        uiState.selection.clear()
-    }
+    val uiState = MainState(recordingListFilter)
 
     fun toggleRecordingListFilter(filter: RecordingListFilter) {
 
@@ -88,46 +42,6 @@ internal class MainViewModel @ViewModelInject constructor(
 
     fun clearRecordingListFilters() {
         recordingListFilter.value = enumSetNoneOf()
-    }
-
-    suspend fun getSelectionInfo(): List<Pair<String, String>> {
-
-        val selection = uiState.selection.single()
-        val wavData = recordings.getWavData(selection)
-        val recording = recordings.getRecording(selection).first()
-
-        return buildList {
-
-            val saveFile = Paths.get(recording.save_path).fileName.toString()
-            add("File Name: " to saveFile)
-
-            add("Contact Name: " to recording.name)
-            add("Number: " to recording.number)
-
-            val formattedStartTime =
-                fullDateFormatter.format(recording.start_instant.toLocalDateTime())
-            add("Recording Started: " to formattedStartTime)
-
-            add("Duration: " to recording.duration.getFormatted())
-
-            val direction = when (recording.call_direction) {
-                CallDirection.INCOMING -> "Incoming"
-                CallDirection.OUTGOING -> "Outgoing"
-            }
-            add("Direction: " to direction)
-
-            val encoding = when (wavData.bitsPerSample.asPcmEncoding()) {
-                PcmEncoding.PCM_8BIT -> "Pcm 8 bit"
-                PcmEncoding.PCM_16BIT -> "Pcm 16 bit"
-                PcmEncoding.PCM_FLOAT -> "Pcm 32 bit (Float)"
-            }
-            add("Pcm Encoding: " to encoding)
-
-            add("Sample Rate: " to "${wavData.sampleRate.value} Hz")
-            add("Channels: " to if (wavData.channels.value == 1) "Mono" else "Stereo")
-            add("Bitrate: " to "${wavData.bitRate.toLong()} kb/s")
-            add("File Size: " to humanReadableByteCount(wavData.fileSize.toLong()))
-        }
     }
 
     private fun observeRecordingList() {
@@ -198,7 +112,6 @@ internal class MainViewModel @ViewModelInject constructor(
 
 private val overlineFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
 private val newDayFormatter = DateTimeFormatter.ofPattern("MMMM d, uuuu")
-private val fullDateFormatter = DateTimeFormatter.ofPattern("MMMM d, uuuu, HH:mm:ss")
 
 private fun Duration.getFormatted(): String =
     "%d:%02d:%02d".format(seconds / 3600, (seconds % 3600) / 60, (seconds % 60))
