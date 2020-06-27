@@ -1,6 +1,7 @@
 package com.redridgeapps.callrecorder.callutils.di.modules
 
 import com.redridgeapps.callrecorder.callutils.services.CallingService
+import com.redridgeapps.callrecorder.callutils.storage.RecordingStoragePathInitializer
 import com.redridgeapps.callrecorder.callutils.workers.RecordingAutoDeleteWorker
 import com.redridgeapps.callrecorder.common.StartupInitializer
 import dagger.Binds
@@ -23,5 +24,11 @@ abstract class InitializerModule {
     @IntoSet
     abstract fun provideRecordingAutoDeleteWorkerInitializer(
         initializer: RecordingAutoDeleteWorker.Initializer
+    ): StartupInitializer
+
+    @Binds
+    @IntoSet
+    abstract fun provideRecordingStoragePathInitializer(
+        initializer: RecordingStoragePathInitializer
     ): StartupInitializer
 }

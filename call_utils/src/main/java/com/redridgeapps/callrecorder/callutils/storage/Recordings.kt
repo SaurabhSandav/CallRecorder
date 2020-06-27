@@ -8,8 +8,12 @@ import com.redridgeapps.callrecorder.callutils.db.RecordingQueries
 import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding.*
 import com.redridgeapps.callrecorder.callutils.recording.RecordingJob
 import com.redridgeapps.callrecorder.callutils.recording.asPcmEncoding
+import com.redridgeapps.callrecorder.common.StartupInitializer
 import com.redridgeapps.callrecorder.common.utils.extension
+import com.redridgeapps.callrecorder.common.utils.launchUnit
 import com.redridgeapps.callrecorder.common.utils.replaceExtension
+import com.redridgeapps.callrecorder.prefs.PREF_RECORDINGS_STORAGE_PATH
+import com.redridgeapps.callrecorder.prefs.Prefs
 import com.redridgeapps.mp3encoder.*
 import com.redridgeapps.wavutils.WavData
 import com.redridgeapps.wavutils.WavFileUtils
@@ -17,6 +21,7 @@ import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import com.squareup.sqldelight.runtime.coroutines.mapToOne
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -176,6 +181,21 @@ class Recordings @Inject constructor(
                 Files.createDirectory(savePath)
 
             return savePath
+        }
+    }
+}
+
+class RecordingStoragePathInitializer @Inject constructor(
+    val prefs: Prefs
+) : StartupInitializer {
+
+    override fun initialize(context: Context) = GlobalScope.launchUnit {
+
+        if (prefs.prefStringOrNull(PREF_RECORDINGS_STORAGE_PATH).first() == null) {
+
+            val newRecordingPath = Recordings.getRecordingsStoragePath(context).toString()
+
+            prefs.editor { setString(PREF_RECORDINGS_STORAGE_PATH, newRecordingPath) }
         }
     }
 }
