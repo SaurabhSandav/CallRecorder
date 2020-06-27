@@ -9,7 +9,7 @@ import com.redridgeapps.callrecorder.prefs.PREF_IS_FIRST_RUN
 import com.redridgeapps.callrecorder.prefs.PREF_RECORDING_ENABLED
 import com.redridgeapps.callrecorder.prefs.Prefs
 
-class FirstRunViewModel @ViewModelInject constructor(
+internal class FirstRunViewModel @ViewModelInject constructor(
     private val systemizer: Systemizer,
     private val prefs: Prefs
 ) : ViewModel() {

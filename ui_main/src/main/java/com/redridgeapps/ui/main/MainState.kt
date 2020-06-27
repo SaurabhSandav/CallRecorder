@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.*
 
-class MainState(
+internal class MainState(
     val playbackState: StateFlow<PlaybackState>,
     val recordingListFilter: StateFlow<EnumSet<RecordingListFilter>>,
     val recordingAutoDeleteEnabled: Flow<Boolean>
@@ -22,7 +22,7 @@ class MainState(
     val selection: ListSelection<Long> = ListSelection()
 }
 
-sealed class RecordingListItem {
+internal sealed class RecordingListItem {
 
     class Divider(val title: String) : RecordingListItem()
 
@@ -36,17 +36,17 @@ sealed class RecordingListItem {
     ) : RecordingListItem()
 }
 
-enum class RecordingListFilter {
+internal enum class RecordingListFilter {
     Incoming,
     Outgoing,
     Starred;
 }
 
-fun RecordingListFilter.toReadableString(): String = name
+internal fun RecordingListFilter.toReadableString(): String = name
 
-enum class OptionsDialogTab {
+internal enum class OptionsDialogTab {
     OPTIONS,
     INFO
 }
 
-fun OptionsDialogTab.toReadableString(): String = name
+internal fun OptionsDialogTab.toReadableString(): String = name

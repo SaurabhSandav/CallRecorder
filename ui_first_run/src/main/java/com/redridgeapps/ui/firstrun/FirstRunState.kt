@@ -5,7 +5,7 @@ import androidx.compose.mutableStateOf
 import androidx.compose.setValue
 import kotlinx.coroutines.flow.Flow
 
-class FirstRunState(val isAppSystemized: Flow<Boolean>) {
+internal class FirstRunState(val isAppSystemized: Flow<Boolean>) {
 
     var permissionsGranted by mutableStateOf(false)
 

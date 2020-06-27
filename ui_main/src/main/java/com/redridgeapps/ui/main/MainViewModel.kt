@@ -27,7 +27,7 @@ import java.time.Duration
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class MainViewModel @ViewModelInject constructor(
+internal class MainViewModel @ViewModelInject constructor(
     prefs: Prefs,
     private val recordings: Recordings,
     private val callPlayback: CallPlayback,

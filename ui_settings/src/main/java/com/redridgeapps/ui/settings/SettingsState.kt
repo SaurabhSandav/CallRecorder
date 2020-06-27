@@ -5,7 +5,7 @@ import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
 import com.redridgeapps.callrecorder.callutils.recording.PcmSampleRate
 import kotlinx.coroutines.flow.Flow
 
-class SettingsState(
+internal class SettingsState(
     val isSystemized: Flow<Boolean>,
     val recordingEnabled: Flow<Boolean>,
     val audioRecordSampleRate: Flow<PcmSampleRate>,

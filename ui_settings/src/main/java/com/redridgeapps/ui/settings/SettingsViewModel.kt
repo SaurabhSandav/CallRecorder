@@ -13,7 +13,7 @@ import com.redridgeapps.callrecorder.common.utils.launchUnit
 import com.redridgeapps.callrecorder.prefs.*
 import kotlinx.coroutines.flow.first
 
-class SettingsViewModel @ViewModelInject constructor(
+internal class SettingsViewModel @ViewModelInject constructor(
     private val prefs: Prefs,
     private val systemizer: Systemizer,
     private val recordings: Recordings

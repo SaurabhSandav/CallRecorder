@@ -128,7 +128,7 @@ private fun RecordingPreference(viewModel: SettingsViewModel) {
 }
 
 @Composable
-fun RecordingAutoDeletePreference(viewModel: SettingsViewModel) {
+private fun RecordingAutoDeletePreference(viewModel: SettingsViewModel) {
 
     val recordingAutoDeleteEnabled by viewModel.uiState.recordingAutoDeleteEnabled
         .collectAsState(null)

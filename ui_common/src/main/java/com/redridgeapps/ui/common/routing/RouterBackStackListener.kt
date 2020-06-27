@@ -5,7 +5,7 @@ import com.koduok.compose.navigation.core.GlobalRoute
 import com.koduok.compose.navigation.core.Route
 import timber.log.Timber
 
-class RouterBackStackListener(
+internal class RouterBackStackListener(
     val onRouteAdded: (Route<*>) -> Unit,
     val onRouteRemoved: (Route<*>) -> Unit
 ) : BackStackController.Listener {
