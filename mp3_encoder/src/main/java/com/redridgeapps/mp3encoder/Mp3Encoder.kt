@@ -1,5 +1,9 @@
 package com.redridgeapps.mp3encoder
 
+import com.redridgeapps.mp3encoder.encoders.Pcm16Mp3Encoder
+import com.redridgeapps.mp3encoder.encoders.Pcm8Mp3Encoder
+import com.redridgeapps.mp3encoder.encoders.PcmFloatMp3Encoder
+import com.redridgeapps.mp3encoder.encoders.TypedMP3Encoder
 import com.redridgeapps.wavutils.WAV_HEADER_SIZE
 import com.redridgeapps.wavutils.WavData
 import timber.log.Timber
@@ -11,24 +15,40 @@ import java.nio.file.StandardOpenOption.*
 
 object Mp3Encoder {
 
-    fun <T : Buffer> encode(encoder: TypedMP3Encoder<T>) {
+    fun encode(encodingJob: EncodingJob) {
+
+        val encoder = when (encodingJob.wavData.bitsPerSample.value) {
+            8 -> Pcm8Mp3Encoder(encodingJob)
+            16 -> Pcm16Mp3Encoder(encodingJob)
+            32 -> PcmFloatMp3Encoder(encodingJob)
+            else -> error("Unsupported Wav encoding")
+        }
+
+        encode(encoder)
+    }
+
+    private fun <T : Buffer> encode(encoder: TypedMP3Encoder<T>) {
 
         val encodingJob = encoder.encodingJob
 
         // Open files
         FileChannel.open(encodingJob.wavPath, READ).use { inputChannel ->
-            FileChannel.open(encodingJob.mp3Path, CREATE, TRUNCATE_EXISTING, WRITE)
-                .use { outputChannel ->
+            FileChannel.open(
+                encodingJob.mp3Path,
+                CREATE,
+                TRUNCATE_EXISTING,
+                WRITE
+            ).use { outputChannel ->
 
-                    // Skip header
-                    inputChannel.position(WAV_HEADER_SIZE.toLong())
+                // Skip header
+                inputChannel.position(WAV_HEADER_SIZE.toLong())
 
-                    // Setup buffers
-                    val bufferSize = BUFFER_MULTIPLIER * encodingJob.wavData.blockAlign
-                    val pcmBuffer =
-                        ByteBuffer.allocateDirect(bufferSize).order(ByteOrder.LITTLE_ENDIAN)
-                    val mp3Buffer =
-                        ByteBuffer.allocateDirect(bufferSize).order(ByteOrder.LITTLE_ENDIAN)
+                // Setup buffers
+                val bufferSize = BUFFER_MULTIPLIER * encodingJob.wavData.blockAlign
+                val pcmBuffer =
+                    ByteBuffer.allocateDirect(bufferSize).order(ByteOrder.LITTLE_ENDIAN)
+                val mp3Buffer =
+                    ByteBuffer.allocateDirect(bufferSize).order(ByteOrder.LITTLE_ENDIAN)
 
                 // Init lame
                 val lame = initLame(encodingJob.wavData, encodingJob.quality)

@@ -5,16 +5,15 @@ import android.os.Environment
 import androidx.core.content.ContextCompat
 import com.redridgeapps.callrecorder.callutils.db.Recording
 import com.redridgeapps.callrecorder.callutils.db.RecordingQueries
-import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding.*
 import com.redridgeapps.callrecorder.callutils.recording.RecordingJob
-import com.redridgeapps.callrecorder.callutils.recording.asPcmEncoding
 import com.redridgeapps.callrecorder.common.StartupInitializer
 import com.redridgeapps.callrecorder.common.utils.extension
 import com.redridgeapps.callrecorder.common.utils.launchUnit
 import com.redridgeapps.callrecorder.common.utils.replaceExtension
 import com.redridgeapps.callrecorder.prefs.PREF_RECORDINGS_STORAGE_PATH
 import com.redridgeapps.callrecorder.prefs.Prefs
-import com.redridgeapps.mp3encoder.*
+import com.redridgeapps.mp3encoder.EncodingJob
+import com.redridgeapps.mp3encoder.Mp3Encoder
 import com.redridgeapps.wavutils.WavData
 import com.redridgeapps.wavutils.WavFileUtils
 import com.squareup.sqldelight.runtime.coroutines.asFlow
@@ -98,15 +97,7 @@ class Recordings @Inject constructor(
             mp3Path = outputPath
         )
 
-        val encoder = when (wavData.bitsPerSample.asPcmEncoding()) {
-            PCM_8BIT -> Pcm8Mp3Encoder(encodingJob)
-            PCM_16BIT -> Pcm16Mp3Encoder(encodingJob)
-            PCM_FLOAT -> PcmFloatMp3Encoder(encodingJob)
-        }
-
-        Mp3Encoder.encode(encoder)
-
-        return@withContext
+        Mp3Encoder.encode(encodingJob)
     }
 
     suspend fun deleteRecording(recordingIdList: List<Long>) = withContext(Dispatchers.IO) {
