@@ -1,4 +1,4 @@
-package com.redridgeapps.mp3encoder
+package com.redridgeapps.mp3encoder.lame
 
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer

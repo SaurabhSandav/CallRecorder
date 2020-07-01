@@ -1,7 +1,7 @@
 package com.redridgeapps.mp3encoder.encoders
 
 import com.redridgeapps.mp3encoder.EncodingJob
-import com.redridgeapps.mp3encoder.Lame
+import com.redridgeapps.mp3encoder.lame.Lame
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
 

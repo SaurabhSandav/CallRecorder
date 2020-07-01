@@ -13,7 +13,7 @@ pub mod android {
     const LAME_EXCEPTION_CLASS: &str = "com/redridgeapps/mp3encoding/LameException";
 
     #[no_mangle]
-    pub extern "system" fn Java_com_redridgeapps_mp3encoder_Lame_getLameVersion(
+    pub extern "system" fn Java_com_redridgeapps_mp3encoder_lame_Lame_getLameVersion(
         env: JNIEnv,
         _: JClass,
     ) -> jstring {
@@ -32,7 +32,7 @@ pub mod android {
     }
 
     #[no_mangle]
-    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_Lame_lameInit(
+    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_lame_Lame_lameInit(
         _env: JNIEnv,
         _class: JClass,
     ) -> jlong {
@@ -40,7 +40,7 @@ pub mod android {
     }
 
     #[no_mangle]
-    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_Lame_lameClose(
+    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_lame_Lame_lameClose(
         _env: JNIEnv,
         _class: JClass,
         lame_pointer: jlong,
@@ -50,7 +50,7 @@ pub mod android {
     }
 
     #[no_mangle]
-    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_Lame_lameSetNumChannels(
+    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_lame_Lame_lameSetNumChannels(
         _env: JNIEnv,
         _class: JClass,
         lame_pointer: jlong,
@@ -61,7 +61,7 @@ pub mod android {
     }
 
     #[no_mangle]
-    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_Lame_lameSetInSampleRate(
+    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_lame_Lame_lameSetInSampleRate(
         _env: JNIEnv,
         _class: JClass,
         lame_pointer: jlong,
@@ -72,7 +72,7 @@ pub mod android {
     }
 
     #[no_mangle]
-    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_Lame_lameSetBitRate(
+    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_lame_Lame_lameSetBitRate(
         _env: JNIEnv,
         _class: JClass,
         lame_pointer: jlong,
@@ -83,7 +83,7 @@ pub mod android {
     }
 
     #[no_mangle]
-    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_Lame_lameSetQuality(
+    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_lame_Lame_lameSetQuality(
         _env: JNIEnv,
         _class: JClass,
         lame_pointer: jlong,
@@ -94,7 +94,7 @@ pub mod android {
     }
 
     #[no_mangle]
-    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_Lame_lameSetVbr(
+    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_lame_Lame_lameSetVbr(
         _env: JNIEnv,
         _class: JClass,
         lame_pointer: jlong,
@@ -105,7 +105,7 @@ pub mod android {
     }
 
     #[no_mangle]
-    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_Lame_lameInitParams(
+    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_lame_Lame_lameInitParams(
         _env: JNIEnv,
         _class: JClass,
         lame_pointer: jlong,
@@ -115,7 +115,7 @@ pub mod android {
     }
 
     #[no_mangle]
-    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_Lame_lameEncodeBuffer(
+    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_lame_Lame_lameEncodeBuffer(
         env: JNIEnv,
         _class: JClass,
         lame_pointer: jlong,
@@ -162,7 +162,7 @@ pub mod android {
     }
 
     #[no_mangle]
-    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_Lame_lameEncodeBufferInterleaved(
+    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_lame_Lame_lameEncodeBufferInterleaved(
         env: JNIEnv,
         _class: JClass,
         lame_pointer: jlong,
@@ -199,7 +199,7 @@ pub mod android {
     }
 
     #[no_mangle]
-    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_Lame_lameEncodeBufferIeeeFloat(
+    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_lame_Lame_lameEncodeBufferIeeeFloat(
         env: JNIEnv,
         _class: JClass,
         lame_pointer: jlong,
@@ -246,7 +246,7 @@ pub mod android {
     }
 
     #[no_mangle]
-    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_Lame_lameEncodeBufferInterleavedIeeeFloat(
+    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_lame_Lame_lameEncodeBufferInterleavedIeeeFloat(
         env: JNIEnv,
         _class: JClass,
         lame_pointer: jlong,
@@ -283,7 +283,7 @@ pub mod android {
     }
 
     #[no_mangle]
-    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_Lame_lameEncodeFlush(
+    pub unsafe extern "system" fn Java_com_redridgeapps_mp3encoder_lame_Lame_lameEncodeFlush(
         env: JNIEnv,
         _class: JClass,
         lame_pointer: jlong,

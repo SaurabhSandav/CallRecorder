@@ -1,4 +1,4 @@
-package com.redridgeapps.mp3encoder
+package com.redridgeapps.mp3encoder.lame
 
 // Used in Rust through JNI
 @Suppress("unused")

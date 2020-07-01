@@ -4,6 +4,7 @@ import com.redridgeapps.mp3encoder.encoders.Pcm16Mp3Encoder
 import com.redridgeapps.mp3encoder.encoders.Pcm8Mp3Encoder
 import com.redridgeapps.mp3encoder.encoders.PcmFloatMp3Encoder
 import com.redridgeapps.mp3encoder.encoders.TypedMP3Encoder
+import com.redridgeapps.mp3encoder.lame.Lame
 import com.redridgeapps.wavutils.WAV_HEADER_SIZE
 import com.redridgeapps.wavutils.WavData
 import timber.log.Timber
