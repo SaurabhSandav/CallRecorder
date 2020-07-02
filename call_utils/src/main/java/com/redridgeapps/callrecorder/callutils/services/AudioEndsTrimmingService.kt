@@ -129,10 +129,7 @@ class AudioEndsTrimmingService : LifecycleService() {
                 putExtra(EXTRA_RECORDING_ID, recordingIdArray)
             }
 
-            ContextCompat.startForegroundService(
-                context,
-                intent
-            )
+            ContextCompat.startForegroundService(context, intent)
         }
 
         private fun stopService(context: Context) {

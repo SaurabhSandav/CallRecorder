@@ -66,7 +66,9 @@ class CallingService : LifecycleService() {
             return START_NOT_STICKY
         }
 
-        getNotificationPendingActivity(intent)
+        @Suppress("UNCHECKED_CAST")
+        pendingActivity = intent
+            ?.getSerializableExtra(EXTRA_NOTIFICATION_PENDING_ACTIVITY) as Class<out Activity>?
         showOngoingNotification()
 
         telephonyManager.listen(callStatusListener, PhoneStateListener.LISTEN_CALL_STATE)
@@ -85,16 +87,6 @@ class CallingService : LifecycleService() {
                 (recordingState.value as? RecordingState.IsRecording)?.stopRecording()
             }
         }
-    }
-
-    private fun getNotificationPendingActivity(intent: Intent?) {
-
-        val newPendingActivity = intent?.getSerializableExtra(EXTRA_NOTIFICATION_PENDING_ACTIVITY)
-
-        requireNotNull(newPendingActivity) { "CallingService: notificationPendingActivity is empty" }
-
-        @Suppress("UNCHECKED_CAST")
-        pendingActivity = newPendingActivity as Class<out Activity>?
     }
 
     private fun showOngoingNotification() {
