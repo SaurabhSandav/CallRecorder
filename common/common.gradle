@@ -12,7 +12,7 @@ commonConfiguration {
 dependencies {
 
     // Kotlin
-    implementation Kotlin.COROUTINES_ANDROID
+    api Kotlin.COROUTINES_ANDROID
 
     // Dagger Hilt
     implementation Dagger.HILT_ANDROID

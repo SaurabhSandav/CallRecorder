@@ -38,9 +38,6 @@ dependencies {
     implementation project(":ui_main")
     implementation project(":ui_settings")
 
-    // Kotlin
-    implementation Kotlin.COROUTINES_ANDROID
-
     // Jetpack
     implementation Jetpack.ACTIVITY_KTX
     implementation Jetpack.APPCOMPAT

@@ -16,9 +16,6 @@ dependencies {
     implementation project(":ui_common")
     implementation project(":ui_main")
 
-    // Kotlin
-    implementation Kotlin.COROUTINES_ANDROID
-
     // Compose
     implementation Compose.RUNTIME
     implementation Compose.FOUNDATION

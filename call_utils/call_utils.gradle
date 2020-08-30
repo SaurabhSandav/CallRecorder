@@ -26,9 +26,6 @@ dependencies {
     implementation project(":wav_utils")
     implementation project(":mp3_encoder")
 
-    // Kotlin
-    implementation Kotlin.COROUTINES_ANDROID
-
     // Jetpack
     implementation Jetpack.CORE_KTX
 
