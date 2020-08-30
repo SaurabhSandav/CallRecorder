@@ -2,32 +2,11 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'common-configuration'
 }
 
-android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.0"
-
-    defaultConfig {
-        minSdkVersion 29
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    buildFeatures {
-        compose true
-    }
-
-    composeOptions {
-        kotlinCompilerVersion Compose.KOTLIN_COMPILER_VERSION
-        kotlinCompilerExtensionVersion Compose.VERSION
-    }
+commonConfiguration {
+    compose true
 }
 
 dependencies {
@@ -54,7 +33,4 @@ dependencies {
     implementation AndroidXHilt.COMMON
     implementation AndroidXHilt.LIFECYCLE_VIEWMODEL
     kapt AndroidXHilt.COMPILER
-
-    // Timber
-    implementation Timber.TIMBER
 }

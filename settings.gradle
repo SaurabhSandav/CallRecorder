@@ -19,6 +19,8 @@ pluginManagement {
     }
 }
 
+includeBuild 'gradle_plugins'
+
 include ':app'
 include ':common'
 include ':prefs'
