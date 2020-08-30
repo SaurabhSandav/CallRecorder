@@ -6,17 +6,16 @@ import androidx.activity.viewModels
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Providers
-import androidx.compose.runtime.key
 import androidx.compose.ui.platform.setContent
 import com.koduok.compose.navigation.Router
 import com.koduok.compose.navigation.core.backStackController
 import com.redridgeapps.compose.viewmodel.ComposeFramework
 import com.redridgeapps.compose.viewmodel.WithViewModels
-import com.redridgeapps.ui.common.routing.Destination
 import com.redridgeapps.ui.common.routing.setupViewModel
 import com.redridgeapps.ui.common.utils.ActivityResultRegistryAmbient
-import com.redridgeapps.ui.firstrun.FirstRunDestination
-import com.redridgeapps.ui.main.MainDestination
+import com.redridgeapps.ui.firstrun.FirstRunScreen
+import com.redridgeapps.ui.main.MainScreen
+import com.redridgeapps.ui.settings.SettingsScreen
 
 fun ComponentActivity.setupCompose(isFirstRun: Boolean) {
 
@@ -37,25 +36,33 @@ fun ComponentActivity.setupCompose(isFirstRun: Boolean) {
 
         Providers(ActivityResultRegistryAmbient provides activityResultRegistry) {
             WithViewModels(composeFramework) {
-                Root(isFirstRun)
+                MaterialTheme {
+                    Root(isFirstRun)
+                }
             }
         }
     }
 }
 
+enum class Routing {
+    FirstRun,
+    Main,
+    Settings,
+}
+
 @Composable
 fun Root(isFirstRun: Boolean) {
 
-    val destination: Destination = when {
-        isFirstRun -> FirstRunDestination
-        else -> MainDestination
+    val start = when {
+        isFirstRun -> Routing.FirstRun
+        else -> Routing.Main
     }
 
-    MaterialTheme {
-        Router(start = destination) { currentRoute ->
-            key(currentRoute) {
-                currentRoute.data.initializeUI()
-            }
+    Router(start = start) { currentRoute ->
+        when (currentRoute.data) {
+            Routing.FirstRun -> FirstRunScreen(onConfigFinished = { replace(Routing.Main) })
+            Routing.Main -> MainScreen(onNavigateToSettings = { push(Routing.Settings) })
+            Routing.Settings -> SettingsScreen(onNavigateUp = { pop() })
         }
     }
 }

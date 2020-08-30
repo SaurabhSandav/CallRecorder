@@ -57,25 +57,16 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped.Playing
 import com.redridgeapps.ui.common.prefcomponents.SwitchPreference
-import com.redridgeapps.ui.common.routing.Destination
 import com.redridgeapps.ui.common.routing.viewModel
 import com.redridgeapps.ui.main.viewmodels.PlaybackViewModel
 import com.redridgeapps.ui.main.viewmodels.RecordingListViewModel
 import com.redridgeapps.ui.main.viewmodels.SelectionViewModel
-import com.redridgeapps.ui.settings.SettingsDestination
-
-object MainDestination : Destination {
-
-    @Composable
-    override fun initializeUI() = MainUI()
-}
 
 @Composable
-private fun MainUI() {
+fun MainScreen(onNavigateToSettings: () -> Unit) {
 
     val recordingListViewModel = viewModel<RecordingListViewModel>()
     val playbackViewModel = viewModel<PlaybackViewModel>()
@@ -84,7 +75,7 @@ private fun MainUI() {
     val topBar = @Composable {
         when {
             selectionViewModel.selection.inMultiSelectMode -> SelectionTopAppBar(selectionViewModel)
-            else -> MainTopAppBar(recordingListViewModel)
+            else -> MainTopAppBar(recordingListViewModel, onNavigateToSettings)
         }
     }
 
@@ -102,13 +93,16 @@ private fun MainUI() {
 }
 
 @Composable
-private fun MainTopAppBar(recordingListViewModel: RecordingListViewModel) {
+private fun MainTopAppBar(
+    recordingListViewModel: RecordingListViewModel,
+    onNavigateToSettings: () -> Unit
+) {
 
     TopAppBar(
         title = { Text("Call Recorder") },
         actions = {
             IconFilter(recordingListViewModel)
-            IconSettings()
+            IconSettings(onNavigateToSettings)
         }
     )
 }
@@ -191,11 +185,9 @@ private fun IconFilter(recordingListViewModel: RecordingListViewModel) {
 }
 
 @Composable
-private fun IconSettings() {
+private fun IconSettings(onNavigateToSettings: () -> Unit) {
 
-    val backStack = BackStackAmbient.current
-
-    IconButton(onClick = { backStack.push(SettingsDestination) }) {
+    IconButton(onClick = onNavigateToSettings) {
         Icon(Icons.Default.Settings)
     }
 }

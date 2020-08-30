@@ -22,35 +22,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.koduok.compose.navigation.BackStackAmbient
-import com.redridgeapps.ui.common.routing.Destination
 import com.redridgeapps.ui.common.routing.viewModel
 import com.redridgeapps.ui.common.utils.isPermissionGranted
 import com.redridgeapps.ui.common.utils.requestPermissions
-import com.redridgeapps.ui.main.MainDestination
-
-object FirstRunDestination : Destination {
-
-    @Composable
-    override fun initializeUI() {
-
-        val viewModel = viewModel<FirstRunViewModel>()
-
-        FirstRunUI(viewModel)
-    }
-}
 
 @Composable
-private fun FirstRunUI(viewModel: FirstRunViewModel) {
+fun FirstRunScreen(onConfigFinished: () -> Unit) {
+
+    val viewModel = viewModel<FirstRunViewModel>()
 
     // If configuration finished, navigate to MainDestination
     with(viewModel.uiState) {
         val isAppSystemized by isAppSystemized.collectAsState(false)
-        val backStack = BackStackAmbient.current
 
         if (isAppSystemized && permissionsGranted && captureAudioOutputPermissionGranted) {
             viewModel.configurationFinished()
-            backStack.push(MainDestination)
+            onConfigFinished()
         }
     }
 

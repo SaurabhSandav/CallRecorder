@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.callrecorder.callutils.recording.PcmChannels
 import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
 import com.redridgeapps.callrecorder.callutils.recording.PcmSampleRate
@@ -23,28 +22,16 @@ import com.redridgeapps.ui.common.prefcomponents.SingleSelectListPreference
 import com.redridgeapps.ui.common.prefcomponents.SwitchPreference
 import com.redridgeapps.ui.common.prefcomponents.TextFieldPreference
 import com.redridgeapps.ui.common.prefcomponents.TitlePreference
-import com.redridgeapps.ui.common.routing.Destination
 import com.redridgeapps.ui.common.routing.viewModel
 
-object SettingsDestination : Destination {
-
-    @Composable
-    override fun initializeUI() {
-
-        val viewModel = viewModel<SettingsViewModel>()
-
-        SettingsUI(viewModel)
-    }
-}
-
 @Composable
-private fun SettingsUI(viewModel: SettingsViewModel) {
+fun SettingsScreen(onNavigateUp: () -> Unit) {
+
+    val viewModel = viewModel<SettingsViewModel>()
 
     val navigationIcon = @Composable {
 
-        val backStack = BackStackAmbient.current
-
-        IconButton(onClick = { backStack.pop() }) {
+        IconButton(onClick = onNavigateUp) {
             Icon(Icons.Default.ArrowBack)
         }
     }
