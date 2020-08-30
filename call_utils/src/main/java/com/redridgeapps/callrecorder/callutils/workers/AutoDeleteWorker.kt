@@ -10,7 +10,7 @@ import androidx.work.WorkerParameters
 import com.redridgeapps.callrecorder.callutils.Defaults
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
 import com.redridgeapps.callrecorder.common.StartupInitializer
-import com.redridgeapps.callrecorder.prefs.PREF_RECORDING_AUTO_DELETE_AFTER_DAYS
+import com.redridgeapps.callrecorder.prefs.PREF_AUTO_DELETE_AFTER_DAYS
 import com.redridgeapps.callrecorder.prefs.Prefs
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -26,8 +26,8 @@ class RecordingAutoDeleteWorker @WorkerInject constructor(
 
     override suspend fun doWork(): Result {
 
-        val days = prefs.int(PREF_RECORDING_AUTO_DELETE_AFTER_DAYS) {
-            Defaults.RECORDING_AUTO_DELETE_AFTER_DAYS
+        val days = prefs.int(PREF_AUTO_DELETE_AFTER_DAYS) {
+            Defaults.AUTO_DELETE_AFTER_DAYS
         }.first()
 
         recordings.deleteOverDaysOldIfNotSkippedAutoDelete(days.days)

@@ -12,7 +12,7 @@ import com.redridgeapps.callrecorder.callutils.services.Mp3ConversionServiceLaun
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
 import com.redridgeapps.callrecorder.common.utils.humanReadableByteCount
 import com.redridgeapps.callrecorder.common.utils.launchUnit
-import com.redridgeapps.callrecorder.prefs.PREF_RECORDING_AUTO_DELETE_ENABLED
+import com.redridgeapps.callrecorder.prefs.PREF_AUTO_DELETE_ENABLED
 import com.redridgeapps.callrecorder.prefs.Prefs
 import com.redridgeapps.ui.common.utils.ListSelection
 import kotlinx.coroutines.flow.Flow
@@ -31,8 +31,8 @@ class SelectionViewModel @ViewModelInject constructor(
 ) : ViewModel() {
 
     val selection: ListSelection<Long> = ListSelection()
-    val showSkipAutoDelete: Flow<Boolean> = prefs.boolean(PREF_RECORDING_AUTO_DELETE_ENABLED) {
-        Defaults.RECORDING_AUTO_DELETE_ENABLED
+    val showSkipAutoDelete: Flow<Boolean> = prefs.boolean(PREF_AUTO_DELETE_ENABLED) {
+        Defaults.AUTO_DELETE_ENABLED
     }
 
     fun getIsStarred(): Flow<Boolean> {
