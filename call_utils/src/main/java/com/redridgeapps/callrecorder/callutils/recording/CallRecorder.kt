@@ -3,14 +3,15 @@ package com.redridgeapps.callrecorder.callutils.recording
 import android.media.AudioRecord
 import android.media.MediaRecorder.AudioSource
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
-import kotlinx.coroutines.Dispatchers
+import com.redridgeapps.callrecorder.common.AppDispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CallRecorder @Inject constructor(
-    private val recordings: Recordings
+    private val recordings: Recordings,
+    private val dispatchers: AppDispatchers,
 ) {
 
     private val _recordingState = MutableStateFlow<RecordingState>(RecordingState.Idle)
@@ -19,8 +20,8 @@ class CallRecorder @Inject constructor(
 
     suspend fun @receiver:Suppress("unused") RecordingState.Idle.startRecording(
         recordingJob: RecordingJob,
-        audioWriter: AudioWriter
-    ) = withContext(Dispatchers.IO) {
+        audioWriter: AudioWriter,
+    ) = withContext(dispatchers.IO) {
 
         val sampleRate = recordingJob.pcmSampleRate.sampleRate
         val channel = recordingJob.pcmChannels.toAudioRecordChannel()
@@ -61,7 +62,7 @@ sealed class RecordingState {
     class IsRecording(
         val recorder: AudioRecord,
         val recordingJob: RecordingJob,
-        val audioWriter: AudioWriter
+        val audioWriter: AudioWriter,
     ) : RecordingState()
 }
 

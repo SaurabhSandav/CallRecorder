@@ -22,6 +22,7 @@ import com.redridgeapps.callrecorder.callutils.recording.AudioWriter
 import com.redridgeapps.callrecorder.callutils.recording.CallRecorder
 import com.redridgeapps.callrecorder.callutils.recording.RecordingJob
 import com.redridgeapps.callrecorder.callutils.recording.RecordingState
+import com.redridgeapps.callrecorder.common.AppDispatchers
 import com.redridgeapps.callrecorder.common.StartupInitializer
 import com.redridgeapps.callrecorder.common.constants.NOTIFICATION_RECORDING_SERVICE_ID
 import com.redridgeapps.callrecorder.common.di.qualifiers.NotificationPendingActivity
@@ -50,8 +51,11 @@ class CallingService : LifecycleService() {
     @Inject
     lateinit var callRecorder: CallRecorder
 
+    @Inject
+    lateinit var dispatchers: AppDispatchers
+
     private val callStatusListener = CallStatusListener()
-    private val audioWriter = AudioWriter(lifecycleScope)
+    private val audioWriter by lazy { AudioWriter(lifecycleScope, dispatchers) }
     private var pendingActivity: Class<out Activity>? = null
 
     override fun onCreate() {

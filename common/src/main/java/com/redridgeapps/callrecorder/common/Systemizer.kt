@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import com.topjohnwu.superuser.Shell
 import com.topjohnwu.superuser.io.SuFile
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.asFlow
@@ -21,7 +20,8 @@ import kotlin.coroutines.suspendCoroutine
 
 @Singleton
 class Systemizer @Inject constructor(
-    @ApplicationContext context: Context
+    @ApplicationContext context: Context,
+    private val dispatchers: AppDispatchers,
 ) {
 
     init {
@@ -48,7 +48,7 @@ class Systemizer @Inject constructor(
         .onStart { emit(Unit) }
         .map { isAppSystemized() }
 
-    suspend fun systemize() = withContext(Dispatchers.IO) {
+    suspend fun systemize() = withContext(dispatchers.IO) {
         if (isAppSystemized()) return@withContext
 
         withWritableSystem {
@@ -61,7 +61,7 @@ class Systemizer @Inject constructor(
         return@withContext
     }
 
-    suspend fun unSystemize() = withContext(Dispatchers.IO) {
+    suspend fun unSystemize() = withContext(dispatchers.IO) {
         if (!isAppSystemized()) return@withContext
 
         withWritableSystem {
@@ -81,7 +81,7 @@ class Systemizer @Inject constructor(
         return@withContext
     }
 
-    private suspend fun isAppSystemized(): Boolean = withContext(Dispatchers.IO) {
+    private suspend fun isAppSystemized(): Boolean = withContext(dispatchers.IO) {
 
         val apkFile = "$APK_TARGET_DIR/$APK_NAME"
         val permissionFile = "$PERMISSIONS_TARGET_DIR/${PERMISSIONS_FILE_NAME.format(packageName)}"

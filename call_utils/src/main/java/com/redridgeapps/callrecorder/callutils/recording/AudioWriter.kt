@@ -1,9 +1,13 @@
 package com.redridgeapps.callrecorder.callutils.recording
 
 import android.media.AudioRecord
+import com.redridgeapps.callrecorder.common.AppDispatchers
 import com.redridgeapps.wavutils.WAV_HEADER_SIZE
 import com.redridgeapps.wavutils.WavFileUtils
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
 import java.nio.file.Files
@@ -11,7 +15,10 @@ import java.nio.file.Path
 import java.nio.file.StandardOpenOption.CREATE_NEW
 import java.nio.file.StandardOpenOption.WRITE
 
-class AudioWriter(private val coroutineScope: CoroutineScope) {
+class AudioWriter(
+    private val coroutineScope: CoroutineScope,
+    private val dispatchers: AppDispatchers,
+) {
 
     private val writingFinishedSignal = CompletableDeferred(Unit)
 
@@ -20,8 +27,8 @@ class AudioWriter(private val coroutineScope: CoroutineScope) {
     internal suspend fun startWriting(
         recorder: AudioRecord,
         recordingJob: RecordingJob,
-        bufferSize: Int
-    ) = coroutineScope.launch(Dispatchers.IO) {
+        bufferSize: Int,
+    ) = coroutineScope.launch(dispatchers.IO) {
 
         FileChannel.open(recordingJob.savePath, CREATE_NEW, WRITE).use { channel ->
 
@@ -58,7 +65,7 @@ class AudioWriter(private val coroutineScope: CoroutineScope) {
         writingFinishedSignal.complete(Unit)
     }
 
-    private suspend fun checkError(bytesRead: Int, savePath: Path) = withContext(Dispatchers.IO) {
+    private suspend fun checkError(bytesRead: Int, savePath: Path) = withContext(dispatchers.IO) {
 
         val errorStr = when (bytesRead) {
             AudioRecord.ERROR_INVALID_OPERATION -> "AudioRecord: ERROR_INVALID_OPERATION"

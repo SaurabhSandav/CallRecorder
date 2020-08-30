@@ -2,7 +2,7 @@ package com.redridgeapps.callrecorder.callutils.playback
 
 import android.media.MediaPlayer
 import com.redridgeapps.callrecorder.callutils.db.Recording
-import kotlinx.coroutines.Dispatchers
+import com.redridgeapps.callrecorder.common.AppDispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +11,9 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class CallPlayback @Inject constructor() {
+class CallPlayback @Inject constructor(
+    private val dispatchers: AppDispatchers,
+) {
 
     private val _playbackState = MutableStateFlow<PlaybackState>(PlaybackState.Stopped)
 
@@ -23,7 +25,7 @@ class CallPlayback @Inject constructor() {
             is PlaybackState.NotStopped -> player
         }
 
-        player.startNewPlayback(recording, _playbackState)
+        player.startNewPlayback(recording, _playbackState, dispatchers)
     }
 
     fun PlaybackState.NotStopped.stopPlayback() {
@@ -64,21 +66,22 @@ sealed class PlaybackState {
         class Playing(
             override val player: MediaPlayer,
             override val recording: Recording,
-            override val progress: Flow<Float>
+            override val progress: Flow<Float>,
         ) : NotStopped()
 
         class Paused(
             override val player: MediaPlayer,
             override val recording: Recording,
-            override val progress: Flow<Float>
+            override val progress: Flow<Float>,
         ) : NotStopped()
     }
 }
 
 private suspend fun MediaPlayer.startNewPlayback(
     recording: Recording,
-    playbackState: MutableStateFlow<PlaybackState>
-) = withContext(Dispatchers.IO) {
+    playbackState: MutableStateFlow<PlaybackState>,
+    dispatchers: AppDispatchers,
+) = withContext(dispatchers.IO) {
 
     reset()
     setDataSource(recording.save_path)

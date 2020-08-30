@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat
 import com.redridgeapps.callrecorder.callutils.db.Recording
 import com.redridgeapps.callrecorder.callutils.db.RecordingQueries
 import com.redridgeapps.callrecorder.callutils.recording.RecordingJob
+import com.redridgeapps.callrecorder.common.AppDispatchers
 import com.redridgeapps.callrecorder.common.StartupInitializer
 import com.redridgeapps.callrecorder.common.utils.extension
 import com.redridgeapps.callrecorder.common.utils.launchUnit
@@ -19,7 +20,6 @@ import com.redridgeapps.wavutils.WavFileUtils
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import com.squareup.sqldelight.runtime.coroutines.mapToOne
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -36,10 +36,11 @@ import kotlin.time.Duration
 @Singleton
 class Recordings @Inject constructor(
     private val recordingQueries: RecordingQueries,
-    private val contactNameFetcher: ContactNameFetcher
+    private val contactNameFetcher: ContactNameFetcher,
+    private val dispatchers: AppDispatchers,
 ) {
 
-    suspend fun saveRecording(recordingJob: RecordingJob) = withContext(Dispatchers.IO) {
+    suspend fun saveRecording(recordingJob: RecordingJob) = withContext(dispatchers.IO) {
 
         val phoneNumber = recordingJob.newCallEvent.phoneNumber
         val name = contactNameFetcher.getContactName(phoneNumber) ?: "Unknown ($phoneNumber)"
@@ -59,14 +60,14 @@ class Recordings @Inject constructor(
     }
 
     fun getRecording(recordingId: Long): Flow<Recording> {
-        return recordingQueries.get(listOf(recordingId)).asFlow().mapToOne(Dispatchers.IO)
+        return recordingQueries.get(listOf(recordingId)).asFlow().mapToOne(dispatchers.IO)
     }
 
     fun getRecordingList(): Flow<List<Recording>> {
-        return recordingQueries.getAll().asFlow().mapToList(Dispatchers.IO)
+        return recordingQueries.getAll().asFlow().mapToList(dispatchers.IO)
     }
 
-    suspend fun trimSilenceEnds(recordingId: Long) = withContext(Dispatchers.IO) {
+    suspend fun trimSilenceEnds(recordingId: Long) = withContext(dispatchers.IO) {
 
         val recording = getRecording(recordingId).first()
         val recordingPath = Paths.get(recording.save_path)
@@ -84,7 +85,7 @@ class Recordings @Inject constructor(
         recordingQueries.updateDuration(duration, recordingId)
     }
 
-    suspend fun convertToMp3(recordingId: Long) = withContext(Dispatchers.IO) {
+    suspend fun convertToMp3(recordingId: Long) = withContext(dispatchers.IO) {
 
         val recording = getRecording(recordingId).first()
         val recordingPath = Paths.get(recording.save_path)
@@ -100,7 +101,7 @@ class Recordings @Inject constructor(
         Mp3Encoder.encode(encodingJob)
     }
 
-    suspend fun deleteRecording(recordingIdList: List<Long>) = withContext(Dispatchers.IO) {
+    suspend fun deleteRecording(recordingIdList: List<Long>) = withContext(dispatchers.IO) {
         val recordings = recordingQueries.get(recordingIdList).executeAsList()
 
         recordings.forEach {
@@ -114,7 +115,7 @@ class Recordings @Inject constructor(
         return recordingQueries.getIsStarred(recordingId).asFlow().mapToOne()
     }
 
-    suspend fun toggleStar(recordingIdList: List<Long>) = withContext(Dispatchers.IO) {
+    suspend fun toggleStar(recordingIdList: List<Long>) = withContext(dispatchers.IO) {
         recordingQueries.toggleStar(recordingIdList)
     }
 
@@ -122,11 +123,11 @@ class Recordings @Inject constructor(
         return recordingQueries.getSkipAutoDelete(recordingId).asFlow().mapToOne()
     }
 
-    suspend fun toggleSkipAutoDelete(recordingIdList: List<Long>) = withContext(Dispatchers.IO) {
+    suspend fun toggleSkipAutoDelete(recordingIdList: List<Long>) = withContext(dispatchers.IO) {
         recordingQueries.toggleSkipAutoDelete(recordingIdList)
     }
 
-    suspend fun updateContactNames() = withContext(Dispatchers.IO) {
+    suspend fun updateContactNames() = withContext(dispatchers.IO) {
 
         val recordings = recordingQueries.getAll().executeAsList()
 
@@ -136,7 +137,7 @@ class Recordings @Inject constructor(
         }
     }
 
-    suspend fun getWavData(recordingId: Long): WavData = withContext(Dispatchers.IO) {
+    suspend fun getWavData(recordingId: Long): WavData = withContext(dispatchers.IO) {
 
         val recording = getRecording(recordingId).first()
         val recordingPath = Paths.get(recording.save_path)
@@ -146,8 +147,8 @@ class Recordings @Inject constructor(
     }
 
     internal suspend fun deleteOverDaysOldIfNotSkippedAutoDelete(
-        duration: Duration
-    ) = withContext(Dispatchers.IO) {
+        duration: Duration,
+    ) = withContext(dispatchers.IO) {
         val days = duration.inDays.toInt()
         recordingQueries.deleteOverDaysOldIfNotSkippedAutoDelete(days.toString())
     }
