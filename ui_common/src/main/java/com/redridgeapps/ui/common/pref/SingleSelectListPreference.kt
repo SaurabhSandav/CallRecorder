@@ -1,4 +1,4 @@
-package com.redridgeapps.ui.common.prefcomponents
+package com.redridgeapps.ui.common.pref
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Box

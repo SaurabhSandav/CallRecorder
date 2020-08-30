@@ -3,9 +3,9 @@ package com.redridgeapps.ui.settings.ui
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import com.redridgeapps.ui.common.prefcomponents.SwitchPreference
-import com.redridgeapps.ui.common.prefcomponents.TextFieldPreference
-import com.redridgeapps.ui.common.prefcomponents.TitlePreference
+import com.redridgeapps.ui.common.pref.SwitchPreference
+import com.redridgeapps.ui.common.pref.TextFieldPreference
+import com.redridgeapps.ui.common.pref.TitlePreference
 import com.redridgeapps.ui.settings.PreferenceValue
 
 @Composable

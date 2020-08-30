@@ -59,7 +59,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped.Playing
-import com.redridgeapps.ui.common.prefcomponents.SwitchPreference
+import com.redridgeapps.ui.common.pref.SwitchPreference
 import com.redridgeapps.ui.common.routing.viewModel
 import com.redridgeapps.ui.main.viewmodels.PlaybackViewModel
 import com.redridgeapps.ui.main.viewmodels.RecordingListViewModel
