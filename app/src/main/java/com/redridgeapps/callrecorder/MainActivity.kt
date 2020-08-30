@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupUI() = lifecycleScope.launchUnit {
 
-        val isFirstRun = prefs.prefBoolean(PREF_IS_FIRST_RUN) { true }.first()
+        val isFirstRun = prefs.boolean(PREF_IS_FIRST_RUN) { true }.first()
         setupCompose(isFirstRun)
 
         // Remove Splash Screen

@@ -1,4 +1,4 @@
-@file:Suppress("Unused", "MemberVisibilityCanBePrivate")
+@file:Suppress("Unused")
 
 package com.redridgeapps.callrecorder.prefs
 
@@ -7,7 +7,11 @@ import androidx.core.content.edit
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,59 +37,59 @@ class Prefs @Inject constructor(private val sharedPrefs: SharedPreferences) {
 
     // region Fetching
 
-    fun prefStringOrNull(
+    fun stringOrNull(
         key: String
     ): Flow<String?> = pref<String?>(key) { sharedPrefs.getString(key, "")!! }
 
-    fun prefStringSetOrNull(
+    fun stringSetOrNull(
         key: String
     ): Flow<Set<String>?> = pref<Set<String>?>(key) { sharedPrefs.getStringSet(key, emptySet())!! }
 
-    fun prefBooleanOrNull(
+    fun booleanOrNull(
         key: String
     ): Flow<Boolean?> = pref(key) { sharedPrefs.getBoolean(key, false) }
 
-    fun prefIntOrNull(
+    fun intOrNull(
         key: String
     ): Flow<Int?> = pref(key) { sharedPrefs.getInt(key, Int.MAX_VALUE) }
 
-    fun prefLongOrNull(
+    fun longOrNull(
         key: String
     ): Flow<Long?> = pref(key) { sharedPrefs.getLong(key, Long.MAX_VALUE) }
 
-    fun prefFloatOrNull(
+    fun floatOrNull(
         key: String
     ): Flow<Float?> = pref(key) { sharedPrefs.getFloat(key, Float.MAX_VALUE) }
 
-    fun prefString(
+    fun string(
         key: String,
         default: () -> String
-    ): Flow<String> = prefStringOrNull(key).map { it ?: default() }
+    ): Flow<String> = stringOrNull(key).map { it ?: default() }
 
-    fun prefStringSet(
+    fun stringSet(
         key: String,
         default: () -> Set<String>
-    ): Flow<Set<String>> = prefStringSetOrNull(key).map { it ?: default() }
+    ): Flow<Set<String>> = stringSetOrNull(key).map { it ?: default() }
 
-    fun prefBoolean(
+    fun boolean(
         key: String,
         default: () -> Boolean
-    ): Flow<Boolean> = prefBooleanOrNull(key).map { it ?: default() }
+    ): Flow<Boolean> = booleanOrNull(key).map { it ?: default() }
 
-    fun prefInt(
+    fun int(
         key: String,
         default: () -> Int
-    ): Flow<Int> = prefIntOrNull(key).map { it ?: default() }
+    ): Flow<Int> = intOrNull(key).map { it ?: default() }
 
-    fun prefLong(
+    fun long(
         key: String,
         default: () -> Long
-    ): Flow<Long> = prefLongOrNull(key).map { it ?: default() }
+    ): Flow<Long> = longOrNull(key).map { it ?: default() }
 
-    fun prefFloat(
+    fun float(
         key: String,
         default: () -> Float
-    ): Flow<Float> = prefFloatOrNull(key).map { it ?: default() }
+    ): Flow<Float> = floatOrNull(key).map { it ?: default() }
 
     private fun <T> pref(key: String, prefGetter: () -> T): Flow<T?> {
         return allPrefs
@@ -106,27 +110,27 @@ class Prefs @Inject constructor(private val sharedPrefs: SharedPreferences) {
 
     class Editor(private val editor: SharedPreferences.Editor) {
 
-        fun setString(key: String, value: String) {
+        fun set(key: String, value: String) {
             editor.putString(key, value)
         }
 
-        fun setBoolean(key: String, value: Boolean) {
+        fun set(key: String, value: Boolean) {
             editor.putBoolean(key, value)
         }
 
-        fun setInt(key: String, value: Int) {
+        fun set(key: String, value: Int) {
             editor.putInt(key, value)
         }
 
-        fun setLong(key: String, value: Long) {
+        fun set(key: String, value: Long) {
             editor.putLong(key, value)
         }
 
-        fun setFloat(key: String, value: Float) {
+        fun set(key: String, value: Float) {
             editor.putFloat(key, value)
         }
 
-        fun setStringSet(key: String, value: Set<String>) {
+        fun set(key: String, value: Set<String>) {
             editor.putStringSet(key, value)
         }
 

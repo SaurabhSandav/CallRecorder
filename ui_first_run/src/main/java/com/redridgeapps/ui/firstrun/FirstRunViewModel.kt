@@ -22,8 +22,8 @@ internal class FirstRunViewModel @ViewModelInject constructor(
 
     fun configurationFinished() = viewModelScope.launchUnit {
         prefs.editor {
-            setBoolean(PREF_IS_FIRST_RUN, false)
-            setBoolean(PREF_RECORDING_ENABLED, true)
+            set(PREF_IS_FIRST_RUN, false)
+            set(PREF_RECORDING_ENABLED, true)
         }
     }
 }

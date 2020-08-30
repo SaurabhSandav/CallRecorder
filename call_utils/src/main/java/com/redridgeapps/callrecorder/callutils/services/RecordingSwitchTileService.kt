@@ -43,17 +43,18 @@ class RecordingSwitchTileService : TileService() {
 
     private fun flipTile() = coroutineScope.launch {
 
-        val flipped = !prefs.prefBoolean(PREF_RECORDING_ENABLED) {
-            Defaults.RECORDING_ENABLED
-        }.first()
-        prefs.editor { setBoolean(PREF_RECORDING_ENABLED, flipped) }
+        val flipped = !prefs
+            .boolean(PREF_RECORDING_ENABLED) { Defaults.RECORDING_ENABLED }
+            .first()
+
+        prefs.editor { set(PREF_RECORDING_ENABLED, flipped) }
 
         updateTile()
     }
 
     private fun updateTile() = coroutineScope.launch {
 
-        val recordingEnabled = prefs.prefBoolean(PREF_RECORDING_ENABLED) {
+        val recordingEnabled = prefs.boolean(PREF_RECORDING_ENABLED) {
             Defaults.RECORDING_ENABLED
         }.first()
 

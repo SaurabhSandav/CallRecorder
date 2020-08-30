@@ -10,7 +10,15 @@ import com.redridgeapps.callrecorder.callutils.recording.PcmSampleRate
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
 import com.redridgeapps.callrecorder.common.Systemizer
 import com.redridgeapps.callrecorder.common.utils.launchUnit
-import com.redridgeapps.callrecorder.prefs.*
+import com.redridgeapps.callrecorder.prefs.PREF_AUDIO_RECORD_CHANNELS
+import com.redridgeapps.callrecorder.prefs.PREF_AUDIO_RECORD_ENCODING
+import com.redridgeapps.callrecorder.prefs.PREF_AUDIO_RECORD_SAMPLE_RATE
+import com.redridgeapps.callrecorder.prefs.PREF_RECORDING_AUTO_DELETE_AFTER_DAYS
+import com.redridgeapps.callrecorder.prefs.PREF_RECORDING_AUTO_DELETE_ENABLED
+import com.redridgeapps.callrecorder.prefs.PREF_RECORDING_ENABLED
+import com.redridgeapps.callrecorder.prefs.Prefs
+import com.redridgeapps.callrecorder.prefs.enum
+import com.redridgeapps.callrecorder.prefs.set
 import kotlinx.coroutines.flow.first
 
 internal class SettingsViewModel @ViewModelInject constructor(
@@ -21,22 +29,20 @@ internal class SettingsViewModel @ViewModelInject constructor(
 
     val uiState: SettingsState = SettingsState(
         isSystemized = systemizer.isAppSystemizedFlow,
-        recordingEnabled = prefs.prefBoolean(PREF_RECORDING_ENABLED) {
-            Defaults.RECORDING_ENABLED
-        },
-        audioRecordSampleRate = prefs.prefEnum(PREF_AUDIO_RECORD_SAMPLE_RATE) {
+        recordingEnabled = prefs.boolean(PREF_RECORDING_ENABLED) { Defaults.RECORDING_ENABLED },
+        audioRecordSampleRate = prefs.enum(PREF_AUDIO_RECORD_SAMPLE_RATE) {
             Defaults.AUDIO_RECORD_SAMPLE_RATE
         },
-        audioRecordChannels = prefs.prefEnum(PREF_AUDIO_RECORD_CHANNELS) {
+        audioRecordChannels = prefs.enum(PREF_AUDIO_RECORD_CHANNELS) {
             Defaults.AUDIO_RECORD_CHANNELS
         },
-        audioRecordEncoding = prefs.prefEnum(PREF_AUDIO_RECORD_ENCODING) {
+        audioRecordEncoding = prefs.enum(PREF_AUDIO_RECORD_ENCODING) {
             Defaults.AUDIO_RECORD_ENCODING
         },
-        recordingAutoDeleteEnabled = prefs.prefBoolean(PREF_RECORDING_AUTO_DELETE_ENABLED) {
+        recordingAutoDeleteEnabled = prefs.boolean(PREF_RECORDING_AUTO_DELETE_ENABLED) {
             Defaults.RECORDING_AUTO_DELETE_ENABLED
         },
-        recordingAutoDeleteAfterDays = prefs.prefInt(PREF_RECORDING_AUTO_DELETE_AFTER_DAYS) {
+        recordingAutoDeleteAfterDays = prefs.int(PREF_RECORDING_AUTO_DELETE_AFTER_DAYS) {
             Defaults.RECORDING_AUTO_DELETE_AFTER_DAYS
         }
     )
@@ -49,42 +55,36 @@ internal class SettingsViewModel @ViewModelInject constructor(
     }
 
     fun flipRecordingEnabled() = viewModelScope.launchUnit {
-        val flipped = !prefs.prefBoolean(PREF_RECORDING_ENABLED) {
-            Defaults.RECORDING_ENABLED
-        }.first()
-        prefs.editor { setBoolean(PREF_RECORDING_ENABLED, flipped) }
+        val flipped = !prefs
+            .boolean(PREF_RECORDING_ENABLED) { Defaults.RECORDING_ENABLED }
+            .first()
+        prefs.editor { set(PREF_RECORDING_ENABLED, flipped) }
     }
 
     fun updateContactNames() = viewModelScope.launchUnit {
         recordings.updateContactNames()
     }
 
-    fun setAudioRecordSampleRate(
-        audioRecordSampleRate: PcmSampleRate
-    ) {
-        prefs.editor { setEnum(PREF_AUDIO_RECORD_SAMPLE_RATE, audioRecordSampleRate) }
+    fun setAudioRecordSampleRate(audioRecordSampleRate: PcmSampleRate) {
+        prefs.editor { set(PREF_AUDIO_RECORD_SAMPLE_RATE, audioRecordSampleRate) }
     }
 
-    fun setAudioRecordChannels(
-        audioRecordChannels: PcmChannels
-    ) {
-        prefs.editor { setEnum(PREF_AUDIO_RECORD_CHANNELS, audioRecordChannels) }
+    fun setAudioRecordChannels(audioRecordChannels: PcmChannels) {
+        prefs.editor { set(PREF_AUDIO_RECORD_CHANNELS, audioRecordChannels) }
     }
 
-    fun setAudioRecordEncoding(
-        audioRecordEncoding: PcmEncoding
-    ) = viewModelScope.launchUnit {
-        prefs.editor { setEnum(PREF_AUDIO_RECORD_ENCODING, audioRecordEncoding) }
+    fun setAudioRecordEncoding(audioRecordEncoding: PcmEncoding) = viewModelScope.launchUnit {
+        prefs.editor { set(PREF_AUDIO_RECORD_ENCODING, audioRecordEncoding) }
     }
 
     fun flipRecordingAutoDeleteEnabled() = viewModelScope.launchUnit {
-        val flippedIsRecording = !prefs.prefBoolean(PREF_RECORDING_AUTO_DELETE_ENABLED) {
-            Defaults.RECORDING_AUTO_DELETE_ENABLED
-        }.first()
-        prefs.editor { setBoolean(PREF_RECORDING_AUTO_DELETE_ENABLED, flippedIsRecording) }
+        val flippedIsRecording = !prefs
+            .boolean(PREF_RECORDING_AUTO_DELETE_ENABLED) { Defaults.RECORDING_AUTO_DELETE_ENABLED }
+            .first()
+        prefs.editor { set(PREF_RECORDING_AUTO_DELETE_ENABLED, flippedIsRecording) }
     }
 
     fun setRecordingAutoDeleteAfterDays(days: Int) = viewModelScope.launchUnit {
-        prefs.editor { setInt(PREF_RECORDING_AUTO_DELETE_AFTER_DAYS, days) }
+        prefs.editor { set(PREF_RECORDING_AUTO_DELETE_AFTER_DAYS, days) }
     }
 }

@@ -30,7 +30,7 @@ class SelectionViewModel @ViewModelInject constructor(
 ) : ViewModel() {
 
     val selection: ListSelection<Long> = ListSelection()
-    val showSkipAutoDelete: Flow<Boolean> = prefs.prefBoolean(PREF_RECORDING_AUTO_DELETE_ENABLED) {
+    val showSkipAutoDelete: Flow<Boolean> = prefs.boolean(PREF_RECORDING_AUTO_DELETE_ENABLED) {
         Defaults.RECORDING_AUTO_DELETE_ENABLED
     }
 

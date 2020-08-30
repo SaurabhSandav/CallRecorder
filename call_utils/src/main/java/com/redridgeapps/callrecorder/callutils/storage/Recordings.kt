@@ -182,11 +182,11 @@ class RecordingStoragePathInitializer @Inject constructor(
 
     override fun initialize(context: Context) = GlobalScope.launchUnit {
 
-        if (prefs.prefStringOrNull(PREF_RECORDINGS_STORAGE_PATH).first() == null) {
+        if (prefs.stringOrNull(PREF_RECORDINGS_STORAGE_PATH).first() == null) {
 
             val newRecordingPath = Recordings.getRecordingsStoragePath(context).toString()
 
-            prefs.editor { setString(PREF_RECORDINGS_STORAGE_PATH, newRecordingPath) }
+            prefs.editor { set(PREF_RECORDINGS_STORAGE_PATH, newRecordingPath) }
         }
     }
 }

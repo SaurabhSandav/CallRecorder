@@ -25,7 +25,7 @@ class RecordingAutoDeleteWorker @WorkerInject constructor(
 
     override suspend fun doWork(): Result {
 
-        val days = prefs.prefInt(PREF_RECORDING_AUTO_DELETE_AFTER_DAYS) {
+        val days = prefs.int(PREF_RECORDING_AUTO_DELETE_AFTER_DAYS) {
             Defaults.RECORDING_AUTO_DELETE_AFTER_DAYS
         }.first()
 

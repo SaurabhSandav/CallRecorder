@@ -3,7 +3,12 @@ package com.redridgeapps.callrecorder.callutils.recording
 import com.redridgeapps.callrecorder.callutils.Defaults
 import com.redridgeapps.callrecorder.callutils.callevents.NewCallEvent
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
-import com.redridgeapps.callrecorder.prefs.*
+import com.redridgeapps.callrecorder.prefs.PREF_AUDIO_RECORD_CHANNELS
+import com.redridgeapps.callrecorder.prefs.PREF_AUDIO_RECORD_ENCODING
+import com.redridgeapps.callrecorder.prefs.PREF_AUDIO_RECORD_SAMPLE_RATE
+import com.redridgeapps.callrecorder.prefs.PREF_RECORDINGS_STORAGE_PATH
+import com.redridgeapps.callrecorder.prefs.Prefs
+import com.redridgeapps.callrecorder.prefs.enum
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
@@ -26,24 +31,17 @@ suspend fun RecordingJob(
 ): RecordingJob = coroutineScope {
 
     val sampleRate = async {
-        prefs.prefEnum(PREF_AUDIO_RECORD_SAMPLE_RATE) {
-            Defaults.AUDIO_RECORD_SAMPLE_RATE
-        }.first()
+        prefs.enum(PREF_AUDIO_RECORD_SAMPLE_RATE) { Defaults.AUDIO_RECORD_SAMPLE_RATE }.first()
     }
     val audioChannel = async {
-        prefs.prefEnum(PREF_AUDIO_RECORD_CHANNELS) {
-            Defaults.AUDIO_RECORD_CHANNELS
-        }.first()
+        prefs.enum(PREF_AUDIO_RECORD_CHANNELS) { Defaults.AUDIO_RECORD_CHANNELS }.first()
     }
     val audioEncoding = async {
-        prefs.prefEnum(PREF_AUDIO_RECORD_ENCODING) {
-            Defaults.AUDIO_RECORD_ENCODING
-        }.first()
+        prefs.enum(PREF_AUDIO_RECORD_ENCODING) { Defaults.AUDIO_RECORD_ENCODING }.first()
     }
     val recordingsStoragePath = async {
-        prefs.prefString(PREF_RECORDINGS_STORAGE_PATH) {
-            error("Recordings storage path is empty")
-        }.first()
+        prefs.string(PREF_RECORDINGS_STORAGE_PATH) { error("Recordings storage path is empty") }
+            .first()
     }
 
     val recordingStartInstant = Instant.now()
