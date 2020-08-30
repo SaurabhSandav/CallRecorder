@@ -1,6 +1,6 @@
 import com.redridgeapps.callrecorder.callutils.callevents.CallDirection;
-import java.time.Duration;
-import java.time.Instant;
+import kotlin.time.Duration;
+import kotlinx.datetime.Instant;
 
 -- 0 == false
 -- 1 == true

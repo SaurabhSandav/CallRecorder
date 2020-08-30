@@ -23,11 +23,13 @@ object AndroidTools {
 object Kotlin {
     const val VERSION = "1.4.0"
     private const val COROUTINES_VERSION = "1.3.9"
+    private const val DATE_TIME_VERSION = "0.1.0"
 
     const val GRADLE_PLUGIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:$VERSION"
     const val COROUTINES_CORE = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$COROUTINES_VERSION"
     const val COROUTINES_ANDROID =
         "org.jetbrains.kotlinx:kotlinx-coroutines-android:$COROUTINES_VERSION"
+    const val DATE_TIME = "org.jetbrains.kotlinx:kotlinx-datetime:$DATE_TIME_VERSION"
 }
 
 object Jetpack {

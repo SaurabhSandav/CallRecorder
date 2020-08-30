@@ -12,8 +12,9 @@ import com.redridgeapps.callrecorder.prefs.enum
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import java.nio.file.Path
-import java.time.Instant
 
 data class RecordingJob internal constructor(
     val pcmSampleRate: PcmSampleRate,
@@ -21,13 +22,13 @@ data class RecordingJob internal constructor(
     val pcmEncoding: PcmEncoding,
     val savePath: Path,
     val newCallEvent: NewCallEvent,
-    val recordingStartInstant: Instant
+    val recordingStartInstant: Instant,
 )
 
 @Suppress("FunctionName")
 suspend fun RecordingJob(
     prefs: Prefs,
-    callEvent: NewCallEvent
+    callEvent: NewCallEvent,
 ): RecordingJob = coroutineScope {
 
     val sampleRate = async {
@@ -44,11 +45,11 @@ suspend fun RecordingJob(
             .first()
     }
 
-    val recordingStartInstant = Instant.now()
+    val recordingStartInstant = Clock.System.now()
 
     val savePath = Recordings.generateFilePath(
         saveDir = recordingsStoragePath.await(),
-        fileName = recordingStartInstant.epochSecond.toString()
+        fileName = recordingStartInstant.epochSeconds.toString()
     )
 
     RecordingJob(

@@ -29,9 +29,9 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardOpenOption.READ
-import java.time.Duration
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration
 
 @Singleton
 class Recordings @Inject constructor(
@@ -148,7 +148,7 @@ class Recordings @Inject constructor(
     internal suspend fun deleteOverDaysOldIfNotSkippedAutoDelete(
         duration: Duration
     ) = withContext(Dispatchers.IO) {
-        val days = duration.toDays()
+        val days = duration.inDays.toInt()
         recordingQueries.deleteOverDaysOldIfNotSkippedAutoDelete(days.toString())
     }
 

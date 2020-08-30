@@ -13,8 +13,9 @@ import com.redridgeapps.callrecorder.common.StartupInitializer
 import com.redridgeapps.callrecorder.prefs.PREF_RECORDING_AUTO_DELETE_AFTER_DAYS
 import com.redridgeapps.callrecorder.prefs.Prefs
 import kotlinx.coroutines.flow.first
-import java.time.Duration
 import javax.inject.Inject
+import kotlin.time.days
+import kotlin.time.toJavaDuration
 
 class RecordingAutoDeleteWorker @WorkerInject constructor(
     @Assisted appContext: Context,
@@ -29,7 +30,7 @@ class RecordingAutoDeleteWorker @WorkerInject constructor(
             Defaults.RECORDING_AUTO_DELETE_AFTER_DAYS
         }.first()
 
-        recordings.deleteOverDaysOldIfNotSkippedAutoDelete(Duration.ofDays(days.toLong()))
+        recordings.deleteOverDaysOldIfNotSkippedAutoDelete(days.days)
 
         return Result.success()
     }
@@ -39,7 +40,7 @@ class RecordingAutoDeleteWorker @WorkerInject constructor(
         internal fun schedule(context: Context) {
 
             val workRequest =
-                PeriodicWorkRequestBuilder<RecordingAutoDeleteWorker>(Duration.ofDays(1)).build()
+                PeriodicWorkRequestBuilder<RecordingAutoDeleteWorker>(1.days.toJavaDuration()).build()
 
             WorkManager.getInstance(context).enqueue(workRequest)
         }

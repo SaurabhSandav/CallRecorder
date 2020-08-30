@@ -12,21 +12,22 @@ import com.redridgeapps.callrecorder.callutils.services.Mp3ConversionServiceLaun
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
 import com.redridgeapps.callrecorder.common.utils.humanReadableByteCount
 import com.redridgeapps.callrecorder.common.utils.launchUnit
-import com.redridgeapps.callrecorder.common.utils.toLocalDateTime
 import com.redridgeapps.callrecorder.prefs.PREF_RECORDING_AUTO_DELETE_ENABLED
 import com.redridgeapps.callrecorder.prefs.Prefs
 import com.redridgeapps.ui.common.utils.ListSelection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.datetime.toLocalDateTime
 import java.nio.file.Paths
-import java.time.Duration
 import java.time.format.DateTimeFormatter
 
 class SelectionViewModel @ViewModelInject constructor(
     prefs: Prefs,
     private val recordings: Recordings,
     private val mp3ConversionServiceLauncher: Mp3ConversionServiceLauncher,
-    private val audioEndsTrimmingServiceLauncher: AudioEndsTrimmingServiceLauncher
+    private val audioEndsTrimmingServiceLauncher: AudioEndsTrimmingServiceLauncher,
 ) : ViewModel() {
 
     val selection: ListSelection<Long> = ListSelection()
@@ -79,11 +80,21 @@ class SelectionViewModel @ViewModelInject constructor(
             add("Contact Name: " to recording.name)
             add("Number: " to recording.number)
 
-            val formattedStartTime =
-                fullDateFormatter.format(recording.start_instant.toLocalDateTime())
+            val formattedStartTime = fullDateFormatter.format(
+                recording.start_instant
+                    .toLocalDateTime(TimeZone.currentSystemDefault())
+                    .toJavaLocalDateTime()
+            )
             add("Recording Started: " to formattedStartTime)
 
-            add("Duration: " to recording.duration.getFormatted())
+            val durationSeconds = recording.duration.inSeconds.toLong()
+            val durationText = "%d:%02d:%02d".format(
+                durationSeconds / 3600,
+                (durationSeconds % 3600) / 60,
+                (durationSeconds % 60)
+            )
+
+            add("Duration: " to durationText)
 
             val direction = when (recording.call_direction) {
                 CallDirection.INCOMING -> "Incoming"
@@ -107,6 +118,3 @@ class SelectionViewModel @ViewModelInject constructor(
 }
 
 private val fullDateFormatter = DateTimeFormatter.ofPattern("MMMM d, uuuu, HH:mm:ss")
-
-private fun Duration.getFormatted(): String =
-    "%d:%02d:%02d".format(seconds / 3600, (seconds % 3600) / 60, (seconds % 60))

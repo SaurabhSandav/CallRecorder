@@ -16,6 +16,7 @@ allprojects {
         google()
         mavenCentral()
         maven { url "https://jitpack.io" } // For compose-navigation
+        maven { url "https://kotlin.bintray.com/kotlinx/" } // For kotlinx-datetime
 
         if (GoogleMaven.SUPPORT_REPO_ENABLED) {
             maven { url GoogleMaven.SUPPORT_REPO_URL }
@@ -37,6 +38,7 @@ allprojects {
                     '-Xskip-prerelease-check',
                     '-Xallow-jvm-ir-dependencies',
                     '-Xopt-in=kotlin.ExperimentalStdlibApi',
+                    "-Xopt-in=kotlin.time.ExperimentalTime",
                     '-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi',
                     '-Xopt-in=kotlinx.coroutines.ObsoleteCoroutinesApi',
                     '-Xopt-in=kotlinx.coroutines.FlowPreview',

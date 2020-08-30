@@ -4,7 +4,8 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.channels.FileChannel
 import java.nio.file.Path
-import java.time.Duration
+import kotlin.time.Duration
+import kotlin.time.milliseconds
 
 object WavFileUtils {
 
@@ -62,13 +63,11 @@ object WavFileUtils {
         )
     }
 
-    fun calculateDuration(
-        fileChannel: FileChannel
-    ): Duration {
+    fun calculateDuration(fileChannel: FileChannel): Duration {
         val wavData = readWavData(fileChannel)
         val fileSize = fileChannel.size() - WAV_HEADER_SIZE
         val durationMillis = (fileSize * 1000) / wavData.byteRate
-        return Duration.ofMillis(durationMillis)
+        return durationMillis.milliseconds
     }
 
     fun trimSilenceEnds(recordingPath: Path, outputPath: Path) {

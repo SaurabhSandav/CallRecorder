@@ -11,8 +11,9 @@ commonConfiguration {
 
 dependencies {
 
-    // Kotlin
+    // KotlinX
     api Kotlin.COROUTINES_ANDROID
+    api Kotlin.DATE_TIME
 
     // Dagger Hilt
     implementation Dagger.HILT_ANDROID
