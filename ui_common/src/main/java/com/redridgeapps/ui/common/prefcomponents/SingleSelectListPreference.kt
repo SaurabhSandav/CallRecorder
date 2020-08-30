@@ -1,21 +1,34 @@
 package com.redridgeapps.ui.common.prefcomponents
 
-import androidx.compose.Composable
-import androidx.compose.state
-import androidx.ui.animation.Crossfade
-import androidx.ui.core.Alignment
-import androidx.ui.core.ConfigurationAmbient
-import androidx.ui.core.Modifier
-import androidx.ui.foundation.*
-import androidx.ui.foundation.selection.selectable
-import androidx.ui.graphics.Color
-import androidx.ui.layout.*
-import androidx.ui.material.Divider
-import androidx.ui.material.ListItem
-import androidx.ui.material.MaterialTheme
-import androidx.ui.material.RadioButton
-import androidx.ui.text.TextStyle
-import androidx.ui.unit.dp
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.Box
+import androidx.compose.foundation.ContentGravity
+import androidx.compose.foundation.ScrollableColumn
+import androidx.compose.foundation.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.preferredHeightIn
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.material.Divider
+import androidx.compose.material.ListItem
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.RadioButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ConfigurationAmbient
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 
 @Composable
 fun <T> SingleSelectListPreference(
@@ -26,17 +39,17 @@ fun <T> SingleSelectListPreference(
     onSelectedChange: (key: T) -> Unit
 ) {
 
-    val (showDialog, setShowDialog) = state { false }
+    val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
     val secondaryText = if (selectedItem == null) "" else itemText(selectedItem)
 
     ListItem(
-        text = { Text(title) },
+        modifier = Modifier.clickable(onClick = { setShowDialog(true) }),
         secondaryText = {
             Crossfade(current = secondaryText) {
                 Text(it)
             }
         },
-        onClick = { setShowDialog(true) }
+        text = { Text(title) },
     )
 
     if (showDialog) {
@@ -122,10 +135,11 @@ private fun <T> KeyedRadioGroup(
 private fun DialogPreference(
     title: String,
     onCloseRequest: () -> Unit,
-    mainContent: @Composable() () -> Unit
+    mainContent: @Composable () -> Unit
 ) {
-    Dialog(onCloseRequest = onCloseRequest) {
-        Column(Modifier.drawBackground(Color.White).width(280.dp)) {
+    Dialog(onDismissRequest = onCloseRequest) {
+
+        Column(Modifier.background(Color.White).width(280.dp)) {
 
             // Title
 
@@ -147,7 +161,7 @@ private fun DialogPreference(
 
             val mainContentHeight = ConfigurationAmbient.current.screenHeightDp - 150
 
-            VerticalScroller(
+            ScrollableColumn(
                 modifier = Modifier.preferredHeightIn(maxHeight = mainContentHeight.dp),
                 children = { mainContent() }
             )

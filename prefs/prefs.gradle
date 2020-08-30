@@ -8,7 +8,6 @@ plugins {
 dependencies {
 
     // Kotlin
-    implementation Kotlin.STDLIB
     implementation Kotlin.COROUTINES_ANDROID
 
     // Jetpack

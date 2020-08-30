@@ -1,8 +1,8 @@
 package com.redridgeapps.ui.firstrun
 
-import androidx.compose.getValue
-import androidx.compose.mutableStateOf
-import androidx.compose.setValue
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import kotlinx.coroutines.flow.Flow
 
 internal class FirstRunState(val isAppSystemized: Flow<Boolean>) {

@@ -11,21 +11,20 @@ commonConfiguration {
 
 dependencies {
 
+    implementation project(":common")
+    implementation project(":prefs")
     implementation project(":ui_common")
     implementation project(":ui_main")
-    implementation project(":prefs")
-    implementation project(":common")
 
     // Kotlin
-    implementation Kotlin.STDLIB
     implementation Kotlin.COROUTINES_ANDROID
 
     // Compose
-    implementation Compose.COMPOSE_RUNTIME
-    implementation Compose.UI_FOUNDATION
-    implementation Compose.UI_LAYOUT
-    implementation Compose.UI_MATERIAL
-    implementation Compose.UI_MATERIAL_ICONS_EXTENDED
+    implementation Compose.RUNTIME
+    implementation Compose.FOUNDATION
+    implementation Compose.FOUNDATION_LAYOUT
+    implementation Compose.MATERIAL
+    implementation Compose.MATERIAL_ICONS_EXTENDED
     implementation Compose.UI_UTIL
     implementation Compose.UI_TOOLING
 

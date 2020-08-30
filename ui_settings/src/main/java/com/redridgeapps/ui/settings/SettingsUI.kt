@@ -1,19 +1,20 @@
 package com.redridgeapps.ui.settings
 
-import androidx.compose.Composable
-import androidx.compose.collectAsState
-import androidx.compose.getValue
-import androidx.ui.core.Modifier
-import androidx.ui.foundation.Icon
-import androidx.ui.foundation.Text
-import androidx.ui.layout.Column
-import androidx.ui.layout.padding
-import androidx.ui.material.IconButton
-import androidx.ui.material.ListItem
-import androidx.ui.material.Scaffold
-import androidx.ui.material.TopAppBar
-import androidx.ui.material.icons.Icons
-import androidx.ui.material.icons.filled.ArrowBack
+import androidx.compose.foundation.Icon
+import androidx.compose.foundation.Text
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.IconButton
+import androidx.compose.material.ListItem
+import androidx.compose.material.Scaffold
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.callrecorder.callutils.recording.PcmChannels
 import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
@@ -79,7 +80,7 @@ private fun ContentMain(viewModel: SettingsViewModel, modifier: Modifier) {
 
         ListItem(
             text = { Text("Update contact names") },
-            onClick = { viewModel.updateContactNames() }
+            modifier = Modifier.clickable(onClick = { viewModel.updateContactNames() }),
         )
 
         RecordingPreference(viewModel)

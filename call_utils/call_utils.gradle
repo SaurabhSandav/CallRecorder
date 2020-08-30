@@ -27,7 +27,6 @@ dependencies {
     implementation project(":mp3_encoder")
 
     // Kotlin
-    implementation Kotlin.STDLIB
     implementation Kotlin.COROUTINES_ANDROID
 
     // Jetpack

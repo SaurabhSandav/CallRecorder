@@ -1,16 +1,16 @@
 package com.redridgeapps.ui.common.prefcomponents
 
-import androidx.compose.Composable
-import androidx.ui.animation.Crossfade
-import androidx.ui.core.Modifier
-import androidx.ui.foundation.Text
-import androidx.ui.layout.padding
-import androidx.ui.material.ListItem
-import androidx.ui.material.MaterialTheme
-import androidx.ui.material.Switch
-import androidx.ui.text.TextStyle
-import androidx.ui.text.font.FontWeight
-import androidx.ui.unit.dp
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ListItem
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Switch
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun TitlePreference(text: String) {

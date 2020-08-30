@@ -1,6 +1,6 @@
 package com.redridgeapps.ui.common.routing
 
-import androidx.compose.Composable
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import com.koduok.compose.navigation.BackStackAmbient
 import com.koduok.compose.navigation.core.Route

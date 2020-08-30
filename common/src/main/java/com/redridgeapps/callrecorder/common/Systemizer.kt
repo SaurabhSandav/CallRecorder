@@ -25,9 +25,13 @@ class Systemizer @Inject constructor(
 ) {
 
     init {
-        Shell.Config.setFlags(Shell.FLAG_REDIRECT_STDERR)
-        Shell.Config.verboseLogging(false)
-        Shell.Config.setTimeout(10)
+        Shell.enableVerboseLogging = false
+
+        val shellBuilder = Shell.Builder.create()
+            .setFlags(Shell.FLAG_REDIRECT_STDERR)
+            .setTimeout(10)
+
+        Shell.setDefaultBuilder(shellBuilder)
     }
 
     private val packageName = context.packageName

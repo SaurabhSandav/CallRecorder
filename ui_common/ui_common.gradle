@@ -13,14 +13,13 @@ dependencies {
     implementation project(":compose_viewmodel")
 
     // Kotlin
-    implementation Kotlin.STDLIB
     implementation Kotlin.COROUTINES_ANDROID
 
     // Compose
-    implementation Compose.COMPOSE_RUNTIME
-    implementation Compose.UI_FOUNDATION
-    implementation Compose.UI_LAYOUT
-    implementation Compose.UI_MATERIAL
+    implementation Compose.RUNTIME
+    implementation Compose.FOUNDATION
+    implementation Compose.FOUNDATION_LAYOUT
+    implementation Compose.MATERIAL
 
     // compose-navigation
     implementation ComposeNavigation.CORE

@@ -11,14 +11,11 @@ commonConfiguration {
 
 dependencies {
 
-    // Kotlin
-    implementation Kotlin.STDLIB
-
     // Jetpack
     implementation Jetpack.ACTIVITY_KTX
 
     // Compose
-    implementation Compose.COMPOSE_RUNTIME
+    implementation Compose.RUNTIME
 
     // ViewModel
     implementation Lifecycle.VIEWMODEL_KTX

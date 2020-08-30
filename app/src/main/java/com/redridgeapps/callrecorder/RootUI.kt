@@ -3,11 +3,11 @@ package com.redridgeapps.callrecorder
 import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.activity.viewModels
-import androidx.compose.Composable
-import androidx.compose.Providers
-import androidx.compose.key
-import androidx.ui.core.setContent
-import androidx.ui.material.MaterialTheme
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Providers
+import androidx.compose.runtime.key
+import androidx.compose.ui.platform.setContent
 import com.koduok.compose.navigation.Router
 import com.koduok.compose.navigation.core.backStackController
 import com.redridgeapps.compose.viewmodel.ComposeFramework

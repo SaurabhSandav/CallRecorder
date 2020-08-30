@@ -2,7 +2,6 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'com.squareup.sqldelight'
     id 'dagger.hilt.android.plugin'
     id 'common-configuration'
 }
@@ -32,15 +31,14 @@ dependencies {
 
     implementation project(":common")
     implementation project(":prefs")
-    implementation project(":compose_viewmodel")
     implementation project(":call_utils")
+    implementation project(":compose_viewmodel")
     implementation project(":ui_common")
     implementation project(":ui_first_run")
     implementation project(":ui_main")
     implementation project(":ui_settings")
 
     // Kotlin
-    implementation Kotlin.STDLIB
     implementation Kotlin.COROUTINES_ANDROID
 
     // Jetpack
@@ -51,9 +49,9 @@ dependencies {
     implementation Jetpack.PREFERENCE_KTX
 
     // Compose
-    implementation Compose.COMPOSE_RUNTIME
-    implementation Compose.UI_FOUNDATION
-    implementation Compose.UI_MATERIAL
+    implementation Compose.RUNTIME
+    implementation Compose.FOUNDATION
+    implementation Compose.MATERIAL
 
     // compose-navigation
     implementation ComposeNavigation.CORE

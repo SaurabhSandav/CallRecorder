@@ -1,23 +1,62 @@
 package com.redridgeapps.ui.main
 
-import androidx.compose.*
-import androidx.ui.animation.Crossfade
-import androidx.ui.core.Modifier
-import androidx.ui.foundation.*
-import androidx.ui.foundation.lazy.LazyColumnItems
-import androidx.ui.graphics.Color
-import androidx.ui.layout.*
-import androidx.ui.material.*
-import androidx.ui.material.icons.Icons
-import androidx.ui.material.icons.filled.*
-import androidx.ui.text.AnnotatedString
-import androidx.ui.text.SpanStyle
-import androidx.ui.text.annotatedString
-import androidx.ui.text.font.FontWeight
-import androidx.ui.text.style.TextAlign
-import androidx.ui.text.withStyle
-import androidx.ui.unit.Dp
-import androidx.ui.unit.dp
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.Box
+import androidx.compose.foundation.ContentGravity
+import androidx.compose.foundation.Icon
+import androidx.compose.foundation.ScrollableColumn
+import androidx.compose.foundation.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ConstraintLayout
+import androidx.compose.foundation.layout.Dimension
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumnFor
+import androidx.compose.material.Checkbox
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.IconButton
+import androidx.compose.material.ListItem
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Slider
+import androidx.compose.material.Surface
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.PauseCircleOutline
+import androidx.compose.material.icons.filled.PlayCircleOutline
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.launchInComposition
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.annotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.koduok.compose.navigation.BackStackAmbient
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped.Playing
@@ -109,7 +148,7 @@ private fun IconCloseSelectionMode(selectionViewModel: SelectionViewModel) {
 @Composable
 private fun IconFilter(recordingListViewModel: RecordingListViewModel) {
 
-    var expanded by state { false }
+    var expanded by remember { mutableStateOf(false) }
 
     val iconButton = @Composable {
         IconButton(onClick = { expanded = true }) {
@@ -188,7 +227,7 @@ private fun RecordingList(
     selectionViewModel: SelectionViewModel
 ) {
 
-    LazyColumnItems(
+    LazyColumnFor(
         items = recordingListViewModel.uiState.recordingList,
         modifier = Modifier.fillMaxSize()
     ) { recordingListItem ->
@@ -240,13 +279,13 @@ private fun RecordingListItem(
     )
 
     if (recordingEntry.id in selection) {
-        modifier = modifier.drawBackground(MaterialTheme.colors.onSurface.copy(alpha = SCRIM_ALPHA))
+        modifier = modifier.background(MaterialTheme.colors.onSurface.copy(alpha = SCRIM_ALPHA))
     }
 
     playbackViewModel.playbackState.collectAsState().value.let {
         if (it is NotStopped && it.recording.id == recordingEntry.id) {
             modifier =
-                modifier.drawBackground(MaterialTheme.colors.secondary.copy(alpha = SCRIM_ALPHA))
+                modifier.background(MaterialTheme.colors.secondary.copy(alpha = SCRIM_ALPHA))
         }
     }
 
@@ -336,8 +375,7 @@ private fun PlaybackBar(playbackViewModel: PlaybackViewModel) {
                     end.linkTo(playbackIcon.start)
                     width = Dimension.fillToConstraints
                     height = Dimension.value(20.dp)
-                }.padding(5.dp),
-                color = MaterialTheme.colors.secondary
+                }.padding(5.dp)
             )
 
             PlayPauseIcon(
@@ -362,7 +400,7 @@ private fun OptionsDialog(selectionViewModel: SelectionViewModel) {
 
     val onCloseRequest = { selection.clear() }
 
-    Dialog(onCloseRequest = onCloseRequest) {
+    Dialog(onDismissRequest = onCloseRequest) {
 
         // Occasionally calling `selection.single()` will crash.
         // Possible reason for crash: Dialog having separate composition.
@@ -370,30 +408,31 @@ private fun OptionsDialog(selectionViewModel: SelectionViewModel) {
         // Rechecking selection status inside Dialog should avoid the crash.
         if (selection.inMultiSelectMode || selection.isEmpty()) return@Dialog
 
-        Column(Modifier.drawBackground(Color.White)) {
+        Column(Modifier.background(Color.White)) {
 
-            var selectedIndex by state { 0 }
+            var selectedIndex by remember { mutableStateOf(0) }
 
-            TabRow(
-                items = OptionsDialogTab.values().asList(),
-                selectedIndex = selectedIndex
-            ) { tabIndex: Int, tab: OptionsDialogTab ->
+            TabRow(selectedTabIndex = selectedIndex) {
 
-                Tab(
-                    text = { Text(tab.toReadableString()) },
-                    selected = selectedIndex == tabIndex,
-                    onSelected = { selectedIndex = tabIndex }
-                )
+                for ((tabIndex, tab) in OptionsDialogTab.values().asList().withIndex()) {
+
+                    Tab(
+                        selected = selectedIndex == tabIndex,
+                        onClick = { selectedIndex = tabIndex }
+                    ) {
+                        Text(tab.toReadableString())
+                    }
+                }
             }
 
-            var recordingInfo by state<List<AnnotatedString>> { emptyList() }
+            var recordingInfo by remember { mutableStateOf<List<AnnotatedString>>(emptyList()) }
 
             launchInComposition {
                 recordingInfo = annotateRecordingInfo(selectionViewModel)
             }
 
             Crossfade(selectedIndex) { tabIndex ->
-                VerticalScroller {
+                ScrollableColumn {
                     when (tabIndex) {
                         0 -> OptionsDialogOptionsTab(selectionViewModel)
                         1 -> OptionsDialogInfoTab(recordingInfo)
@@ -439,9 +478,20 @@ private fun OptionsDialogOptionsTab(selectionViewModel: SelectionViewModel) {
             )
         }
 
-        ListItem("Trim silence at start/end", onClick = { selectionViewModel.trimSilenceEnds() })
-        ListItem("Convert to Mp3", onClick = { selectionViewModel.convertToMp3() })
-        ListItem("Delete", onClick = { selectionViewModel.deleteRecordings() })
+        ListItem(
+            modifier = Modifier.clickable(onClick = { selectionViewModel.trimSilenceEnds() }),
+            text = { Text(text = "Trim silence at start/end") }
+        )
+
+        ListItem(
+            modifier = Modifier.clickable(onClick = { selectionViewModel.convertToMp3() }),
+            text = { Text(text = "Convert to Mp3") }
+        )
+
+        ListItem(
+            modifier = Modifier.clickable(onClick = { selectionViewModel.deleteRecordings() }),
+            text = { Text(text = "Delete") }
+        )
     }
 }
 
