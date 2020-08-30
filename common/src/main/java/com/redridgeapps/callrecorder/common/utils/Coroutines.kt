@@ -6,10 +6,12 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-fun CoroutineScope.launchUnit(
+inline fun CoroutineScope.launchUnit(
     context: CoroutineContext = EmptyCoroutineContext,
     start: CoroutineStart = CoroutineStart.DEFAULT,
-    block: suspend CoroutineScope.() -> Unit
+    crossinline block: suspend CoroutineScope.() -> Unit
 ) {
-    launch(context, start, block)
+    launch(context, start) {
+        block()
+    }
 }
