@@ -1,14 +1,35 @@
-include ':ui_first_run'
-include ':ui_settings'
-include ':ui_main'
-include ':ui_common'
-include ':call_utils'
+
+pluginManagement {
+
+    repositories {
+        google()
+        gradlePluginPortal()
+        mavenCentral()
+        jcenter()
+    }
+
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == "com.android.application") {
+                useModule("com.android.tools.build:gradle:${requested.version}")
+            } else if (requested.id.id == "dagger.hilt.android.plugin") {
+                useModule("com.google.dagger:hilt-android-gradle-plugin:${requested.version}")
+            }
+        }
+    }
+}
+
+include ':app'
 include ':common'
 include ':prefs'
-include ':compose_viewmodel'
+include ':call_utils'
 include ':wav_utils'
 include ':mp3_encoder'
-include ':app'
+include ':compose_viewmodel'
+include ':ui_common'
+include ':ui_first_run'
+include ':ui_main'
+include ':ui_settings'
 
 rootProject.name = "Call Recorder"
 
