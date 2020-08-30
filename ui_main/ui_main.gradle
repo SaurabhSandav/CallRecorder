@@ -10,7 +10,6 @@ commonConfiguration {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation project(":ui_common")
     implementation project(":ui_settings")

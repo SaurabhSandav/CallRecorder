@@ -10,7 +10,6 @@ commonConfiguration {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // Kotlin
     implementation Kotlin.STDLIB

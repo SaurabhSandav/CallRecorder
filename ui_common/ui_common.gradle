@@ -9,7 +9,6 @@ commonConfiguration {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation project(":compose_viewmodel")
 
