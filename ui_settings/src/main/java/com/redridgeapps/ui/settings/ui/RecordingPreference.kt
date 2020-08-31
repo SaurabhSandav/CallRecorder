@@ -20,7 +20,7 @@ internal fun RecordingPreference(
         SingleSelectListPreference(
             title = "Sample Rate",
             keys = PcmSampleRate.values().asList(),
-            itemText = { it.sampleRate.toString() },
+            itemLabel = { it.sampleRate.toString() },
             selectedItem = audioRecordSampleRate.value,
             onSelectedChange = audioRecordSampleRate.onChanged
         )
@@ -28,7 +28,7 @@ internal fun RecordingPreference(
         SingleSelectListPreference(
             title = "Channels",
             keys = PcmChannels.values().asList(),
-            itemText = {
+            itemLabel = {
                 when (it) {
                     PcmChannels.MONO -> "Mono"
                     PcmChannels.STEREO -> "Stereo"
@@ -41,7 +41,7 @@ internal fun RecordingPreference(
         SingleSelectListPreference(
             title = "Encoding",
             keys = PcmEncoding.values().asList(),
-            itemText = {
+            itemLabel = {
                 when (it) {
                     PcmEncoding.PCM_8BIT -> "PCM_8BIT"
                     PcmEncoding.PCM_16BIT -> "PCM_16BIT"
