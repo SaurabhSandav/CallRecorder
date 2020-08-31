@@ -1,13 +1,27 @@
 package com.redridgeapps.ui.firstrun
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import kotlinx.coroutines.flow.Flow
+import android.Manifest
+import androidx.compose.runtime.Stable
 
-internal class FirstRunState(val isAppSystemized: Flow<Boolean>) {
+@Stable
+internal data class FirstRunState(
+    val isAppSystemized: Boolean = false,
+    val onAppSystemize: OnAppSystemize,
 
-    var permissionsGranted by mutableStateOf(false)
+    val allPermissionsGranted: Boolean = false,
+    val onPermissionsResult: OnPermissionsResult,
 
-    var captureAudioOutputPermissionGranted by mutableStateOf(false)
-}
+    val captureAudioOutputPermissionGranted: Boolean = false,
+
+    val isConfigFinished: Boolean = false,
+)
+
+internal val REQUESTED_DANGEROUS_PERMISSIONS = listOf(
+    Manifest.permission.RECORD_AUDIO,
+    Manifest.permission.READ_PHONE_STATE,
+    Manifest.permission.READ_CALL_LOG,
+    Manifest.permission.READ_CONTACTS,
+)
+
+internal typealias OnAppSystemize = () -> Unit
+internal typealias OnPermissionsResult = (Boolean) -> Unit

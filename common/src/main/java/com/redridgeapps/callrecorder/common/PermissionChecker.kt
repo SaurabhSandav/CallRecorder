@@ -9,7 +9,7 @@ import javax.inject.Inject
 class PermissionChecker @Inject constructor(@ApplicationContext private val context: Context) {
 
     fun isPermissionGranted(permission: String): Boolean {
-        val permissionStatus = ContextCompat.checkSelfPermission(context, permission)
-        return permissionStatus == PackageManager.PERMISSION_GRANTED
+        val permissionResult = ContextCompat.checkSelfPermission(context, permission)
+        return permissionResult == PackageManager.PERMISSION_GRANTED
     }
 }
