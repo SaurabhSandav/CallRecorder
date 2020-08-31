@@ -1,20 +1,13 @@
 package com.redridgeapps.ui.common.pref
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.Box
-import androidx.compose.foundation.ContentGravity
 import androidx.compose.foundation.Text
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.ListItem
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
@@ -24,24 +17,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.savedinstancestate.savedInstanceState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 
 @Composable
 fun TextFieldPreference(
     title: String,
     text: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
 
-    val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
 
     ListItem(
-        modifier = Modifier.clickable(onClick = { setShowDialog(true) }),
+        modifier = modifier.clickable(onClick = { showDialog = true }),
         secondaryText = {
             Crossfade(current = text) {
                 Text(it)
@@ -51,70 +43,83 @@ fun TextFieldPreference(
     )
 
     if (showDialog) {
-        DialogPreference(
+
+        TextFieldPreferenceDialog(
             title = title,
             text = text,
-            onCloseRequest = { setShowDialog(false) },
-            onValueChange = {
-                onValueChange(it)
-                setShowDialog(false)
-            }
+            onValueChange = onValueChange,
+            onDismiss = { showDialog = false }
         )
     }
 }
 
 @Composable
-private fun DialogPreference(
+private fun TextFieldPreferenceDialog(
     title: String,
     text: String,
-    onCloseRequest: () -> Unit,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    onDismiss: () -> Unit,
 ) {
-    Dialog(onDismissRequest = onCloseRequest) {
 
-        Column(Modifier.background(Color.White).width(280.dp)) {
+    var textFieldValue by savedInstanceState(saver = TextFieldValue.Saver) {
+        TextFieldValue(text = text, selection = TextRange(text.length))
+    }
 
-            // Title
-
-            Box(
-                modifier = Modifier.height(56.dp).padding(horizontal = 24.dp),
-                gravity = ContentGravity.CenterStart
-            ) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.h6.copy(MaterialTheme.colors.onSurface)
-                )
-            }
-
-            // Main content
-
-            var textFieldValue by savedInstanceState(saver = TextFieldValue.Saver) {
-                TextFieldValue(text = text, selection = TextRange(text.length))
-            }
-
-            TextField(
-                modifier = Modifier.padding(8.dp),
-                value = textFieldValue,
-                label = {},
-                onValueChange = { textFieldValue = it },
-                keyboardType = KeyboardType.Number
+    PreferenceDialog(
+        title = title,
+        onDismiss = onDismiss,
+        buttonContent = {
+            DialogButtonContent(
+                onCancel = onDismiss,
+                onOk = {
+                    onValueChange(textFieldValue.text)
+                    onDismiss()
+                }
             )
-
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(8.dp),
-                horizontalArrangement = Arrangement.End
-            ) {
-
-                TextButton(onClick = onCloseRequest) {
-                    Text("CANCEL")
-                }
-
-                TextButton(
-                    onClick = { onValueChange(textFieldValue.text) }
-                ) {
-                    Text("OK")
-                }
-            }
+        },
+        content = {
+            DialogContent(
+                textFieldValue = textFieldValue,
+                onTextFieldValueChange = { textFieldValue = it }
+            )
         }
+    )
+}
+
+@Composable
+private fun DialogContent(
+    textFieldValue: TextFieldValue,
+    onTextFieldValueChange: (TextFieldValue) -> Unit,
+) {
+
+    TextField(
+        modifier = Modifier.padding(8.dp),
+        value = textFieldValue,
+        label = {},
+        onValueChange = onTextFieldValueChange,
+        keyboardType = KeyboardType.Number
+    )
+}
+
+@Composable
+private fun DialogButtonContent(
+    onCancel: () -> Unit,
+    onOk: () -> Unit,
+) {
+
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        horizontalArrangement = Arrangement.End
+    ) {
+
+        TextButton(
+            onClick = onCancel,
+            content = { Text("CANCEL") }
+        )
+
+        TextButton(
+            onClick = onOk,
+            content = { Text("OK") }
+        )
     }
 }

@@ -24,7 +24,7 @@ internal fun AutoDeletePreference(
         AnimatedVisibility(visible = autoDeleteEnabled.value) {
 
             TextFieldPreference(
-                title = "Auto delete after",
+                title = "Auto delete after (days)",
                 text = autoDeleteAfterDays.value.toString(),
                 onValueChange = { autoDeleteAfterDays.onChanged(it.toInt()) }
             )
