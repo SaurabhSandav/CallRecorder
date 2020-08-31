@@ -452,7 +452,7 @@ private fun OptionsDialogOptionsTab(selectionViewModel: SelectionViewModel) {
 
     Column {
 
-        val isStarred by selectionViewModel.getIsStarred().collectAsState(null)
+        val isStarred by selectionViewModel.getIsStarred().collectAsState(false)
         SwitchPreference(
             text = "Star",
             checked = isStarred,
@@ -461,7 +461,7 @@ private fun OptionsDialogOptionsTab(selectionViewModel: SelectionViewModel) {
 
         if (selectionViewModel.showSkipAutoDelete.collectAsState(false).value) {
 
-            val skipAutoDelete by selectionViewModel.getSkipAutoDelete().collectAsState(null)
+            val skipAutoDelete by selectionViewModel.getSkipAutoDelete().collectAsState(false)
 
             SwitchPreference(
                 text = "Skip auto delete",
