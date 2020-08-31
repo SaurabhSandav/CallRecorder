@@ -1,11 +1,8 @@
 package com.redridgeapps.ui.settings.ui
 
-import androidx.compose.foundation.Text
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.ListItem
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import com.redridgeapps.ui.common.pref.ButtonPreference
 import com.redridgeapps.ui.common.pref.SwitchPreference
 import com.redridgeapps.ui.common.pref.TitlePreference
 import com.redridgeapps.ui.settings.PreferenceValue
@@ -34,9 +31,9 @@ internal fun GeneralPreference(
             onCheckedChange = recordingEnabled.onChanged
         )
 
-        ListItem(
-            modifier = Modifier.clickable(onClick = onUpdateContactNames),
-            text = { Text("Update contact names") },
+        ButtonPreference(
+            text = "Update contact names",
+            onClick = onUpdateContactNames,
         )
     }
 }
