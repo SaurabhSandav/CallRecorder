@@ -1,10 +1,9 @@
 package com.redridgeapps.ui.settings.ui
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import com.redridgeapps.ui.common.pref.ButtonPreference
+import com.redridgeapps.ui.common.pref.PreferenceCategory
 import com.redridgeapps.ui.common.pref.SwitchPreference
-import com.redridgeapps.ui.common.pref.TitlePreference
 import com.redridgeapps.ui.settings.PreferenceValue
 
 @Composable
@@ -15,9 +14,7 @@ internal fun GeneralPreference(
     onUpdateContactNames: () -> Unit,
 ) {
 
-    Column {
-
-        TitlePreference(text = "General")
+    PreferenceCategory(title = "Auto delete") {
 
         SwitchPreference(
             text = "Systemize",

@@ -1,12 +1,11 @@
 package com.redridgeapps.ui.settings.ui
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import com.redridgeapps.callrecorder.callutils.recording.PcmChannels
 import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
 import com.redridgeapps.callrecorder.callutils.recording.PcmSampleRate
+import com.redridgeapps.ui.common.pref.PreferenceCategory
 import com.redridgeapps.ui.common.pref.SingleSelectListPreference
-import com.redridgeapps.ui.common.pref.TitlePreference
 import com.redridgeapps.ui.settings.PreferenceValue
 
 @Composable
@@ -16,9 +15,7 @@ internal fun RecordingPreference(
     audioRecordEncoding: PreferenceValue<PcmEncoding>,
 ) {
 
-    Column {
-
-        TitlePreference(text = "Recording")
+    PreferenceCategory(title = "Auto delete") {
 
         SingleSelectListPreference(
             title = "Sample Rate",
