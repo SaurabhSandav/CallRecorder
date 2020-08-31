@@ -45,6 +45,7 @@ allprojects {
                     '-Xopt-in=androidx.compose.runtime.ExperimentalComposeApi',
                     '-Xopt-in=androidx.compose.foundation.layout.ExperimentalLayout',
                     '-Xopt-in=androidx.compose.animation.ExperimentalAnimationApi',
+                    '-Xopt-in=androidx.compose.material.ExperimentalMaterialApi',
             ]
         }
     }

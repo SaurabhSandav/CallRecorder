@@ -63,6 +63,10 @@ class Recordings @Inject constructor(
         return recordingQueries.get(listOf(recordingId)).asFlow().mapToOne(dispatchers.IO)
     }
 
+    fun getRecordings(recordingIdList: List<Long>): Flow<List<Recording>> {
+        return recordingQueries.get(recordingIdList).asFlow().mapToList(dispatchers.IO)
+    }
+
     fun getRecordingList(): Flow<List<Recording>> {
         return recordingQueries.getAll().asFlow().mapToList(dispatchers.IO)
     }
@@ -115,17 +119,19 @@ class Recordings @Inject constructor(
         return recordingQueries.getIsStarred(recordingId).asFlow().mapToOne()
     }
 
-    suspend fun toggleStar(recordingIdList: List<Long>) = withContext(dispatchers.IO) {
-        recordingQueries.toggleStar(recordingIdList)
-    }
+    suspend fun setIsStarred(newValue: Boolean, recordingIdList: List<Long>) =
+        withContext(dispatchers.IO) {
+            recordingQueries.setIsStarred(newValue, recordingIdList)
+        }
 
     fun getSkipAutoDelete(recordingId: Long): Flow<Boolean> {
         return recordingQueries.getSkipAutoDelete(recordingId).asFlow().mapToOne()
     }
 
-    suspend fun toggleSkipAutoDelete(recordingIdList: List<Long>) = withContext(dispatchers.IO) {
-        recordingQueries.toggleSkipAutoDelete(recordingIdList)
-    }
+    suspend fun setSkipAutoDelete(newValue: Boolean, recordingIdList: List<Long>) =
+        withContext(dispatchers.IO) {
+            recordingQueries.setSkipAutoDelete(newValue, recordingIdList)
+        }
 
     suspend fun updateContactNames() = withContext(dispatchers.IO) {
 

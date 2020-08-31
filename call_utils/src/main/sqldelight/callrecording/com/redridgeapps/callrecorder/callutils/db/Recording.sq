@@ -38,14 +38,14 @@ getSkipAutoDelete:
 SELECT skip_auto_delete FROM Recording
 WHERE id = ?;
 
-toggleStar:
+setIsStarred:
 UPDATE Recording
-SET is_starred = ((is_starred | 1) - (is_starred & 1)) -- SET is_starred = !is_starred
+SET is_starred = ?
 WHERE id IN ?;
 
-toggleSkipAutoDelete:
+setSkipAutoDelete:
 UPDATE Recording
-SET skip_auto_delete = ((skip_auto_delete | 1) - (skip_auto_delete & 1)) -- SET skip_auto_delete = !skip_auto_delete
+SET skip_auto_delete = ?
 WHERE id IN ?;
 
 updateContactName:
