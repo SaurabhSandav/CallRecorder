@@ -10,6 +10,7 @@ commonConfiguration {
 
 dependencies {
 
+    implementation project(":common")
     implementation project(":compose_viewmodel")
 
     // Kotlin

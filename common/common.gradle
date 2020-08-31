@@ -15,6 +15,9 @@ dependencies {
     api Kotlin.COROUTINES_ANDROID
     api Kotlin.DATE_TIME
 
+    // Jetpack
+    implementation Jetpack.ACTIVITY_KTX
+
     // Dagger Hilt
     implementation Dagger.HILT_ANDROID
     kapt Dagger.HILT_ANDROID_COMPILER

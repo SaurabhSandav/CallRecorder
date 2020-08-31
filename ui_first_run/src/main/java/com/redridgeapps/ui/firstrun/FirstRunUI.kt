@@ -17,14 +17,15 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.invalidate
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ContextAmbient
 import androidx.compose.ui.unit.dp
+import com.redridgeapps.callrecorder.common.PermissionChecker
+import com.redridgeapps.ui.common.activityresult.rememberPermissionsRequest
 import com.redridgeapps.ui.common.routing.viewModel
-import com.redridgeapps.ui.common.utils.isPermissionGranted
-import com.redridgeapps.ui.common.utils.requestPermissions
 
 @Composable
 fun FirstRunScreen(onConfigFinished: () -> Unit) {
@@ -114,10 +115,7 @@ private fun PermissionsConfig(viewModel: FirstRunViewModel) {
 
         Spacer(modifier = Modifier.preferredHeight(10.dp))
 
-        // Called to re-request permissions
-        val recompose = invalidate
-
-        requestPermissions(
+        val request = rememberPermissionsRequest(
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.READ_CALL_LOG,
@@ -134,7 +132,7 @@ private fun PermissionsConfig(viewModel: FirstRunViewModel) {
             if (permissionsGranted) {
                 Text("✔ All permissions granted")
             } else {
-                Button(onClick = { recompose() }) {
+                Button(onClick = { request() }) {
                     Text(text = "Grant permissions")
                 }
             }
@@ -159,8 +157,10 @@ private fun CaptureAudioConfig(viewModel: FirstRunViewModel) {
 
         Spacer(modifier = Modifier.preferredHeight(10.dp))
 
-        viewModel.uiState.captureAudioOutputPermissionGranted =
-            isPermissionGranted(Manifest.permission.CAPTURE_AUDIO_OUTPUT)
+        val context = ContextAmbient.current
+        viewModel.uiState.captureAudioOutputPermissionGranted = remember {
+            PermissionChecker(context).isPermissionGranted(Manifest.permission.CAPTURE_AUDIO_OUTPUT)
+        }
 
         Crossfade(
             current = viewModel.uiState.captureAudioOutputPermissionGranted
