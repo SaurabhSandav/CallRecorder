@@ -7,7 +7,6 @@ import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material.ListItem
-import androidx.compose.material.Surface
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.runtime.Composable
@@ -23,7 +22,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.annotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.window.Dialog
+import com.redridgeapps.ui.common.generic.MaterialDialog
 import com.redridgeapps.ui.common.pref.ButtonPreference
 import com.redridgeapps.ui.common.pref.SwitchPreference
 import com.redridgeapps.ui.main.OptionsDialogTab
@@ -38,44 +37,38 @@ internal fun OptionsDialog(
     onDismissRequest: () -> Unit,
 ) {
 
-    Dialog(onDismissRequest = onDismissRequest) {
+    MaterialDialog(onDismissRequest = onDismissRequest) {
 
-        Surface {
+        val tabs = remember { OptionsDialogTab.values().asList() }
+        var selectedTab by remember { mutableStateOf(tabs.first()) }
 
-            Column {
+        TabRow(selectedTabIndex = selectedTab.ordinal) {
 
-                val tabs = remember { OptionsDialogTab.values().asList() }
-                var selectedTab by remember { mutableStateOf(tabs.first()) }
+            for (tab in tabs) {
 
-                TabRow(selectedTabIndex = selectedTab.ordinal) {
-
-                    for (tab in tabs) {
-
-                        Tab(
-                            selected = selectedTab.ordinal == tab.ordinal,
-                            onClick = { selectedTab = tab },
-                            text = { Text(tab.toReadableString()) }
-                        )
-                    }
-                }
-
-                val recordingInfo by annotatedRecordingInfo(
-                    getInfoMap = selectedRecordingOperations.getInfoMap
+                Tab(
+                    selected = selectedTab.ordinal == tab.ordinal,
+                    onClick = { selectedTab = tab },
+                    text = { Text(tab.toReadableString()) }
                 )
+            }
+        }
 
-                Crossfade(selectedTab, Modifier.animateContentSize()) { tabIndex ->
+        val recordingInfo by annotatedRecordingInfo(
+            getInfoMap = selectedRecordingOperations.getInfoMap
+        )
 
-                    ScrollableColumn {
+        Crossfade(selectedTab, Modifier.animateContentSize()) { tabIndex ->
 
-                        when (tabIndex) {
-                            OptionsDialogTab.OPTIONS -> OptionsDialogOptionsTab(
-                                autoDeleteEnabled = autoDeleteEnabled,
-                                selectedRecording = selectedRecording,
-                                selectedRecordingOperations = selectedRecordingOperations,
-                            )
-                            OptionsDialogTab.INFO -> OptionsDialogInfoTab(recordingInfo)
-                        }
-                    }
+            ScrollableColumn {
+
+                when (tabIndex) {
+                    OptionsDialogTab.OPTIONS -> OptionsDialogOptionsTab(
+                        autoDeleteEnabled = autoDeleteEnabled,
+                        selectedRecording = selectedRecording,
+                        selectedRecordingOperations = selectedRecordingOperations,
+                    )
+                    OptionsDialogTab.INFO -> OptionsDialogInfoTab(recordingInfo)
                 }
             }
         }
