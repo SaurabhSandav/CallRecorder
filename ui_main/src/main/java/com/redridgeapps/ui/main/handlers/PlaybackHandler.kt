@@ -3,9 +3,9 @@ package com.redridgeapps.ui.main.handlers
 import com.redridgeapps.callrecorder.callutils.db.RecordingId
 import com.redridgeapps.callrecorder.callutils.playback.CallPlayback
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState
-import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped
-import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped.Paused
-import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped.Playing
+import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.Started
+import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.Started.Paused
+import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.Started.Playing
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
 import com.redridgeapps.callrecorder.common.ViewModelHandle
 import com.redridgeapps.callrecorder.common.utils.launchUnit
@@ -33,11 +33,11 @@ internal class PlaybackHandler(
 
             val currentPlayback = when (it) {
                 PlaybackState.Stopped -> null
-                is NotStopped -> CurrentPlayback(
-                    title = recordings.getRecording(it.recording.id).first().name,
+                is Started -> CurrentPlayback(
+                    title = recordings.getRecording(it.recordingId).first().name,
                     isPlaying = it is Playing,
                     positionFlow = it.progress,
-                    onPlayPauseToggle = { onPlayPauseToggle(it.recording.id) },
+                    onPlayPauseToggle = { onPlayPauseToggle(it.recordingId) },
                     onPlaybackStop = this::stopPlayback,
                     onPlaybackSeek = this::onPlaybackSeek,
                 )
@@ -55,7 +55,7 @@ internal class PlaybackHandler(
         val playbackState = callPlayback.playbackState.value
 
         when {
-            playbackState is Playing && playbackState.recording.id == recordingId -> pausePlayback()
+            playbackState is Playing && playbackState.recordingId == recordingId -> pausePlayback()
             else -> startPlayback(recordingId)
         }
     }
@@ -67,7 +67,7 @@ internal class PlaybackHandler(
 
         with(callPlayback) {
             when {
-                playbackStatus is Paused && playbackStatus.recording.id == recording.id -> {
+                playbackStatus is Paused && playbackStatus.recordingId == recording.id -> {
                     playbackStatus.resumePlayback()
                 }
                 else -> playbackStatus.startNewPlayback(recording)
@@ -89,7 +89,7 @@ internal class PlaybackHandler(
         val playbackStatus = callPlayback.playbackState.first()
 
         with(callPlayback) {
-            (playbackStatus as? NotStopped)?.setPosition(position)
+            (playbackStatus as? Started)?.setPosition(position)
         }
     }
 
@@ -98,7 +98,7 @@ internal class PlaybackHandler(
         val playbackStatus = callPlayback.playbackState.first()
 
         with(callPlayback) {
-            (playbackStatus as? NotStopped)?.stopPlayback()
+            (playbackStatus as? Started)?.stopPlayback()
         }
     }
 }

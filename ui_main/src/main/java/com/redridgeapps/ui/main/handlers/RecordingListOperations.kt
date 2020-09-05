@@ -4,8 +4,8 @@ import com.redridgeapps.callrecorder.callutils.callevents.CallDirection
 import com.redridgeapps.callrecorder.callutils.db.Recording
 import com.redridgeapps.callrecorder.callutils.db.RecordingId
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState
-import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped
-import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped.Playing
+import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.Started
+import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.Started.Playing
 import com.redridgeapps.callrecorder.common.utils.format
 import com.redridgeapps.ui.main.RecordingListEntry
 import com.redridgeapps.ui.main.RecordingListEntry.Header
@@ -108,8 +108,8 @@ internal fun Flow<List<RecordingListEntry>>.updateWithPlaybackState(
     entry.map {
         when (it) {
             is Item -> it.copy(
-                isStarted = playbackState is NotStopped && playbackState.recording.id == it.id,
-                isPlaying = playbackState is Playing && playbackState.recording.id == it.id,
+                isStarted = playbackState is Started && playbackState.recordingId == it.id,
+                isPlaying = playbackState is Playing && playbackState.recordingId == it.id,
             )
             else -> it
         }
