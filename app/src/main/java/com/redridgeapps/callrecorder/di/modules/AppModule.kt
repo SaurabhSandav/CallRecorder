@@ -9,7 +9,7 @@ import android.telephony.TelephonyManager
 import androidx.core.content.getSystemService
 import androidx.preference.PreferenceManager
 import com.redridgeapps.callrecorder.MainActivity
-import com.redridgeapps.callrecorder.common.di.qualifiers.NotificationPendingActivity
+import com.redridgeapps.common.di.qualifiers.NotificationPendingActivity
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

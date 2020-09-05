@@ -3,7 +3,7 @@ package com.redridgeapps.callrecorder
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
-import com.redridgeapps.callrecorder.common.StartupInitializer
+import com.redridgeapps.common.StartupInitializer
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 

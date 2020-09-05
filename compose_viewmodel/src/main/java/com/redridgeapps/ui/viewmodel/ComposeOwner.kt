@@ -1,0 +1,43 @@
+package com.redridgeapps.ui.viewmodel
+
+import android.os.Bundle
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.savedstate.SavedStateRegistry
+import androidx.savedstate.SavedStateRegistryController
+import androidx.savedstate.SavedStateRegistryOwner
+
+internal class ComposeOwner(
+    private val savedStateKey: String,
+    private val _viewModelStore: ViewModelStore,
+) : LifecycleOwner, SavedStateRegistryOwner, ViewModelStoreOwner {
+
+    private val lifecycleRegistry = LifecycleRegistry(this)
+    private val savedStateRegistryController = SavedStateRegistryController.create(this)
+
+    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+
+    override fun getSavedStateRegistry(): SavedStateRegistry {
+        return savedStateRegistryController.savedStateRegistry
+    }
+
+    override fun getViewModelStore(): ViewModelStore = _viewModelStore
+
+    fun performSave(outState: Bundle) {
+        Bundle().let {
+            savedStateRegistryController.performSave(it)
+            outState.putBundle(savedStateKey, it)
+        }
+    }
+
+    fun performRestore(savedState: Bundle?) {
+
+        val bundle = savedState?.getBundle(savedStateKey)
+        savedStateRegistryController.performRestore(bundle)
+
+        lifecycleRegistry.currentState = Lifecycle.State.RESUMED
+    }
+}

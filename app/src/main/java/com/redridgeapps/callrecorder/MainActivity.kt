@@ -3,9 +3,9 @@ package com.redridgeapps.callrecorder
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.redridgeapps.callrecorder.common.utils.launchUnit
-import com.redridgeapps.callrecorder.prefs.PREF_IS_FIRST_RUN
-import com.redridgeapps.callrecorder.prefs.Prefs
+import com.redridgeapps.common.utils.launchUnit
+import com.redridgeapps.prefs.PREF_IS_FIRST_RUN
+import com.redridgeapps.prefs.Prefs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject

@@ -1,7 +1,7 @@
 package com.redridgeapps.callrecorder.di.modules
 
-import com.redridgeapps.callrecorder.common.StartupInitializer
 import com.redridgeapps.callrecorder.utils.TimberInitializer
+import com.redridgeapps.common.StartupInitializer
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

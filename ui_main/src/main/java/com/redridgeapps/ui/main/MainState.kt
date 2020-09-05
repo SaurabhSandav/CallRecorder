@@ -1,7 +1,7 @@
 package com.redridgeapps.ui.main
 
 import androidx.compose.runtime.Stable
-import com.redridgeapps.callrecorder.callutils.db.RecordingId
+import com.redridgeapps.callutils.db.RecordingId
 import kotlinx.coroutines.flow.Flow
 import java.util.*
 

@@ -10,9 +10,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.redridgeapps.callrecorder.callutils.recording.PcmChannels
-import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
-import com.redridgeapps.callrecorder.callutils.recording.PcmSampleRate
+import com.redridgeapps.callutils.recording.PcmChannels
+import com.redridgeapps.callutils.recording.PcmEncoding
+import com.redridgeapps.callutils.recording.PcmSampleRate
 import com.redridgeapps.ui.settings.OnUpdateContactNames
 import com.redridgeapps.ui.settings.PreferenceValue
 
