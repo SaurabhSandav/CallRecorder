@@ -1,4 +1,5 @@
 import com.redridgeapps.callrecorder.callutils.callevents.CallDirection;
+import com.redridgeapps.callrecorder.callutils.db.RecordingId;
 import kotlin.time.Duration;
 import kotlinx.datetime.Instant;
 
@@ -6,7 +7,7 @@ import kotlinx.datetime.Instant;
 -- 1 == true
 
 CREATE TABLE IF NOT EXISTS Recording (
-id INTEGER AS Long NOT NULL PRIMARY KEY AUTOINCREMENT,
+id INTEGER AS RecordingId NOT NULL PRIMARY KEY AUTOINCREMENT,
 name TEXT NOT NULL,
 number TEXT NOT NULL,
 start_instant INTEGER AS Instant NOT NULL,

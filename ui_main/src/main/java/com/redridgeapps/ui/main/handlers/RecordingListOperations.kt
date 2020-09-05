@@ -2,11 +2,11 @@ package com.redridgeapps.ui.main.handlers
 
 import com.redridgeapps.callrecorder.callutils.callevents.CallDirection
 import com.redridgeapps.callrecorder.callutils.db.Recording
+import com.redridgeapps.callrecorder.callutils.db.RecordingId
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped
 import com.redridgeapps.callrecorder.callutils.playback.PlaybackState.NotStopped.Playing
 import com.redridgeapps.callrecorder.common.utils.format
-import com.redridgeapps.ui.main.RecordingId
 import com.redridgeapps.ui.main.RecordingListEntry
 import com.redridgeapps.ui.main.RecordingListEntry.Header
 import com.redridgeapps.ui.main.RecordingListEntry.Item

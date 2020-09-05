@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.redridgeapps.callrecorder.callutils.R
+import com.redridgeapps.callrecorder.callutils.db.RecordingId
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
 import com.redridgeapps.callrecorder.common.constants.NOTIFICATION_WAV_TRIMMING_FINISHED_ID
 import com.redridgeapps.callrecorder.common.constants.NOTIFICATION_WAV_TRIMMING_ONGOING_ID
@@ -32,7 +33,7 @@ class AudioEndsTrimmingService : LifecycleService() {
     private var totalJobCount = 0
     private var ongoingJobCount = 0
 
-    private val trimmingActor = lifecycleScope.actor<Long>(start = CoroutineStart.LAZY) {
+    private val trimmingActor = lifecycleScope.actor<RecordingId>(start = CoroutineStart.LAZY) {
 
         channel.invokeOnClose {
             stopService(applicationContext)
@@ -73,7 +74,7 @@ class AudioEndsTrimmingService : LifecycleService() {
         showOngoingNotification()
 
         lifecycleScope.launch {
-            recordingIdList.forEach { trimmingActor.send(it) }
+            recordingIdList.map(::RecordingId).forEach { trimmingActor.send(it) }
         }
 
         return START_STICKY
@@ -121,9 +122,9 @@ class AudioEndsTrimmingService : LifecycleService() {
         private const val ACTION_STOP = "ACTION_STOP"
         private const val EXTRA_RECORDING_ID = "EXTRA_RECORDING_ID"
 
-        fun start(context: Context, recordingIdList: List<Long>) {
+        fun start(context: Context, recordingIdList: List<RecordingId>) {
 
-            val recordingIdArray = recordingIdList.toLongArray()
+            val recordingIdArray = recordingIdList.map { it.value }.toLongArray()
 
             val intent = Intent(context, AudioEndsTrimmingService::class.java).apply {
                 putExtra(EXTRA_RECORDING_ID, recordingIdArray)
@@ -146,7 +147,7 @@ class AudioEndsTrimmingServiceLauncher @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
 
-    fun launch(recordingIdList: List<Long>) {
+    fun launch(recordingIdList: List<RecordingId>) {
         AudioEndsTrimmingService.start(context, recordingIdList)
     }
 }

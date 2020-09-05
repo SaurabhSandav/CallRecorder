@@ -1,6 +1,7 @@
 package com.redridgeapps.ui.main
 
 import androidx.compose.runtime.Stable
+import com.redridgeapps.callrecorder.callutils.db.RecordingId
 import kotlinx.coroutines.flow.Flow
 import java.util.*
 
@@ -94,6 +95,5 @@ internal enum class OptionsDialogTab {
     INFO
 }
 
-internal typealias RecordingId = Long
 internal typealias SetState = (MainState.() -> MainState) -> Unit
 internal typealias OnNavigateToSettings = () -> Unit
