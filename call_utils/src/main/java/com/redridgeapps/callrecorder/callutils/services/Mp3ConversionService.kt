@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.redridgeapps.callrecorder.callutils.R
+import com.redridgeapps.callrecorder.callutils.db.RecordingId
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
 import com.redridgeapps.callrecorder.common.constants.NOTIFICATION_MP3_CONVERSION_FINISHED_ID
 import com.redridgeapps.callrecorder.common.constants.NOTIFICATION_MP3_CONVERSION_ONGOING_ID
@@ -32,7 +33,7 @@ class Mp3ConversionService : LifecycleService() {
     private var totalJobCount = 0
     private var ongoingJobCount = 0
 
-    private val conversionActor = lifecycleScope.actor<Long>(start = CoroutineStart.LAZY) {
+    private val conversionActor = lifecycleScope.actor<RecordingId>(start = CoroutineStart.LAZY) {
 
         channel.invokeOnClose {
             stopService(applicationContext)
@@ -73,7 +74,7 @@ class Mp3ConversionService : LifecycleService() {
         showOngoingNotification()
 
         lifecycleScope.launch {
-            recordingIdList.forEach { conversionActor.send(it) }
+            recordingIdList.map(::RecordingId).forEach { conversionActor.send(it) }
         }
 
         return START_STICKY
@@ -121,9 +122,9 @@ class Mp3ConversionService : LifecycleService() {
         private const val ACTION_STOP = "ACTION_STOP"
         private const val EXTRA_RECORDING_ID = "EXTRA_RECORDING_ID"
 
-        fun start(context: Context, recordingIdList: List<Long>) {
+        fun start(context: Context, recordingIdList: List<RecordingId>) {
 
-            val recordingIdArray = recordingIdList.toLongArray()
+            val recordingIdArray = recordingIdList.map { it.value }.toLongArray()
 
             val intent = Intent(context, Mp3ConversionService::class.java).apply {
                 putExtra(EXTRA_RECORDING_ID, recordingIdArray)
@@ -143,10 +144,10 @@ class Mp3ConversionService : LifecycleService() {
 }
 
 class Mp3ConversionServiceLauncher @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
 ) {
 
-    fun launch(recordingIdList: List<Long>) {
+    fun launch(recordingIdList: List<RecordingId>) {
         Mp3ConversionService.start(context, recordingIdList)
     }
 }

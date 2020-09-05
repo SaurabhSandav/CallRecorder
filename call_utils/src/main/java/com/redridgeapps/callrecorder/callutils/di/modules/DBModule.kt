@@ -3,6 +3,7 @@ package com.redridgeapps.callrecorder.callutils.di.modules
 import android.content.Context
 import com.redridgeapps.callrecorder.callutils.db.CallRecordingDB
 import com.redridgeapps.callrecorder.callutils.db.Recording
+import com.redridgeapps.callrecorder.callutils.db.RecordingIdColumnAdapter
 import com.redridgeapps.callrecorder.callutils.db.RecordingQueries
 import com.redridgeapps.callrecorder.common.db.adapters.DurationLongColumnAdapter
 import com.redridgeapps.callrecorder.common.db.adapters.InstantIntegerColumnAdapter
@@ -29,6 +30,7 @@ object DBModule {
         return CallRecordingDB(
             driver = driver,
             RecordingAdapter = Recording.Adapter(
+                idAdapter = RecordingIdColumnAdapter,
                 start_instantAdapter = InstantIntegerColumnAdapter,
                 durationAdapter = DurationLongColumnAdapter,
                 call_directionAdapter = EnumColumnAdapter()

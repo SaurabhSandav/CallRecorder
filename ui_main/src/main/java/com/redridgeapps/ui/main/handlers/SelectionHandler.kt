@@ -2,13 +2,13 @@ package com.redridgeapps.ui.main.handlers
 
 import com.redridgeapps.callrecorder.callutils.Defaults
 import com.redridgeapps.callrecorder.callutils.db.Recording
+import com.redridgeapps.callrecorder.callutils.db.RecordingId
 import com.redridgeapps.callrecorder.callutils.storage.Recordings
 import com.redridgeapps.callrecorder.common.ViewModelHandle
 import com.redridgeapps.callrecorder.common.utils.launchUnit
 import com.redridgeapps.callrecorder.prefs.PREF_AUTO_DELETE_ENABLED
 import com.redridgeapps.callrecorder.prefs.Prefs
 import com.redridgeapps.ui.common.utils.ClickSelection
-import com.redridgeapps.ui.main.RecordingId
 import com.redridgeapps.ui.main.SelectedRecording
 import com.redridgeapps.ui.main.SetState
 import kotlinx.coroutines.flow.first
