@@ -2,7 +2,7 @@ package com.redridgeapps.callrecorder.utils
 
 import android.content.Context
 import com.redridgeapps.callrecorder.BuildConfig
-import com.redridgeapps.callrecorder.common.StartupInitializer
+import com.redridgeapps.common.StartupInitializer
 import timber.log.Timber
 import javax.inject.Inject
 

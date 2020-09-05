@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import com.koduok.compose.navigation.BackStackAmbient
 import com.koduok.compose.navigation.core.Route
 import com.koduok.compose.navigation.core.backStackController
-import com.redridgeapps.compose.viewmodel.ComposeFramework
-import com.redridgeapps.compose.viewmodel.fetchViewModel
+import com.redridgeapps.ui.viewmodel.ComposeFramework
+import com.redridgeapps.ui.viewmodel.fetchViewModel
 import kotlin.reflect.KClass
 
 @Composable

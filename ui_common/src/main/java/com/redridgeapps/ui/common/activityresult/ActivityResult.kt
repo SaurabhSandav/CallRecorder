@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLifecycleObserver
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ContextAmbient
-import com.redridgeapps.callrecorder.common.utils.getComponentActivity
+import com.redridgeapps.common.utils.getComponentActivity
 
 @Composable
 internal fun <I, O> rememberActivityResultManager(

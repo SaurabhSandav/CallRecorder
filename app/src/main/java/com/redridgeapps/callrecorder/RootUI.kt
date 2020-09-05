@@ -8,12 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.setContent
 import com.koduok.compose.navigation.Router
 import com.koduok.compose.navigation.core.backStackController
-import com.redridgeapps.compose.viewmodel.ComposeFramework
-import com.redridgeapps.compose.viewmodel.WithViewModels
 import com.redridgeapps.ui.common.routing.setupViewModel
 import com.redridgeapps.ui.firstrun.FirstRunScreen
 import com.redridgeapps.ui.main.MainScreen
 import com.redridgeapps.ui.settings.SettingsScreen
+import com.redridgeapps.ui.viewmodel.ComposeFramework
+import com.redridgeapps.ui.viewmodel.WithViewModels
 
 fun ComponentActivity.setupCompose(isFirstRun: Boolean) {
 

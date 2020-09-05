@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.currentComposer
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ContextAmbient
-import com.redridgeapps.callrecorder.common.PermissionChecker
+import com.redridgeapps.common.PermissionChecker
 
 @Composable
 fun rememberPermissionsRequest(

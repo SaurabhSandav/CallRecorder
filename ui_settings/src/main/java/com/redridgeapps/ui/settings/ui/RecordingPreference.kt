@@ -1,9 +1,9 @@
 package com.redridgeapps.ui.settings.ui
 
 import androidx.compose.runtime.Composable
-import com.redridgeapps.callrecorder.callutils.recording.PcmChannels
-import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
-import com.redridgeapps.callrecorder.callutils.recording.PcmSampleRate
+import com.redridgeapps.callutils.recording.PcmChannels
+import com.redridgeapps.callutils.recording.PcmEncoding
+import com.redridgeapps.callutils.recording.PcmSampleRate
 import com.redridgeapps.ui.common.pref.PreferenceCategory
 import com.redridgeapps.ui.common.pref.SingleSelectListPreference
 import com.redridgeapps.ui.settings.PreferenceValue

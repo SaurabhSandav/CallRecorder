@@ -13,7 +13,7 @@ android {
         main {
             java.srcDirs = [
                     "src/main/java",
-                    "src/main/sqldelight/callrecording"
+                    "src/main/sqldelight/"
             ]
         }
     }
@@ -53,8 +53,8 @@ dependencies {
 sqldelight {
 
     CallRecordingDB {
-        packageName = "com.redridgeapps.callrecorder.callutils.db"
-        sourceFolders = ["sqldelight/callrecording"]
-        schemaOutputDirectory = file("build/callrecording")
+        packageName = "com.redridgeapps.callutils.db"
+        sourceFolders = ["sqldelight"]
+        schemaOutputDirectory = file("src/main/sqldelight/schema")
     }
 }

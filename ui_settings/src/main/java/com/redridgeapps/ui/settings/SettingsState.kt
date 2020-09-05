@@ -1,9 +1,9 @@
 package com.redridgeapps.ui.settings
 
 import androidx.compose.runtime.Stable
-import com.redridgeapps.callrecorder.callutils.recording.PcmChannels
-import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
-import com.redridgeapps.callrecorder.callutils.recording.PcmSampleRate
+import com.redridgeapps.callutils.recording.PcmChannels
+import com.redridgeapps.callutils.recording.PcmEncoding
+import com.redridgeapps.callutils.recording.PcmSampleRate
 
 @Stable
 internal data class SettingsState(

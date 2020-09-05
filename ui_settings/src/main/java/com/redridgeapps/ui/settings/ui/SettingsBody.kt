@@ -3,9 +3,9 @@ package com.redridgeapps.ui.settings.ui
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.redridgeapps.callrecorder.callutils.recording.PcmChannels
-import com.redridgeapps.callrecorder.callutils.recording.PcmEncoding
-import com.redridgeapps.callrecorder.callutils.recording.PcmSampleRate
+import com.redridgeapps.callutils.recording.PcmChannels
+import com.redridgeapps.callutils.recording.PcmEncoding
+import com.redridgeapps.callutils.recording.PcmSampleRate
 import com.redridgeapps.ui.settings.PreferenceValue
 
 @Composable
