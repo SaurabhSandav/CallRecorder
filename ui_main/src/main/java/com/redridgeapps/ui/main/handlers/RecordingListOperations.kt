@@ -48,8 +48,8 @@ internal fun Flow<List<Recording>>.mapToRecordingListEntries(
     onMultiSelect: (recordingId: RecordingId) -> Unit,
     onPlayPauseToggle: (recordingId: RecordingId) -> Unit,
 ): Flow<List<RecordingListEntry>> = map { recordings ->
-    recordings.sortedByDescending { it.start_instant }
-        .groupBy { it.start_instant.toLocalDateTime(TimeZone.currentSystemDefault()).date }
+    recordings.sortedByDescending { it.call_instant }
+        .groupBy { it.call_instant.toLocalDateTime(TimeZone.currentSystemDefault()).date }
         .mapKeys { Header(it.key.format(newDayFormatter)) }
         .mapValues {
             it.value.mapRecordingToRecordingListEntryItem(
@@ -68,12 +68,12 @@ private fun List<Recording>.mapRecordingToRecordingListEntryItem(
 ): List<Item> = map {
 
     // Format call Interval
-    val startTime = it.start_instant
+    val startTime = it.call_instant
         .toLocalDateTime(TimeZone.currentSystemDefault())
         .format(DateTimeFormatter.ISO_LOCAL_TIME)
     val overlineText = "$startTime • ${it.call_direction}"
 
-    val seconds = it.duration.inSeconds.toLong()
+    val seconds = it.call_duration.inSeconds.toLong()
     val metaText = "%d:%02d:%02d"
         .format(seconds / 3600, (seconds % 3600) / 60, (seconds % 60))
 

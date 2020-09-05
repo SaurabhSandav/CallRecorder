@@ -31,8 +31,8 @@ object DBModule {
             driver = driver,
             RecordingAdapter = Recording.Adapter(
                 idAdapter = RecordingIdColumnAdapter,
-                start_instantAdapter = InstantIntegerColumnAdapter,
-                durationAdapter = DurationLongColumnAdapter,
+                call_instantAdapter = InstantIntegerColumnAdapter,
+                call_durationAdapter = DurationLongColumnAdapter,
                 call_directionAdapter = EnumColumnAdapter()
             )
         )

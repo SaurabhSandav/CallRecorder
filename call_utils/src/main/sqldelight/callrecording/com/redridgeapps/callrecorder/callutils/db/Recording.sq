@@ -10,18 +10,18 @@ CREATE TABLE IF NOT EXISTS Recording (
 id INTEGER AS RecordingId NOT NULL PRIMARY KEY AUTOINCREMENT,
 name TEXT NOT NULL,
 number TEXT NOT NULL,
-start_instant INTEGER AS Instant NOT NULL,
-duration INTEGER AS Duration NOT NULL,
+call_instant INTEGER AS Instant NOT NULL,
+call_duration INTEGER AS Duration NOT NULL,
 call_direction TEXT AS CallDirection NOT NULL,
 save_path TEXT NOT NULL,
 save_format TEXT NOT NULL,
 is_starred INTEGER AS Boolean NOT NULL DEFAULT 0 CHECK(is_starred IN (0, 1)), -- DEFAULT false
-skip_auto_delete INTEGER AS Boolean NOT NULL DEFAULT 0 CHECK(is_starred IN (0, 1)) -- DEFAULT talse
+skip_auto_delete INTEGER AS Boolean NOT NULL DEFAULT 0 CHECK(skip_auto_delete IN (0, 1)) -- DEFAULT false
 );
 
 insert:
 INSERT OR REPLACE
-INTO Recording (name, number, start_instant, duration, call_direction, save_path, save_format)
+INTO Recording (name, number, call_instant, call_duration, call_direction, save_path, save_format)
 VALUES (?, ?, ?, ?, ?, ?, ?);
 
 get:
@@ -31,13 +31,8 @@ getAll:
 SELECT * FROM Recording
 ORDER BY id DESC;
 
-getIsStarred:
-SELECT is_starred FROM Recording
-WHERE id = ?;
-
-getSkipAutoDelete:
-SELECT skip_auto_delete FROM Recording
-WHERE id = ?;
+getNameAndNumbers:
+SELECT name, number FROM Recording GROUP BY number;
 
 setIsStarred:
 UPDATE Recording
@@ -56,13 +51,13 @@ WHERE number = ?;
 
 updateDuration:
 UPDATE Recording
-SET duration = ?
+SET call_duration = ?
 WHERE id = ?;
 
 delete:
 DELETE FROM Recording WHERE id IN ?;
 
-deleteOverDaysOldIfNotSkippedAutoDelete:
+deleteAutoIfOlderThan:
 DELETE FROM Recording
-WHERE (julianday('now') - julianday(start_instant, 'unixepoch')) > :overDaysOld
+WHERE (julianday('now') - julianday(call_instant, 'unixepoch')) > :overDaysOld
 AND skip_auto_delete = 0; -- AND skip_auto_delete = false

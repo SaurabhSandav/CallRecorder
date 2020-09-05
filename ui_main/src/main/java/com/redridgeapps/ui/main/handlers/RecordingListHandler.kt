@@ -63,7 +63,7 @@ internal class RecordingListHandler(
 
         val selectionFlow = recordingSelection.state.map { it.selection }.distinctUntilChanged()
 
-        recordings.getRecordingList()
+        recordings.getAllRecordings()
             .filterWith(filters)
             .mapToRecordingListEntries(
                 onSelect = onRecordingSelect,
