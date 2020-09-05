@@ -35,7 +35,7 @@ import javax.inject.Singleton
 import kotlin.time.Duration
 
 @Singleton
-class Recordings @Inject constructor(
+class Recordings @Inject internal constructor(
     private val recordingQueries: RecordingQueries,
     private val contactNameFetcher: ContactNameFetcher,
     private val dispatchers: AppDispatchers,
@@ -52,8 +52,8 @@ class Recordings @Inject constructor(
         recordingQueries.insert(
             name = name,
             number = phoneNumber,
-            start_instant = recordingJob.recordingStartInstant,
-            duration = duration,
+            call_instant = recordingJob.recordingStartInstant,
+            call_duration = duration,
             call_direction = recordingJob.newCallEvent.callDirection,
             save_path = recordingJob.savePath.toAbsolutePath().toString(),
             save_format = recordingJob.savePath.extension
@@ -68,7 +68,7 @@ class Recordings @Inject constructor(
         return recordingQueries.get(recordingIdList).asFlow().mapToList(dispatchers.IO)
     }
 
-    fun getRecordingList(): Flow<List<Recording>> {
+    fun getAllRecordings(): Flow<List<Recording>> {
         return recordingQueries.getAll().asFlow().mapToList(dispatchers.IO)
     }
 
@@ -116,29 +116,25 @@ class Recordings @Inject constructor(
         recordingQueries.delete(recordingIdList)
     }
 
-    fun getIsStarred(recordingId: RecordingId): Flow<Boolean> {
-        return recordingQueries.getIsStarred(recordingId).asFlow().mapToOne()
+    suspend fun setIsStarred(
+        newValue: Boolean,
+        recordingIdList: List<RecordingId>,
+    ) = withContext(dispatchers.IO) {
+        recordingQueries.setIsStarred(newValue, recordingIdList)
     }
 
-    suspend fun setIsStarred(newValue: Boolean, recordingIdList: List<RecordingId>) =
-        withContext(dispatchers.IO) {
-            recordingQueries.setIsStarred(newValue, recordingIdList)
-        }
-
-    fun getSkipAutoDelete(recordingId: RecordingId): Flow<Boolean> {
-        return recordingQueries.getSkipAutoDelete(recordingId).asFlow().mapToOne()
+    suspend fun setSkipAutoDelete(
+        newValue: Boolean,
+        recordingIdList: List<RecordingId>,
+    ) = withContext(dispatchers.IO) {
+        recordingQueries.setSkipAutoDelete(newValue, recordingIdList)
     }
-
-    suspend fun setSkipAutoDelete(newValue: Boolean, recordingIdList: List<RecordingId>) =
-        withContext(dispatchers.IO) {
-            recordingQueries.setSkipAutoDelete(newValue, recordingIdList)
-        }
 
     suspend fun updateContactNames() = withContext(dispatchers.IO) {
 
-        val recordings = recordingQueries.getAll().executeAsList()
+        val recordings = recordingQueries.getNameAndNumbers().executeAsList()
 
-        recordings.distinctBy { it.number }.forEach { recording ->
+        recordings.forEach { recording ->
             val name = contactNameFetcher.getContactName(recording.number) ?: recording.name
             recordingQueries.updateContactName(name, recording.number)
         }
@@ -153,11 +149,9 @@ class Recordings @Inject constructor(
         return@withContext fileChannel.use { WavFileUtils.readWavData(fileChannel) }
     }
 
-    internal suspend fun deleteOverDaysOldIfNotSkippedAutoDelete(
-        duration: Duration,
-    ) = withContext(dispatchers.IO) {
+    internal suspend fun deleteAutoIfOlderThan(duration: Duration) = withContext(dispatchers.IO) {
         val days = duration.inDays.toInt()
-        recordingQueries.deleteOverDaysOldIfNotSkippedAutoDelete(days.toString())
+        recordingQueries.deleteAutoIfOlderThan(days.toString())
     }
 
     companion object {
@@ -185,7 +179,7 @@ class Recordings @Inject constructor(
 }
 
 class RecordingStoragePathInitializer @Inject constructor(
-    val prefs: Prefs
+    val prefs: Prefs,
 ) : StartupInitializer {
 
     override fun initialize(context: Context) = GlobalScope.launchUnit {

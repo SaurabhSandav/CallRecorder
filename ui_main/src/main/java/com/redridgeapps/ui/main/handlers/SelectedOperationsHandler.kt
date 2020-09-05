@@ -79,13 +79,13 @@ internal class SelectedOperationsHandler(
         put("Number: ", recording.number)
 
         val formattedStartTime = fullDateFormatter.format(
-            recording.start_instant
+            recording.call_instant
                 .toLocalDateTime(TimeZone.currentSystemDefault())
                 .toJavaLocalDateTime()
         )
         put("Recording Started: ", formattedStartTime)
 
-        val durationSeconds = recording.duration.inSeconds.toLong()
+        val durationSeconds = recording.call_duration.inSeconds.toLong()
         val durationText = "%d:%02d:%02d".format(
             durationSeconds / 3600,
             (durationSeconds % 3600) / 60,
