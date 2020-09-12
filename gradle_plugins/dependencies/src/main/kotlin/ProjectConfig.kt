@@ -13,7 +13,7 @@ object GoogleMaven {
 }
 
 object AndroidTools {
-    private const val GRADLE_PLUGIN_VERSION = "4.2.0-alpha09"
+    private const val GRADLE_PLUGIN_VERSION = "4.2.0-alpha10"
     private const val DESUGAR_JDK_LIBS_VERSION = "1.0.9"
 
     const val GRADLE_PLUGIN = "com.android.tools.build:gradle:$GRADLE_PLUGIN_VERSION"
@@ -21,7 +21,7 @@ object AndroidTools {
 }
 
 object Kotlin {
-    const val VERSION = "1.4.0"
+    const val VERSION = "1.4.10"
     private const val COROUTINES_VERSION = "1.3.9"
     private const val DATE_TIME_VERSION = "0.1.0"
 
@@ -47,7 +47,7 @@ object Jetpack {
 }
 
 object Compose {
-    const val VERSION = "1.0.0-alpha01"
+    const val VERSION = "1.0.0-alpha02"
     const val KOTLIN_COMPILER_VERSION = Kotlin.VERSION
 
     const val RUNTIME = "androidx.compose.runtime:runtime:$VERSION"
@@ -60,7 +60,7 @@ object Compose {
 }
 
 object ComposeNavigation {
-    private const val VERSION = "0.3.7"
+    private const val VERSION = "0.4.1"
 
     const val CORE = "com.github.mvarnagiris.compose-navigation:core:$VERSION"
     const val NAVIGATION = "com.github.mvarnagiris.compose-navigation:navigation:$VERSION"
@@ -88,13 +88,12 @@ object JavaXInject {
     const val JAVAX_INJECT = "javax.inject:javax.inject:$VERSION"
 }
 
-object Dagger {
-    private const val HILT_VERSION = "2.28.3-alpha"
+object DaggerHilt {
+    private const val VERSION = "2.29.1-alpha"
 
-    const val HILT_ANDROID = "com.google.dagger:hilt-android:$HILT_VERSION"
-    const val HILT_ANDROID_COMPILER = "com.google.dagger:hilt-android-compiler:$HILT_VERSION"
-    const val HILT_ANDROID_GRADLE_PLUGIN =
-        "com.google.dagger:hilt-android-gradle-plugin:$HILT_VERSION"
+    const val ANDROID = "com.google.dagger:hilt-android:$VERSION"
+    const val COMPILER = "com.google.dagger:hilt-compiler:$VERSION"
+    const val ANDROID_GRADLE_PLUGIN = "com.google.dagger:hilt-android-gradle-plugin:$VERSION"
 }
 
 object AndroidXHilt {
@@ -120,7 +119,7 @@ object LibSU {
 }
 
 object SQLDelight {
-    private const val VERSION = "1.4.2"
+    private const val VERSION = "1.4.3"
 
     const val GRADLE_PLUGIN = "com.squareup.sqldelight:gradle-plugin:$VERSION"
     const val ANDROID_DRIVER = "com.squareup.sqldelight:android-driver:$VERSION"
@@ -128,8 +127,7 @@ object SQLDelight {
 }
 
 object RustAndroidGradle {
-    private const val ANDROID_WAV_TO_MP3_VERSION = "0.8.3"
+    private const val VERSION = "0.8.3"
 
-    const val GRADLE_PLUGIN =
-        "gradle.plugin.org.mozilla.rust-android-gradle:plugin:$ANDROID_WAV_TO_MP3_VERSION"
+    const val GRADLE_PLUGIN = "gradle.plugin.org.mozilla.rust-android-gradle:plugin:$VERSION"
 }

@@ -62,8 +62,8 @@ dependencies {
     implementation WorkManager.WORK_RUNTIME_KTX
 
     // Dagger Hilt
-    implementation Dagger.HILT_ANDROID
-    kapt Dagger.HILT_ANDROID_COMPILER
+    implementation DaggerHilt.ANDROID
+    kapt DaggerHilt.COMPILER
 
     // AndroidX Hilt
     implementation AndroidXHilt.COMMON
