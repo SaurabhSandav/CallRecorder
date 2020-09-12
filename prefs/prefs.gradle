@@ -14,6 +14,6 @@ dependencies {
     implementation Jetpack.CORE_KTX
 
     // Dagger Hilt
-    implementation Dagger.HILT_ANDROID
-    kapt Dagger.HILT_ANDROID_COMPILER
+    implementation DaggerHilt.ANDROID
+    kapt DaggerHilt.COMPILER
 }

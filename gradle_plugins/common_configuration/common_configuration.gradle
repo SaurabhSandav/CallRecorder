@@ -13,6 +13,6 @@ gradlePlugin {
 }
 
 dependencies {
-    compileOnly "com.android.tools.build:gradle:4.2.0-alpha08"
+    compileOnly "com.android.tools.build:gradle:4.2.0-alpha10"
     implementation project(":dependencies")
 }

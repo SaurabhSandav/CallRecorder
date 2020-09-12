@@ -19,8 +19,8 @@ dependencies {
     implementation Jetpack.ACTIVITY_KTX
 
     // Dagger Hilt
-    implementation Dagger.HILT_ANDROID
-    kapt Dagger.HILT_ANDROID_COMPILER
+    implementation DaggerHilt.ANDROID
+    kapt DaggerHilt.COMPILER
 
     // SQLDelight
     implementation SQLDelight.ANDROID_DRIVER
