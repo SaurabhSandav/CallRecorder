@@ -3,11 +3,11 @@ package com.redridgeapps.callrecorder
 import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.activity.viewModels
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.setContent
 import com.koduok.compose.navigation.Router
 import com.koduok.compose.navigation.core.backStackController
+import com.redridgeapps.callrecorder.theme.CallRecorderTheme
 import com.redridgeapps.ui.common.routing.setupViewModel
 import com.redridgeapps.ui.firstrun.FirstRunScreen
 import com.redridgeapps.ui.main.MainScreen
@@ -32,7 +32,7 @@ fun ComponentActivity.setupCompose(isFirstRun: Boolean) {
 
     setContent {
         WithViewModels(composeFramework) {
-            MaterialTheme {
+            CallRecorderTheme {
                 Root(isFirstRun)
             }
         }
