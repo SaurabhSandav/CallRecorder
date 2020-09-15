@@ -1,4 +1,4 @@
-package com.redridgeapps.common
+package com.redridgeapps.common.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

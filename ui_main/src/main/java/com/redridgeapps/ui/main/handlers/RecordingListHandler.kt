@@ -3,7 +3,7 @@ package com.redridgeapps.ui.main.handlers
 import com.redridgeapps.callutils.db.RecordingId
 import com.redridgeapps.callutils.playback.CallPlayback
 import com.redridgeapps.callutils.storage.Recordings
-import com.redridgeapps.common.ViewModelHandle
+import com.redridgeapps.common.viewmodel.ViewModelHandle
 import com.redridgeapps.ui.common.utils.ClickSelection
 import com.redridgeapps.ui.main.RecordingListFilter
 import com.redridgeapps.ui.main.SelectedRecording

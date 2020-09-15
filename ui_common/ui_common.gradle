@@ -11,7 +11,6 @@ commonConfiguration {
 dependencies {
 
     implementation project(":common")
-    implementation project(":compose_viewmodel")
 
     // Kotlin
     implementation Kotlin.COROUTINES_ANDROID
@@ -21,8 +20,4 @@ dependencies {
     implementation Compose.FOUNDATION
     implementation Compose.FOUNDATION_LAYOUT
     implementation Compose.MATERIAL
-
-    // compose-navigation
-    implementation ComposeNavigation.CORE
-    implementation ComposeNavigation.NAVIGATION
 }

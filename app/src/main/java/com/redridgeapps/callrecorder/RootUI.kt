@@ -1,40 +1,30 @@
 package com.redridgeapps.callrecorder
 
 import androidx.activity.ComponentActivity
-import androidx.activity.addCallback
-import androidx.activity.viewModels
+import androidx.compose.navigation.AmbientNavController
+import androidx.compose.navigation.NavHost
+import androidx.compose.navigation.composable
+import androidx.compose.navigation.navigate
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LifecycleOwnerAmbient
 import androidx.compose.ui.platform.setContent
-import com.koduok.compose.navigation.Router
-import com.koduok.compose.navigation.core.backStackController
+import androidx.savedstate.SavedStateRegistryOwner
 import com.redridgeapps.callrecorder.theme.CallRecorderTheme
-import com.redridgeapps.ui.common.routing.setupViewModel
+import com.redridgeapps.common.viewmodel.AppSavedStateViewModelFactory
+import com.redridgeapps.common.viewmodel.ViewModelAssistedFactoryMap
 import com.redridgeapps.ui.firstrun.FirstRunScreen
 import com.redridgeapps.ui.main.MainScreen
 import com.redridgeapps.ui.settings.SettingsScreen
-import com.redridgeapps.ui.viewmodel.ComposeFramework
-import com.redridgeapps.ui.viewmodel.WithViewModels
 
-fun ComponentActivity.setupCompose(isFirstRun: Boolean) {
-
-    val composeFramework by viewModels<ComposeFramework>()
-
-    composeFramework.setupViewModel()
-
-    // Handle back pressed
-    onBackPressedDispatcher.addCallback(this@setupCompose) {
-        if (!backStackController.pop()) {
-            isEnabled = false
-            this@setupCompose.onBackPressed()
-            isEnabled = true
-        }
-    }
+fun ComponentActivity.setupCompose(
+    isFirstRun: Boolean,
+    viewModelAssistedFactories: ViewModelAssistedFactoryMap,
+) {
 
     setContent {
-        WithViewModels(composeFramework) {
-            CallRecorderTheme {
-                Root(isFirstRun)
-            }
+        CallRecorderTheme {
+            Root(isFirstRun, viewModelAssistedFactories)
         }
     }
 }
@@ -46,18 +36,61 @@ enum class Routing {
 }
 
 @Composable
-fun Root(isFirstRun: Boolean) {
+fun Root(
+    isFirstRun: Boolean,
+    viewModelAssistedFactories: ViewModelAssistedFactoryMap,
+) {
 
     val start = when {
         isFirstRun -> Routing.FirstRun
         else -> Routing.Main
     }
 
-    Router(start = start) { currentRoute ->
-        when (currentRoute.data) {
-            Routing.FirstRun -> FirstRunScreen(onConfigFinished = { replace(Routing.Main) })
-            Routing.Main -> MainScreen(onNavigateToSettings = { push(Routing.Settings) })
-            Routing.Settings -> SettingsScreen(onNavigateUp = { pop() })
+    NavHost(startDestination = start) {
+
+        composable(Routing.FirstRun) {
+
+            val navController = AmbientNavController.current
+
+            FirstRunScreen(
+                rememberViewModelFactory(viewModelAssistedFactories),
+                onConfigFinished = {
+                    navController.popBackStack()
+                    navController.navigate(Routing.Main)
+                }
+            )
         }
+
+        composable(Routing.Main) {
+
+            val navController = AmbientNavController.current
+
+            MainScreen(
+                rememberViewModelFactory(viewModelAssistedFactories),
+                onNavigateToSettings = { navController.navigate(Routing.Settings) }
+            )
+        }
+
+        composable(Routing.Settings) {
+
+            val navController = AmbientNavController.current
+
+            SettingsScreen(
+                rememberViewModelFactory(viewModelAssistedFactories),
+                onNavigateUp = { navController.navigateUp() }
+            )
+        }
+    }
+}
+
+@Composable
+private fun rememberViewModelFactory(
+    viewModelAssistedFactories: ViewModelAssistedFactoryMap,
+): AppSavedStateViewModelFactory {
+
+    val savedStateRegistryOwner = LifecycleOwnerAmbient.current as SavedStateRegistryOwner
+
+    return remember {
+        AppSavedStateViewModelFactory(savedStateRegistryOwner, viewModelAssistedFactories)
     }
 }

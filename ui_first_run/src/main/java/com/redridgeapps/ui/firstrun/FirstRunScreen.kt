@@ -3,13 +3,17 @@ package com.redridgeapps.ui.firstrun
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.redridgeapps.ui.common.routing.viewModel
+import androidx.compose.ui.viewinterop.viewModel
+import androidx.lifecycle.ViewModelProvider
 import com.redridgeapps.ui.firstrun.ui.Content
 
 @Composable
-fun FirstRunScreen(onConfigFinished: () -> Unit) {
+fun FirstRunScreen(
+    viewModelFactory: ViewModelProvider.Factory,
+    onConfigFinished: () -> Unit,
+) {
 
-    val viewModel = viewModel<FirstRunViewModel>()
+    val viewModel = viewModel<FirstRunViewModel>(factory = viewModelFactory)
     val uiState by viewModel.uiState.collectAsState()
 
     if (uiState.isConfigFinished) onConfigFinished()

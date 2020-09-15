@@ -22,6 +22,9 @@ dependencies {
     implementation DaggerHilt.ANDROID
     kapt DaggerHilt.COMPILER
 
+    // AndroidX Hilt
+    implementation AndroidXHilt.LIFECYCLE_VIEWMODEL
+
     // SQLDelight
     implementation SQLDelight.ANDROID_DRIVER
 
