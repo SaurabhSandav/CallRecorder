@@ -1,15 +1,12 @@
 package com.redridgeapps.callutils.recording
 
-import com.redridgeapps.callutils.Defaults
+import androidx.datastore.DataStore
 import com.redridgeapps.callutils.callevents.NewCallEvent
 import com.redridgeapps.callutils.storage.Recordings
-import com.redridgeapps.prefs.PREF_AUDIO_RECORD_CHANNELS
-import com.redridgeapps.prefs.PREF_AUDIO_RECORD_ENCODING
-import com.redridgeapps.prefs.PREF_AUDIO_RECORD_SAMPLE_RATE
-import com.redridgeapps.prefs.PREF_RECORDINGS_STORAGE_PATH
+import com.redridgeapps.callutils.toPcmChannels
+import com.redridgeapps.callutils.toPcmEncoding
+import com.redridgeapps.callutils.toPcmSampleRate
 import com.redridgeapps.prefs.Prefs
-import com.redridgeapps.prefs.enum
-import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.datetime.Clock
@@ -27,35 +24,31 @@ data class RecordingJob internal constructor(
 
 @Suppress("FunctionName")
 suspend fun RecordingJob(
-    prefs: Prefs,
+    prefs: DataStore<Prefs>,
     callEvent: NewCallEvent,
 ): RecordingJob = coroutineScope {
 
-    val sampleRate = async {
-        prefs.enum(PREF_AUDIO_RECORD_SAMPLE_RATE) { Defaults.AUDIO_RECORD_SAMPLE_RATE }.first()
-    }
-    val audioChannel = async {
-        prefs.enum(PREF_AUDIO_RECORD_CHANNELS) { Defaults.AUDIO_RECORD_CHANNELS }.first()
-    }
-    val audioEncoding = async {
-        prefs.enum(PREF_AUDIO_RECORD_ENCODING) { Defaults.AUDIO_RECORD_ENCODING }.first()
-    }
-    val recordingsStoragePath = async {
-        prefs.string(PREF_RECORDINGS_STORAGE_PATH) { error("Recordings storage path is empty") }
-            .first()
+    val prefsData = prefs.data.first()
+    val audioRecord = prefsData.audio_record ?: Prefs.AudioRecord()
+
+    val pcmSampleRate = audioRecord.sample_rate.toPcmSampleRate()
+    val pcmChannels = audioRecord.channels.toPcmChannels()
+    val pcmEncoding = audioRecord.encoding.toPcmEncoding()
+    val recordingsStoragePath = prefsData.recording_storage_path.ifBlank {
+        error("Recordings storage path is empty")
     }
 
     val recordingStartInstant = Clock.System.now()
 
     val savePath = Recordings.generateFilePath(
-        saveDir = recordingsStoragePath.await(),
+        saveDir = recordingsStoragePath,
         fileName = recordingStartInstant.epochSeconds.toString()
     )
 
     RecordingJob(
-        pcmSampleRate = sampleRate.await(),
-        pcmChannels = audioChannel.await(),
-        pcmEncoding = audioEncoding.await(),
+        pcmSampleRate = pcmSampleRate,
+        pcmChannels = pcmChannels,
+        pcmEncoding = pcmEncoding,
         savePath = savePath,
         newCallEvent = callEvent,
         recordingStartInstant = recordingStartInstant

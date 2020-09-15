@@ -77,6 +77,13 @@ object WorkManager {
     const val WORK_RUNTIME_KTX = "androidx.work:work-runtime-ktx:$VERSION"
 }
 
+object DataStore {
+    private const val VERSION = "1.0.0-alpha01"
+
+    const val PREFERENCES = "androidx.datastore:datastore-preferences:$VERSION"
+    const val CORE = "androidx.datastore:datastore-core:$VERSION"
+}
+
 object DaggerHilt {
     private const val VERSION = "2.29.1-alpha"
 
@@ -119,4 +126,10 @@ object RustAndroidGradle {
     private const val VERSION = "0.8.3"
 
     const val GRADLE_PLUGIN = "gradle.plugin.org.mozilla.rust-android-gradle:plugin:$VERSION"
+}
+
+object Wire {
+    private const val VERSION = "3.3.0"
+
+    const val RUNTIME = "com.squareup.wire:wire-runtime:$VERSION"
 }

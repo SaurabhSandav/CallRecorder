@@ -10,9 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.redridgeapps.callutils.recording.PcmChannels
-import com.redridgeapps.callutils.recording.PcmEncoding
-import com.redridgeapps.callutils.recording.PcmSampleRate
+import com.redridgeapps.prefs.Prefs
 import com.redridgeapps.ui.settings.OnUpdateContactNames
 import com.redridgeapps.ui.settings.Preference
 
@@ -24,9 +22,9 @@ internal fun Content(
 
     onUpdateContactNames: OnUpdateContactNames,
 
-    audioRecordSampleRate: Preference<PcmSampleRate>,
-    audioRecordChannels: Preference<PcmChannels>,
-    audioRecordEncoding: Preference<PcmEncoding>,
+    audioRecordSampleRate: Preference<Prefs.AudioRecord.SampleRate>,
+    audioRecordChannels: Preference<Prefs.AudioRecord.Channels>,
+    audioRecordEncoding: Preference<Prefs.AudioRecord.Encoding>,
 
     autoDeleteEnabled: Preference<Boolean>,
     autoDeleteAfterDays: Preference<Int>,

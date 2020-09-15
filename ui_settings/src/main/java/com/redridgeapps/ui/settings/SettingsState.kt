@@ -3,9 +3,7 @@ package com.redridgeapps.ui.settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
-import com.redridgeapps.callutils.recording.PcmChannels
-import com.redridgeapps.callutils.recording.PcmEncoding
-import com.redridgeapps.callutils.recording.PcmSampleRate
+import com.redridgeapps.prefs.Prefs
 import kotlinx.coroutines.flow.Flow
 
 @Stable
@@ -16,9 +14,9 @@ internal data class SettingsState(
 
     val onUpdateContactNames: OnUpdateContactNames,
 
-    val audioRecordSampleRate: Preference<PcmSampleRate>,
-    val audioRecordChannels: Preference<PcmChannels>,
-    val audioRecordEncoding: Preference<PcmEncoding>,
+    val audioRecordSampleRate: Preference<Prefs.AudioRecord.SampleRate>,
+    val audioRecordChannels: Preference<Prefs.AudioRecord.Channels>,
+    val audioRecordEncoding: Preference<Prefs.AudioRecord.Encoding>,
 
     val autoDeleteEnabled: Preference<Boolean>,
     val autoDeleteAfterDays: Preference<Int>,

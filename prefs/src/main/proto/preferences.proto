@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option java_package = "com.redridgeapps.prefs";
+option java_multiple_files = true;
+
+message Prefs {
+
+  bool is_initial_config_finished = 1;
+  bool is_recording_enabled = 2;
+  string recording_storage_path = 3;
+  AudioRecord audio_record = 4;
+  bool is_auto_delete_enabled = 5;
+  int32 auto_delete_threshold_days = 6;
+
+  message AudioRecord {
+
+    SampleRate sample_rate = 1;
+    Channels channels = 2;
+    Encoding encoding = 3;
+
+    enum SampleRate {
+      S44_100 = 0;
+      S8_000 = 1;
+      S11_025 = 2;
+      S16_000 = 3;
+      S22_050 = 4;
+      S48_000 = 5;
+    }
+
+    enum Channels {
+      MONO = 0;
+      STEREO = 1;
+    }
+
+    enum Encoding {
+      PCM_16BIT = 0;
+      PCM_8BIT = 1;
+      PCM_FLOAT = 2;
+    }
+  }
+}

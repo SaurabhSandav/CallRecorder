@@ -1,5 +1,6 @@
 package com.redridgeapps.ui.main
 
+import androidx.datastore.DataStore
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
@@ -20,7 +21,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 internal class MainViewModel @ViewModelInject constructor(
     @Assisted savedStateHandle: SavedStateHandle,
-    prefs: Prefs,
+    prefs: DataStore<Prefs>,
     callPlayback: CallPlayback,
     recordings: Recordings,
     mp3ConversionServiceLauncher: Mp3ConversionServiceLauncher,

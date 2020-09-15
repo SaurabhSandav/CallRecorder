@@ -3,6 +3,16 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'common-configuration'
+    id 'com.squareup.wire'
+}
+
+android {
+    sourceSets {
+        main.java.srcDirs += [
+                "$buildDir/generated/source/wire",
+                "src/main/proto/"
+        ]
+    }
 }
 
 dependencies {
@@ -13,7 +23,18 @@ dependencies {
     // Jetpack
     implementation Jetpack.CORE_KTX
 
+    // DataStore
+    api DataStore.CORE
+
     // Dagger Hilt
     implementation DaggerHilt.ANDROID
     kapt DaggerHilt.COMPILER
+
+    // Wire
+    api Wire.RUNTIME
+}
+
+wire {
+    kotlin {
+    }
 }
