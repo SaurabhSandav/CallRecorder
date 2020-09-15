@@ -8,7 +8,7 @@ import com.redridgeapps.callutils.playback.CallPlayback
 import com.redridgeapps.callutils.services.AudioEndsTrimmingServiceLauncher
 import com.redridgeapps.callutils.services.Mp3ConversionServiceLauncher
 import com.redridgeapps.callutils.storage.Recordings
-import com.redridgeapps.common.createViewModelHandle
+import com.redridgeapps.common.viewmodel.createViewModelHandle
 import com.redridgeapps.prefs.Prefs
 import com.redridgeapps.ui.common.utils.ClickSelection
 import com.redridgeapps.ui.main.handlers.PlaybackHandler

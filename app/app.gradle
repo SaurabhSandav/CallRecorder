@@ -32,7 +32,6 @@ dependencies {
     implementation project(":common")
     implementation project(":prefs")
     implementation project(":call_utils")
-    implementation project(":compose_viewmodel")
     implementation project(":ui_common")
     implementation project(":ui_first_run")
     implementation project(":ui_main")
@@ -49,10 +48,7 @@ dependencies {
     implementation Compose.RUNTIME
     implementation Compose.FOUNDATION
     implementation Compose.MATERIAL
-
-    // compose-navigation
-    implementation ComposeNavigation.CORE
-    implementation ComposeNavigation.NAVIGATION
+    implementation Compose.NAVIGATION
 
     // Lifecycle, ViewModel and LiveData
     implementation Lifecycle.SERVICE

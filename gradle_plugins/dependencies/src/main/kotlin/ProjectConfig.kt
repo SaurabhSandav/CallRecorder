@@ -1,7 +1,7 @@
 @file:Suppress("unused")
 
 object GoogleMaven {
-    const val SNAPSHOT_BUILD_ID = "6634459"
+    const val SNAPSHOT_BUILD_ID = "6836714"
 
     const val SUPPORT_REPO_ENABLED = false
     const val SUPPORT_REPO_URL =
@@ -48,6 +48,7 @@ object Jetpack {
 
 object Compose {
     const val VERSION = "1.0.0-alpha02"
+    private const val NAVIGATION_VERSION = "0.1.0-SNAPSHOT"
     const val KOTLIN_COMPILER_VERSION = Kotlin.VERSION
 
     const val RUNTIME = "androidx.compose.runtime:runtime:$VERSION"
@@ -57,13 +58,7 @@ object Compose {
     const val MATERIAL_ICONS_EXTENDED = "androidx.compose.material:material-icons-extended:$VERSION"
     const val UI_UTIL = "androidx.compose.ui:ui-util:$VERSION"
     const val UI_TOOLING = "androidx.ui:ui-tooling:$VERSION"
-}
-
-object ComposeNavigation {
-    private const val VERSION = "0.4.1"
-
-    const val CORE = "com.github.mvarnagiris.compose-navigation:core:$VERSION"
-    const val NAVIGATION = "com.github.mvarnagiris.compose-navigation:navigation:$VERSION"
+    const val NAVIGATION = "androidx.compose.navigation:navigation:$NAVIGATION_VERSION"
 }
 
 object Lifecycle {
@@ -80,12 +75,6 @@ object WorkManager {
     private const val VERSION = "2.5.0-alpha01"
 
     const val WORK_RUNTIME_KTX = "androidx.work:work-runtime-ktx:$VERSION"
-}
-
-object JavaXInject {
-    private const val VERSION = "1"
-
-    const val JAVAX_INJECT = "javax.inject:javax.inject:$VERSION"
 }
 
 object DaggerHilt {

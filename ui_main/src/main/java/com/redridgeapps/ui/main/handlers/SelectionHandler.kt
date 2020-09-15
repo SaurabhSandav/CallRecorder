@@ -4,8 +4,8 @@ import com.redridgeapps.callutils.Defaults
 import com.redridgeapps.callutils.db.Recording
 import com.redridgeapps.callutils.db.RecordingId
 import com.redridgeapps.callutils.storage.Recordings
-import com.redridgeapps.common.ViewModelHandle
 import com.redridgeapps.common.utils.launchUnit
+import com.redridgeapps.common.viewmodel.ViewModelHandle
 import com.redridgeapps.prefs.PREF_AUTO_DELETE_ENABLED
 import com.redridgeapps.prefs.Prefs
 import com.redridgeapps.ui.common.utils.ClickSelection

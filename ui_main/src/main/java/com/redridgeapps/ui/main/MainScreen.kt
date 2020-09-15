@@ -3,13 +3,17 @@ package com.redridgeapps.ui.main
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.redridgeapps.ui.common.routing.viewModel
+import androidx.compose.ui.viewinterop.viewModel
+import androidx.lifecycle.ViewModelProvider
 import com.redridgeapps.ui.main.ui.Content
 
 @Composable
-fun MainScreen(onNavigateToSettings: OnNavigateToSettings) {
+fun MainScreen(
+    viewModelFactory: ViewModelProvider.Factory,
+    onNavigateToSettings: OnNavigateToSettings,
+) {
 
-    val viewModel = viewModel<MainViewModel>()
+    val viewModel = viewModel<MainViewModel>(factory = viewModelFactory)
     val uiState by viewModel.uiState.collectAsState()
 
     Content(

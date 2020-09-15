@@ -6,9 +6,9 @@ import com.redridgeapps.callutils.recording.asPcmEncoding
 import com.redridgeapps.callutils.services.AudioEndsTrimmingServiceLauncher
 import com.redridgeapps.callutils.services.Mp3ConversionServiceLauncher
 import com.redridgeapps.callutils.storage.Recordings
-import com.redridgeapps.common.ViewModelHandle
 import com.redridgeapps.common.utils.humanReadableByteCount
 import com.redridgeapps.common.utils.launchUnit
+import com.redridgeapps.common.viewmodel.ViewModelHandle
 import com.redridgeapps.ui.common.utils.ClickSelection
 import com.redridgeapps.ui.main.SelectedRecording
 import kotlinx.coroutines.flow.first

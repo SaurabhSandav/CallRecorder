@@ -25,10 +25,6 @@ dependencies {
     implementation Compose.UI_UTIL
     implementation Compose.UI_TOOLING
 
-    // compose-navigation
-    implementation ComposeNavigation.CORE
-    implementation ComposeNavigation.NAVIGATION
-
     // ViewModel
     implementation Lifecycle.VIEWMODEL_KTX
     implementation Lifecycle.COMMON_JAVA8
