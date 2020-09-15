@@ -1,6 +1,7 @@
 package com.redridgeapps.callutils.recording
 
 import android.media.AudioFormat
+import com.redridgeapps.prefs.Prefs
 import com.redridgeapps.wavutils.WavBitsPerSample
 import com.redridgeapps.wavutils.WavChannels
 import com.redridgeapps.wavutils.WavSampleRate
@@ -44,3 +45,23 @@ fun PcmEncoding.asWavBitsPerSample(): WavBitsPerSample = WavBitsPerSample(bitsPe
 
 fun WavBitsPerSample.asPcmEncoding(): PcmEncoding =
     PcmEncoding.values().first { it.bitsPerSample == value }
+
+fun Prefs.AudioRecord.SampleRate.toPcmSampleRate(): PcmSampleRate = when (this) {
+    Prefs.AudioRecord.SampleRate.S44_100 -> PcmSampleRate.S44_100
+    Prefs.AudioRecord.SampleRate.S8_000 -> PcmSampleRate.S8_000
+    Prefs.AudioRecord.SampleRate.S11_025 -> PcmSampleRate.S11_025
+    Prefs.AudioRecord.SampleRate.S16_000 -> PcmSampleRate.S16_000
+    Prefs.AudioRecord.SampleRate.S22_050 -> PcmSampleRate.S22_050
+    Prefs.AudioRecord.SampleRate.S48_000 -> PcmSampleRate.S48_000
+}
+
+fun Prefs.AudioRecord.Channels.toPcmChannels(): PcmChannels = when (this) {
+    Prefs.AudioRecord.Channels.MONO -> PcmChannels.MONO
+    Prefs.AudioRecord.Channels.STEREO -> PcmChannels.STEREO
+}
+
+fun Prefs.AudioRecord.Encoding.toPcmEncoding(): PcmEncoding = when (this) {
+    Prefs.AudioRecord.Encoding.PCM_16BIT -> PcmEncoding.PCM_16BIT
+    Prefs.AudioRecord.Encoding.PCM_8BIT -> PcmEncoding.PCM_8BIT
+    Prefs.AudioRecord.Encoding.PCM_FLOAT -> PcmEncoding.PCM_FLOAT
+}

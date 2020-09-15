@@ -2,8 +2,7 @@ package com.redridgeapps.callutils.services
 
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import com.redridgeapps.callutils.Defaults
-import com.redridgeapps.prefs.PREF_RECORDING_ENABLED
+import androidx.datastore.DataStore
 import com.redridgeapps.prefs.Prefs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -17,7 +16,7 @@ import javax.inject.Inject
 class RecordingSwitchTileService : TileService() {
 
     @Inject
-    lateinit var prefs: Prefs
+    lateinit var prefs: DataStore<Prefs>
 
     private val coroutineScope = CoroutineScope(SupervisorJob())
 
@@ -43,20 +42,16 @@ class RecordingSwitchTileService : TileService() {
 
     private fun flipTile() = coroutineScope.launch {
 
-        val flipped = !prefs
-            .boolean(PREF_RECORDING_ENABLED) { Defaults.RECORDING_ENABLED }
-            .first()
+        val flipped = prefs.data.first().is_recording_enabled.not()
 
-        prefs.editor { set(PREF_RECORDING_ENABLED, flipped) }
+        prefs.updateData { it.copy(is_recording_enabled = flipped) }
 
         updateTile()
     }
 
     private fun updateTile() = coroutineScope.launch {
 
-        val recordingEnabled = prefs.boolean(PREF_RECORDING_ENABLED) {
-            Defaults.RECORDING_ENABLED
-        }.first()
+        val recordingEnabled = prefs.data.first().is_recording_enabled
 
         qsTile.state = if (recordingEnabled) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
         qsTile.updateTile()

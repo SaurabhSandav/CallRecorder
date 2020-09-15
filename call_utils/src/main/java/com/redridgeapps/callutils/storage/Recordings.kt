@@ -3,6 +3,7 @@ package com.redridgeapps.callutils.storage
 import android.content.Context
 import android.os.Environment
 import androidx.core.content.ContextCompat
+import androidx.datastore.DataStore
 import com.redridgeapps.callutils.db.Recording
 import com.redridgeapps.callutils.db.RecordingId
 import com.redridgeapps.callutils.db.RecordingQueries
@@ -14,7 +15,6 @@ import com.redridgeapps.common.utils.launchUnit
 import com.redridgeapps.common.utils.replaceExtension
 import com.redridgeapps.mp3encoder.EncodingJob
 import com.redridgeapps.mp3encoder.Mp3Encoder
-import com.redridgeapps.prefs.PREF_RECORDINGS_STORAGE_PATH
 import com.redridgeapps.prefs.Prefs
 import com.redridgeapps.wavutils.WavData
 import com.redridgeapps.wavutils.WavFileUtils
@@ -179,16 +179,18 @@ class Recordings @Inject internal constructor(
 }
 
 class RecordingStoragePathInitializer @Inject constructor(
-    val prefs: Prefs,
+    val prefs: DataStore<Prefs>,
 ) : StartupInitializer {
 
     override fun initialize(context: Context) = GlobalScope.launchUnit {
 
-        if (prefs.stringOrNull(PREF_RECORDINGS_STORAGE_PATH).first() == null) {
+        val currentRecordingStoragePath = prefs.data.first().recording_storage_path
 
-            val newRecordingPath = Recordings.getRecordingsStoragePath(context).toString()
+        if (currentRecordingStoragePath.isBlank()) {
 
-            prefs.editor { set(PREF_RECORDINGS_STORAGE_PATH, newRecordingPath) }
+            val newRecordingStoragePath = Recordings.getRecordingsStoragePath(context).toString()
+
+            prefs.updateData { it.copy(recording_storage_path = newRecordingStoragePath) }
         }
     }
 }

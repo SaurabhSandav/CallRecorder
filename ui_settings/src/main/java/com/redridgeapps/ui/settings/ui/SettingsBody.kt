@@ -3,9 +3,7 @@ package com.redridgeapps.ui.settings.ui
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.redridgeapps.callutils.recording.PcmChannels
-import com.redridgeapps.callutils.recording.PcmEncoding
-import com.redridgeapps.callutils.recording.PcmSampleRate
+import com.redridgeapps.prefs.Prefs
 import com.redridgeapps.ui.settings.Preference
 
 @Composable
@@ -15,9 +13,9 @@ internal fun SettingsBody(
 
     onUpdateContactNames: () -> Unit,
 
-    audioRecordSampleRate: Preference<PcmSampleRate>,
-    audioRecordChannels: Preference<PcmChannels>,
-    audioRecordEncoding: Preference<PcmEncoding>,
+    audioRecordSampleRate: Preference<Prefs.AudioRecord.SampleRate>,
+    audioRecordChannels: Preference<Prefs.AudioRecord.Channels>,
+    audioRecordEncoding: Preference<Prefs.AudioRecord.Encoding>,
 
     autoDeleteEnabled: Preference<Boolean>,
     autoDeleteAfterDays: Preference<Int>,

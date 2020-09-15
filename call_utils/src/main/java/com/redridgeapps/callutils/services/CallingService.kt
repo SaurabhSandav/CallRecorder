@@ -11,9 +11,9 @@ import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.datastore.DataStore
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import com.redridgeapps.callutils.Defaults
 import com.redridgeapps.callutils.R
 import com.redridgeapps.callutils.callevents.CallState
 import com.redridgeapps.callutils.callevents.CallStatusListener
@@ -26,10 +26,10 @@ import com.redridgeapps.common.AppDispatchers
 import com.redridgeapps.common.StartupInitializer
 import com.redridgeapps.common.constants.NOTIFICATION_RECORDING_SERVICE_ID
 import com.redridgeapps.common.di.qualifiers.NotificationPendingActivity
-import com.redridgeapps.prefs.PREF_RECORDING_ENABLED
 import com.redridgeapps.prefs.Prefs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -40,7 +40,7 @@ import kotlin.reflect.KClass
 class CallingService : LifecycleService() {
 
     @Inject
-    lateinit var prefs: Prefs
+    lateinit var prefs: DataStore<Prefs>
 
     @Inject
     lateinit var telephonyManager: TelephonyManager
@@ -173,20 +173,18 @@ class CallingService : LifecycleService() {
     }
 
     class Initializer @Inject constructor(
-        private val prefs: Prefs,
+        private val prefs: DataStore<Prefs>,
         @NotificationPendingActivity private val notificationPendingActivity: KClass<out Activity>,
     ) : StartupInitializer {
 
         override fun initialize(context: Context) {
 
-            prefs.boolean(PREF_RECORDING_ENABLED) { Defaults.RECORDING_ENABLED }
-                .onEach { recordingOn ->
-                    when {
-                        recordingOn -> start(context, notificationPendingActivity)
-                        else -> stop(context)
-                    }
+            prefs.data.distinctUntilChangedBy { it.is_recording_enabled }.onEach {
+                when {
+                    it.is_recording_enabled -> start(context, notificationPendingActivity)
+                    else -> stop(context)
                 }
-                .launchIn(GlobalScope)
+            }.launchIn(GlobalScope)
         }
     }
 }

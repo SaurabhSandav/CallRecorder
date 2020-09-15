@@ -1,12 +1,11 @@
 package com.redridgeapps.ui.main.handlers
 
-import com.redridgeapps.callutils.Defaults
+import androidx.datastore.DataStore
 import com.redridgeapps.callutils.db.Recording
 import com.redridgeapps.callutils.db.RecordingId
 import com.redridgeapps.callutils.storage.Recordings
 import com.redridgeapps.common.utils.launchUnit
 import com.redridgeapps.common.viewmodel.ViewModelHandle
-import com.redridgeapps.prefs.PREF_AUTO_DELETE_ENABLED
 import com.redridgeapps.prefs.Prefs
 import com.redridgeapps.ui.common.utils.ClickSelection
 import com.redridgeapps.ui.main.SelectedRecording
@@ -22,7 +21,7 @@ internal class SelectionHandler constructor(
     private val viewModelHandle: ViewModelHandle,
     private val setState: SetState,
     private val recordingSelection: ClickSelection<SelectedRecording>,
-    private val prefs: Prefs,
+    private val prefs: DataStore<Prefs>,
     private val recordings: Recordings,
 ) {
 
@@ -52,8 +51,7 @@ internal class SelectionHandler constructor(
 
     private fun observeSelection() {
 
-        val autoDeleteEnabledFlow =
-            prefs.boolean(PREF_AUTO_DELETE_ENABLED) { Defaults.AUTO_DELETE_ENABLED }
+        val autoDeleteEnabledFlow = prefs.data.map { it.is_auto_delete_enabled }
 
         recordingSelection.state
             .flatMapLatest { state ->

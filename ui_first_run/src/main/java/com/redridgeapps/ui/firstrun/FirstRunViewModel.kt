@@ -1,14 +1,13 @@
 package com.redridgeapps.ui.firstrun
 
 import android.Manifest
+import androidx.datastore.DataStore
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.common.PermissionChecker
 import com.redridgeapps.common.Systemizer
 import com.redridgeapps.common.utils.launchUnit
-import com.redridgeapps.prefs.PREF_IS_FIRST_RUN
-import com.redridgeapps.prefs.PREF_RECORDING_ENABLED
 import com.redridgeapps.prefs.Prefs
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +16,7 @@ import kotlinx.coroutines.flow.onEach
 
 internal class FirstRunViewModel @ViewModelInject constructor(
     private val systemizer: Systemizer,
-    private val prefs: Prefs,
+    private val prefs: DataStore<Prefs>,
     permissionChecker: PermissionChecker,
 ) : ViewModel() {
 
@@ -51,7 +50,7 @@ internal class FirstRunViewModel @ViewModelInject constructor(
         _uiState.value = _uiState.value.copy(allPermissionsGranted = allPermissionsGranted)
     }
 
-    private fun checkConfigurationFinished(uiState: FirstRunState) {
+    private suspend fun checkConfigurationFinished(uiState: FirstRunState) {
 
         val isConfigFinished = uiState.isAppSystemized
                 && uiState.allPermissionsGranted
@@ -59,9 +58,8 @@ internal class FirstRunViewModel @ViewModelInject constructor(
 
         if (isConfigFinished) {
 
-            prefs.editor {
-                set(PREF_IS_FIRST_RUN, false)
-                set(PREF_RECORDING_ENABLED, true)
+            prefs.updateData {
+                it.copy(is_initial_config_finished = true, is_recording_enabled = true)
             }
 
             _uiState.value = _uiState.value.copy(isConfigFinished = true)
