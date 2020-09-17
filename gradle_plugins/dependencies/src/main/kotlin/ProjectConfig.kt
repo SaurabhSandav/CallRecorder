@@ -13,8 +13,8 @@ object GoogleMaven {
 }
 
 object AndroidTools {
-    private const val GRADLE_PLUGIN_VERSION = "4.2.0-alpha10"
-    private const val DESUGAR_JDK_LIBS_VERSION = "1.0.9"
+    private const val GRADLE_PLUGIN_VERSION = "4.2.0-alpha11"
+    private const val DESUGAR_JDK_LIBS_VERSION = "1.0.10"
 
     const val GRADLE_PLUGIN = "com.android.tools.build:gradle:$GRADLE_PLUGIN_VERSION"
     const val DESUGAR_JDK_LIBS = "com.android.tools:desugar_jdk_libs:$DESUGAR_JDK_LIBS_VERSION"
@@ -35,7 +35,7 @@ object Kotlin {
 object Jetpack {
     private const val ACTIVITY_KTX_VERSION = "1.2.0-alpha08"
     private const val APPCOMPAT_VERSION = "1.3.0-alpha02"
-    private const val CORE_KTX_VERSION = "1.5.0-alpha02"
+    private const val CORE_KTX_VERSION = "1.5.0-alpha03"
     private const val FRAGMENT_KTX_VERSION = "1.3.0-alpha08"
     private const val PREFERENCE_KTX_VERSION = "1.1.1"
 
@@ -47,7 +47,7 @@ object Jetpack {
 }
 
 object Compose {
-    const val VERSION = "1.0.0-alpha02"
+    const val VERSION = "1.0.0-alpha03"
     private const val NAVIGATION_VERSION = "0.1.0-SNAPSHOT"
     const val KOTLIN_COMPILER_VERSION = Kotlin.VERSION
 
@@ -72,7 +72,7 @@ object Lifecycle {
 }
 
 object WorkManager {
-    private const val VERSION = "2.5.0-alpha01"
+    private const val VERSION = "2.5.0-alpha02"
 
     const val WORK_RUNTIME_KTX = "androidx.work:work-runtime-ktx:$VERSION"
 }

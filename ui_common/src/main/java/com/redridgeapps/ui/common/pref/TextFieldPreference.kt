@@ -95,7 +95,6 @@ private fun DialogContent(
     TextField(
         modifier = Modifier.padding(8.dp),
         value = textFieldValue,
-        label = {},
         onValueChange = onTextFieldValueChange,
         keyboardType = KeyboardType.Number
     )
