@@ -97,7 +97,7 @@ private fun <T> DialogContent(
     LazyColumnFor(
         items = keys,
         modifier = Modifier.preferredHeightIn(
-            maxHeight = (ConfigurationAmbient.current.screenHeightDp - 150).dp
+            max = (ConfigurationAmbient.current.screenHeightDp - 150).dp
         ),
     ) { key ->
 
@@ -124,7 +124,7 @@ private fun RadioItem(
             selected = isSelected,
             onClick = onSelect
         ),
-        verticalGravity = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically
     ) {
 
         RadioButton(
