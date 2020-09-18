@@ -18,7 +18,6 @@ internal fun Content(
     filterState: FilterState,
     selectionState: SelectionState,
     selectedRecordingOperations: SelectedRecordingOperations,
-    autoDeleteEnabled: Boolean,
     currentPlayback: CurrentPlayback?,
 ) {
 
@@ -54,7 +53,6 @@ internal fun Content(
     if (!selectionState.inMultiSelectMode && singleSelection != null) {
 
         OptionsDialog(
-            autoDeleteEnabled = autoDeleteEnabled,
             selectedRecording = singleSelection,
             selectedRecordingOperations = selectedRecordingOperations,
             onDismissRequest = selectionState.onCloseSelectionMode,

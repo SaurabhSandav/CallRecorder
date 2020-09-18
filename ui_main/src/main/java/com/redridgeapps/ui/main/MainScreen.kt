@@ -21,7 +21,6 @@ fun MainScreen(
         recordingListState = uiState.recordingListState,
         filterState = uiState.filterState,
         selectionState = uiState.selectionState,
-        autoDeleteEnabled = uiState.autoDeleteEnabled,
         selectedRecordingOperations = uiState.selectedRecordingOperations,
         currentPlayback = uiState.currentPlayback,
     )

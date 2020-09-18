@@ -31,7 +31,6 @@ import com.redridgeapps.ui.main.SelectedRecordingOperations
 
 @Composable
 internal fun OptionsDialog(
-    autoDeleteEnabled: Boolean,
     selectedRecording: SelectedRecording,
     selectedRecordingOperations: SelectedRecordingOperations,
     onDismissRequest: () -> Unit,
@@ -64,7 +63,6 @@ internal fun OptionsDialog(
 
                 when (tabIndex) {
                     OptionsDialogTab.OPTIONS -> OptionsDialogOptionsTab(
-                        autoDeleteEnabled = autoDeleteEnabled,
                         selectedRecording = selectedRecording,
                         selectedRecordingOperations = selectedRecordingOperations,
                     )
@@ -101,7 +99,6 @@ private fun annotatedRecordingInfo(
 
 @Composable
 private fun ColumnScope.OptionsDialogOptionsTab(
-    autoDeleteEnabled: Boolean,
     selectedRecording: SelectedRecording,
     selectedRecordingOperations: SelectedRecordingOperations,
 ) {
@@ -112,11 +109,11 @@ private fun ColumnScope.OptionsDialogOptionsTab(
         onCheckedChange = selectedRecordingOperations.onToggleStar,
     )
 
-    AnimatedVisibility(visible = autoDeleteEnabled) {
+    AnimatedVisibility(visible = selectedRecording.skipAutoDelete != null) {
 
         SwitchPreference(
             text = "Skip auto delete",
-            checked = selectedRecording.skipAutoDelete,
+            checked = selectedRecording.skipAutoDelete ?: false,
             onCheckedChange = selectedRecordingOperations.onToggleSkipAutoDelete,
         )
     }

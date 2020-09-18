@@ -11,7 +11,6 @@ internal data class MainState(
     val filterState: FilterState,
     val selectionState: SelectionState,
     val selectedRecordingOperations: SelectedRecordingOperations,
-    val autoDeleteEnabled: Boolean = false,
     val currentPlayback: CurrentPlayback? = null,
 )
 
@@ -61,7 +60,7 @@ internal data class SelectionState(
 internal data class SelectedRecording(
     val id: RecordingId,
     val isStarred: Boolean,
-    val skipAutoDelete: Boolean,
+    val skipAutoDelete: Boolean? = null,
 )
 
 @Stable

@@ -11,6 +11,7 @@ import com.redridgeapps.prefs.Prefs
 import com.redridgeapps.ui.common.utils.ClickSelection
 import com.redridgeapps.ui.main.SelectedRecording
 import com.redridgeapps.ui.main.SetState
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
@@ -26,10 +27,7 @@ internal class SelectionHandler constructor(
 ) {
 
     init {
-        viewModelHandle.onInit {
-            observeSelection()
-            observeAutoDeleteEnabled()
-        }
+        viewModelHandle.onInit { observeSelection() }
     }
 
     internal fun onSelect(id: RecordingId) = viewModelHandle.coroutineScope.launchUnit {
@@ -54,12 +52,21 @@ internal class SelectionHandler constructor(
 
     private fun observeSelection() {
 
+        val autoDeleteEnabledFlow =
+            prefs.boolean(PREF_AUTO_DELETE_ENABLED) { Defaults.AUTO_DELETE_ENABLED }
+
         recordingSelection.state
             .flatMapLatest { state ->
                 recordings.getRecordings(state.selection.map { it.id })
                     .map { list ->
                         state.inMultiSelectMode to list.map(this::buildSelectedRecording)
                     }
+            }
+            .combine(autoDeleteEnabledFlow) { pair, autoDeleteEnabled ->
+                when {
+                    autoDeleteEnabled -> pair
+                    else -> pair.first to pair.second.map { it.copy(skipAutoDelete = null) }
+                }
             }
             .onEach {
                 setState {
@@ -72,13 +79,6 @@ internal class SelectionHandler constructor(
                     copy(selectionState = selectionState)
                 }
             }
-            .launchIn(viewModelHandle.coroutineScope)
-    }
-
-    private fun observeAutoDeleteEnabled() {
-
-        prefs.boolean(PREF_AUTO_DELETE_ENABLED) { Defaults.AUTO_DELETE_ENABLED }
-            .onEach { setState { copy(autoDeleteEnabled = it) } }
             .launchIn(viewModelHandle.coroutineScope)
     }
 
