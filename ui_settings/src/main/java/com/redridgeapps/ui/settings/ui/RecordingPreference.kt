@@ -6,13 +6,14 @@ import com.redridgeapps.callutils.recording.PcmEncoding
 import com.redridgeapps.callutils.recording.PcmSampleRate
 import com.redridgeapps.ui.common.pref.PreferenceCategory
 import com.redridgeapps.ui.common.pref.SingleSelectListPreference
-import com.redridgeapps.ui.settings.PreferenceValue
+import com.redridgeapps.ui.settings.Preference
+import com.redridgeapps.ui.settings.collectPrefValue
 
 @Composable
 internal fun RecordingPreference(
-    audioRecordSampleRate: PreferenceValue<PcmSampleRate>,
-    audioRecordChannels: PreferenceValue<PcmChannels>,
-    audioRecordEncoding: PreferenceValue<PcmEncoding>,
+    audioRecordSampleRate: Preference<PcmSampleRate>,
+    audioRecordChannels: Preference<PcmChannels>,
+    audioRecordEncoding: Preference<PcmEncoding>,
 ) {
 
     PreferenceCategory(title = "Auto delete") {
@@ -21,7 +22,7 @@ internal fun RecordingPreference(
             title = "Sample Rate",
             keys = PcmSampleRate.values().asList(),
             itemLabel = { it.sampleRate.toString() },
-            selectedItem = audioRecordSampleRate.value,
+            selectedItem = audioRecordSampleRate.collectPrefValue(),
             onSelectedChange = audioRecordSampleRate.onChanged
         )
 
@@ -34,7 +35,7 @@ internal fun RecordingPreference(
                     PcmChannels.STEREO -> "Stereo"
                 }
             },
-            selectedItem = audioRecordChannels.value,
+            selectedItem = audioRecordChannels.collectPrefValue(),
             onSelectedChange = audioRecordChannels.onChanged
         )
 
@@ -48,7 +49,7 @@ internal fun RecordingPreference(
                     PcmEncoding.PCM_FLOAT -> "PCM_FLOAT"
                 }
             },
-            selectedItem = audioRecordEncoding.value,
+            selectedItem = audioRecordEncoding.collectPrefValue(),
             onSelectedChange = audioRecordEncoding.onChanged
         )
     }

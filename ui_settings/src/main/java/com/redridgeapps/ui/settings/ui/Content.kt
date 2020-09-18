@@ -14,22 +14,22 @@ import com.redridgeapps.callutils.recording.PcmChannels
 import com.redridgeapps.callutils.recording.PcmEncoding
 import com.redridgeapps.callutils.recording.PcmSampleRate
 import com.redridgeapps.ui.settings.OnUpdateContactNames
-import com.redridgeapps.ui.settings.PreferenceValue
+import com.redridgeapps.ui.settings.Preference
 
 @Composable
 internal fun Content(
     onNavigateUp: () -> Unit,
-    isAppSystemized: PreferenceValue<Boolean>,
-    recordingEnabled: PreferenceValue<Boolean>,
+    isAppSystemized: Preference<Boolean>,
+    recordingEnabled: Preference<Boolean>,
 
     onUpdateContactNames: OnUpdateContactNames,
 
-    audioRecordSampleRate: PreferenceValue<PcmSampleRate>,
-    audioRecordChannels: PreferenceValue<PcmChannels>,
-    audioRecordEncoding: PreferenceValue<PcmEncoding>,
+    audioRecordSampleRate: Preference<PcmSampleRate>,
+    audioRecordChannels: Preference<PcmChannels>,
+    audioRecordEncoding: Preference<PcmEncoding>,
 
-    autoDeleteEnabled: PreferenceValue<Boolean>,
-    autoDeleteAfterDays: PreferenceValue<Int>,
+    autoDeleteEnabled: Preference<Boolean>,
+    autoDeleteAfterDays: Preference<Int>,
 ) {
 
     Scaffold(
