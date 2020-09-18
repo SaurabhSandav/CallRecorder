@@ -5,27 +5,30 @@ import androidx.compose.runtime.Composable
 import com.redridgeapps.ui.common.pref.PreferenceCategory
 import com.redridgeapps.ui.common.pref.SwitchPreference
 import com.redridgeapps.ui.common.pref.TextFieldPreference
-import com.redridgeapps.ui.settings.PreferenceValue
+import com.redridgeapps.ui.settings.Preference
+import com.redridgeapps.ui.settings.collectPrefValue
 
 @Composable
 internal fun AutoDeletePreference(
-    autoDeleteEnabled: PreferenceValue<Boolean>,
-    autoDeleteAfterDays: PreferenceValue<Int>,
+    autoDeleteEnabled: Preference<Boolean>,
+    autoDeleteAfterDays: Preference<Int>,
 ) {
 
     PreferenceCategory(title = "Auto delete") {
 
+        val autoDeleteEnabledValue = autoDeleteEnabled.collectPrefValue()
+
         SwitchPreference(
             text = "Auto delete",
-            checked = autoDeleteEnabled.value,
+            checked = autoDeleteEnabledValue,
             onCheckedChange = autoDeleteEnabled.onChanged
         )
 
-        AnimatedVisibility(visible = autoDeleteEnabled.value) {
+        AnimatedVisibility(visible = autoDeleteEnabledValue) {
 
             TextFieldPreference(
                 title = "Auto delete after (days)",
-                text = autoDeleteAfterDays.value.toString(),
+                text = autoDeleteAfterDays.collectPrefValue().toString(),
                 onValueChange = { autoDeleteAfterDays.onChanged(it.toInt()) }
             )
         }
