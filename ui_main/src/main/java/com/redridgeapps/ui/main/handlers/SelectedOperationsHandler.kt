@@ -1,8 +1,6 @@
 package com.redridgeapps.ui.main.handlers
 
 import com.redridgeapps.callutils.callevents.CallDirection
-import com.redridgeapps.callutils.recording.PcmEncoding
-import com.redridgeapps.callutils.recording.asPcmEncoding
 import com.redridgeapps.callutils.services.AudioEndsTrimmingServiceLauncher
 import com.redridgeapps.callutils.services.Mp3ConversionServiceLauncher
 import com.redridgeapps.callutils.storage.Recordings
@@ -100,15 +98,9 @@ internal class SelectedOperationsHandler(
         }
         put("Direction: ", direction)
 
-        val encoding = when (wavData.bitsPerSample.asPcmEncoding()) {
-            PcmEncoding.PCM_8BIT -> "Pcm 8 bit"
-            PcmEncoding.PCM_16BIT -> "Pcm 16 bit"
-            PcmEncoding.PCM_FLOAT -> "Pcm 32 bit (Float)"
-        }
-        put("Pcm Encoding: ", encoding)
-
         put("Sample Rate: ", "${wavData.sampleRate.value} Hz")
         put("Channels: ", if (wavData.channels.value == 1) "Mono" else "Stereo")
+        put("Bits per sample: ", wavData.bitsPerSample.value.toString())
         put("Bitrate: ", "${wavData.bitRate.toLong()} kb/s")
         put("File Size: ", humanReadableByteCount(wavData.fileSize.toLong()))
     }

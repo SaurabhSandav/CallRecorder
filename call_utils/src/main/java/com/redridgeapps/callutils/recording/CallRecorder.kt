@@ -23,9 +23,9 @@ class CallRecorder @Inject constructor(
         audioWriter: AudioWriter,
     ) = withContext(dispatchers.IO) {
 
-        val sampleRate = recordingJob.pcmSampleRate.sampleRate
-        val channel = recordingJob.pcmChannels.toAudioRecordChannel()
-        val encoding = recordingJob.pcmEncoding.toAudioRecordEncoding()
+        val sampleRate = recordingJob.sampleRate.value
+        val channel = recordingJob.channels.toAudioRecordChannel()
+        val encoding = recordingJob.encoding.toAudioRecordEncoding()
 
         val bufferSize =
             AudioRecord.getMinBufferSize(sampleRate, channel, encoding) + BUFFER_ADDER
