@@ -56,9 +56,9 @@ class AudioWriter(
 
             WavFileUtils.writeHeader(
                 fileChannel = channel,
-                sampleRate = recordingJob.pcmSampleRate.asWavSampleRate(),
-                channels = recordingJob.pcmChannels.asWavChannels(),
-                bitsPerSample = recordingJob.pcmEncoding.asWavBitsPerSample()
+                sampleRate = recordingJob.sampleRate,
+                channels = recordingJob.channels,
+                bitsPerSample = recordingJob.encoding
             )
         }
 
