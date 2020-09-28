@@ -10,9 +10,9 @@ import androidx.compose.material.ListItem
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedTask
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.launchInComposition
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -85,7 +85,7 @@ private fun annotatedRecordingInfo(
 
     val recordingInfo = remember { mutableStateOf<List<AnnotatedString>>(emptyList()) }
 
-    launchInComposition {
+    LaunchedTask {
         recordingInfo.value = getInfoMap().map {
             annotatedString {
                 withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(it.key) }

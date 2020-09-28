@@ -13,7 +13,7 @@ object GoogleMaven {
 }
 
 object AndroidTools {
-    private const val GRADLE_PLUGIN_VERSION = "4.2.0-alpha11"
+    private const val GRADLE_PLUGIN_VERSION = "4.2.0-alpha13"
     private const val DESUGAR_JDK_LIBS_VERSION = "1.0.10"
 
     const val GRADLE_PLUGIN = "com.android.tools.build:gradle:$GRADLE_PLUGIN_VERSION"
@@ -22,7 +22,7 @@ object AndroidTools {
 
 object Kotlin {
     const val VERSION = "1.4.10"
-    private const val COROUTINES_VERSION = "1.3.9"
+    private const val COROUTINES_VERSION = "1.4.0-M1"
     private const val DATE_TIME_VERSION = "0.1.0"
 
     const val GRADLE_PLUGIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:$VERSION"
@@ -33,10 +33,10 @@ object Kotlin {
 }
 
 object Jetpack {
-    private const val ACTIVITY_KTX_VERSION = "1.2.0-alpha08"
+    private const val ACTIVITY_KTX_VERSION = "1.2.0-beta01"
     private const val APPCOMPAT_VERSION = "1.3.0-alpha02"
-    private const val CORE_KTX_VERSION = "1.5.0-alpha03"
-    private const val FRAGMENT_KTX_VERSION = "1.3.0-alpha08"
+    private const val CORE_KTX_VERSION = "1.5.0-alpha04"
+    private const val FRAGMENT_KTX_VERSION = "1.3.0-beta01"
     private const val PREFERENCE_KTX_VERSION = "1.1.1"
 
     const val ACTIVITY_KTX = "androidx.activity:activity-ktx:$ACTIVITY_KTX_VERSION"
@@ -47,7 +47,7 @@ object Jetpack {
 }
 
 object Compose {
-    const val VERSION = "1.0.0-alpha03"
+    const val VERSION = "1.0.0-alpha05"
     private const val NAVIGATION_VERSION = "0.1.0-SNAPSHOT"
     const val KOTLIN_COMPILER_VERSION = Kotlin.VERSION
 
@@ -62,7 +62,7 @@ object Compose {
 }
 
 object Lifecycle {
-    private const val VERSION = "2.3.0-alpha07"
+    private const val VERSION = "2.3.0-beta01"
 
     const val SERVICE = "androidx.lifecycle:lifecycle-service:$VERSION"
     const val RUNTIME_KTX = "androidx.lifecycle:lifecycle-runtime-ktx:$VERSION"
@@ -72,13 +72,13 @@ object Lifecycle {
 }
 
 object WorkManager {
-    private const val VERSION = "2.5.0-alpha02"
+    private const val VERSION = "2.5.0-alpha03"
 
     const val WORK_RUNTIME_KTX = "androidx.work:work-runtime-ktx:$VERSION"
 }
 
 object DataStore {
-    private const val VERSION = "1.0.0-alpha01"
+    private const val VERSION = "1.0.0-alpha02"
 
     const val PREFERENCES = "androidx.datastore:datastore-preferences:$VERSION"
     const val CORE = "androidx.datastore:datastore-core:$VERSION"
@@ -115,7 +115,7 @@ object LibSU {
 }
 
 object SQLDelight {
-    private const val VERSION = "1.4.3"
+    private const val VERSION = "1.4.4"
 
     const val GRADLE_PLUGIN = "com.squareup.sqldelight:gradle-plugin:$VERSION"
     const val ANDROID_DRIVER = "com.squareup.sqldelight:android-driver:$VERSION"
@@ -129,7 +129,7 @@ object RustAndroidGradle {
 }
 
 object Wire {
-    private const val VERSION = "3.3.0"
+    private const val VERSION = "3.4.0"
 
     const val RUNTIME = "com.squareup.wire:wire-runtime:$VERSION"
 }

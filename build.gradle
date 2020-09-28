@@ -3,11 +3,11 @@
 plugins {
     id 'dependencies'
     id 'com.github.ben-manes.versions' version '0.33.0'
-    id 'com.android.application' version '4.2.0-alpha11' apply false
+    id 'com.android.application' version '4.2.0-alpha13' apply false
     id 'org.jetbrains.kotlin.android' version '1.4.10' apply false
-    id 'com.squareup.sqldelight' version '1.4.3' apply false
+    id 'com.squareup.sqldelight' version '1.4.4' apply false
     id 'dagger.hilt.android.plugin' version '2.29.1-alpha' apply false
-    id 'com.squareup.wire' version '3.3.0' apply false
+    id 'com.squareup.wire' version '3.4.0' apply false
 }
 
 allprojects {
@@ -16,7 +16,7 @@ allprojects {
         mavenLocal()
         google()
         mavenCentral()
-        maven { url "https://jitpack.io" } // For compose-navigation
+        maven { url "https://jitpack.io" } // For libsu
         maven { url "https://kotlin.bintray.com/kotlinx/" } // For kotlinx-datetime
 
         if (GoogleMaven.SUPPORT_REPO_ENABLED) {
