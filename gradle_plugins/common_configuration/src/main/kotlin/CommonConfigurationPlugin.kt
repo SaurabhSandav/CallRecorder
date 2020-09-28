@@ -31,7 +31,7 @@ class CommonConfigurationPlugin : Plugin<Project> {
     private fun Project.configureAndroidCommon() = extensions.getByType<BaseExtension>().run {
 
         compileSdkVersion(30)
-        buildToolsVersion = "30.0.0"
+        buildToolsVersion = "30.0.2"
 
         defaultConfig {
             minSdkVersion(29)
