@@ -10,10 +10,10 @@ import androidx.compose.material.ListItem
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedTask
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -81,20 +81,13 @@ private fun OptionsDialogTab.toReadableString(): String = when (this) {
 @Composable
 private fun annotatedRecordingInfo(
     getInfoMap: suspend () -> Map<String, String>,
-): State<List<AnnotatedString>> {
-
-    val recordingInfo = remember { mutableStateOf<List<AnnotatedString>>(emptyList()) }
-
-    LaunchedTask {
-        recordingInfo.value = getInfoMap().map {
-            annotatedString {
-                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(it.key) }
-                append(it.value)
-            }
+): State<List<AnnotatedString>> = produceState(initialValue = emptyList(), getInfoMap) {
+    value = getInfoMap().map {
+        annotatedString {
+            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(it.key) }
+            append(it.value)
         }
     }
-
-    return recordingInfo
 }
 
 @Composable
