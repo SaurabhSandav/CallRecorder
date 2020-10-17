@@ -1,15 +1,11 @@
 @file:Suppress("unused")
 
 object GoogleMaven {
-    const val SNAPSHOT_BUILD_ID = "6836714"
+    const val SNAPSHOT_BUILD_ID = "6910220"
 
-    const val SUPPORT_REPO_ENABLED = false
-    const val SUPPORT_REPO_URL =
+    const val ANDROIDX_REPO_ENABLED = true
+    const val ANDROIDX_REPO_URL =
         "https://androidx.dev/snapshots/builds/$SNAPSHOT_BUILD_ID/artifacts/repository"
-
-    const val UI_REPO_ENABLED = true
-    const val UI_REPO_URL =
-        "https://androidx.dev/snapshots/builds/$SNAPSHOT_BUILD_ID/artifacts/ui/repository"
 }
 
 object AndroidTools {
@@ -48,7 +44,7 @@ object Jetpack {
 
 object Compose {
     const val VERSION = "1.0.0-alpha05"
-    private const val NAVIGATION_VERSION = "0.1.0-SNAPSHOT"
+    private const val NAVIGATION_VERSION = "1.0.0-SNAPSHOT"
     const val KOTLIN_COMPILER_VERSION = Kotlin.VERSION
 
     const val RUNTIME = "androidx.compose.runtime:runtime:$VERSION"
@@ -58,7 +54,7 @@ object Compose {
     const val MATERIAL_ICONS_EXTENDED = "androidx.compose.material:material-icons-extended:$VERSION"
     const val UI_UTIL = "androidx.compose.ui:ui-util:$VERSION"
     const val UI_TOOLING = "androidx.ui:ui-tooling:$VERSION"
-    const val NAVIGATION = "androidx.compose.navigation:navigation:$NAVIGATION_VERSION"
+    const val NAVIGATION = "androidx.navigation:navigation-compose:$NAVIGATION_VERSION"
 }
 
 object Lifecycle {

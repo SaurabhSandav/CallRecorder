@@ -19,12 +19,8 @@ allprojects {
         maven { url "https://jitpack.io" } // For libsu
         maven { url "https://kotlin.bintray.com/kotlinx/" } // For kotlinx-datetime
 
-        if (GoogleMaven.SUPPORT_REPO_ENABLED) {
-            maven { url GoogleMaven.SUPPORT_REPO_URL }
-        }
-
-        if (GoogleMaven.UI_REPO_ENABLED) {
-            maven { url GoogleMaven.UI_REPO_URL }
+        if (GoogleMaven.ANDROIDX_REPO_ENABLED) {
+            maven { url GoogleMaven.ANDROIDX_REPO_URL }
         }
 
         jcenter()
