@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import com.redridgeapps.prefs.Prefs
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 @Stable
 internal data class SettingsState(
@@ -24,14 +24,11 @@ internal data class SettingsState(
 
 @Stable
 internal data class Preference<T>(
-    val value: Flow<T>,
-    val initialValue: T,
+    val value: StateFlow<T>,
     val onChanged: (T) -> Unit,
 )
 
 @Composable
-internal fun <T> Preference<T>.collectPrefValue(): T {
-    return value.collectAsState(initial = initialValue).value
-}
+internal fun <T> Preference<T>.collectPrefValue(): T = value.collectAsState().value
 
 internal typealias OnUpdateContactNames = () -> Unit
