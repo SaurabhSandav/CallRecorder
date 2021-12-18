@@ -1,6 +1,5 @@
 
 include(":dependencies")
-include(":common_configuration")
 
 rootProject.name = "Gradle Plugins"
 

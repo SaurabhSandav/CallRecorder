@@ -4,10 +4,24 @@ plugins {
     id 'kotlin-kapt'
     id 'com.squareup.sqldelight'
     id 'dagger.hilt.android.plugin'
-    id 'common-configuration'
 }
 
 android {
+
+    compileSdkVersion(30)
+    buildToolsVersion = "30.0.2"
+
+    defaultConfig {
+        minSdkVersion(29)
+        targetSdkVersion(30)
+        versionCode = 1
+        versionName = "1.0"
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
 
     sourceSets {
         main {

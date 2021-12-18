@@ -3,19 +3,39 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
-    id 'common-configuration'
-}
-
-commonConfiguration {
-    compose true
-    coreLibraryDesugaring true
 }
 
 android {
 
+    compileSdkVersion(30)
+    buildToolsVersion = "30.0.2"
+
     defaultConfig {
+
+        minSdkVersion(29)
+        targetSdkVersion(30)
+
+        versionCode = 1
+        versionName = "1.0"
+
         applicationId "com.redridgeapps.callrecorder"
     }
+
+    compileOptions {
+
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+
+        coreLibraryDesugaringEnabled = true
+    }
+
+    composeOptions {
+
+        kotlinCompilerVersion = Compose.KOTLIN_COMPILER_VERSION
+        kotlinCompilerExtensionVersion = Compose.VERSION
+    }
+
+    buildFeatures.compose = true
 
     buildTypes {
         release {
@@ -28,6 +48,8 @@ android {
 }
 
 dependencies {
+
+    coreLibraryDesugaring AndroidTools.DESUGAR_JDK_LIBS
 
     implementation project(":common")
     implementation project(":prefs")
@@ -64,4 +86,7 @@ dependencies {
     implementation AndroidXHilt.WORK
     implementation AndroidXHilt.LIFECYCLE_VIEWMODEL
     kapt AndroidXHilt.COMPILER
+
+    // Timber
+    implementation Timber.TIMBER
 }
