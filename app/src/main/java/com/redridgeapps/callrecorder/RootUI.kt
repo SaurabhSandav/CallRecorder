@@ -10,12 +10,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
 import androidx.savedstate.SavedStateRegistryOwner
+import com.redridgeapps.callrecorder.screen.firstrun.FirstRunScreen
+import com.redridgeapps.callrecorder.screen.main.MainScreen
+import com.redridgeapps.callrecorder.screen.settings.SettingsScreen
 import com.redridgeapps.callrecorder.theme.CallRecorderTheme
 import com.redridgeapps.common.viewmodel.AppSavedStateViewModelFactory
 import com.redridgeapps.common.viewmodel.ViewModelAssistedFactoryMap
-import com.redridgeapps.ui.firstrun.FirstRunScreen
-import com.redridgeapps.ui.main.MainScreen
-import com.redridgeapps.ui.settings.SettingsScreen
 
 fun ComponentActivity.setupCompose(
     isFirstRun: Boolean,

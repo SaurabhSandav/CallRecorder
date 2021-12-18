@@ -26,10 +26,6 @@ include ':prefs'
 include ':call_utils'
 include ':wav_utils'
 include ':mp3_encoder'
-include ':ui_common'
-include ':ui_first_run'
-include ':ui_main'
-include ':ui_settings'
 
 rootProject.name = "Call Recorder"
 

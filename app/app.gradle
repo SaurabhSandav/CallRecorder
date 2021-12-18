@@ -32,10 +32,7 @@ dependencies {
     implementation project(":common")
     implementation project(":prefs")
     implementation project(":call_utils")
-    implementation project(":ui_common")
-    implementation project(":ui_first_run")
-    implementation project(":ui_main")
-    implementation project(":ui_settings")
+    implementation project(":wav_utils")
 
     // Jetpack
     implementation Jetpack.ACTIVITY_KTX
@@ -48,6 +45,7 @@ dependencies {
     implementation Compose.RUNTIME
     implementation Compose.FOUNDATION
     implementation Compose.MATERIAL
+    implementation Compose.MATERIAL_ICONS_EXTENDED
     implementation Compose.NAVIGATION
 
     // Lifecycle, ViewModel and LiveData
