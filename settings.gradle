@@ -5,7 +5,6 @@ pluginManagement {
         google()
         gradlePluginPortal()
         mavenCentral()
-        jcenter()
     }
 
     resolutionStrategy {

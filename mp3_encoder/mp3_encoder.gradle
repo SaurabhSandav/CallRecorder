@@ -6,6 +6,7 @@ plugins {
 }
 
 android {
+    compileSdkVersion(30)
     ndkVersion "21.3.6528147"
 }
 
@@ -20,8 +21,8 @@ cargo {
     targets = ["arm", "x86", "x86_64", "arm64"]
 }
 
-tasks.whenTaskAdded { task ->
+/*tasks.whenTaskAdded { task ->
     if ((task.name == 'javaPreCompileDebug' || task.name == 'javaPreCompileRelease')) {
         task.dependsOn 'cargoBuild'
     }
-}
+}*/

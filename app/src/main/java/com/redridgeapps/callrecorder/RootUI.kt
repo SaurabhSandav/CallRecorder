@@ -5,10 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LifecycleOwnerAmbient
 import androidx.compose.ui.platform.setContent
-import androidx.navigation.compose.AmbientNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigate
+import androidx.navigation.compose.rememberNavController
 import androidx.savedstate.SavedStateRegistryOwner
 import com.redridgeapps.callrecorder.theme.CallRecorderTheme
 import com.redridgeapps.common.viewmodel.AppSavedStateViewModelFactory
@@ -46,34 +46,30 @@ fun Root(
         else -> Routing.Main
     }
 
-    NavHost(startDestination = start) {
+    val navController = rememberNavController()
 
-        composable(Routing.FirstRun) {
+    NavHost(navController, startDestination = start.toString()) {
 
-            val navController = AmbientNavController.current
+        composable(Routing.FirstRun.toString()) {
 
             FirstRunScreen(
                 rememberViewModelFactory(viewModelAssistedFactories),
                 onConfigFinished = {
                     navController.popBackStack()
-                    navController.navigate(Routing.Main)
+                    navController.navigate(Routing.Main.toString())
                 }
             )
         }
 
-        composable(Routing.Main) {
-
-            val navController = AmbientNavController.current
+        composable(Routing.Main.toString()) {
 
             MainScreen(
                 rememberViewModelFactory(viewModelAssistedFactories),
-                onNavigateToSettings = { navController.navigate(Routing.Settings) }
+                onNavigateToSettings = { navController.navigate(Routing.Settings.toString()) }
             )
         }
 
-        composable(Routing.Settings) {
-
-            val navController = AmbientNavController.current
+        composable(Routing.Settings.toString()) {
 
             SettingsScreen(
                 rememberViewModelFactory(viewModelAssistedFactories),

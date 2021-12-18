@@ -3,13 +3,13 @@
 object GoogleMaven {
     const val SNAPSHOT_BUILD_ID = "6910220"
 
-    const val ANDROIDX_REPO_ENABLED = true
+    const val ANDROIDX_REPO_ENABLED = false
     const val ANDROIDX_REPO_URL =
         "https://androidx.dev/snapshots/builds/$SNAPSHOT_BUILD_ID/artifacts/repository"
 }
 
 object AndroidTools {
-    private const val GRADLE_PLUGIN_VERSION = "4.2.0-alpha13"
+    private const val GRADLE_PLUGIN_VERSION = "4.2.0"
     private const val DESUGAR_JDK_LIBS_VERSION = "1.0.10"
 
     const val GRADLE_PLUGIN = "com.android.tools.build:gradle:$GRADLE_PLUGIN_VERSION"
@@ -44,7 +44,7 @@ object Jetpack {
 
 object Compose {
     const val VERSION = "1.0.0-alpha05"
-    private const val NAVIGATION_VERSION = "1.0.0-SNAPSHOT"
+    private const val NAVIGATION_VERSION = "1.0.0-alpha01"
     const val KOTLIN_COMPILER_VERSION = Kotlin.VERSION
 
     const val RUNTIME = "androidx.compose.runtime:runtime:$VERSION"

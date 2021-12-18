@@ -3,7 +3,7 @@
 plugins {
     id 'dependencies'
     id 'com.github.ben-manes.versions' version '0.33.0'
-    id 'com.android.application' version '4.2.0-alpha13' apply false
+    id 'com.android.application' version '4.2.0' apply false
     id 'org.jetbrains.kotlin.android' version '1.4.10' apply false
     id 'com.squareup.sqldelight' version '1.4.4' apply false
     id 'dagger.hilt.android.plugin' version '2.29.1-alpha' apply false
@@ -22,8 +22,6 @@ allprojects {
         if (GoogleMaven.ANDROIDX_REPO_ENABLED) {
             maven { url GoogleMaven.ANDROIDX_REPO_URL }
         }
-
-        jcenter()
     }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
