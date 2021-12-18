@@ -9,7 +9,7 @@ object GoogleMaven {
 }
 
 object AndroidTools {
-    private const val GRADLE_PLUGIN_VERSION = "4.2.0"
+    private const val GRADLE_PLUGIN_VERSION = "7.0.0"
     private const val DESUGAR_JDK_LIBS_VERSION = "1.0.10"
 
     const val GRADLE_PLUGIN = "com.android.tools.build:gradle:$GRADLE_PLUGIN_VERSION"
