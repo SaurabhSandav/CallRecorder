@@ -33,6 +33,7 @@ import java.nio.file.StandardOpenOption.READ
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration
+import kotlin.time.DurationUnit
 
 @Singleton
 class Recordings @Inject internal constructor(
@@ -150,7 +151,7 @@ class Recordings @Inject internal constructor(
     }
 
     internal suspend fun deleteAutoIfOlderThan(duration: Duration) = withContext(dispatchers.IO) {
-        val days = duration.inDays.toInt()
+        val days = duration.toInt(DurationUnit.DAYS)
         recordingQueries.deleteAutoIfOlderThan(days.toString())
     }
 

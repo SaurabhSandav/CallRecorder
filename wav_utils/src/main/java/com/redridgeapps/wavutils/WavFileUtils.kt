@@ -22,10 +22,10 @@ object WavFileUtils {
 
         val byteBuffer = ByteBuffer.allocateDirect(WAV_HEADER_SIZE).order(ByteOrder.LITTLE_ENDIAN)
 
-        "RIFF".forEach { byteBuffer.put(it.toByte()) }
+        "RIFF".forEach { byteBuffer.put(it.code.toByte()) }
         byteBuffer.putInt(pcmSize + 36)
-        "WAVE".forEach { byteBuffer.put(it.toByte()) }
-        "fmt ".forEach { byteBuffer.put(it.toByte()) }
+        "WAVE".forEach { byteBuffer.put(it.code.toByte()) }
+        "fmt ".forEach { byteBuffer.put(it.code.toByte()) }
         byteBuffer.putInt(16)
 
         if (bitsPerSample.value == 32)
@@ -38,7 +38,7 @@ object WavFileUtils {
         byteBuffer.putInt(sampleRate.value * channels.value * bitsPerSample.value / 8)
         byteBuffer.putShort((channels.value * bitsPerSample.value / 8).toShort())
         byteBuffer.putShort(bitsPerSample.value.toShort())
-        "data".forEach { byteBuffer.put(it.toByte()) }
+        "data".forEach { byteBuffer.put(it.code.toByte()) }
         byteBuffer.putInt(pcmSize)
 
         byteBuffer.flip()

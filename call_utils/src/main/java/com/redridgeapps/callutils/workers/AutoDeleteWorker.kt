@@ -14,7 +14,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
-import kotlin.time.days
+import kotlin.time.Duration.Companion.days
 import kotlin.time.toJavaDuration
 
 @HiltWorker
