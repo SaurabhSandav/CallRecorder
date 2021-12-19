@@ -7,13 +7,13 @@ import java.nio.file.Path
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
-object WavFileUtils {
+public object WavFileUtils {
 
-    fun writeHeader(
+    public fun writeHeader(
         fileChannel: FileChannel,
         sampleRate: WavSampleRate,
         channels: WavChannels,
-        bitsPerSample: WavBitsPerSample
+        bitsPerSample: WavBitsPerSample,
     ) {
 
         val pcmSize = fileChannel.size().toInt() - WAV_HEADER_SIZE
@@ -46,7 +46,7 @@ object WavFileUtils {
         fileChannel.write(byteBuffer)
     }
 
-    fun readWavData(fileChannel: FileChannel): WavData {
+    public fun readWavData(fileChannel: FileChannel): WavData {
 
         fileChannel.position(0)
 
@@ -63,16 +63,16 @@ object WavFileUtils {
         )
     }
 
-    fun calculateDuration(fileChannel: FileChannel): Duration {
+    public fun calculateDuration(fileChannel: FileChannel): Duration {
         val wavData = readWavData(fileChannel)
         val fileSize = fileChannel.size() - WAV_HEADER_SIZE
         val durationMillis = (fileSize * 1000) / wavData.byteRate
         return durationMillis.milliseconds
     }
 
-    fun trimSilenceEnds(recordingPath: Path, outputPath: Path) {
+    public fun trimSilenceEnds(recordingPath: Path, outputPath: Path) {
         WavTrimmer.trimSilenceEnds(recordingPath, outputPath)
     }
 }
 
-const val WAV_HEADER_SIZE = 44
+public const val WAV_HEADER_SIZE: Int = 44

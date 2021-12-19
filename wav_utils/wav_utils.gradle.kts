@@ -1,15 +1,30 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    id("java-library")
-    id(libs.plugins.kotlin.jvm.get().pluginId)
+    id(libs.plugins.kotlin.multiplatform.get().pluginId)
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
+kotlin {
 
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.time.ExperimentalTime"
+    explicitApi()
+
+    jvm {
+        compilations.all {
+            kotlinOptions.jvmTarget = "11"
+        }
+    }
+
+    sourceSets {
+
+        all {
+
+            languageSettings {
+
+                progressiveMode = true
+
+                optIn("kotlin.time.ExperimentalTime")
+            }
+        }
+
+        named("commonMain") {
+        }
+    }
 }
