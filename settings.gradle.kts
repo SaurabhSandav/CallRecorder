@@ -18,17 +18,17 @@ pluginManagement {
     }
 }
 
-includeBuild 'gradle_plugins'
-
-include ':app'
-include ':common'
-include ':prefs'
-include ':call_utils'
-include ':wav_utils'
-include ':mp3_encoder'
-
 rootProject.name = "Call Recorder"
 
-rootProject.children.each { subproject ->
-    subproject.buildFileName = "${subproject.name}.gradle"
+includeBuild("gradle_plugins")
+
+include(":app")
+include(":common")
+include(":prefs")
+include(":call_utils")
+include(":wav_utils")
+include(":mp3_encoder")
+
+rootProject.children.forEach { subproject ->
+    subproject.buildFileName = "${subproject.name}.gradle.kts"
 }

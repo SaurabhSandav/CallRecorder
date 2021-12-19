@@ -1,7 +1,7 @@
 plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
-    id 'org.mozilla.rust-android-gradle.rust-android' version '0.8.3'
+    id("com.android.library")
+    id("kotlin-android")
+//    id("org.mozilla.rust-android-gradle.rust-android") version "0.8.3"
 }
 
 android {
@@ -12,8 +12,6 @@ android {
     defaultConfig {
         minSdkVersion(29)
         targetSdkVersion(30)
-        versionCode = 1
-        versionName = "1.0"
     }
 
     compileOptions {
@@ -21,22 +19,22 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    ndkVersion "21.3.6528147"
+    ndkVersion = "21.3.6528147"
 }
 
 dependencies {
 
-    implementation project(":wav_utils")
+    implementation(project(":wav_utils"))
 
     // Timber
-    implementation Timber.TIMBER
+    implementation(Timber.TIMBER)
 }
 
-cargo {
+/*cargo {
     module = "../lame_wrapper/"
     libname = "lame_wrapper"
-    targets = ["arm", "x86", "x86_64", "arm64"]
-}
+    targets = listOf("arm", "x86", "x86_64", "arm64")
+}*/
 
 /*tasks.whenTaskAdded { task ->
     if ((task.name == 'javaPreCompileDebug' || task.name == 'javaPreCompileRelease')) {
