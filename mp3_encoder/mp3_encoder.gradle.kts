@@ -24,7 +24,7 @@ android {
 
 dependencies {
 
-    implementation(project(":wav_utils"))
+    implementation(projects.wavUtils)
 
     // Timber
     implementation(libs.timber)

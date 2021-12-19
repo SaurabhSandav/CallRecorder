@@ -1,4 +1,3 @@
-
 pluginManagement {
 
     repositories {
@@ -18,18 +17,21 @@ pluginManagement {
     }
 }
 
-rootProject.name = "Call Recorder"
+rootProject.name = "CallRecorder"
 
 listOf(
+    "TYPESAFE_PROJECT_ACCESSORS",
     "VERSION_CATALOGS",
 ).forEach { enableFeaturePreview(it) }
 
-include(":app")
-include(":common")
-include(":prefs")
-include(":call_utils")
-include(":wav_utils")
-include(":mp3_encoder")
+include(
+    ":app",
+    ":common",
+    ":prefs",
+    ":call_utils",
+    ":wav_utils",
+    ":mp3_encoder",
+)
 
 rootProject.children.forEach { subproject ->
     subproject.buildFileName = "${subproject.name}.gradle.kts"

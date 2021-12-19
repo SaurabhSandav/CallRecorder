@@ -49,10 +49,10 @@ dependencies {
 
     coreLibraryDesugaring(libs.desugarjdklibs)
 
-    implementation(project(":common"))
-    implementation(project(":prefs"))
-    implementation(project(":call_utils"))
-    implementation(project(":wav_utils"))
+    implementation(projects.common)
+    implementation(projects.prefs)
+    implementation(projects.callUtils)
+    implementation(projects.wavUtils)
 
     // Jetpack
     implementation(libs.jetpack.activity)

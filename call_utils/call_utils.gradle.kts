@@ -32,10 +32,10 @@ android {
 
 dependencies {
 
-    implementation(project(":common"))
-    implementation(project(":prefs"))
-    implementation(project(":wav_utils"))
-    implementation(project(":mp3_encoder"))
+    implementation(projects.common)
+    implementation(projects.prefs)
+    implementation(projects.wavUtils)
+    implementation(projects.mp3Encoder)
 
     // Jetpack
     implementation(libs.jetpack.core)
