@@ -1,7 +1,6 @@
 package com.redridgeapps.callrecorder.screen.settings
 
-import androidx.datastore.DataStore
-import androidx.hilt.lifecycle.ViewModelInject
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callutils.Defaults
@@ -10,14 +9,17 @@ import com.redridgeapps.common.Systemizer
 import com.redridgeapps.common.utils.launchUnit
 import com.redridgeapps.prefs.Prefs
 import com.redridgeapps.prefs.audioRecord
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-internal class SettingsViewModel @ViewModelInject constructor(
+@HiltViewModel
+internal class SettingsViewModel @Inject constructor(
     private val prefs: DataStore<Prefs>,
     private val systemizer: Systemizer,
     private val recordings: Recordings,

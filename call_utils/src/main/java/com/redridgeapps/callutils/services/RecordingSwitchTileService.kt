@@ -2,7 +2,7 @@ package com.redridgeapps.callutils.services
 
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import androidx.datastore.DataStore
+import androidx.datastore.core.DataStore
 import com.redridgeapps.prefs.Prefs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope

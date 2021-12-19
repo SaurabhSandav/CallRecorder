@@ -1,6 +1,6 @@
 package com.redridgeapps.callrecorder.screen.main.handlers
 
-import androidx.datastore.DataStore
+import androidx.datastore.core.DataStore
 import com.redridgeapps.callrecorder.screen.common.utils.ClickSelection
 import com.redridgeapps.callrecorder.screen.main.SelectedRecording
 import com.redridgeapps.callrecorder.screen.main.SetState

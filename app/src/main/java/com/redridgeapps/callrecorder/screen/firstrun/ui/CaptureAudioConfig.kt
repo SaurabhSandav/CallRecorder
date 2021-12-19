@@ -1,10 +1,10 @@
 package com.redridgeapps.callrecorder.screen.firstrun.ui
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -23,7 +23,7 @@ internal fun CaptureAudioConfig(captureAudioOutputPermissionGranted: Boolean) {
             style = MaterialTheme.typography.subtitle1
         )
 
-        Crossfade(current = captureAudioOutputPermissionGranted) { permissionGranted ->
+        Crossfade(captureAudioOutputPermissionGranted) { permissionGranted ->
 
             if (permissionGranted) {
                 Text(text = "✔ Permission granted", style = MaterialTheme.typography.subtitle1)

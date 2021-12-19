@@ -1,14 +1,14 @@
 package com.redridgeapps.callrecorder.screen.main.ui
 
-import androidx.compose.foundation.Icon
-import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Checkbox
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -72,12 +72,12 @@ private fun IconFilter(filterState: FilterState) {
 
     val iconButton = @Composable {
         IconButton(onClick = { expanded = true }) {
-            Icon(Icons.Default.FilterList)
+            Icon(Icons.Default.FilterList, contentDescription = null)
         }
     }
 
     DropdownMenu(
-        toggle = iconButton,
+//        toggle = iconButton,
         expanded = expanded,
         onDismissRequest = { expanded = false }
     ) {
@@ -119,7 +119,7 @@ private fun RecordingListFilter.toReadableString(): String = when (this) {
 private fun IconSettings(onNavigateToSettings: () -> Unit) {
 
     IconButton(onClick = onNavigateToSettings) {
-        Icon(Icons.Default.Settings)
+        Icon(Icons.Default.Settings, contentDescription = null)
     }
 }
 
@@ -144,7 +144,7 @@ private fun SelectionTopAppBar(
 private fun IconDelete(onDeleteRecordings: () -> Unit) {
 
     IconButton(onClick = onDeleteRecordings) {
-        Icon(Icons.Default.Delete)
+        Icon(Icons.Default.Delete, contentDescription = null)
     }
 }
 
@@ -152,6 +152,6 @@ private fun IconDelete(onDeleteRecordings: () -> Unit) {
 private fun IconCloseSelectionMode(onCloseSelectionMode: () -> Unit) {
 
     IconButton(onClick = onCloseSelectionMode) {
-        Icon(Icons.Default.Close)
+        Icon(Icons.Default.Close, contentDescription = null)
     }
 }

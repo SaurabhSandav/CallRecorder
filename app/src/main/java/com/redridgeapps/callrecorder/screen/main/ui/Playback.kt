@@ -1,7 +1,5 @@
 package com.redridgeapps.callrecorder.screen.main.ui
 
-import androidx.compose.foundation.Icon
-import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -11,10 +9,13 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.BottomAppBar
 import androidx.compose.material.DismissValue
+import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Slider
+import androidx.compose.material.SliderDefaults
 import androidx.compose.material.SwipeToDismiss
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PauseCircleOutline
 import androidx.compose.material.icons.filled.PlayCircleOutline
@@ -106,9 +107,11 @@ private fun PlaybackBar(
             Slider(
                 value = playbackPosition,
                 onValueChange = { sliderPosition = it },
-                onValueChangeEnd = { onPlaybackSeek(sliderPosition) },
-                thumbColor = MaterialTheme.colors.secondary,
-                activeTrackColor = MaterialTheme.colors.secondaryVariant,
+                onValueChangeFinished = { onPlaybackSeek(sliderPosition) },
+                colors = SliderDefaults.colors(
+                    thumbColor = MaterialTheme.colors.secondary,
+                    activeTrackColor = MaterialTheme.colors.secondaryVariant,
+                ),
                 modifier = Modifier.fillMaxWidth()
                     .wrapContentSize(Alignment.Center)
                     .padding(5.dp),
@@ -145,8 +148,10 @@ internal fun PlayPauseToggleButton(
         }
 
         Icon(
-            asset = icon.copy(defaultWidth = iconSideSize, defaultHeight = iconSideSize),
-            tint = MaterialTheme.colors.secondary
+//            imageVector = icon.copy(defaultWidth = iconSideSize, defaultHeight = iconSideSize),
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colors.secondary,
         )
     }
 }

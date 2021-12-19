@@ -31,6 +31,13 @@ android {
 
     kotlinOptions {
         jvmTarget = "11"
+
+        freeCompilerArgs += listOf(
+            "-opt-in=androidx.compose.runtime.InternalComposeApi",
+            "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+            "-P",
+            "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true",
+        )
     }
 
     composeOptions {
@@ -83,10 +90,10 @@ dependencies {
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
 
-    // AndroidX Hilt
+    // Jetpack Hilt
     implementation(libs.jetpack.hilt.common)
+    implementation(libs.jetpack.hilt.navigation.compose)
     implementation(libs.jetpack.hilt.work)
-    implementation(libs.jetpack.hilt.lifecycle.viewmodel)
     kapt(libs.jetpack.hilt.compiler)
 
     // Timber

@@ -3,7 +3,7 @@ package com.redridgeapps.callutils.storage
 import android.content.Context
 import android.os.Environment
 import androidx.core.content.ContextCompat
-import androidx.datastore.DataStore
+import androidx.datastore.core.DataStore
 import com.redridgeapps.callutils.db.Recording
 import com.redridgeapps.callutils.db.RecordingId
 import com.redridgeapps.callutils.db.RecordingQueries

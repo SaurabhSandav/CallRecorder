@@ -38,12 +38,12 @@ dependencies {
     // Jetpack
     implementation(libs.jetpack.activity)
 
+    // Jetpack Hilt
+    implementation(libs.jetpack.hilt.navigation.compose)
+
     // Dagger Hilt
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
-
-    // AndroidX Hilt
-    implementation(libs.jetpack.hilt.lifecycle.viewmodel)
 
     // SQLDelight
     implementation(libs.sqldelight.android.driver)

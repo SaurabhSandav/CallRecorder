@@ -5,9 +5,9 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLifecycleObserver
+import androidx.compose.runtime.RememberObserver
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.ContextAmbient
+import androidx.compose.ui.platform.LocalContext
 import com.redridgeapps.common.utils.getComponentActivity
 
 @Composable
@@ -17,7 +17,7 @@ internal fun <I, O> rememberActivityResultManager(
     callback: ActivityResultCallback<O>,
 ): ActivityResultManager<I, O> {
 
-    val context = ContextAmbient.current
+    val context = LocalContext.current
 
     return remember {
         val activityResultRegistry = context.getComponentActivity().activityResultRegistry
@@ -30,7 +30,7 @@ internal class ActivityResultManager<I, O>(
     private val activityResultRegistry: ActivityResultRegistry,
     private val contract: ActivityResultContract<I, O>,
     private val callback: ActivityResultCallback<O>,
-) : CompositionLifecycleObserver {
+) : RememberObserver {
 
     private var resultLauncher: ActivityResultLauncher<I>? = null
 
@@ -38,11 +38,16 @@ internal class ActivityResultManager<I, O>(
         resultLauncher?.launch(input)
     }
 
-    override fun onEnter() {
+    override fun onRemembered() {
         resultLauncher = activityResultRegistry.register(key, contract, callback)
     }
 
-    override fun onLeave() {
+    override fun onAbandoned() {
+        resultLauncher?.unregister()
+        resultLauncher = null
+    }
+
+    override fun onForgotten() {
         resultLauncher?.unregister()
         resultLauncher = null
     }

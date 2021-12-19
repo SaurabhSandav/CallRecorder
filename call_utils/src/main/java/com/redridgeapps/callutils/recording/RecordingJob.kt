@@ -1,6 +1,6 @@
 package com.redridgeapps.callutils.recording
 
-import androidx.datastore.DataStore
+import androidx.datastore.core.DataStore
 import com.redridgeapps.callutils.callevents.NewCallEvent
 import com.redridgeapps.callutils.storage.Recordings
 import com.redridgeapps.prefs.Prefs

@@ -3,17 +3,15 @@ package com.redridgeapps.callrecorder.screen.main
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.viewinterop.viewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.redridgeapps.callrecorder.screen.main.ui.Content
 
 @Composable
 fun MainScreen(
-    viewModelFactory: ViewModelProvider.Factory,
     onNavigateToSettings: OnNavigateToSettings,
 ) {
 
-    val viewModel = viewModel<MainViewModel>(factory = viewModelFactory)
+    val viewModel = hiltViewModel<MainViewModel>()
     val uiState by viewModel.uiState.collectAsState()
 
     Content(

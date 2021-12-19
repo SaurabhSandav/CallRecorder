@@ -1,8 +1,6 @@
 package com.redridgeapps.callrecorder.screen.main
 
-import androidx.datastore.DataStore
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.redridgeapps.callrecorder.screen.common.utils.ClickSelection
@@ -16,11 +14,14 @@ import com.redridgeapps.callutils.services.Mp3ConversionServiceLauncher
 import com.redridgeapps.callutils.storage.Recordings
 import com.redridgeapps.common.viewmodel.createViewModelHandle
 import com.redridgeapps.prefs.Prefs
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Inject
 
-internal class MainViewModel @ViewModelInject constructor(
-    @Assisted savedStateHandle: SavedStateHandle,
+@HiltViewModel
+internal class MainViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     prefs: DataStore<Prefs>,
     callPlayback: CallPlayback,
     recordings: Recordings,

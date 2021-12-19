@@ -1,21 +1,21 @@
 [versions]
-kotlin = "1.4.10"
-coroutines = "1.4.0-M1"
+kotlin = "1.6.10"
+coroutines = "1.6.0-RC3"
 serialization = "1.3.1"
-datetime = "0.1.0"
+datetime = "0.3.1"
 ktor = "1.6.2"
-compose = "1.0.0-alpha05"
-lifecycle = "2.3.0-beta01"
-work = "2.5.0-alpha03"
-datastore = "1.0.0-alpha02"
-jetpackHilt = "1.0.0-alpha02"
-daggerHilt = "2.29.1-alpha"
-sqldelight = "1.4.4"
-wire = "3.4.0"
-libsu = "3.0.2"
+compose = "1.1.0-rc01"
+lifecycle = "2.4.0"
+work = "2.7.1"
+datastore = "1.0.0"
+jetpackHilt = "1.0.0"
+daggerHilt = "2.40.5"
+sqldelight = "1.5.3"
+wire = "4.0.1"
+libsu = "3.2.1"
 
 [plugins]
-gradle-versions-checker = "com.github.ben-manes.versions:0.33.0"
+gradle-versions-checker = "com.github.ben-manes.versions:0.39.0"
 
 android-application = "com.android.application:7.0.0"
 android-library = "com.android.library:7.0.0"
@@ -54,27 +54,27 @@ compose-foundation = { module = "androidx.compose.foundation:foundation", versio
 compose-material = { module = "androidx.compose.material:material", version.ref = "compose" }
 compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
 
-jetpack-core = "androidx.core:core-ktx:1.5.0-alpha04"
-jetpack-activity = "androidx.activity:activity-ktx:1.2.0-beta01"
-jetpack-appcompat = "androidx.appcompat:appcompat:1.3.0-alpha02"
-jetpack-fragment = "androidx.fragment:fragment-ktx:1.3.0-beta01"
-jetpack-preference = "androidx.preference:preference-ktx:1.1.1"
+jetpack-core = "androidx.core:core-ktx:1.8.0-alpha02"
+jetpack-activity = "androidx.activity:activity-ktx:1.4.0"
+jetpack-appcompat = "androidx.appcompat:appcompat:1.4.0"
+jetpack-fragment = "androidx.fragment:fragment-ktx:1.4.0"
+jetpack-preference = "androidx.preference:preference-ktx:1.2.0-rc01"
 
 jetpack-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
 jetpack-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version.ref = "lifecycle" }
 jetpack-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 
-jetpack-navigation-compose = "androidx.navigation:navigation-compose:1.0.0-alpha01"
+jetpack-navigation-compose = "androidx.navigation:navigation-compose:2.4.0-rc01"
 
+jetpack-datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
 jetpack-datastore-core = { module = "androidx.datastore:datastore-core", version.ref = "datastore" }
-jetpack-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 
 jetpack-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
 
 jetpack-hilt-common = { module = "androidx.hilt:hilt-common", version.ref = "jetpackHilt" }
 jetpack-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "jetpackHilt" }
 jetpack-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "jetpackHilt" }
-jetpack-hilt-lifecycle-viewmodel = { module = "androidx.hilt:hilt-lifecycle-viewmodel", version.ref = "jetpackHilt" }
+jetpack-hilt-navigation-compose = "androidx.hilt:hilt-navigation-compose:1.0.0-beta01"
 
 dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "daggerHilt" }
 dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "daggerHilt" }
@@ -87,6 +87,6 @@ wire = { module = "com.squareup.wire:wire-runtime", version.ref = "wire" }
 libsu-core = { module = "com.github.topjohnwu.libsu:core", version.ref = "libsu" }
 libsu-io = { module = "com.github.topjohnwu.libsu:io", version.ref = "libsu" }
 
-timber = "com.jakewharton.timber:timber:4.7.1"
+timber = "com.jakewharton.timber:timber:5.0.1"
 
 bignum = "com.ionspin.kotlin:bignum:0.3.3"

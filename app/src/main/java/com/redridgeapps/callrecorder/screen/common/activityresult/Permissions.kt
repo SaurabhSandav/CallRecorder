@@ -5,13 +5,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.currentComposer
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.ContextAmbient
+import androidx.compose.ui.platform.LocalContext
 import com.redridgeapps.common.PermissionChecker
 
 @Composable
 fun rememberPermissionsRequest(
     vararg requestedPermissions: String,
-    key: String = currentComposer.currentCompoundKeyHash.toString(),
+    key: String = currentComposer.compoundKeyHash.toString(),
     onResult: (permissionsResult: Map<String, Boolean>) -> Unit,
 ): () -> Unit {
 
@@ -23,7 +23,7 @@ fun rememberPermissionsRequest(
                 onResult(permissionsResult)
         }
     )
-    val context = ContextAmbient.current
+    val context = LocalContext.current
 
     return remember {
         @Suppress("UNCHECKED_CAST")

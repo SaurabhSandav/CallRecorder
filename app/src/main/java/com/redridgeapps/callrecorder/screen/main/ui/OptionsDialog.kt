@@ -3,12 +3,14 @@ package com.redridgeapps.callrecorder.screen.main.ui
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ScrollableColumn
-import androidx.compose.foundation.Text
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ListItem
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -19,7 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.annotatedString
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import com.redridgeapps.callrecorder.screen.common.generic.MaterialDialog
@@ -59,7 +61,9 @@ internal fun OptionsDialog(
 
         Crossfade(selectedTab, Modifier.animateContentSize()) { tabIndex ->
 
-            ScrollableColumn {
+            val scrollState = rememberScrollState()
+
+            Column(Modifier.verticalScroll(scrollState)) {
 
                 when (tabIndex) {
                     OptionsDialogTab.OPTIONS -> OptionsDialogOptionsTab(
@@ -83,7 +87,7 @@ private fun annotatedRecordingInfo(
     getInfoMap: suspend () -> Map<String, String>,
 ): State<List<AnnotatedString>> = produceState(initialValue = emptyList(), getInfoMap) {
     value = getInfoMap().map {
-        annotatedString {
+        buildAnnotatedString {
             withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(it.key) }
             append(it.value)
         }

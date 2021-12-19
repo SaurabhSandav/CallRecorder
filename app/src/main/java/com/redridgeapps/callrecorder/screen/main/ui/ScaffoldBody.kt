@@ -15,7 +15,7 @@ internal fun ScaffoldBody(
     modifier: Modifier,
 ) {
 
-    Crossfade(current = recordingListState.isRecordingListRefreshing) { isRefreshing ->
+    Crossfade(recordingListState.isRecordingListRefreshing) { isRefreshing ->
 
         when {
             isRefreshing -> CircularProgressIndicator(

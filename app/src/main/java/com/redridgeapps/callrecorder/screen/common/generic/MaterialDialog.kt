@@ -16,7 +16,7 @@ fun MaterialDialog(
 
     Dialog(onDismissRequest = onDismissRequest) {
         Surface {
-            Column(modifier = modifier, children = children)
+            Column(modifier = modifier, content = children)
         }
     }
 }

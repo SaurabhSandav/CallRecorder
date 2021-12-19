@@ -1,11 +1,11 @@
 package com.redridgeapps.callrecorder.screen.firstrun.ui
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import com.redridgeapps.callrecorder.screen.common.activityresult.rememberPermissionsRequest
@@ -41,7 +41,7 @@ internal fun PermissionsConfig(
             }
         )
 
-        Crossfade(current = allPermissionsGranted) { permissionsGranted ->
+        Crossfade(allPermissionsGranted) { permissionsGranted ->
 
             if (permissionsGranted) {
                 Text("✔ All permissions granted")

@@ -1,9 +1,8 @@
 package com.redridgeapps.callutils.workers
 
 import android.content.Context
-import androidx.datastore.DataStore
-import androidx.hilt.Assisted
-import androidx.hilt.work.WorkerInject
+import androidx.datastore.core.DataStore
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
@@ -11,12 +10,15 @@ import androidx.work.WorkerParameters
 import com.redridgeapps.callutils.storage.Recordings
 import com.redridgeapps.common.StartupInitializer
 import com.redridgeapps.prefs.Prefs
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import kotlin.time.days
 import kotlin.time.toJavaDuration
 
-class RecordingAutoDeleteWorker @WorkerInject constructor(
+@HiltWorker
+class RecordingAutoDeleteWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted workerParameters: WorkerParameters,
     private val recordings: Recordings,

@@ -1,12 +1,12 @@
 package com.redridgeapps.callrecorder.screen.firstrun.ui
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,7 +34,7 @@ internal fun SystemizationConfig(
             mutableStateOf(isAppSystemized)
         }
 
-        Crossfade(current = isAppSystemizedNullable) { isAppSystemizedNullableCF ->
+        Crossfade(isAppSystemizedNullable) { isAppSystemizedNullableCF ->
 
             when (isAppSystemizedNullableCF) {
                 null -> CircularProgressIndicator()

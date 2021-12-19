@@ -1,20 +1,22 @@
 package com.redridgeapps.callrecorder.screen.firstrun
 
 import android.Manifest
-import androidx.datastore.DataStore
-import androidx.hilt.lifecycle.ViewModelInject
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.common.PermissionChecker
 import com.redridgeapps.common.Systemizer
 import com.redridgeapps.common.utils.launchUnit
 import com.redridgeapps.prefs.Prefs
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
 
-internal class FirstRunViewModel @ViewModelInject constructor(
+@HiltViewModel
+internal class FirstRunViewModel @Inject constructor(
     private val systemizer: Systemizer,
     private val prefs: DataStore<Prefs>,
     permissionChecker: PermissionChecker,

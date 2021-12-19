@@ -41,6 +41,7 @@ dependencies {
     implementation(libs.jetpack.core)
 
     // DataStore
+    api(libs.jetpack.datastore)
     api(libs.jetpack.datastore.core)
 
     // Dagger Hilt

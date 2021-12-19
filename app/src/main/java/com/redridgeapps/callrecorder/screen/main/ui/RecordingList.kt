@@ -1,16 +1,17 @@
 package com.redridgeapps.callrecorder.screen.main.ui
 
-import androidx.compose.foundation.Text
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyColumnFor
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.ListItem
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,14 +26,14 @@ internal fun RecordingList(
     modifier: Modifier = Modifier,
 ) {
 
-    LazyColumnFor(
-        items = recordingList,
-        modifier = modifier
-    ) { entry ->
+    LazyColumn(modifier) {
 
-        when (entry) {
-            is Header -> RecordingListHeader(header = entry.title)
-            is Item -> RecordingListItem(item = entry)
+        items(recordingList) { entry ->
+
+            when (entry) {
+                is Header -> RecordingListHeader(header = entry.title)
+                is Item -> RecordingListItem(item = entry)
+            }
         }
     }
 }
@@ -68,7 +69,7 @@ private fun RecordingListDivider() {
 @Composable
 private fun RecordingListItem(item: Item) {
 
-    var modifier = Modifier.clickable(
+    var modifier = Modifier.combinedClickable(
         onClick = item.onSelect,
         onLongClick = item.onMultiSelect
     )
