@@ -47,7 +47,7 @@ ktor-client-json = { module = "io.ktor:ktor-client-json", version.ref = "ktor" }
 ktor-client-serialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktor" }
 ktor-client-sockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
 
-desugarjdklibs = "com.android.tools:desugar_jdk_libs:1.0.10"
+desugarJdkLibs = "com.android.tools:desugar_jdk_libs:1.1.5"
 
 compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
 compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }

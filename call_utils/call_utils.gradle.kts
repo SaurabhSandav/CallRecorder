@@ -8,18 +8,22 @@ plugins {
 
 android {
 
-    compileSdkVersion(30)
-    buildToolsVersion = "30.0.2"
+    compileSdk = 31
+    buildToolsVersion = "32.0.0"
 
     defaultConfig {
 
-        minSdkVersion(29)
-        targetSdkVersion(30)
+        minSdk = 29
+        targetSdk = 31
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
     }
 
     sourceSets {
