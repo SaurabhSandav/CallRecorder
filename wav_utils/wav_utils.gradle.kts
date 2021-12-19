@@ -1,6 +1,6 @@
 plugins {
     id("java-library")
-    id("kotlin")
+    id(libs.plugins.kotlin.jvm.get().pluginId)
 }
 
 java {

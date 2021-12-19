@@ -1,7 +1,7 @@
 plugins {
-    id("com.android.library")
-    id("kotlin-android")
-    id("kotlin-kapt")
+    id(libs.plugins.android.library.get().pluginId)
+    id(libs.plugins.kotlin.android.get().pluginId)
+    id(libs.plugins.kotlin.kapt.get().pluginId)
 }
 
 android {
@@ -25,29 +25,29 @@ android {
 
 dependencies {
 
-    coreLibraryDesugaring(AndroidTools.DESUGAR_JDK_LIBS)
+    coreLibraryDesugaring(libs.desugarjdklibs)
 
     // KotlinX
-    api(Kotlin.COROUTINES_ANDROID)
-    api(Kotlin.DATE_TIME)
+    implementation(libs.kotlinx.coroutines.android)
+    api(libs.kotlinx.datetime)
 
     // Jetpack
-    implementation(Jetpack.ACTIVITY_KTX)
+    implementation(libs.jetpack.activity)
 
     // Dagger Hilt
-    implementation(DaggerHilt.ANDROID)
-    kapt(DaggerHilt.COMPILER)
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.dagger.hilt.compiler)
 
     // AndroidX Hilt
-    implementation(AndroidXHilt.LIFECYCLE_VIEWMODEL)
+    implementation(libs.jetpack.hilt.lifecycle.viewmodel)
 
     // SQLDelight
-    implementation(SQLDelight.ANDROID_DRIVER)
+    implementation(libs.sqldelight.android.driver)
 
     // LibSU
-    implementation(LibSU.CORE)
-    implementation(LibSU.IO)
+    implementation(libs.libsu.core)
+    implementation(libs.libsu.io)
 
     // Timber
-    implementation(Timber.TIMBER)
+    implementation(libs.timber)
 }

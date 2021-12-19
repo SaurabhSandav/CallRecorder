@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.library")
-    id("kotlin-android")
-    id("kotlin-kapt")
-    id("com.squareup.wire")
+    id(libs.plugins.android.library.get().pluginId)
+    id(libs.plugins.kotlin.android.get().pluginId)
+    id(libs.plugins.kotlin.kapt.get().pluginId)
+    id(libs.plugins.wire.get().pluginId)
 }
 
 android {
@@ -31,20 +31,20 @@ android {
 dependencies {
 
     // Kotlin
-    implementation(Kotlin.COROUTINES_ANDROID)
+    implementation(libs.kotlinx.coroutines.android)
 
     // Jetpack
-    implementation(Jetpack.CORE_KTX)
+    implementation(libs.jetpack.core)
 
     // DataStore
-    api(DataStore.CORE)
+    api(libs.jetpack.datastore.core)
 
     // Dagger Hilt
-    implementation(DaggerHilt.ANDROID)
-    kapt(DaggerHilt.COMPILER)
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.dagger.hilt.compiler)
 
     // Wire
-    api(Wire.RUNTIME)
+    api(libs.wire)
 }
 
 wire {

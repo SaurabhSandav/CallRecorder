@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
-    id("kotlin-kapt")
-    id("dagger.hilt.android.plugin")
+    id(libs.plugins.android.application.get().pluginId)
+    id(libs.plugins.kotlin.android.get().pluginId)
+    id(libs.plugins.kotlin.kapt.get().pluginId)
+    id(libs.plugins.hilt.android.get().pluginId)
 }
 
 android {
@@ -30,8 +30,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerVersion = Compose.KOTLIN_COMPILER_VERSION
-        kotlinCompilerExtensionVersion = Compose.VERSION
+        kotlinCompilerExtensionVersion = libs.versions.compose.get()
     }
 
     buildFeatures.compose = true
@@ -48,7 +47,7 @@ android {
 
 dependencies {
 
-    coreLibraryDesugaring(AndroidTools.DESUGAR_JDK_LIBS)
+    coreLibraryDesugaring(libs.desugarjdklibs)
 
     implementation(project(":common"))
     implementation(project(":prefs"))
@@ -56,36 +55,36 @@ dependencies {
     implementation(project(":wav_utils"))
 
     // Jetpack
-    implementation(Jetpack.ACTIVITY_KTX)
-    implementation(Jetpack.APPCOMPAT)
-    implementation(Jetpack.CORE_KTX)
-    implementation(Jetpack.FRAGMENT_KTX)
-    implementation(Jetpack.PREFERENCE_KTX)
+    implementation(libs.jetpack.activity)
+    implementation(libs.jetpack.appcompat)
+    implementation(libs.jetpack.core)
+    implementation(libs.jetpack.fragment)
+    implementation(libs.jetpack.preference)
 
     // Compose
-    implementation(Compose.RUNTIME)
-    implementation(Compose.FOUNDATION)
-    implementation(Compose.MATERIAL)
-    implementation(Compose.MATERIAL_ICONS_EXTENDED)
-    implementation(Compose.NAVIGATION)
+    implementation(libs.compose.runtime)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.material)
+    implementation(libs.compose.material.icons.extended)
+    implementation(libs.jetpack.navigation.compose)
 
     // Lifecycle, ViewModel and LiveData
-    implementation(Lifecycle.SERVICE)
-    implementation(Lifecycle.VIEWMODEL_KTX)
+    implementation(libs.jetpack.lifecycle.service)
+    implementation(libs.jetpack.lifecycle.viewmodel)
 
     // WorkManager
-    implementation(WorkManager.WORK_RUNTIME_KTX)
+    implementation(libs.jetpack.work.runtime)
 
     // Dagger Hilt
-    implementation(DaggerHilt.ANDROID)
-    kapt(DaggerHilt.COMPILER)
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.dagger.hilt.compiler)
 
     // AndroidX Hilt
-    implementation(AndroidXHilt.COMMON)
-    implementation(AndroidXHilt.WORK)
-    implementation(AndroidXHilt.LIFECYCLE_VIEWMODEL)
-    kapt(AndroidXHilt.COMPILER)
+    implementation(libs.jetpack.hilt.common)
+    implementation(libs.jetpack.hilt.work)
+    implementation(libs.jetpack.hilt.lifecycle.viewmodel)
+    kapt(libs.jetpack.hilt.compiler)
 
     // Timber
-    implementation(Timber.TIMBER)
+    implementation(libs.timber)
 }

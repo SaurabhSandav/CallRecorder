@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.library")
-    id("kotlin-android")
+    id(libs.plugins.android.library.get().pluginId)
+    id(libs.plugins.kotlin.android.get().pluginId)
 //    id("org.mozilla.rust-android-gradle.rust-android") version "0.8.3"
 }
 
@@ -27,7 +27,7 @@ dependencies {
     implementation(project(":wav_utils"))
 
     // Timber
-    implementation(Timber.TIMBER)
+    implementation(libs.timber)
 }
 
 /*cargo {

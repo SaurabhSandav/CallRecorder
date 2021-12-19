@@ -1,8 +1,0 @@
-
-include(":dependencies")
-
-rootProject.name = "Gradle Plugins"
-
-rootProject.children.each { subproject ->
-    subproject.buildFileName = "${subproject.name}.gradle"
-}

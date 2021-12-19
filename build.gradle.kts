@@ -3,13 +3,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("dependencies")
-    id("com.github.ben-manes.versions") version "0.33.0"
-    id("com.android.application") version "7.0.0" apply false
-    id("org.jetbrains.kotlin.android") version "1.4.10" apply false
-    id("com.squareup.sqldelight") version "1.4.4" apply false
-    id("dagger.hilt.android.plugin") version "2.29.1-alpha" apply false
-    id("com.squareup.wire") version "3.4.0" apply false
+    alias(libs.plugins.gradle.versions.checker)
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.sqldelight) apply false
+    alias(libs.plugins.hilt.android) apply false
+    alias(libs.plugins.wire) apply false
 }
 
 allprojects {
@@ -20,10 +19,6 @@ allprojects {
         mavenCentral()
         maven("https://jitpack.io") // For libsu
         maven("https://kotlin.bintray.com/kotlinx/") // For kotlinx-datetime
-
-        if (GoogleMaven.ANDROIDX_REPO_ENABLED) {
-            maven(GoogleMaven.ANDROIDX_REPO_URL)
-        }
     }
 
     tasks.withType<KotlinCompile>().configureEach {

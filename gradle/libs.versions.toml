@@ -1,0 +1,92 @@
+[versions]
+kotlin = "1.4.10"
+coroutines = "1.4.0-M1"
+serialization = "1.3.1"
+datetime = "0.1.0"
+ktor = "1.6.2"
+compose = "1.0.0-alpha05"
+lifecycle = "2.3.0-beta01"
+work = "2.5.0-alpha03"
+datastore = "1.0.0-alpha02"
+jetpackHilt = "1.0.0-alpha02"
+daggerHilt = "2.29.1-alpha"
+sqldelight = "1.4.4"
+wire = "3.4.0"
+libsu = "3.0.2"
+
+[plugins]
+gradle-versions-checker = "com.github.ben-manes.versions:0.33.0"
+
+android-application = "com.android.application:7.0.0"
+android-library = "com.android.library:7.0.0"
+
+hilt-android = { id = "dagger.hilt.android.plugin", version.ref = "daggerHilt" }
+
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+sqldelight = { id = "com.squareup.sqldelight", version.ref = "sqldelight" }
+
+wire = { id = "com.squareup.wire", version.ref = "wire" }
+
+[libraries]
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "serialization" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
+
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-client-json = { module = "io.ktor:ktor-client-json", version.ref = "ktor" }
+ktor-client-serialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktor" }
+ktor-client-sockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
+
+desugarjdklibs = "com.android.tools:desugar_jdk_libs:1.0.10"
+
+compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
+compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
+compose-material = { module = "androidx.compose.material:material", version.ref = "compose" }
+compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
+
+jetpack-core = "androidx.core:core-ktx:1.5.0-alpha04"
+jetpack-activity = "androidx.activity:activity-ktx:1.2.0-beta01"
+jetpack-appcompat = "androidx.appcompat:appcompat:1.3.0-alpha02"
+jetpack-fragment = "androidx.fragment:fragment-ktx:1.3.0-beta01"
+jetpack-preference = "androidx.preference:preference-ktx:1.1.1"
+
+jetpack-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
+jetpack-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version.ref = "lifecycle" }
+jetpack-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+
+jetpack-navigation-compose = "androidx.navigation:navigation-compose:1.0.0-alpha01"
+
+jetpack-datastore-core = { module = "androidx.datastore:datastore-core", version.ref = "datastore" }
+jetpack-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+
+jetpack-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
+
+jetpack-hilt-common = { module = "androidx.hilt:hilt-common", version.ref = "jetpackHilt" }
+jetpack-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "jetpackHilt" }
+jetpack-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "jetpackHilt" }
+jetpack-hilt-lifecycle-viewmodel = { module = "androidx.hilt:hilt-lifecycle-viewmodel", version.ref = "jetpackHilt" }
+
+dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "daggerHilt" }
+dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "daggerHilt" }
+
+sqldelight-android-driver = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelight-coroutines-extensions-jvm = { module = "com.squareup.sqldelight:coroutines-extensions-jvm", version.ref = "sqldelight" }
+
+wire = { module = "com.squareup.wire:wire-runtime", version.ref = "wire" }
+
+libsu-core = { module = "com.github.topjohnwu.libsu:core", version.ref = "libsu" }
+libsu-io = { module = "com.github.topjohnwu.libsu:io", version.ref = "libsu" }
+
+timber = "com.jakewharton.timber:timber:4.7.1"
+
+bignum = "com.ionspin.kotlin:bignum:0.3.3"

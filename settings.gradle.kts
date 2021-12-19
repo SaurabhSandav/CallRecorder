@@ -20,7 +20,9 @@ pluginManagement {
 
 rootProject.name = "Call Recorder"
 
-includeBuild("gradle_plugins")
+listOf(
+    "VERSION_CATALOGS",
+).forEach { enableFeaturePreview(it) }
 
 include(":app")
 include(":common")

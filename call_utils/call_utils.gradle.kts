@@ -1,9 +1,9 @@
 plugins {
-    id("com.android.library")
-    id("kotlin-android")
-    id("kotlin-kapt")
-    id("com.squareup.sqldelight")
-    id("dagger.hilt.android.plugin")
+    id(libs.plugins.android.library.get().pluginId)
+    id(libs.plugins.kotlin.android.get().pluginId)
+    id(libs.plugins.kotlin.kapt.get().pluginId)
+    id(libs.plugins.sqldelight.get().pluginId)
+    id(libs.plugins.hilt.android.get().pluginId)
 }
 
 android {
@@ -38,27 +38,27 @@ dependencies {
     implementation(project(":mp3_encoder"))
 
     // Jetpack
-    implementation(Jetpack.CORE_KTX)
+    implementation(libs.jetpack.core)
 
     // Lifecycle
-    implementation(Lifecycle.SERVICE)
-    implementation(Lifecycle.RUNTIME_KTX)
+    implementation(libs.jetpack.lifecycle.service)
+    implementation(libs.jetpack.lifecycle.runtime)
 
     // WorkManager
-    implementation(WorkManager.WORK_RUNTIME_KTX)
+    implementation(libs.jetpack.work.runtime)
 
     // Dagger Hilt
-    implementation(DaggerHilt.ANDROID)
-    kapt(DaggerHilt.COMPILER)
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.dagger.hilt.compiler)
 
     // AndroidX Hilt
-    implementation(AndroidXHilt.COMMON)
-    implementation(AndroidXHilt.WORK)
-    kapt(AndroidXHilt.COMPILER)
+    implementation(libs.jetpack.hilt.common)
+    implementation(libs.jetpack.hilt.work)
+    kapt(libs.jetpack.hilt.compiler)
 
     // SQLDelight
-    implementation(SQLDelight.ANDROID_DRIVER)
-    implementation(SQLDelight.COROUTINES_EXTENSIONS)
+    implementation(libs.sqldelight.android.driver)
+    implementation(libs.sqldelight.coroutines.extensions.jvm)
 }
 
 sqldelight {
