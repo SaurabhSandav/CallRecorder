@@ -3,12 +3,13 @@ mod lame;
 #[cfg(target_os = "android")]
 #[allow(non_snake_case)]
 pub mod android {
+    use std::ffi::CStr;
 
-    use crate::lame::{self, lame_global_flags};
+    use jni::JNIEnv;
     use jni::objects::{JByteBuffer, JClass};
     use jni::sys::{jfloat, jint, jlong, jshort, jstring};
-    use jni::JNIEnv;
-    use std::ffi::CStr;
+
+    use crate::lame::{self, lame_global_flags};
 
     const LAME_EXCEPTION_CLASS: &str = "com/redridgeapps/mp3encoding/LameException";
 
@@ -130,7 +131,7 @@ pub mod android {
         let pcm_left = match env.get_direct_buffer_address(pcm_left) {
             Ok(value) => value.as_ptr() as *const jshort,
             Err(err) => {
-                throw_lame_exception(env, format!("{}", err.0));
+                throw_lame_exception(env, format!("{}", err.to_string()));
                 return -1;
             }
         };
@@ -138,7 +139,7 @@ pub mod android {
         let pcm_right = match env.get_direct_buffer_address(pcm_right) {
             Ok(value) => value.as_ptr() as *const jshort,
             Err(err) => {
-                throw_lame_exception(env, format!("{}", err.0));
+                throw_lame_exception(env, format!("{}", err.to_string()));
                 return -1;
             }
         };
@@ -146,7 +147,7 @@ pub mod android {
         let mp3_buffer = match env.get_direct_buffer_address(mp3_buffer) {
             Ok(value) => value.as_mut_ptr(),
             Err(err) => {
-                throw_lame_exception(env, format!("{}", err.0));
+                throw_lame_exception(env, format!("{}", err.to_string()));
                 return -1;
             }
         };
@@ -176,7 +177,7 @@ pub mod android {
         let pcm_buffer = match env.get_direct_buffer_address(pcm_buffer) {
             Ok(value) => value.as_mut_ptr() as *mut jshort,
             Err(err) => {
-                throw_lame_exception(env, format!("{}", err.0));
+                throw_lame_exception(env, format!("{}", err.to_string()));
                 return -1;
             }
         };
@@ -184,7 +185,7 @@ pub mod android {
         let mp3_buffer = match env.get_direct_buffer_address(mp3_buffer) {
             Ok(value) => value.as_mut_ptr(),
             Err(err) => {
-                throw_lame_exception(env, format!("{}", err.0));
+                throw_lame_exception(env, format!("{}", err.to_string()));
                 return -1;
             }
         };
@@ -214,7 +215,7 @@ pub mod android {
         let pcm_left = match env.get_direct_buffer_address(pcm_left) {
             Ok(value) => value.as_ptr() as *const jfloat,
             Err(err) => {
-                throw_lame_exception(env, format!("{}", err.0));
+                throw_lame_exception(env, format!("{}", err.to_string()));
                 return -1;
             }
         };
@@ -222,7 +223,7 @@ pub mod android {
         let pcm_right = match env.get_direct_buffer_address(pcm_right) {
             Ok(value) => value.as_ptr() as *const jfloat,
             Err(err) => {
-                throw_lame_exception(env, format!("{}", err.0));
+                throw_lame_exception(env, format!("{}", err.to_string()));
                 return -1;
             }
         };
@@ -230,7 +231,7 @@ pub mod android {
         let mp3_buffer = match env.get_direct_buffer_address(mp3_buffer) {
             Ok(value) => value.as_mut_ptr(),
             Err(err) => {
-                throw_lame_exception(env, format!("{}", err.0));
+                throw_lame_exception(env, format!("{}", err.to_string()));
                 return -1;
             }
         };
@@ -260,7 +261,7 @@ pub mod android {
         let pcm_buffer = match env.get_direct_buffer_address(pcm_buffer) {
             Ok(value) => value.as_ptr() as *const jfloat,
             Err(err) => {
-                throw_lame_exception(env, format!("{}", err.0));
+                throw_lame_exception(env, format!("{}", err.to_string()));
                 return -1;
             }
         };
@@ -268,7 +269,7 @@ pub mod android {
         let mp3_buffer = match env.get_direct_buffer_address(mp3_buffer) {
             Ok(value) => value.as_mut_ptr(),
             Err(err) => {
-                throw_lame_exception(env, format!("{}", err.0));
+                throw_lame_exception(env, format!("{}", err.to_string()));
                 return -1;
             }
         };
@@ -295,7 +296,7 @@ pub mod android {
         let mp3_buffer = match env.get_direct_buffer_address(mp3_buffer) {
             Ok(value) => value.as_mut_ptr(),
             Err(err) => {
-                throw_lame_exception(env, format!("{}", err.0));
+                throw_lame_exception(env, format!("{}", err.to_string()));
                 return -1;
             }
         };

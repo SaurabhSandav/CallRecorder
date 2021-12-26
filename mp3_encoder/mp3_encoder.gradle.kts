@@ -1,7 +1,7 @@
 plugins {
     id(libs.plugins.android.library.get().pluginId)
     id(libs.plugins.kotlin.android.get().pluginId)
-//    id("org.mozilla.rust-android-gradle.rust-android") version "0.8.3"
+    id("org.mozilla.rust-android-gradle.rust-android") version "0.9.0"
 }
 
 android {
@@ -23,7 +23,7 @@ android {
         jvmTarget = "11"
     }
 
-    ndkVersion = "21.3.6528147"
+    ndkVersion = "22.1.7171670"
 }
 
 dependencies {
@@ -34,14 +34,14 @@ dependencies {
     implementation(libs.timber)
 }
 
-/*cargo {
+cargo {
     module = "../lame_wrapper/"
     libname = "lame_wrapper"
     targets = listOf("arm", "x86", "x86_64", "arm64")
-}*/
+}
 
-/*tasks.whenTaskAdded { task ->
-    if ((task.name == 'javaPreCompileDebug' || task.name == 'javaPreCompileRelease')) {
-        task.dependsOn 'cargoBuild'
+tasks.whenTaskAdded {
+    if (name == "javaPreCompileDebug" || name == "javaPreCompileRelease") {
+        dependsOn("cargoBuild")
     }
-}*/
+}
