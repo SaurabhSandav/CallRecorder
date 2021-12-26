@@ -1,15 +1,15 @@
 package com.redridgeapps.callrecorder.screen.main.handlers
 
-import androidx.datastore.core.DataStore
 import com.redridgeapps.callrecorder.screen.common.utils.ClickSelection
 import com.redridgeapps.callrecorder.screen.main.SelectedRecording
 import com.redridgeapps.callrecorder.screen.main.SetState
 import com.redridgeapps.callutils.db.Recording
 import com.redridgeapps.callutils.db.RecordingId
 import com.redridgeapps.callutils.storage.Recordings
+import com.redridgeapps.common.PrefKeys
 import com.redridgeapps.common.utils.launchUnit
 import com.redridgeapps.common.viewmodel.ViewModelHandle
-import com.redridgeapps.prefs.Prefs
+import com.russhwolf.settings.coroutines.FlowSettings
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -21,7 +21,7 @@ internal class SelectionHandler constructor(
     private val viewModelHandle: ViewModelHandle,
     private val setState: SetState,
     private val recordingSelection: ClickSelection<SelectedRecording>,
-    private val prefs: DataStore<Prefs>,
+    private val prefs: FlowSettings,
     private val recordings: Recordings,
 ) {
 
@@ -51,7 +51,7 @@ internal class SelectionHandler constructor(
 
     private fun observeSelection() {
 
-        val autoDeleteEnabledFlow = prefs.data.map { it.is_auto_delete_enabled }
+        val autoDeleteEnabledFlow = prefs.getBooleanFlow(PrefKeys.isAutoDeleteEnabled)
 
         recordingSelection.state
             .flatMapLatest { state ->

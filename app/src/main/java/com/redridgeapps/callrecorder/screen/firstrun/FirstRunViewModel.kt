@@ -1,13 +1,13 @@
 package com.redridgeapps.callrecorder.screen.firstrun
 
 import android.Manifest
-import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.common.PermissionChecker
+import com.redridgeapps.common.PrefKeys
 import com.redridgeapps.common.Systemizer
 import com.redridgeapps.common.utils.launchUnit
-import com.redridgeapps.prefs.Prefs
+import com.russhwolf.settings.coroutines.FlowSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class FirstRunViewModel @Inject constructor(
     private val systemizer: Systemizer,
-    private val prefs: DataStore<Prefs>,
+    private val prefs: FlowSettings,
     permissionChecker: PermissionChecker,
 ) : ViewModel() {
 
@@ -60,9 +60,8 @@ internal class FirstRunViewModel @Inject constructor(
 
         if (isConfigFinished) {
 
-            prefs.updateData {
-                it.copy(is_initial_config_finished = true, is_recording_enabled = true)
-            }
+            prefs.putBoolean(PrefKeys.isInitialConfigFinished, true)
+            prefs.putBoolean(PrefKeys.isRecordingEnabled, true)
 
             _uiState.value = _uiState.value.copy(isConfigFinished = true)
         }

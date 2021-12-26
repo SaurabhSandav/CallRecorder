@@ -1,14 +1,14 @@
 package com.redridgeapps.callutils.recording
 
-import androidx.datastore.core.DataStore
+import com.redridgeapps.callutils.Defaults
 import com.redridgeapps.callutils.callevents.NewCallEvent
 import com.redridgeapps.callutils.storage.Recordings
-import com.redridgeapps.prefs.Prefs
+import com.redridgeapps.common.PrefKeys
 import com.redridgeapps.wavutils.WavBitsPerSample
 import com.redridgeapps.wavutils.WavChannels
 import com.redridgeapps.wavutils.WavSampleRate
+import com.russhwolf.settings.coroutines.FlowSettings
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.first
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import java.nio.file.Path
@@ -24,24 +24,23 @@ data class RecordingJob internal constructor(
 
 @Suppress("FunctionName")
 suspend fun RecordingJob(
-    prefs: DataStore<Prefs>,
+    prefs: FlowSettings,
     callEvent: NewCallEvent,
 ): RecordingJob = coroutineScope {
-
-    val prefsData = prefs.data.first()
-    val audioRecord = prefsData.audio_record ?: Prefs.AudioRecord()
 
     val recordingStartInstant = Clock.System.now()
 
     val savePath = Recordings.generateFilePath(
-        saveDir = prefsData.recording_storage_path.ifBlank { error("Recordings storage path is empty") },
+        saveDir = prefs.getString(PrefKeys.recordingStoragePath)
+            .ifBlank { error("Recordings storage path is empty") },
         fileName = recordingStartInstant.epochSeconds.toString()
     )
 
     RecordingJob(
-        sampleRate = audioRecord.sample_rate.toWavSampleRate(),
-        channels = audioRecord.channels.toWavChannels(),
-        encoding = audioRecord.encoding.toWavBitsPerSample(),
+        sampleRate = WavSampleRate(prefs.getInt(PrefKeys.AudioRecord.sampleRate,
+            Defaults.AUDIO_RECORD_SAMPLE_RATE.value)),
+        channels = WavChannels(prefs.getInt(PrefKeys.AudioRecord.channels, Defaults.AUDIO_RECORD_CHANNELS.value)),
+        encoding = WavBitsPerSample(prefs.getInt(PrefKeys.AudioRecord.encoding, Defaults.AUDIO_RECORD_ENCODING.value)),
         savePath = savePath,
         newCallEvent = callEvent,
         recordingStartInstant = recordingStartInstant

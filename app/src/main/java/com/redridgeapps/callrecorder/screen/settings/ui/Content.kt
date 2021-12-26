@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.redridgeapps.callrecorder.screen.settings.OnUpdateContactNames
 import com.redridgeapps.callrecorder.screen.settings.Preference
-import com.redridgeapps.prefs.Prefs
 
 @Composable
 internal fun Content(
@@ -22,9 +21,9 @@ internal fun Content(
 
     onUpdateContactNames: OnUpdateContactNames,
 
-    audioRecordSampleRate: Preference<Prefs.AudioRecord.SampleRate>,
-    audioRecordChannels: Preference<Prefs.AudioRecord.Channels>,
-    audioRecordEncoding: Preference<Prefs.AudioRecord.Encoding>,
+    audioRecordSampleRate: Preference<Int>,
+    audioRecordChannels: Preference<Int>,
+    audioRecordEncoding: Preference<Int>,
 
     autoDeleteEnabled: Preference<Boolean>,
     autoDeleteAfterDays: Preference<Int>,

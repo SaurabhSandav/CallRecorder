@@ -1,6 +1,5 @@
 package com.redridgeapps.callrecorder.screen.main
 
-import androidx.datastore.core.DataStore
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.redridgeapps.callrecorder.screen.common.utils.ClickSelection
@@ -13,7 +12,7 @@ import com.redridgeapps.callutils.services.AudioEndsTrimmingServiceLauncher
 import com.redridgeapps.callutils.services.Mp3ConversionServiceLauncher
 import com.redridgeapps.callutils.storage.Recordings
 import com.redridgeapps.common.viewmodel.createViewModelHandle
-import com.redridgeapps.prefs.Prefs
+import com.russhwolf.settings.coroutines.FlowSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class MainViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    prefs: DataStore<Prefs>,
+    prefs: FlowSettings,
     callPlayback: CallPlayback,
     recordings: Recordings,
     mp3ConversionServiceLauncher: Mp3ConversionServiceLauncher,

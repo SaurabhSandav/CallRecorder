@@ -12,6 +12,7 @@ jetpackHilt = "1.0.0"
 daggerHilt = "2.40.5"
 sqldelight = "1.5.3"
 wire = "4.0.1"
+multiplatform-settings = "0.8.1"
 libsu = "3.2.1"
 
 [plugins]
@@ -68,6 +69,7 @@ jetpack-navigation-compose = "androidx.navigation:navigation-compose:2.4.0-rc01"
 
 jetpack-datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
 jetpack-datastore-core = { module = "androidx.datastore:datastore-core", version.ref = "datastore" }
+jetpack-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 
 jetpack-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
 
@@ -83,6 +85,10 @@ sqldelight-android-driver = { module = "com.squareup.sqldelight:android-driver",
 sqldelight-coroutines-extensions-jvm = { module = "com.squareup.sqldelight:coroutines-extensions-jvm", version.ref = "sqldelight" }
 
 wire = { module = "com.squareup.wire:wire-runtime", version.ref = "wire" }
+
+multiplatform-settings-core = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatform-settings" }
+multiplatform-settings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatform-settings" }
+multiplatform-settings-datastore = { module = "com.russhwolf:multiplatform-settings-datastore", version.ref = "multiplatform-settings" }
 
 libsu-core = { module = "com.github.topjohnwu.libsu:core", version.ref = "libsu" }
 libsu-io = { module = "com.github.topjohnwu.libsu:io", version.ref = "libsu" }

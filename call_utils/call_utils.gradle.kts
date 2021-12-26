@@ -37,7 +37,6 @@ android {
 dependencies {
 
     implementation(projects.common)
-    implementation(projects.prefs)
     implementation(projects.wavUtils)
     implementation(projects.mp3Encoder)
 
@@ -63,6 +62,10 @@ dependencies {
     // SQLDelight
     implementation(libs.sqldelight.android.driver)
     implementation(libs.sqldelight.coroutines.extensions.jvm)
+
+    // Multiplatform Settings
+    implementation(libs.multiplatform.settings.core)
+    implementation(libs.multiplatform.settings.coroutines)
 }
 
 sqldelight {

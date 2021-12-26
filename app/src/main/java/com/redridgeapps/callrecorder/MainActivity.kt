@@ -2,19 +2,18 @@ package com.redridgeapps.callrecorder
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.datastore.core.DataStore
 import androidx.lifecycle.lifecycleScope
+import com.redridgeapps.common.PrefKeys
 import com.redridgeapps.common.utils.launchUnit
-import com.redridgeapps.prefs.Prefs
+import com.russhwolf.settings.coroutines.FlowSettings
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var prefs: DataStore<Prefs>
+    lateinit var prefs: FlowSettings
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupUI() = lifecycleScope.launchUnit {
 
-        val isFirstRun = prefs.data.first().is_initial_config_finished.not()
+        val isFirstRun = prefs.getBoolean(PrefKeys.isInitialConfigFinished, true)
         setupCompose(isFirstRun)
 
         // Remove Splash Screen

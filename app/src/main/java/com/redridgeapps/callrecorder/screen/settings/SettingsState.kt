@@ -3,7 +3,6 @@ package com.redridgeapps.callrecorder.screen.settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
-import com.redridgeapps.prefs.Prefs
 import kotlinx.coroutines.flow.StateFlow
 
 @Stable
@@ -14,9 +13,9 @@ internal data class SettingsState(
 
     val onUpdateContactNames: OnUpdateContactNames,
 
-    val audioRecordSampleRate: Preference<Prefs.AudioRecord.SampleRate>,
-    val audioRecordChannels: Preference<Prefs.AudioRecord.Channels>,
-    val audioRecordEncoding: Preference<Prefs.AudioRecord.Encoding>,
+    val audioRecordSampleRate: Preference<Int>,
+    val audioRecordChannels: Preference<Int>,
+    val audioRecordEncoding: Preference<Int>,
 
     val autoDeleteEnabled: Preference<Boolean>,
     val autoDeleteAfterDays: Preference<Int>,

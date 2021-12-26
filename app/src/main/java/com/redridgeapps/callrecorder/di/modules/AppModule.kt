@@ -7,9 +7,12 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.telephony.TelephonyManager
 import androidx.core.content.getSystemService
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.preference.PreferenceManager
 import com.redridgeapps.callrecorder.MainActivity
 import com.redridgeapps.common.di.qualifiers.NotificationPendingActivity
+import com.russhwolf.settings.coroutines.FlowSettings
+import com.russhwolf.settings.datastore.DataStoreSettings
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,6 +40,12 @@ object AppModule {
     @Provides
     fun @receiver:ApplicationContext Context.provideContentResolver(): ContentResolver =
         contentResolver
+
+    private val Context.prefsDs by preferencesDataStore("settings")
+
+    @Provides
+    fun @receiver:ApplicationContext Context.provideFlowSettings(): FlowSettings =
+        DataStoreSettings(prefsDs)
 
     @NotificationPendingActivity
     @Provides

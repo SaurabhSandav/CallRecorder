@@ -11,7 +11,6 @@ import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import androidx.datastore.core.DataStore
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.redridgeapps.callutils.R
@@ -23,13 +22,13 @@ import com.redridgeapps.callutils.recording.CallRecorder
 import com.redridgeapps.callutils.recording.RecordingJob
 import com.redridgeapps.callutils.recording.RecordingState
 import com.redridgeapps.common.AppDispatchers
+import com.redridgeapps.common.PrefKeys
 import com.redridgeapps.common.StartupInitializer
 import com.redridgeapps.common.constants.NOTIFICATION_RECORDING_SERVICE_ID
 import com.redridgeapps.common.di.qualifiers.NotificationPendingActivity
-import com.redridgeapps.prefs.Prefs
+import com.russhwolf.settings.coroutines.FlowSettings
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -40,7 +39,7 @@ import kotlin.reflect.KClass
 class CallingService : LifecycleService() {
 
     @Inject
-    lateinit var prefs: DataStore<Prefs>
+    lateinit var prefs: FlowSettings
 
     @Inject
     lateinit var telephonyManager: TelephonyManager
@@ -173,18 +172,20 @@ class CallingService : LifecycleService() {
     }
 
     class Initializer @Inject constructor(
-        private val prefs: DataStore<Prefs>,
+        private val prefs: FlowSettings,
         @NotificationPendingActivity private val notificationPendingActivity: KClass<out Activity>,
     ) : StartupInitializer {
 
         override fun initialize(context: Context) {
 
-            prefs.data.distinctUntilChangedBy { it.is_recording_enabled }.onEach {
-                when {
-                    it.is_recording_enabled -> start(context, notificationPendingActivity)
-                    else -> stop(context)
+            prefs.getBooleanFlow(PrefKeys.isRecordingEnabled)
+                .onEach { isRecordingEnabled ->
+                    when {
+                        isRecordingEnabled -> start(context, notificationPendingActivity)
+                        else -> stop(context)
+                    }
                 }
-            }.launchIn(GlobalScope)
+                .launchIn(GlobalScope)
         }
     }
 }

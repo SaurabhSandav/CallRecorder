@@ -27,7 +27,6 @@ listOf(
 include(
     ":app",
     ":common",
-    ":prefs",
     ":call_utils",
     ":wav_utils",
     ":mp3_encoder",

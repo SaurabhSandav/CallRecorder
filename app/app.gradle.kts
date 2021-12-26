@@ -61,7 +61,6 @@ dependencies {
     coreLibraryDesugaring(libs.desugarJdkLibs)
 
     implementation(projects.common)
-    implementation(projects.prefs)
     implementation(projects.callUtils)
     implementation(projects.wavUtils)
 
@@ -71,6 +70,11 @@ dependencies {
     implementation(libs.jetpack.core)
     implementation(libs.jetpack.fragment)
     implementation(libs.jetpack.preference)
+
+    // DataStore
+    implementation(libs.jetpack.datastore)
+    implementation(libs.jetpack.datastore.core)
+    implementation(libs.jetpack.datastore.preferences)
 
     // Compose
     implementation(libs.compose.runtime)
@@ -95,6 +99,11 @@ dependencies {
     implementation(libs.jetpack.hilt.navigation.compose)
     implementation(libs.jetpack.hilt.work)
     kapt(libs.jetpack.hilt.compiler)
+
+    // Multiplatform Settings
+    implementation(libs.multiplatform.settings.core)
+    implementation(libs.multiplatform.settings.coroutines)
+    implementation(libs.multiplatform.settings.datastore)
 
     // Timber
     implementation(libs.timber)

@@ -1,26 +1,24 @@
 package com.redridgeapps.callrecorder.screen.settings
 
-import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redridgeapps.callutils.Defaults
 import com.redridgeapps.callutils.storage.Recordings
+import com.redridgeapps.common.PrefKeys
 import com.redridgeapps.common.Systemizer
 import com.redridgeapps.common.utils.launchUnit
-import com.redridgeapps.prefs.Prefs
-import com.redridgeapps.prefs.audioRecord
+import com.russhwolf.settings.coroutines.FlowSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 internal class SettingsViewModel @Inject constructor(
-    private val prefs: DataStore<Prefs>,
+    private val prefs: FlowSettings,
     private val systemizer: Systemizer,
     private val recordings: Recordings,
 ) : ViewModel() {
@@ -33,8 +31,8 @@ internal class SettingsViewModel @Inject constructor(
         ),
 
         recordingEnabled = Preference(
-            value = prefValue(Defaults.RECORDING_ENABLED) { is_recording_enabled },
-            onChanged = updatePrefs { copy(is_recording_enabled = it) }
+            value = prefValue(PrefKeys.isRecordingEnabled, Defaults.RECORDING_ENABLED),
+            onChanged = launchable { prefs.putBoolean(PrefKeys.isRecordingEnabled, it) }
         ),
 
         onUpdateContactNames = {
@@ -42,28 +40,28 @@ internal class SettingsViewModel @Inject constructor(
         },
 
         audioRecordSampleRate = Preference(
-            value = prefValue(Defaults.AUDIO_RECORD_SAMPLE_RATE) { audioRecord.sample_rate },
-            onChanged = updatePrefs { copy(audio_record = audioRecord.copy(sample_rate = it)) }
+            value = prefValue(PrefKeys.AudioRecord.sampleRate, Defaults.AUDIO_RECORD_SAMPLE_RATE.value),
+            onChanged = launchable { prefs.putInt(PrefKeys.AudioRecord.sampleRate, it) },
         ),
 
         audioRecordChannels = Preference(
-            value = prefValue(Defaults.AUDIO_RECORD_CHANNELS) { audioRecord.channels },
-            onChanged = updatePrefs { copy(audio_record = audioRecord.copy(channels = it)) }
+            value = prefValue(PrefKeys.AudioRecord.channels, Defaults.AUDIO_RECORD_CHANNELS.value),
+            onChanged = launchable { prefs.putInt(PrefKeys.AudioRecord.channels, it) },
         ),
 
         audioRecordEncoding = Preference(
-            value = prefValue(Defaults.AUDIO_RECORD_ENCODING) { audioRecord.encoding },
-            onChanged = updatePrefs { copy(audio_record = audioRecord.copy(encoding = it)) }
+            value = prefValue(PrefKeys.AudioRecord.encoding, Defaults.AUDIO_RECORD_ENCODING.value),
+            onChanged = launchable { prefs.putInt(PrefKeys.AudioRecord.encoding, it) },
         ),
 
         autoDeleteEnabled = Preference(
-            value = prefValue(Defaults.AUTO_DELETE_ENABLED) { is_auto_delete_enabled },
-            onChanged = updatePrefs { copy(is_auto_delete_enabled = it) }
+            value = prefValue(PrefKeys.isAutoDeleteEnabled, Defaults.IS_AUTO_DELETE_ENABLED),
+            onChanged = launchable { prefs.putBoolean(PrefKeys.isAutoDeleteEnabled, it) }
         ),
 
         autoDeleteAfterDays = Preference(
-            value = prefValue(Defaults.AUTO_DELETE_AFTER_DAYS) { auto_delete_threshold_days },
-            onChanged = updatePrefs { copy(auto_delete_threshold_days = it) }
+            value = prefValue(PrefKeys.autoDeleteThresholdDays, Defaults.AUTO_DELETE_AFTER_DAYS),
+            onChanged = launchable { prefs.putInt(PrefKeys.autoDeleteThresholdDays, it) }
         ),
     )
 
@@ -76,18 +74,25 @@ internal class SettingsViewModel @Inject constructor(
         initialValue = initialValue
     )
 
-    private inline fun <T> prefValue(
+    private inline fun <reified T> prefValue(
+        key: String,
         initialValue: T,
-        crossinline transform: suspend Prefs.() -> T,
-    ): StateFlow<T> = prefs.data.map { it.transform() }.toStateFlow(initialValue)
+    ): StateFlow<T> {
+
+        val flow = when (T::class) {
+            Boolean::class -> prefs.getBooleanFlow(key, initialValue as Boolean)
+            Int::class -> prefs.getIntFlow(key, initialValue as Int)
+            Long::class -> prefs.getLongFlow(key, initialValue as Long)
+            Float::class -> prefs.getFloatFlow(key, initialValue as Float)
+            Double::class -> prefs.getDoubleFlow(key, initialValue as Double)
+            String::class -> prefs.getStringFlow(key, initialValue as String)
+            else -> error("Flow")
+        }
+
+        return flow.toStateFlow(initialValue) as StateFlow<T>
+    }
 
     private inline fun <T> launchable(crossinline block: suspend (T) -> Unit): (T) -> Unit = {
         viewModelScope.launchUnit { block(it) }
-    }
-
-    private inline fun <T> updatePrefs(
-        crossinline block: suspend Prefs.(T) -> Prefs,
-    ): (T) -> Unit = launchable {
-        prefs.updateData { prefsSnapshot -> prefsSnapshot.block(it) }
     }
 }
